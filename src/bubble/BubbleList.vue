@@ -13,7 +13,7 @@ import { computed, onWatcherCleanup, ref, unref, watch, watchEffect } from 'vue'
 import useState from '../_util/hooks/use-state';
 import BubbleContextProvider from './context';
 
-defineOptions({ name: "AXBubbleList" });
+defineOptions({ name: "AXBubbleList", inheritAttrs: false });
 
 const TOLERANCE = 1;
 
