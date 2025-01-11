@@ -123,7 +123,8 @@ defineRender(() => {
       {/* Content */}
       {content.value && (
         // TODO: add animation
-        contentVisible.value && (<div
+        <div
+          v-show={contentVisible.value}
           class={classnames(`${itemCls.value}-content`)}
         >
           <div
@@ -132,7 +133,7 @@ defineRender(() => {
           >
             {content.value}
           </div>
-        </div>)
+        </div>
         // <CSSMotion {...collapseMotion} visible={enableCollapse.value ? contentOpen.value : true}>
         //   {({ className: motionClassName, style }, motionRef) => (
         //     <div
