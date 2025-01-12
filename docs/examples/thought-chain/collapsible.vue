@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { Card, Typography } from 'ant-design-vue';
 import { ThoughtChain, type ThoughtChainProps } from 'ant-design-x-vue';
+import { cloneVNode } from 'vue';
 
 defineOptions({ name: 'AXThoughtChainCollapsible' });
 
@@ -29,12 +30,12 @@ const items: ThoughtChainProps['items'] = [
   {
     title: 'Click me to expand the content',
     description: 'Collapsible',
-    content: mockContent,
+    content: cloneVNode(mockContent),
   },
   {
     title: 'Click me to expand the content',
     description: 'Collapsible',
-    content: mockContent,
+    content: cloneVNode(mockContent),
   },
 ];
 

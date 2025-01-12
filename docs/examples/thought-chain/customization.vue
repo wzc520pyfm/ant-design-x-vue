@@ -2,6 +2,7 @@
 import { CheckCircleOutlined, MoreOutlined } from '@ant-design/icons-vue';
 import { Button, Card, Typography } from 'ant-design-vue';
 import { ThoughtChain, type ThoughtChainItem, type ThoughtChainProps } from 'ant-design-x-vue';
+import { cloneVNode, isVNode } from 'vue';
 
 defineOptions({ name: 'AXThoughtChainCustomization' });
 
@@ -33,17 +34,23 @@ const customizationProps: ThoughtChainItem = {
   ),
 };
 
+const cloneCustomizationProps = (op: ThoughtChainItem) => {
+  return Object.fromEntries(Object.entries(op).map(([k, v]) => {
+    return [k, isVNode(v) ? cloneVNode(v): v];
+  }));
+}
+
 const items: ThoughtChainProps['items'] = [
   {
-    ...customizationProps,
+    ...cloneCustomizationProps(customizationProps),
     status: 'success',
   },
   {
-    ...customizationProps,
+    ...cloneCustomizationProps(customizationProps),
     status: 'error',
   },
   {
-    ...customizationProps,
+    ...cloneCustomizationProps(customizationProps),
     status: 'pending',
   },
 ];
