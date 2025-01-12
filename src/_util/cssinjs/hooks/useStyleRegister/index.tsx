@@ -278,15 +278,16 @@ export const parseStyle = (
   if (!root) {
     styleStr = `{${styleStr}}`;
   } else if (layer && supportLayer()) {
-    const layerCells = layer.split(',');
-    const layerName = layerCells[layerCells.length - 1].trim();
-    styleStr = `@layer ${layerName} {${styleStr}}`;
+    // TODO: need support layer conf to allow css layer
+    // const layerCells = layer.split(',');
+    // const layerName = layerCells[layerCells.length - 1].trim();
+    // styleStr = `@layer ${layerName} {${styleStr}}`;
 
-    // Order of layer if needed
-    if (layerCells.length > 1) {
-      // zombieJ: stylis do not support layer order, so we need to handle it manually.
-      styleStr = `@layer ${layer}{%%%:%}${styleStr}`;
-    }
+    // // Order of layer if needed
+    // if (layerCells.length > 1) {
+    //   // zombieJ: stylis do not support layer order, so we need to handle it manually.
+    //   styleStr = `@layer ${layer}{%%%:%}${styleStr}`;
+    // }
   }
 
   return [styleStr, effectStyle];

@@ -24,7 +24,7 @@ import getDefaultComponentToken from './getDefaultComponentToken';
 import genMaxMin from './maxmin';
 import statisticToken, { merge as mergeToken } from './statistic';
 
-import { MaybeRefOrGetter, toValue, unref, type VNode } from 'vue'
+import { computed, type MaybeRefOrGetter, toValue, unref, type VNode } from 'vue'
 import useUniqueMemo from '../_util/hooks/useUniqueMemo';
 import type { UseCSP } from '../hooks/useCSP';
 import useDefaultCSP from '../hooks/useCSP';
@@ -408,11 +408,11 @@ function genStyleUtils<
       if (typeof getResetStyles === 'function') {
         // Generate style for all need reset tags.
         useStyleRegister(
-          {
+          computed(() => ({
             ...sharedConfig,
             clientOnly: false,
             path: ['Shared', rootPrefixCls],
-          },
+          })),
           () =>
             getResetStyles(token, {
               prefix: { rootPrefixCls, iconPrefixCls },
@@ -422,7 +422,7 @@ function genStyleUtils<
       }
 
       const wrapSSR = useStyleRegister(
-        { ...sharedConfig, path: [concatComponent, prefixCls, iconPrefixCls] },
+        computed(() => ({ ...sharedConfig, path: [concatComponent, prefixCls, iconPrefixCls] })),
         () => {
           if (options.injectStyle === false) {
             return [];
@@ -545,12 +545,6 @@ function genStyleUtils<
       useStyle(prefixCls, rootCls);
       return null;
     };
-
-    if (process.env.NODE_ENV !== 'production') {
-      StyledComponent.displayName = `SubStyle_${String(
-        Array.isArray(componentName) ? componentName.join('.') : componentName,
-      )}`;
-    }
 
     return StyledComponent;
   }
