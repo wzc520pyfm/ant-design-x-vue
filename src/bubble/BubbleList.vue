@@ -9,11 +9,13 @@ import useDisplayData from './hooks/useDisplayData';
 import useListData from './hooks/useListData';
 import type { BubbleListProps } from './interface';
 import useStyle from './style';
-import { computed, onWatcherCleanup, ref, unref, watch, watchEffect } from 'vue';
+import { computed, type HTMLAttributes, mergeProps, onWatcherCleanup, ref, unref, useAttrs, watch, watchEffect } from 'vue';
 import useState from '../_util/hooks/use-state';
 import BubbleContextProvider from './context';
 
 defineOptions({ name: "AXBubbleList", inheritAttrs: false });
+
+const attrs = useAttrs();
 
 const TOLERANCE = 1;
 
@@ -26,10 +28,10 @@ const {
   ...restProps
 } = defineProps<BubbleListProps>();
 
-const domProps = pickAttrs(restProps, {
+const domProps = pickAttrs(mergeProps(restProps, attrs), {
   attr: true,
   aria: true,
-});
+}) as HTMLAttributes;
 
 const items = ref<BubbleListProps['items']>(itemsProp);
 

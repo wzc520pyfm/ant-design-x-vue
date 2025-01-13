@@ -1,6 +1,6 @@
 const attributes = `accept acceptcharset accesskey action allowfullscreen allowtransparency
 alt async autocomplete autofocus autoplay capture cellpadding cellspacing challenge
-charset checked classid classname colspan cols content contenteditable contextmenu
+charset checked classid class colspan cols content contenteditable contextmenu
 controls coords crossorigin data datetime default defer dir disabled download draggable
 enctype form formaction formenctype formmethod formnovalidate formtarget frameborder
 headers height hidden high href hreflang htmlfor for httpequiv icon id inputmode integrity
