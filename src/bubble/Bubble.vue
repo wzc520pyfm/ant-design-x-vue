@@ -56,7 +56,7 @@ const prefixCls = getPrefixCls('bubble', customizePrefixCls);
 const contextConfig = useXComponentConfig('bubble');
 
 // ============================ Typing ============================
-const [typingEnabled, typingStep, typingInterval, typingSuffix] = useTypingConfig(typing);
+const [typingEnabled, typingStep, typingInterval, typingSuffix] = useTypingConfig(() => typing);
 
 const [typedContent, isTyping] = useTypedEffect(
   content,
