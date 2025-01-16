@@ -17,7 +17,7 @@ Then, introduce component:
 
 ```ts
 <script setup lang="ts">
-import { Bubble, XProvider } 'ant-design-x-vue';
+import { Bubble, XProvider } from 'ant-design-x-vue';
 </script>
 
 <template>
