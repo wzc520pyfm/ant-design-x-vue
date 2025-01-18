@@ -1,6 +1,5 @@
 <script setup lang="tsx">
-import { Input } from 'ant-design-vue';
-import { Suggestion, type SuggestionProps } from 'ant-design-x-vue';
+import { Sender, Suggestion, type SuggestionProps } from 'ant-design-x-vue';
 import { ref } from 'vue';
 
 defineOptions({ name: 'AXSuggestionBlock' });
@@ -29,10 +28,9 @@ defineRender(() => {
       block
       children={({ onTrigger, onKeyDown }) => {
         return (
-          <Input
+          <Sender
             value={value.value}
-            onChange={(e) => {
-              const nextVal = e.target.value
+            onChange={(nextVal) => {
               if (nextVal === '/') {
                 onTrigger();
               } else if (!nextVal) {
@@ -40,7 +38,7 @@ defineRender(() => {
               }
               value.value = nextVal;
             }}
-            onKeydown={onKeyDown}
+            onKeyDown={onKeyDown}
             placeholder="输入 / 获取建议"
           />
         );
