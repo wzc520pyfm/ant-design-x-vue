@@ -39,6 +39,7 @@ const {
   style,
   defaultValue,
   value,
+  placeholder,
   readOnly,
   submitType = 'enter',
   onSubmit,
@@ -269,6 +270,7 @@ defineRender(() => {
           onCompositionstart={onInternalCompositionStart}
           onCompositionend={onInternalCompositionEnd}
           onKeydown={onKeyDown}
+          placeholder={placeholder}
           // @ts-expect-error
           onPaste={onInternalPaste}
           bordered={false}
