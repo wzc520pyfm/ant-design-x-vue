@@ -1,4 +1,4 @@
-import { VNode } from 'vue';
+import type { Ref, VNode } from 'vue';
 
 export type {
   OverrideTokenMap,
@@ -10,4 +10,4 @@ export type {
   GlobalToken,
 } from './components';
 
-export type UseComponentStyleResult = [(node: VNode) => VNode, string];
+export type UseComponentStyleResult = [(node: VNode) => VNode, Ref<string>];

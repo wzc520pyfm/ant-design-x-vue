@@ -24,7 +24,7 @@ import getDefaultComponentToken from './getDefaultComponentToken';
 import genMaxMin from './maxmin';
 import statisticToken, { merge as mergeToken } from './statistic';
 
-import { computed, type MaybeRefOrGetter, toValue, unref, type VNode } from 'vue'
+import { computed, type MaybeRefOrGetter, type Ref, toValue, unref, type VNode } from 'vue'
 import useUniqueMemo from '../_util/hooks/useUniqueMemo';
 import type { UseCSP } from '../hooks/useCSP';
 import useDefaultCSP from '../hooks/useCSP';
@@ -226,7 +226,7 @@ function genStyleUtils<
     return (prefixCls: MaybeRefOrGetter<string>, rootCls: string = toValue(prefixCls)) => {
       const [, hashId] = useStyle(toValue(prefixCls), rootCls);
       const [wrapCSSVar, cssVarCls] = useCSSVar(rootCls);
-
+      
       return [wrapCSSVar, hashId, cssVarCls] as const;
     };
   }
@@ -390,31 +390,33 @@ function genStyleUtils<
 
       const { max, min } = genMaxMin(type);
 
+      type Raw<T extends Ref<any>> = T extends Ref<infer R> ? R : never;
+      type SharedConfig = Omit<Raw<Parameters<typeof useStyleRegister>[0]>, 'path'>;
       // Shared config
-      const sharedConfig: Omit<Parameters<typeof useStyleRegister>[0], 'path'> =
+      const sharedConfig = computed<SharedConfig>(() => (
         {
-          theme,
-          token,
-          hashId,
+          theme: theme.value,
+          token: token.value,
+          hashId: hashId.value,
           nonce: () => csp.nonce!,
           clientOnly: options.clientOnly,
           layer: mergedLayer,
 
           // antd is always at top of styles
           order: options.order || -999,
-        };
+        }));
 
       // This if statement is safe, as it will only be used if the generator has the function. It's not dynamic.
       if (typeof getResetStyles === 'function') {
         // Generate style for all need reset tags.
         useStyleRegister(
           computed(() => ({
-            ...sharedConfig,
+            ...sharedConfig.value,
             clientOnly: false,
             path: ['Shared', rootPrefixCls],
           })),
           () =>
-            getResetStyles(token, {
+            getResetStyles(token.value, {
               prefix: { rootPrefixCls, iconPrefixCls },
               csp,
             }),
@@ -422,7 +424,7 @@ function genStyleUtils<
       }
 
       const wrapSSR = useStyleRegister(
-        computed(() => ({ ...sharedConfig, path: [concatComponent, prefixCls, iconPrefixCls] })),
+        computed(() => ({ ...sharedConfig.value, path: [concatComponent, prefixCls, iconPrefixCls] })),
         () => {
           if (options.injectStyle === false) {
             return [];
@@ -456,8 +458,8 @@ function genStyleUtils<
               )})`;
             });
           }
-          const mergedToken = mergeToken<any>(
-            proxyToken,
+          const mergedToken = computed(() => mergeToken<any>(
+            proxyToken.value,
             {
               componentCls,
               prefixCls,
@@ -470,19 +472,19 @@ function genStyleUtils<
               min,
             },
             cssVar ? defaultComponentToken : componentToken,
-          );
+          ));
 
-          const styleInterpolation = styleFn(mergedToken, {
-            hashId,
+          const styleInterpolation = computed(() => styleFn(mergedToken.value, {
+            hashId: hashId.value,
             prefixCls,
             rootPrefixCls,
             iconPrefixCls,
-          });
+          }));
           flush(component, componentToken);
           const commonStyle =
             typeof getCommonStyle === 'function'
               ? getCommonStyle(
-                  mergedToken,
+                  mergedToken.value,
                   prefixCls,
                   rootCls,
                   options.resetFont,
@@ -490,7 +492,7 @@ function genStyleUtils<
               : null;
           return [
             options.resetStyle === false ? null : commonStyle,
-            styleInterpolation,
+            styleInterpolation.value,
           ];
         },
       );

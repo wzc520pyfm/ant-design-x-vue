@@ -1,3 +1,4 @@
+import type { Ref } from 'vue';
 import type { Theme, TokenType } from '../../cssinjs';
 
 import type { OverrideTokenMap, TokenMap, GlobalToken } from '../interface';
@@ -20,11 +21,11 @@ export interface UseTokenReturn<
   AliasToken extends TokenType,
   DesignToken extends TokenType,
 > {
-  token: GlobalToken<CompTokenMap, AliasToken>;
+  token: Ref<GlobalToken<CompTokenMap, AliasToken>>;
   realToken?: GlobalToken<CompTokenMap, AliasToken>;
-  theme?: Theme<DesignToken, AliasToken>;
+  theme?: Ref<Theme<DesignToken, AliasToken>>;
   components?: TokenMapWithTheme<CompTokenMap, DesignToken, AliasToken>;
-  hashId?: string;
+  hashId?: Ref<string>;
   hashed?: string | boolean;
   cssVar?: {
     prefix?: string;

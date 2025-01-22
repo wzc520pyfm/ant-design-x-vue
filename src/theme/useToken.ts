@@ -9,7 +9,7 @@ import type { Theme } from '../_util/cssinjs';
 import type { DesignTokenProviderProps } from './patch-antd';
 import type { AliasToken, GlobalToken, SeedToken } from './cssinjs-utils';
 import { useDesignTokenInject } from 'ant-design-vue/es/theme/internal';
-import { ref, unref } from 'vue';
+import { computed, type Ref, unref } from 'vue';
 
 const defaultTheme: Theme<SeedToken, AliasToken> = createTheme(antdTheme.defaultAlgorithm);
 
@@ -78,33 +78,30 @@ export const getComputedToken = (
   return mergedDerivativeToken;
 };
 export function useInternalToken(): [
-  theme: Theme<SeedToken, AliasToken>,
+  theme: Ref<Theme<SeedToken, AliasToken>>,
   token: GlobalToken,
-  hashId: string,
-  realToken: GlobalToken,
+  hashId: Ref<string>,
+  realToken: Ref<GlobalToken>,
   cssVar?: DesignTokenProviderProps['cssVar'],
 ] {
+  const designToken = useDesignTokenInject();
   const {
-    token: rootDesignToken,
-    hashed,
-    // @ts-expect-error
-    theme = defaultTheme,
     // @ts-expect-error
     override,
     // @ts-expect-error
     cssVar,
-  } = unref(useDesignTokenInject());
+  } = unref(designToken);
 
-  const [
-    token,
-    hashId,
-    // @ts-expect-error
-    realToken,
-  ] = unref(useCacheToken<GlobalToken, SeedToken>(
-    ref(theme),
-    ref([antdTheme.defaultSeed, rootDesignToken]),
-    ref({
-      salt: `${version}-${hashed || ''}`,
+  const rootDesignToken = computed(() => designToken.value.token);
+  const hashed = computed(() => designToken.value.hashed);
+  // @ts-expect-error
+  const theme = computed(() => designToken.value.theme ?? defaultTheme);
+
+  const catchToken = useCacheToken<GlobalToken, SeedToken>(
+    computed(() => theme.value),
+    computed(() => [antdTheme.defaultSeed, rootDesignToken.value]),
+    computed(() => ({
+      salt: `${version}-${hashed.value || ''}`,
       override,
       getComputedToken,
       cssVar: cssVar && {
@@ -114,9 +111,17 @@ export function useInternalToken(): [
         ignore,
         preserve,
       },
-    }),
-  ));
-  return [theme as Theme<SeedToken, AliasToken>, realToken, hashed ? hashId : '', token, cssVar];
+    })),
+  );
+  const [
+    _, // token
+    __, // hashId
+    // @ts-expect-error
+    realToken,
+  ] = unref(catchToken);
+  const token = computed(() => catchToken.value[0]);
+  const hashId = computed(() => hashed.value ? catchToken.value[1] : '');
+  return [theme as Ref<Theme<SeedToken, AliasToken>>, realToken, hashId, token, cssVar];
 }
 
 export default function useToken() {
