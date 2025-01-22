@@ -236,7 +236,7 @@ defineRender(() => {
           [`${cardCls}-type-overview`]: !isImgPreview.value,
         },
         className,
-        hashId,
+        hashId.value,
         cssVarCls,
       )}
       style={style}

@@ -41,7 +41,7 @@ const mergedCls = computed(() => classnames(
   contextConfig.value.className,
   className,
   rootClassName,
-  hashId,
+  hashId.value,
   cssVarCls,
   {
     [`${prefixCls}-rtl`]: direction.value === 'rtl',

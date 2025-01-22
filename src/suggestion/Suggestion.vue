@@ -117,7 +117,7 @@ defineRender(() => {
           rootClassName,
           className,
           `${prefixCls.value}-wrapper`,
-          hashId,
+          hashId.value,
           cssVarCls,
         )}
         style={{

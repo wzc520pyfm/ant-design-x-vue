@@ -54,7 +54,7 @@ const uploadRef = useTemplateRef<InstanceType<typeof Upload>>('attachments-uploa
 // ============================ Style ============================
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 
-const cssinjsCls = computed(() => classnames(hashId, cssVarCls));
+const cssinjsCls = computed(() => classnames(hashId.value, cssVarCls));
 
 // ============================ Upload ============================
 const [fileList, setFileList] = useState(items);

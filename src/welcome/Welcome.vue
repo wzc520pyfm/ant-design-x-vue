@@ -107,7 +107,7 @@ defineRender(() => {
         contextConfig.value.className,
         className,
         rootClassName,
-        hashId,
+        hashId.value,
         cssVarCls,
         `${prefixCls}-${variant}`,
         {

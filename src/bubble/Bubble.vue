@@ -91,7 +91,7 @@ const mergedCls = computed(() => [
   prefixCls,
   rootClassName,
   contextConfig.value.className,
-  hashId,
+  hashId.value,
   cssVarCls,
   `${prefixCls}-${placement}`,
   {

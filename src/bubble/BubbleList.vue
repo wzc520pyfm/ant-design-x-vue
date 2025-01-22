@@ -130,7 +130,7 @@ defineRender(() => {
     <BubbleContextProvider value={context.value}>
       <div
         {...domProps}
-        class={classnames(listPrefixCls, rootClassName, hashId, cssVarCls, {
+        class={classnames(listPrefixCls, rootClassName, hashId.value, cssVarCls, {
           [`${listPrefixCls}-reach-end`]: scrollReachEnd.value,
         })}
         ref={listRef}
