@@ -1,22 +1,13 @@
 <script setup lang="tsx">
 import { AlipayCircleOutlined, BulbOutlined, CheckCircleOutlined, GithubOutlined, LoadingOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons-vue';
 import { Card, Divider, Flex, Radio, Typography } from 'ant-design-vue';
-import { Bubble, Conversations, Prompts, Sender, Suggestion, ThoughtChain, XProvider, theme as xTheme, type XProviderProps } from 'ant-design-x-vue';
-import { computed, ref } from 'vue';
+import { Bubble, Conversations, Prompts, Sender, Suggestion, ThoughtChain, XProvider, type XProviderProps } from 'ant-design-x-vue';
+import { ref } from 'vue';
 
 defineOptions({ name: 'AXProviderUse' });
 
 const value = ref('');
 const direction = ref<XProviderProps['direction']>('ltr');
-const theme = ref<'dark' | 'light'>('dark');
-
-const algorithm = computed<XProviderProps['theme']['algorithm']>(() => {
-  const algorithmConf = {
-    light: xTheme.defaultAlgorithm,
-    dark: xTheme.darkAlgorithm
-  }
-  return algorithmConf[theme.value];
-});
 
 defineRender(() => {
   return (
@@ -27,16 +18,9 @@ defineRender(() => {
           <Radio.Button value="ltr">LTR</Radio.Button>
           <Radio.Button value="rtl">RTL</Radio.Button>
         </Radio.Group>
-        <Typography.Text>Theme:</Typography.Text>
-        <Radio.Group value={theme.value} onChange={(e) => theme.value = e.target.value}>
-          <Radio.Button value="dark">Dark</Radio.Button>
-          <Radio.Button value="light">Light</Radio.Button>
-        </Radio.Group>
       </Flex>
       <Card>
-        <XProvider direction={direction.value} theme={{
-          algorithm: algorithm.value
-        }}>
+        <XProvider direction={direction.value}>
           <Flex style={{ height: '500px' }} gap={12}>
             <Conversations
               style={{ width: '200px' }}
