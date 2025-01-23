@@ -2,6 +2,7 @@
 import { CommentOutlined } from '@ant-design/icons-vue';
 import { Space, theme } from 'ant-design-vue';
 import { Conversations, type ConversationsProps } from 'ant-design-x-vue';
+import { computed } from 'vue';
 
 
 defineOptions({ name: 'AXConversationsGroupSort' });
@@ -20,11 +21,11 @@ const items: ConversationsProps['items'] = Array.from({ length: 6 }).map((_, ind
 const { token } = theme.useToken();
 
 // Customize the style of the container
-const style = {
+const style = computed(() => ({
   width: '272px',
   background: token.value.colorBgContainer,
   borderRadius: token.value.borderRadius,
-};
+}));
 
 const groupable: ConversationsProps['groupable'] = {
   sort(a, b) {
@@ -47,7 +48,7 @@ const groupable: ConversationsProps['groupable'] = {
 
 defineRender(() => {
   return (
-    <Conversations style={style} groupable={groupable} defaultActiveKey="demo1" items={items} />
+    <Conversations style={style.value} groupable={groupable} defaultActiveKey="demo1" items={items} />
   )
 });
 </script>

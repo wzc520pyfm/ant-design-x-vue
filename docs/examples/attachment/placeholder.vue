@@ -71,11 +71,11 @@ const getPlaceholderFn = (
 const { token } = theme.useToken();
 const items = ref<AttachmentsProps['items']>([]);
 
-const sharedBorderStyle: CSSProperties = {
+const sharedBorderStyle = computed<CSSProperties>(() => ({
   borderRadius: token.value.borderRadius,
   overflow: 'hidden',
   background: token.value.colorBgContainer,
-};
+}));
 
 const sharedAttachmentProps = computed<AttachmentsProps>(() => ({
   beforeUpload: () => false,
@@ -96,7 +96,7 @@ defineRender(() => {
         background: token.value.colorBgContainerDisabled,
       }}
     >
-      <div style={sharedBorderStyle}>
+      <div style={sharedBorderStyle.value}>
         <Attachments
           {...sharedAttachmentProps.value}
           placeholder={getPlaceholderFn({
@@ -107,7 +107,7 @@ defineRender(() => {
         />
       </div>
 
-      <div style={sharedBorderStyle}>
+      <div style={sharedBorderStyle.value}>
         <Attachments
           {...sharedAttachmentProps.value}
           placeholder={getPlaceholderFn(

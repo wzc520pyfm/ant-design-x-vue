@@ -2,6 +2,7 @@
 import { DeleteOutlined, EditOutlined, StopOutlined } from '@ant-design/icons-vue';
 import { App, theme } from 'ant-design-vue';
 import { Conversations, type ConversationsProps } from 'ant-design-x-vue';
+import { computed } from 'vue';
 
 defineOptions({ name: 'AXConversationsWithMenu' })
 
@@ -11,16 +12,16 @@ const items: ConversationsProps['items'] = Array.from({ length: 4 }).map((_, ind
   disabled: index === 3,
 }));
 
+const { message } = App.useApp();
+const { token } = theme.useToken();
+
+const style = computed(() => ({
+  width: '256px',
+  background: token.value.colorBgContainer,
+  borderRadius: token.value.borderRadius,
+}));
+
 const Demo = () => {
-  const { message } = App.useApp();
-  const { token } = theme.useToken();
-
-  const style = {
-    width: '256px',
-    background: token.value.colorBgContainer,
-    borderRadius: token.value.borderRadius,
-  };
-
   const menuConfig: ConversationsProps['menu'] = (conversation) => ({
     items: [
       {
@@ -46,7 +47,7 @@ const Demo = () => {
     },
   });
 
-  return <Conversations defaultActiveKey="item1" menu={menuConfig} items={items} style={style} />
+  return <Conversations defaultActiveKey="item1" menu={menuConfig} items={items} style={style.value} />
 }
 
 
