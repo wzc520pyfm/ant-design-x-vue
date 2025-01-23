@@ -60,7 +60,7 @@ const genAttachmentsStyle: GenerateStyle<AttachmentsToken> = (token) => {
         padding: token.padding,
         position: 'relative',
         backdropFilter: 'blur(10px)',
-        background: token.colorBgPlaceholderHover,
+        // background: token.colorBgPlaceholderHover,
         ...anyBoxSizing,
 
         [`${antCls}-upload-wrapper ${antCls}-upload${antCls}-upload-btn`]: {
