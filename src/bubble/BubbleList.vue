@@ -136,7 +136,7 @@ defineRender(() => {
         ref={listRef}
         onScroll={onInternalScroll}
       >
-        {unref(displayData).map(({ key, ...bubble }) => (
+        {unref(displayData).map(({ key, onTypingComplete: onTypingCompleteBubble, ...bubble }) => (
           <Bubble
             {...bubble}
             key={key}
@@ -149,7 +149,7 @@ defineRender(() => {
             }}
             typing={initialized.value ? bubble.typing : false}
             onTypingComplete={() => {
-              bubble.onTypingComplete?.();
+              onTypingCompleteBubble?.();
               onTypingComplete(key);
             }}
           />
