@@ -59,6 +59,10 @@ const {
   ...rest
 } = defineProps<SenderProps>();
 
+const emit = defineEmits<{
+  'update:value': [value: string];
+}>();
+
 // ============================= MISC =============================
 const { direction, getPrefixCls } = useXProviderContext();
 const prefixCls = computed(() => {
@@ -105,6 +109,7 @@ watch(() => value, () => {
 const triggerValueChange: SenderProps['onChange'] = (nextValue, event) => {
   setInnerValue(nextValue);
 
+  emit('update:value', nextValue);
   if (onChange) {
     onChange(nextValue, event);
   }
