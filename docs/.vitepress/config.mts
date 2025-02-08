@@ -88,53 +88,64 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     logo: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original',
     nav: [
-      { text: '组件', link: '/component/overview' }
+      { text: '组件', link: '/component/overview' },
+      { text: '演示', link: '/playground/independent' },
     ],
 
-    sidebar: [
-      {
-        text: '总览',
-        link: '/component/overview'
-      },
-      {
-        text: '通用',
-        items: [
-          { text: 'Bubble 对话气泡框', link: '/component/bubble' },
-          { text: 'Conversations 管理对话', link: '/component/conversations' }
-        ]
-      },
-      {
-        text: '唤醒',
-        items: [
-          { text: 'Welcome 欢迎', link: '/component/welcome' },
-          { text: 'Prompts 提示集', link: '/component/prompts' }
-        ]
-      },
-      {
-        text: '表达',
-        items: [
-          { text: 'Sender 输入框', link: '/component/sender' },
-          { text: 'Attachment 输入附件', link: '/component/attachment' },
-          { text: 'Suggestion 快捷指令', link: '/component/suggestion' }
-        ]
-      },
-      {
-        text: '确认',
-        items: [
-          { text: 'ThoughtChain 思维链', link: '/component/thought-chain' }
-        ]
-      },
-      {
-        text: '工具',
-        items: [
-          { text: 'useXAgent 模型调度', link: '/component/use-x-agent' },
-          { text: 'useXChat 数据管理', link: '/component/use-x-chat' },
-          { text: 'XStream 流', link: '/component/x-stream' },
-          { text: 'XRequest 请求', link: '/component/x-request' },
-          { text: 'XProvider 全局化配置', link: '/component/x-provider' }
-        ]
-      },
-    ],
+    sidebar: {
+      '/component/': [
+        {
+          text: '总览',
+          link: '/component/overview'
+        },
+        {
+          text: '通用',
+          items: [
+            { text: 'Bubble 对话气泡框', link: '/component/bubble' },
+            { text: 'Conversations 管理对话', link: '/component/conversations' }
+          ]
+        },
+        {
+          text: '唤醒',
+          items: [
+            { text: 'Welcome 欢迎', link: '/component/welcome' },
+            { text: 'Prompts 提示集', link: '/component/prompts' }
+          ]
+        },
+        {
+          text: '表达',
+          items: [
+            { text: 'Sender 输入框', link: '/component/sender' },
+            { text: 'Attachment 输入附件', link: '/component/attachment' },
+            { text: 'Suggestion 快捷指令', link: '/component/suggestion' }
+          ]
+        },
+        {
+          text: '确认',
+          items: [
+            { text: 'ThoughtChain 思维链', link: '/component/thought-chain' }
+          ]
+        },
+        {
+          text: '工具',
+          items: [
+            { text: 'useXAgent 模型调度', link: '/component/use-x-agent' },
+            { text: 'useXChat 数据管理', link: '/component/use-x-chat' },
+            { text: 'XStream 流', link: '/component/x-stream' },
+            { text: 'XRequest 请求', link: '/component/x-request' },
+            { text: 'XProvider 全局化配置', link: '/component/x-provider' }
+          ]
+        },
+      ],
+      '/playground/': [
+        {
+          text: '样板间',
+          items: [
+            { text: '独立式', link: '/playground/independent' }
+          ]
+        },
+      ]
+    },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/wzc520pyfm/ant-design-x-vue' }
