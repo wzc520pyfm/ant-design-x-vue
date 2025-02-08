@@ -26,11 +26,11 @@ import {
   SmileOutlined,
 } from '@ant-design/icons-vue';
 import { Badge, Button, Space, theme } from 'ant-design-vue';
-import { computed, ref, watchEffect, type VNode } from 'vue';
+import { computed, ref, watch, type VNode } from 'vue';
 
 defineOptions({ name: 'PlaygroundIndependent' });
 
-const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
+const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
 
 const renderTitle = (icon: VNode, title: string) => (
   <Space align="start">
@@ -215,11 +215,11 @@ const { onRequest, messages, setMessages } = useXChat({
   agent: agent.value,
 });
 
-watchEffect(() => {
+watch(activeKey, () => {
   if (activeKey.value !== undefined) {
     setMessages([]);
   }
-});
+}, { immediate: true });
 
 // ==================== Event ====================
 const onSubmit = (nextContent: string) => {
