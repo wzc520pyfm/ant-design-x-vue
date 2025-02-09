@@ -1,5 +1,5 @@
 import useMergedState from '../_util/hooks/useMergedState';
-import { computed, ref, watchEffect, MaybeRefOrGetter, toValue, onWatcherCleanup } from 'vue';
+import { computed, ref, watchEffect, type MaybeRefOrGetter, toValue, onWatcherCleanup } from 'vue';
 
 // Ensure that the SpeechRecognition API is available in the browser
 let SpeechRecognition: any;

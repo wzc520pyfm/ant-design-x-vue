@@ -1,4 +1,5 @@
 import type { AvatarProps } from 'ant-design-vue';
+import type { AvoidValidation } from '../type-utility';
 import type { CSSProperties, HTMLAttributes, VNode } from 'vue';
 
 export interface TypingOption {
@@ -31,7 +32,7 @@ export interface BubbleProps extends /* @vue-ignore */ Omit<HTMLAttributes, 'con
   avatar?: Partial<_AvatarProps> | VNode;
   placement?: 'start' | 'end';
   loading?: boolean;
-  typing?: boolean | TypingOption;
+  typing?: AvoidValidation<TypingOption | boolean>;
   content?: VNode | object | string;
   messageRender?: (content: string) => VNode | string;
   loadingRender?: () => VNode;
@@ -74,5 +75,5 @@ export interface BubbleListProps extends /* @vue-ignore */ HTMLAttributes {
   rootClassName?: string;
   items?: BubbleDataType[];
   autoScroll?: boolean;
-  roles?: RolesType;
+  roles?: AvoidValidation<RolesType>;
 }

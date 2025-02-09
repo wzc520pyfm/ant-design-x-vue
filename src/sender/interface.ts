@@ -4,6 +4,7 @@ import type { ConfigProviderProps } from "ant-design-vue/es/config-provider/cont
 import type { CSSProperties, VNode, } from "vue";
 import type { AllowSpeech } from "./useSpeech";
 import type { InputRef } from "ant-design-vue/es/vc-input/inputProps";
+import type { AvoidValidation } from '../type-utility';
 import SendButton from "./components/SendButton.vue";
 import ClearButton from "./components/ClearButton.vue";
 import LoadingButton from "./components/LoadingButton.vue";
@@ -60,7 +61,7 @@ export interface SenderProps extends Pick<TextAreaProps, 'placeholder'> {
   style?: CSSProperties;
   className?: string;
   actions?: VNode | ActionsRender;
-  allowSpeech?: AllowSpeech;
+  allowSpeech?: AvoidValidation<AllowSpeech>;
   prefix?: VNode;
   header?: VNode;
 }
