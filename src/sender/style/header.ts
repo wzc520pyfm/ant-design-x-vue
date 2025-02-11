@@ -1,5 +1,5 @@
-import type { GenerateStyle } from '../../theme/cssinjs-utils';
 import type { SenderToken } from '.';
+import type { GenerateStyle } from '../../theme/cssinjs-utils';
 
 const genSenderHeaderStyle: GenerateStyle<SenderToken> = (token) => {
   const { componentCls, calc } = token;
@@ -12,7 +12,6 @@ const genSenderHeaderStyle: GenerateStyle<SenderToken> = (token) => {
         borderBottomWidth: token.lineWidth,
         borderBottomStyle: 'solid',
         borderBottomColor: token.colorBorder,
-
         // ======================== Header ========================
         '&-header': {
           background: token.colorFillAlter,
@@ -48,10 +47,30 @@ const genSenderHeaderStyle: GenerateStyle<SenderToken> = (token) => {
             display: 'none',
           },
         },
+
+        // ========================= CollapseTransition ========================
+        '&-collapse-transition': {
+          '&-enter-active': {
+            transition: ['max-height', 'padding-top', 'padding-bottom']
+              .map(
+                (prop) =>
+                  `${prop} ${token.motionDurationSlow} ${token.motionEaseInOut}`,
+              )
+              .join(','),
+          },
+
+          '&-leave-active': {
+            transition: ['max-height', 'padding-top', 'padding-bottom']
+              .map(
+                (prop) =>
+                  `${prop} ${token.motionDurationSlow} ${token.motionEaseInOut}`,
+              )
+              .join(','),
+          },
+        },
       },
     },
   };
 };
 
 export default genSenderHeaderStyle;
-
