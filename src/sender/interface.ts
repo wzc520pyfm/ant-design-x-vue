@@ -26,13 +26,14 @@ export type ActionsRender = (
   },
 ) => VNode;
 
-export interface SenderProps extends Pick<TextAreaProps, 'placeholder'> {
+export interface SenderProps {
   onKeyPress?: KeyboardEventHandler;
 
   prefixCls?: string;
   defaultValue?: string;
   value?: string;
   loading?: boolean;
+  placeholder?: TextAreaProps['placeholder'];
   readOnly?: boolean;
   submitType?: SubmitType;
   disabled?: boolean;
