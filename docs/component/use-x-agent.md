@@ -30,7 +30,7 @@ use-x-agent/custom
 ```tsx | pure
 type useXAgent<AgentMessage> = (
   config: XAgentConfigPreset | XAgentConfigCustom<AgentMessage>,
-) => {Agent};
+) => [Agent];
 ```
 
 ### XAgentConfigPreset
