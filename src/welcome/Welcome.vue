@@ -5,7 +5,7 @@ import type { WelcomeProps } from './interface';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 
 import useStyle from './style';
-import { computed } from 'vue';
+import { computed, type VNode } from 'vue';
 import { Flex, Typography } from 'ant-design-vue';
 
 defineOptions({ name: 'AXWelcome' });
@@ -28,6 +28,13 @@ const {
   extra,
 } = defineProps<WelcomeProps>();
 
+const slots = defineSlots<{
+  title?(): VNode | string;
+  description?(): VNode | string;
+  icon?(): VNode | string;
+  extra?(): VNode | string;
+}>();
+
 // ============================= MISC =============================
 const { direction, getPrefixCls } = useXProviderContext();
 const prefixCls = getPrefixCls('welcome', customizePrefixCls);
@@ -40,13 +47,14 @@ const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 
 // ============================= Icon =============================
 const iconNode = computed(() => {
-  if (!icon) {
+  const _icon = slots.icon ? slots.icon() : icon;
+  if (!_icon) {
     return null;
   }
 
-  let iconEle = icon;
-  if (typeof icon === 'string' && icon.startsWith('http')) {
-    iconEle = <img src={icon} alt="icon" />;
+  let iconEle = _icon;
+  if (typeof _icon === 'string' && _icon.startsWith('http')) {
+    iconEle = <img src={_icon} alt="icon" />;
   }
   return (
     <div
@@ -59,7 +67,8 @@ const iconNode = computed(() => {
 });
 
 const titleNode = computed(() => {
-  if (!title) {
+  const _title = slots.title ? slots.title() : title;
+  if (!_title) {
     return null;
   }
 
@@ -74,13 +83,21 @@ const titleNode = computed(() => {
       )}
       style={styles.title}
     >
-      {title}
+      {_title}
     </Typography.Title>
   );
 });
 
+const descriptionNode = computed(() => {
+  if (slots.description) {
+    return slots.description();
+  }
+  return description;
+})
+
 const extraNode = computed(() => {
-  if (!extra) {
+  const _extra = slots.extra ? slots.extra() : extra;
+  if (!_extra) {
     return null;
   }
 
@@ -93,7 +110,7 @@ const extraNode = computed(() => {
       )}
       style={styles.extra}
     >
-      {extra}
+      {_extra}
     </div>
   );
 });
@@ -122,7 +139,7 @@ defineRender(() => {
       {/* Content */}
       <Flex vertical class={`${prefixCls}-content-wrapper`}>
         {/* Title */}
-        {extra ? (
+        {(slots.extra || extra) ? (
           <Flex align="flex-start" class={`${prefixCls}-title-wrapper`}>
             {titleNode.value}
             {extraNode.value}
@@ -132,7 +149,7 @@ defineRender(() => {
         )}
 
         {/* Description */}
-        {description && (
+        {descriptionNode.value && (
           <Typography.Text
             // @ts-expect-error
             class={classnames(
@@ -142,7 +159,7 @@ defineRender(() => {
             )}
             style={styles.description}
           >
-            {description}
+            {descriptionNode.value}
           </Typography.Text>
         )}
       </Flex>
