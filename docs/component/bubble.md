@@ -139,7 +139,7 @@ bubble/gpt-vis
 | header | 头部面板 | - |
 | footer | 底部内容 | - |
 | loading | loading占位 | - |
-| message | 消息内容 | { content: string } |
+| message | 消息内容 | \{ content: string \} |
 
 ### Bubble.List
 
