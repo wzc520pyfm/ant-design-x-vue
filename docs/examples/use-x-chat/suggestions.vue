@@ -66,7 +66,7 @@ const content = ref('');
 const senderLoading = ref(false);
 
 // Agent for request
-const { agent } = useXAgent<AgentMessage>({
+const [ agent ] = useXAgent<AgentMessage>({
   request: async ({ message }, { onSuccess }) => {
     senderLoading.value = true;
     await sleep();

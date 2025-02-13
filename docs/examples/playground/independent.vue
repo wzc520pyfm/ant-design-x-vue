@@ -202,7 +202,7 @@ const attachedFiles = ref<AttachmentsProps['items']>([]);
 const agentRequestLoading = ref(false);
 
 // ==================== Runtime ====================
-const { agent } = useXAgent({
+const [ agent ] = useXAgent({
   request: async ({ message }, { onSuccess }) => {
     agentRequestLoading.value = true;
     await sleep();
