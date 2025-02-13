@@ -35,6 +35,16 @@ const {
   ...otherHtmlProps
 } = defineProps<BubbleProps>();
 
+const slots = defineSlots<{
+  avatar?(): VNode;
+  header?(): VNode | string;
+  footer?(): VNode | string;
+  loading?(): VNode;
+  message?(props?: {
+    content: string;
+  }): VNode | string;
+}>();
+
 const content = ref(contentProp);
 
 watch(() => contentProp, () => {
@@ -98,19 +108,32 @@ const mergedCls = computed(() => [
     [`${prefixCls}-rtl`]: direction.value === 'rtl',
   },
   {
-    [`${prefixCls}-typing`]: isTyping.value && !loading && !messageRender && !typingSuffix.value,
+    [`${prefixCls}-typing`]: isTyping.value && !loading && !messageRender && !slots.message && !typingSuffix.value,
   },
 ]);
 
 // ============================ Avatar ============================
-const avatarNode = computed(() => isVNode(avatar) ? avatar : <Avatar {...avatar} />);
+const avatarNode = computed(() => {
+  if (slots.avatar) {
+    return slots.avatar();
+  }
+  return isVNode(avatar) ? avatar : <Avatar {...avatar} />;
+});
 
 // =========================== Content ============================
-const mergedContent = computed(() => messageRender ? messageRender(typedContent.value as any) : typedContent.value);
+const mergedContent = computed(() => {
+  if (slots.message) {
+    return slots.message({ content: typedContent.value as any});
+  }
+  return messageRender ? messageRender(typedContent.value as any) : typedContent.value
+});
 
 // ============================ Render ============================
 const contentNode = computed<VNode>(() => {
   if (loading) {
+    if (slots.loading) {
+      return slots.loading();
+    }
     return loadingRender ? loadingRender() : <Loading prefixCls={prefixCls} />;
   } else {
     return (
@@ -140,10 +163,13 @@ const fullContent = computed<VNode>(() => {
       {toValue(contentNode)}
     </div>
   );
-  if (header || footer) {
+  const _header = slots.header ? slots.header() : header;
+  const _footer = slots.footer ? slots.footer() : footer;
+
+  if (_header || _footer) {
     return (
       <div class={`${prefixCls}-content-wrapper`}>
-        {header && (
+        {_header && (
           <div
             class={[
               `${prefixCls}-header`,
@@ -155,11 +181,11 @@ const fullContent = computed<VNode>(() => {
               ...styles.header,
             }}
           >
-            {header}
+            {_header}
           </div>
         )}
         {_content}
-        {footer && (
+        {_footer && (
           <div
             class={[
               `${prefixCls}-footer`,
@@ -171,7 +197,7 @@ const fullContent = computed<VNode>(() => {
               ...styles.footer,
             }}
           >
-            {footer}
+            {_footer}
           </div>
         )}
       </div>
