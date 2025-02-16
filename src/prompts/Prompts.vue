@@ -4,7 +4,7 @@ import useStyle from './style';
 import type { PromptsProps } from './interface';
 import { useXProviderContext } from '../x-provider';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
-import { computed } from 'vue';
+import { computed, type VNode } from 'vue';
 import { Typography } from 'ant-design-vue';
 import Prompts from '.';
 
@@ -24,6 +24,10 @@ const {
   style,
   ...htmlProps
 } = defineProps<PromptsProps>();
+
+const slots = defineSlots<{
+  title?(): VNode | string;
+}>();
 
 // ============================ PrefixCls ============================
 const { getPrefixCls, direction } = useXProviderContext();
@@ -56,6 +60,14 @@ const mergedListCls = computed(() => classnames(
   { [`${prefixCls}-list-vertical`]: vertical },
 ));
 
+// ============================ Nodes ============================
+const titleNode = computed(() => {
+  if (slots.title) {
+    return slots.title();
+  }
+  return title;
+});
+
 defineRender(() => {
   return wrapCSSVar(
     <div
@@ -68,7 +80,7 @@ defineRender(() => {
       }}
     >
       {/* Title */}
-      {title && (
+      {titleNode.value && (
         <Typography.Title
           level={5}
           // @ts-expect-error
@@ -79,7 +91,7 @@ defineRender(() => {
           )}
           style={{ ...contextConfig.value.styles.title, ...styles.title }}
         >
-          {title}
+          {titleNode.value}
         </Typography.Title>
       )}
       {/* Prompt List */}

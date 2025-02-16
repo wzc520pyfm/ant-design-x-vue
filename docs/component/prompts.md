@@ -81,6 +81,12 @@ prompts/nest
 type SemanticType = 'list' | 'item' | 'content' | 'title' | 'subList' | 'subItem';
 ```
 
+### Prompts Slots
+
+| 插槽名 | 说明 |
+| --- | --- |
+| title | 显示在提示列表顶部的标题 |
+
 ### PromptProps
 
 | 属性        | 说明                         | 类型            | 默认值  | 版本 |
