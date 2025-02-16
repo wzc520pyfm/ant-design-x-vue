@@ -24,7 +24,7 @@ export interface PlaceholderConfig {
   description?: VNode | string;
 }
 
-export type PlaceholderType = PlaceholderConfig | VNode;
+export type PlaceholderType = PlaceholderConfig | VNode | string;
 
 export interface PlaceholderProps {
   prefixCls: string;
