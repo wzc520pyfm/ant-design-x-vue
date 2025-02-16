@@ -4,6 +4,7 @@
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![bundle][bundle-src]][bundle-href]
 [![Github Actions][github-actions-src]][github-actions-href]
+![Netlify Build][netlify-build-src]
 [![License][license-src]][license-href]
 
 Ant Design X For Vue.（WIP） 疯狂研发中🔥
@@ -95,5 +96,6 @@ MIT
 [bundle-href]: https://bundlephobia.com/result?p=ant-design-x-vue
 [github-actions-src]: https://img.shields.io/github/actions/workflow/status/wzc520pyfm/ant-design-x-vue/ci.yml?branch=main&style=flat
 [github-actions-href]: https://github.com/wzc520pyfm/ant-design-x-vue/actions?query=workflow%3Aci
+[netlify-build-src]: https://img.shields.io/netlify/cb006e4e-afce-4c3e-9652-6f8a065b5b6e
 [license-src]: https://img.shields.io/github/license/wzc520pyfm/ant-design-x-vue?style=flat
 [license-href]: https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/LICENSE
