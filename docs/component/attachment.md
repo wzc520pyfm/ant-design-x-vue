@@ -69,6 +69,12 @@ interface PlaceholderType {
 }
 ```
 
+### Attachments Slots
+
+| 插槽名 | 说明 | 类型 |
+| --- | --- | --- |
+| placeholder | 没有文件时的占位信息 | \{ type: "inline" \| "drop" \} |
+
 ### Attachments Expose
 
 | 属性          | 说明             | 类型                 | 版本 |
