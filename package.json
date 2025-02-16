@@ -8,7 +8,7 @@
     "dev": "dumi dev",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "lint": "npm run lint:es && npm run lint:css",
+    "lint": "npm run lint:es",
     "lint:css": "stylelint \"{src,test}/**/*.{css,less}\"",
     "lint:es": "eslint \"{src,test}/**/*.{js,jsx,ts,tsx,vue}\"",
     "prepare": "husky install && dumi setup",

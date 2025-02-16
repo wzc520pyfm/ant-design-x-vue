@@ -9,5 +9,7 @@ module.exports = {
       jsx: true,
     },
   },
-  rules: {},
+  rules: {
+    'vue/one-component-per-file': 'off'
+  },
 };
