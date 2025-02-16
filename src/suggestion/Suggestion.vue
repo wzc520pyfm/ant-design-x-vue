@@ -4,7 +4,7 @@ import type { RenderChildrenProps, SuggestionItem, SuggestionProps } from './int
 import { useXProviderContext } from '../x-provider';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import useStyle from './style';
-import { computed } from 'vue';
+import { computed, type VNode } from 'vue';
 import useState from '../_util/hooks/use-state';
 import { Cascader, type CascaderProps } from 'ant-design-vue';
 import useActive from './useActive';
@@ -23,6 +23,10 @@ const {
   onSelect,
   block,
 } = defineProps<SuggestionProps<T>>();
+
+const slots = defineSlots<{
+  default?(props?: RenderChildrenProps<T>): VNode;
+}>();
 
 // ============================= MISC =============================
 const { direction, getPrefixCls } = useXProviderContext();
@@ -88,7 +92,12 @@ const onInternalChange = (valuePath: string[]) => {
 const [activePath, onKeyDown] = useActive(itemList, mergedOpen, isRTL, onInternalChange, onClose);
 
 // =========================== Children ===========================
-const childNode = computed(() => children?.({ onTrigger, onKeyDown }));
+const childNode = computed(() => {
+  if (slots.default) {
+    return slots.default({ onTrigger, onKeyDown });
+  }
+  return children?.({ onTrigger, onKeyDown });
+});
 
 defineRender(() => {
   return wrapCSSVar(
