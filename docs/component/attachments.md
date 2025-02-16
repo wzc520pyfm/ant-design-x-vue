@@ -81,7 +81,7 @@ interface PlaceholderType {
 | 属性 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | item | 附件，同 Upload `UploadFile` | Attachment | - | - |
-| onRemove | 是否禁用 | (item: Attachment) => void | - | - |
+| onRemove | 附件移除时的回调函数 | (item: Attachment) => void | - | - |
 
 ## Semantic DOM
 
