@@ -92,6 +92,7 @@ export interface AttachmentsProps extends Omit<UploadProps, 'fileList'> {
   items?: Attachment[];
   overflow?: FileListProps['overflow'];
 
+  beforeUpload?: UploadProps['beforeUpload'];
   onChange?: (info: UploadChangeParam<UploadFile>) => void;
 }
 
