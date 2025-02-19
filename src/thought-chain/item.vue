@@ -84,6 +84,7 @@ defineRender(() => {
             }}
             // @ts-expect-error
             class={`${itemCls.value}-title`}
+            content={title.value as string}
           >
             {enableCollapse.value &&
               content.value &&
@@ -98,7 +99,6 @@ defineRender(() => {
                   rotate={contentOpen.value ? 90 : 0}
                 />
               ))}
-            {title.value}
           </Typography.Text>
           {/* Description */}
           {description.value && (
@@ -112,9 +112,8 @@ defineRender(() => {
                 },
               }}
               type="secondary"
-            >
-              {description.value}
-            </Typography.Text>
+              content={description.value as string}
+            ></Typography.Text>
           )}
         </div>
         {/* Extra */}
