@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, ref, useTemplateRef, watch } from 'vue';
+import { computed, ref, useTemplateRef, type VNode, watch } from 'vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import type { Attachment, AttachmentsProps, AttachmentsRef, PlaceholderProps } from './interface';
@@ -32,6 +32,10 @@ const {
   styles = {},
   ...uploadProps
 } = defineProps<AttachmentsProps>();
+
+const slots = defineSlots<{
+  placeholder?(props?: { type: "inline" | "drop" }): VNode | string;
+}>();
 
 // ============================ PrefixCls ============================
 const { getPrefixCls, direction } = useXProviderContext();
@@ -86,7 +90,12 @@ const getPlaceholderNode = (
   props?: Pick<PlaceholderProps, 'style'>,
   ref?: InstanceType<typeof Upload>,
 ) => {
-  const placeholderContent = typeof placeholder === 'function' ? placeholder(type) : placeholder;
+  const placeholderContent =
+    slots.placeholder
+      ? slots.placeholder({type})
+      : typeof placeholder === 'function'
+        ? placeholder(type)
+        : placeholder;
 
   return (
     <PlaceholderUploader
