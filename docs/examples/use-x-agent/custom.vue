@@ -17,7 +17,7 @@ const log = (text: string) => {
   lines.value = [...lines.value, text];
 };
 
-const { agent } = useXAgent({
+const [ agent ] = useXAgent({
   request: ({ message }, { onUpdate, onSuccess }) => {
     let times = 0;
 

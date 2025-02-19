@@ -97,8 +97,7 @@ export default function useXAgent<Message = string>(config: XAgentConfig<Message
         ...restConfig,
       }));
 
-  // todo: return obj or arr ?
-  return {
+  return [
     agent
-  }
+  ]
 }

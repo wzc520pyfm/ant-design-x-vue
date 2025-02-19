@@ -32,7 +32,7 @@ const setContent = (v: string) => {
 }
 
 // Agent for request
-const {agent} = useXAgent({
+const [agent] = useXAgent({
   request: async ({ message }, { onSuccess, onError }) => {
     senderLoading.value = true;
     await sleep();

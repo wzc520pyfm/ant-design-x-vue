@@ -62,7 +62,7 @@ watchEffect(() => {
 });
 
 // Agent for request
-const { agent } = useXAgent({
+const [ agent ] = useXAgent({
   request: async (_, { onSuccess, onUpdate }) => {
     senderLoading.value = true;
     const stream = XStream({
