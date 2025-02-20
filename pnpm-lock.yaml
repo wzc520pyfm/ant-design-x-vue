@@ -44,7 +44,7 @@ importers:
         version: 2.4.14(dumi@2.4.17(@babel/core@7.26.9)(@swc/helpers@0.5.1)(@types/node@22.10.2)(@types/react@18.3.18)(eslint@8.57.1)(lightningcss@1.22.1)(prettier@2.8.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@3.29.5)(stylelint@14.16.1)(terser@5.39.0)(type-fest@1.4.0)(typescript@5.5.4)(webpack@5.97.1(@swc/core@1.9.2(@swc/helpers@0.5.1))(esbuild@0.24.2)))(type-fest@1.4.0)(typescript@5.5.4)(vue@3.5.13(typescript@5.5.4))(webpack@5.97.1(@swc/core@1.9.2(@swc/helpers@0.5.1))(esbuild@0.24.2))
       '@eslint/js':
         specifier: ^9.11.1
-        version: 9.17.0
+        version: 9.20.0
       '@types/markdown-it':
         specifier: ^14.1.2
         version: 14.1.2
@@ -1468,8 +1468,8 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@eslint/js@9.17.0':
-    resolution: {integrity: sha512-Sxc4hqcs1kTu0iID3kcZDW3JHq2a77HO9P8CP6YEA/FpH3Ll8UXE2r/86Rz9YJLKme39S9vU5OWNjC6Xl0Cr3w==}
+  '@eslint/js@9.20.0':
+    resolution: {integrity: sha512-iZA07H9io9Wn836aVTytRaNqh00Sad+EamwOVJT12GTLw1VGMFV/4JaME+JjLtr9fiGaoWgYnS54wrfWsSs4oQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@floating-ui/core@0.6.2':
@@ -10417,7 +10417,7 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@eslint/js@9.17.0': {}
+  '@eslint/js@9.20.0': {}
 
   '@floating-ui/core@0.6.2': {}
 
