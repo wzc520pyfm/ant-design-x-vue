@@ -1,6 +1,6 @@
 <script setup lang="tsx" generic="T = any">
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons-vue';
-import type { ButtonProps } from 'ant-design-vue';
+import type { AntdButtonProps } from '../../interface';
 import ActionButton from '../ActionButton/index.vue';
 import { useActionButtonContextInject } from '../ActionButton/context';
 
@@ -9,7 +9,7 @@ import { computed } from 'vue';
 
 defineOptions({ name: 'AXSenderSpeechButton' });
 
-const props = defineProps<ButtonProps>();
+const { disabled = undefined, ...restProps} = defineProps<AntdButtonProps>();
 
 const context = useActionButtonContextInject();
 
@@ -35,7 +35,8 @@ defineRender(() => {
     type='primary'
     // color="primary"
     // variant="text"
-    {...props}
+    disabled={disabled}
+    {...restProps}
     style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
     action="onSpeech"
   >

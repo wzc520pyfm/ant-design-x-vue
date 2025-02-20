@@ -1,7 +1,8 @@
-import type { ButtonProps, Input, TextAreaProps } from "ant-design-vue";
+import type { ButtonProps, TextAreaProps } from "ant-design-vue";
+import { Input } from "ant-design-vue";
 import type { ChangeEvent, ClipboardEventHandler, KeyboardEventHandler } from "ant-design-vue/es/_util/EventInterface";
 import type { ConfigProviderProps } from "ant-design-vue/es/config-provider/context";
-import type { CSSProperties, VNode, } from "vue";
+import type { CSSProperties, VNode } from "vue";
 import type { AllowSpeech } from "./useSpeech";
 import type { InputRef } from "ant-design-vue/es/vc-input/inputProps";
 import type { AvoidValidation } from '../type-utility';
@@ -108,6 +109,26 @@ export interface ActionButtonContextProps {
   disabled?: boolean;
 }
 
-export interface ActionButtonProps extends ButtonProps {
+// refer from the ButtonProps of ant-design-vue
+export interface AntdButtonProps {
+  prefixCls?: ButtonProps['prefixCls'];
+  type?: ButtonProps['type'];
+  htmlType?: ButtonProps['htmlType'];
+  shape?: ButtonProps['shape'];
+  size?: ButtonProps['size'];
+  loading?: ButtonProps['loading'];
+  disabled?: ButtonProps['disabled'];
+  ghost?: ButtonProps['ghost'];
+  block?: ButtonProps['block'];
+  danger?: ButtonProps['danger'];
+  icon?: ButtonProps['icon'];
+  href?: ButtonProps['href'];
+  target?: ButtonProps['target'];
+  title?: ButtonProps['title'];
+  onClick?: ButtonProps['onClick'];
+  onMousedown?: ButtonProps['onMousedown'];
+}
+
+export interface ActionButtonProps extends AntdButtonProps {
   action: 'onSend' | 'onClear' | 'onCancel' | 'onSpeech';
 }

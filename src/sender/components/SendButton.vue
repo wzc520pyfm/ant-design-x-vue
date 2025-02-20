@@ -1,17 +1,18 @@
 <script setup lang="tsx">
-import type { ButtonProps } from 'ant-design-vue';
+import type { AntdButtonProps } from '../interface';
 import ActionButton from './ActionButton/index.vue';
 import { ArrowUpOutlined } from '@ant-design/icons-vue';
 
 defineOptions({ name: 'AXSenderLoadingButton' });
 
-const props = defineProps<ButtonProps>();
+const { disabled = undefined, ...restProps} = defineProps<AntdButtonProps>();
 
 defineRender(() => {
   return <ActionButton
     type="primary"
     shape="circle"
-    {...props}
+    disabled={disabled}
+    {...restProps}
     action="onSend"
   >
     <ArrowUpOutlined />
