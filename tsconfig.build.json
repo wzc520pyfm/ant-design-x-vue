@@ -14,7 +14,6 @@
     "baseUrl": "./",
     "types": ["unplugin-vue-macros/macros-global", "node"],
     "paths": {
-      "@@/*": [".dumi/tmp/*"],
       "ant-design-x-vue": ["src/index.ts"],
       "ant-design-x-vue/*": ["src/*"],
     }
