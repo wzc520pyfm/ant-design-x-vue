@@ -2,6 +2,16 @@
   "name": "ant-design-x-vue",
   "version": "0.1.4",
   "description": "Craft AI-driven interfaces effortlessly",
+  "keywords": [
+    "AI",
+    "Copilot",
+    "ant",
+    "antdv",
+    "components",
+    "framework",
+    "chat-ui",
+    "vue"
+  ],
   "scripts": {
     "build": "vite build && vue-tsc --project ./tsconfig.build.json",
     "build:watch": "vite build --watch",
