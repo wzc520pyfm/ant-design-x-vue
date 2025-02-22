@@ -9,6 +9,7 @@ defineOptions({ name: 'AXSenderActionButton' });
 
 const {
   action,
+  type = "text",
   disabled: propDisable = undefined,
   onClick: outClick,
   ...restProps
@@ -37,7 +38,7 @@ const onClick = computed(() => {
 defineRender(() => {
   return (
     <Button
-      type="text"
+      type={type}
       {...restProps}
       onClick={(e) => {
         if (!mergedDisabled.value) {

@@ -5,12 +5,12 @@ import { ArrowUpOutlined } from '@ant-design/icons-vue';
 
 defineOptions({ name: 'AXSenderLoadingButton' });
 
-const { disabled = undefined, ...restProps} = defineProps<AntdButtonProps>();
+const { type = "primary", shape = "circle", disabled = undefined, ...restProps } = defineProps<AntdButtonProps>();
 
 defineRender(() => {
   return <ActionButton
-    type="primary"
-    shape="circle"
+    type={type}
+    shape={shape}
     disabled={disabled}
     {...restProps}
     action="onSend"

@@ -1,10 +1,12 @@
 <script setup lang="tsx">
 import { SendOutlined } from '@ant-design/icons-vue';
 import { type ButtonProps, App, Flex, Tooltip } from 'ant-design-vue';
-import { Sender } from 'ant-design-x-vue';
+import { Sender, theme } from 'ant-design-x-vue';
 import { type CSSProperties, onWatcherCleanup, ref, watch } from 'vue';
 
 defineOptions({ name: 'AXSenderSendStyle' });
+
+const { token } = theme.useToken();
 
 const value = ref('Ask something?');
 const loading = ref(false);
@@ -80,6 +82,7 @@ const Demo = () => {
         // variant: 'text',
         placeholder: 'Change button icon',
         // color: 'primary',
+        style: { color: token.value.colorPrimary },
         icon: <SendOutlined />,
         shape: 'default',
       })}

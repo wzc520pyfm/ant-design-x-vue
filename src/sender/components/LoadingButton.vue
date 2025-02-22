@@ -4,21 +4,23 @@ import classNames from 'classnames';
 import ActionButton from './ActionButton/index.vue';
 import StopLoadingIcon from '../StopLoading.vue'
 import { useActionButtonContextInject } from './ActionButton/context';
+import { theme } from 'ant-design-vue';
 
 defineOptions({ name: 'AXSenderLoadingButton' });
 
-const { disabled = undefined, ...restProps} = defineProps<AntdButtonProps>();
+const { type = "primary", shape = "circle", icon = null, disabled = undefined, ...restProps } = defineProps<AntdButtonProps>();
 const context = useActionButtonContextInject()
+const { token } = theme.useToken();
 
 defineRender(() => {
   return <ActionButton
-    icon={null}
-    type='primary'
+    type={type}
     // color="primary"
     // variant="text"
     disabled={disabled}
-    shape="circle"
+    shape={shape}
     {...restProps}
+    style={{ backgroundColor: 'transparent', color: token.value.colorPrimary }}
     class={classNames(`${context.value.prefixCls}-loading-button`)}
     action="onCancel"
   >
