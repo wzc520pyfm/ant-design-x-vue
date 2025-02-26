@@ -93,7 +93,7 @@ export default defineConfig({
       {
         text: '更多',
         items: [
-          { text: 'Ant Design X Of React', link: 'https://x.ant.design/index-cn' },
+          { text: 'Ant Design X of React', link: 'https://x.ant.design/index-cn' },
         ]
       }
     ],
