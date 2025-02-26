@@ -13,11 +13,11 @@ Ant Design X For Vue. 🔥
 
 ## Usage
 
-First, install `ant-design-vue` and `ant-design-x-vue`:
+First, install packages `ant-design-vue` and `ant-design-x-vue` to you project, you can run below commands in your project directory:
 
 > pnpm add ant-design-vue ant-design-x-vue
 
-Then, introduce component:
+Second, import components from lib ant-design-x-vue:
 
 ```ts
 <script setup lang="ts">
@@ -62,8 +62,10 @@ $ pnpm lint
 ## Contributing
 
 您的贡献至关重要！
+Would you like to change the world with us?
 
 您可以参考[Roadmap](https://github.com/wzc520pyfm/ant-design-x-vue/issues/1)，从中挑选您感兴趣的部分。
+Please reference the [Roadmap](https://github.com/wzc520pyfm/ant-design-x-vue/issues/1) and pick up any one you like.
 
 ## Contributors
 
