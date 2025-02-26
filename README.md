@@ -13,11 +13,11 @@ Ant Design X For Vue. 🔥
 
 ## Usage
 
-First, install packages `ant-design-vue` and `ant-design-x-vue` to you project, you can run below commands in your project directory:
+First, install packages `ant-design-vue` and `ant-design-x-vue` to your project, you can run following commands in your project directory:
 
 > pnpm add ant-design-vue ant-design-x-vue
 
-Second, import components from lib ant-design-x-vue:
+Second, import components from `ant-design-vue` library:
 
 ```ts
 <script setup lang="ts">
