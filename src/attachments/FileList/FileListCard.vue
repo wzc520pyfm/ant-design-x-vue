@@ -185,7 +185,7 @@ const content = computed(() => {
     // Preview Image style
     return (
       <>
-        <img alt="preview" src={previewUrl.value} />
+        {previewUrl.value && <img alt="preview" src={previewUrl.value} />}
 
         {status.value !== 'done' && (
           <div class={`${cardCls}-img-mask`}>
