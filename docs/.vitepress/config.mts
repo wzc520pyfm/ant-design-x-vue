@@ -90,6 +90,7 @@ export default defineConfig({
     nav: [
       { text: '组件', link: '/component/overview' }
     ],
+    outline:[2,3],
 
     sidebar: [
       {
