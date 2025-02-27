@@ -33,6 +33,14 @@ attachments/overflow
 
 :::
 
+### 组合示例
+
+:::demo 配合 Sender.Header 使用，在对话中插入附件。
+
+attachments/with-sender
+
+:::
+
 ### 文件卡片
 
 :::demo 单独的文件卡片，用于一些展示场景。
