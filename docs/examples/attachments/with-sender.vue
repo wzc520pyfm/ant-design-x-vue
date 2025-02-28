@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { CloudUploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
-import { App, Button, Flex } from 'ant-design-vue';
+import { App, Button, Flex, Badge } from 'ant-design-vue';
 import { Attachments, Sender } from 'ant-design-x-vue';
 import { computed, ref } from 'vue';
 
@@ -47,7 +47,7 @@ const Demo = () => {
   ));
 
   const badgeNode = computed(() => (
-    <Badge dot={items.value.length > 0 && !headerOpen.value}>
+    <Badge dot={items.value.length > 0 && !open.value}>
       <Button onClick={() => open.value = !open.value} icon={<LinkOutlined />} />
     </Badge>
   ))
