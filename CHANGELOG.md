@@ -1,6 +1,33 @@
 # Changelog
 
 
+## v1.0.1
+
+[compare changes](https://undefined/undefined/compare/v1.0.0...v1.0.1)
+
+### 🚀 Enhancements
+
+- **theme:** More detailed documentation is displayed (#87)
+
+### 🩹 Fixes
+
+- **conversations:** Fix item label render err when it is a vnode (#92)
+
+### 📖 Documentation
+
+- Add ant design x spec link (#85)
+- Add ant design x link in nav (#86)
+
+### 🏡 Chore
+
+- Enhance readme for English (#89)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Wangyonghui0394 ([@wangyonghui0394](http://github.com/wangyonghui0394))
+- 雨溪 ([@yuxi-ovo](http://github.com/yuxi-ovo))
+
 ## v1.0.0
 
 [compare changes](https://undefined/undefined/compare/v0.1.4...v1.0.0)
