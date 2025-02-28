@@ -9,7 +9,7 @@ import useDisplayData from './hooks/useDisplayData';
 import useListData from './hooks/useListData';
 import type { BubbleListProps } from './interface';
 import useStyle from './style';
-import { computed, type HTMLAttributes, mergeProps, onWatcherCleanup, ref, unref, useAttrs, watch, watchEffect } from 'vue';
+import { computed, type HTMLAttributes, mergeProps, onWatcherCleanup, ref, unref, useAttrs, watch, watchEffect, nextTick } from 'vue';
 import useState from '../_util/hooks/use-state';
 import BubbleContextProvider from './context';
 
@@ -85,10 +85,12 @@ const onInternalScroll = (e: Event) => {
 
 watch(updateCount, () => {
   if (autoScroll && unref(listRef) && unref(scrollReachEnd)) {
-    unref(listRef).scrollTo({
+    nextTick(() => {
+      unref(listRef).scrollTo({
         top: unref(listRef).scrollHeight,
       });
-    }
+    })
+  }
 });
 
 // Always scroll to bottom when data change
