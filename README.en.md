@@ -7,28 +7,28 @@
 ![Netlify Build][netlify-build-src]
 [![License][license-src]][license-href]
 
-Ant Design X For Vue. 🔥 [English](./README.en.md)
+Ant Design X For Vue. 🔥 [中文](./README.md)
 
-这里是[Ant Design X](https://github.com/ant-design/x)的Vue实现。
+This is the implementation of [Ant Design X](https://github.com/ant-design/x) for Vue.
 
-## ✨ 特性
+## ✨ Features
 
-- 🌈 基于 RICH 交互范式，提供卓越的 AI 交互体验
-- 🧩 覆盖绝大部分 AI 对话场景，助力快速构建个性化 AI 交互页面
-- ⚡ 轻松对接符合 OpenAI 标准的模型推理服务
-- 🔄 提供好用的数据流管理功能，让开发更高效
-- 📦 提供多种模板，快速启动 LUI 应用开发
-- 🛡 采用 TypeScript 开发，提供完整类型支持，提升开发体验与可靠性
-- 🎨 支持细粒度的样式调整，满足各种场景的个性化需求
+- 🌈 Built on the RICH interaction paradigm, delivering an exceptional AI interaction experience.
+- 🧩 Covers most AI dialogue scenarios, empowering you to quickly build personalized AI interaction interfaces.
+- ⚡ Easily connect with inference services compatible with OpenAI standards.
+- 🔄 Provides powerful tools for managing data flows, enhancing development efficiency.
+- 📦 Offers multiple templates for quickly starting LUI application development.
+- 🛡 Developed with TypeScript, ensuring robust type coverage to improve the development experience and reliability.
+- 🎨 Supports fine-grained style adjustments to meet diverse use cases and personalization needs.
 
 
 ## Usage
 
-安装两个依赖 `ant-design-vue` and `ant-design-x-vue` 到你的项目中, 你可以参照如下命令行：
+First, install packages `ant-design-vue` and `ant-design-x-vue` to your project, you can run following commands in your project directory:
 
 > pnpm add ant-design-vue ant-design-x-vue
 
-然后在你的项目里导入 `ant-design-vue`:
+Second, import components from `ant-design-vue` library:
 
 ```ts
 <script setup lang="ts">
@@ -40,7 +40,7 @@ import { Bubble, XProvider } from 'ant-design-x-vue';
 </template>
 ```
 
-## 开发
+## Development
 
 ```bash
 # install dependencies
@@ -62,7 +62,7 @@ $ pnpm run docs:preview
 $ pnpm lint
 ```
 
-## 链接
+## Links
 
 * [Vue](https://vuejs.org/)
 
@@ -72,17 +72,17 @@ $ pnpm lint
 
 ## Contributing
 
-您的贡献至关重要！
+Would you like to change the world with us?
 
-您可以参考[Roadmap](https://github.com/wzc520pyfm/ant-design-x-vue/issues/1)，从中挑选您感兴趣的部分。
+Please reference the [Roadmap](https://github.com/wzc520pyfm/ant-design-x-vue/issues/1) and pick up any one you like.
 
-## 贡献者
+## Contributors
 
 <a href="https://github.com/wzc520pyfm/ant-design-x-vue/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=wzc520pyfm/ant-design-x-vue" />
 </a>
 
-## 微信公众号
+## Wechat Public Account
 Ant-Design-X Vue
 
 ## LICENSE
