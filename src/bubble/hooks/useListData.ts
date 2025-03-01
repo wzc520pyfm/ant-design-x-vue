@@ -8,15 +8,15 @@ export type ListItemType = UnRef<ReturnType<typeof useListData>>[number];
 
 export default function useListData(
   items: Ref<BubbleListProps['items']>,
-  roles?: BubbleListProps['roles'],
+  roles?: Ref<BubbleListProps['roles']>,
 ) {
-  const getRoleBubbleProps = (bubble: BubbleDataType): Partial<BubbleProps> => {
-    if (typeof roles === 'function') {
-      return roles(bubble);
+  const getRoleBubbleProps = (bubble: BubbleDataType, index: number): Partial<BubbleProps> => {
+    if (typeof roles.value === 'function') {
+      return roles.value(bubble, index);
     }
 
     if (roles) {
-      return roles[bubble.role!] || {};
+      return roles.value[bubble.role!] || {};
     }
 
     return {};
@@ -27,7 +27,7 @@ export default function useListData(
       const mergedKey = bubbleData.key ?? `preset_${i}`;
 
       return {
-        ...getRoleBubbleProps(bubbleData),
+        ...getRoleBubbleProps(bubbleData, i),
         ...bubbleData,
         key: mergedKey,
       };

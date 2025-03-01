@@ -4,13 +4,14 @@ import { useEventCallback } from '../_util/hooks/use-event-callback';
 import pickAttrs from '../_util/pick-attrs';
 import { useXProviderContext } from '../x-provider';
 import Bubble from './Bubble.vue';
-import type { BubbleRef } from './interface';
+import type { BubbleRef, RolesType } from './interface';
 import useDisplayData from './hooks/useDisplayData';
 import useListData from './hooks/useListData';
 import type { BubbleListProps } from './interface';
 import useStyle from './style';
 import { computed, type HTMLAttributes, mergeProps, onWatcherCleanup, ref, unref, useAttrs, watch, watchEffect, nextTick } from 'vue';
 import useState from '../_util/hooks/use-state';
+import type { AvoidValidation } from '../type-utility';
 import BubbleContextProvider from './context';
 
 defineOptions({ name: "AXBubbleList", inheritAttrs: false });
@@ -24,7 +25,7 @@ const {
   rootClassName,
   items: itemsProp,
   autoScroll = true,
-  roles,
+  roles: rolesProp,
   ...restProps
 } = defineProps<BubbleListProps>();
 
@@ -34,9 +35,14 @@ const domProps = pickAttrs(mergeProps(restProps, attrs), {
 }) as HTMLAttributes;
 
 const items = ref<BubbleListProps['items']>(itemsProp);
+const roles = ref<AvoidValidation<RolesType>>(rolesProp);
 
 watch(() => itemsProp, () => {
   items.value = itemsProp;
+})
+
+watch(() => rolesProp, () => {
+  roles.value = rolesProp;
 })
 
 // ============================= Refs =============================
@@ -169,28 +175,28 @@ defineExpose({
     behavior?: ScrollBehavior;
     block?: ScrollLogicalPosition;
   }) => {
-      if (typeof offset === 'number') {
-        // Offset scroll
-        unref(listRef)!.scrollTo({
-          top: offset,
+    if (typeof offset === 'number') {
+      // Offset scroll
+      unref(listRef)!.scrollTo({
+        top: offset,
+        behavior,
+      });
+    } else if (key !== undefined) {
+      // Key scroll
+      const bubbleInst = unref(bubbleRefs)[key];
+
+      if (bubbleInst) {
+        // Block current auto scrolling
+        const index = unref(displayData).findIndex((dataItem) => dataItem.key === key);
+        setScrollReachEnd(index === unref(displayData).length - 1);
+
+        // Do native scroll
+        bubbleInst.nativeElement.scrollIntoView({
           behavior,
+          block,
         });
-      } else if (key !== undefined) {
-        // Key scroll
-        const bubbleInst = unref(bubbleRefs)[key];
-
-        if (bubbleInst) {
-          // Block current auto scrolling
-          const index = unref(displayData).findIndex((dataItem) => dataItem.key === key);
-          setScrollReachEnd(index === unref(displayData).length - 1);
-
-          // Do native scroll
-          bubbleInst.nativeElement.scrollIntoView({
-            behavior,
-            block,
-          });
-        }
       }
     }
+  }
 });
 </script>
