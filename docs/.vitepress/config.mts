@@ -94,6 +94,7 @@ export default defineConfig({
         text: '更多',
         items: [
           { text: 'Ant Design X of React', link: 'https://x.ant.design/index-cn' },
+          { text: 'Ant Design Vue', link: 'https://www.antdv.com/components/overview-cn' },
         ]
       }
     ],
