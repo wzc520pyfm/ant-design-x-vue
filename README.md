@@ -82,8 +82,13 @@ $ pnpm lint
   <img src="https://contrib.rocks/image?repo=wzc520pyfm/ant-design-x-vue" />
 </a>
 
-## 微信公众号
-Ant-Design-X Vue
+## 交流
+
+### 微信公众号
+![Ant-Design-X Vue](./docs/public/images//wechat_public_account.jpg)
+
+### QQ 群
+![QQ 群](./docs/public/images/QQ_group_1.jpg)
 
 ## LICENSE
 
