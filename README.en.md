@@ -82,8 +82,6 @@ Please reference the [Roadmap](https://github.com/wzc520pyfm/ant-design-x-vue/is
   <img src="https://contrib.rocks/image?repo=wzc520pyfm/ant-design-x-vue" />
 </a>
 
-## Wechat Public Account
-Ant-Design-X Vue
 
 ## LICENSE
 
@@ -102,3 +100,10 @@ MIT
 [netlify-build-src]: https://img.shields.io/netlify/cb006e4e-afce-4c3e-9652-6f8a065b5b6e
 [license-src]: https://img.shields.io/github/license/wzc520pyfm/ant-design-x-vue?style=flat
 [license-href]: https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/LICENSE
+
+## Connect Us
+### Wechat Public Account
+![Ant-Design-X Vue](./docs/public/images//wechat_public_account.jpg)
+
+### QQ Group
+![QQ 群](./docs/public/images/QQ_group_1.jpg)
