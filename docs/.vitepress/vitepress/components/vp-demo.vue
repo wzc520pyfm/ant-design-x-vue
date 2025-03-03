@@ -77,9 +77,7 @@ const copyCode = async () => {
 
     <div class="example">
       <div class="example-showcase">
-        <App>
-          <slot name="source" />
-        </App>
+        <slot name="source" />
       </div>
 
       <Divider style="margin: 0;" />
