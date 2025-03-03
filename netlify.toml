@@ -1,0 +1,5 @@
+## history 路由模式
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
