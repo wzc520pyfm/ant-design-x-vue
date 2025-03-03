@@ -42,6 +42,9 @@ importers:
       '@eslint/js':
         specifier: ^9.11.1
         version: 9.17.0
+      '@stackblitz/sdk':
+        specifier: ^1.11.0
+        version: 1.11.0
       '@types/markdown-it':
         specifier: ^14.1.2
         version: 14.1.2
@@ -1295,6 +1298,9 @@ packages:
 
   '@simonwep/pickr@1.8.2':
     resolution: {integrity: sha512-/l5w8BIkrpP6n1xsetx9MWPWlU6OblN5YgZZphxan0Tq4BByTCETL6lyIeY8lagalS2Nbt4F2W034KHLIiunKA==}
+
+  '@stackblitz/sdk@1.11.0':
+    resolution: {integrity: sha512-DFQGANNkEZRzFk1/rDP6TcFdM82ycHE+zfl9C/M/jXlH68jiqHWHFMQURLELoD8koxvu/eW5uhg94NSAZlYrUQ==}
 
   '@swc/core-darwin-arm64@1.9.2':
     resolution: {integrity: sha512-nETmsCoY29krTF2PtspEgicb3tqw7Ci5sInTI03EU5zpqYbPjoPH99BVTjj0OsF53jP5MxwnLI5Hm21lUn1d6A==}
@@ -5449,6 +5455,8 @@ snapshots:
     dependencies:
       core-js: 3.34.0
       nanopop: 2.4.2
+
+  '@stackblitz/sdk@1.11.0': {}
 
   '@swc/core-darwin-arm64@1.9.2':
     optional: true

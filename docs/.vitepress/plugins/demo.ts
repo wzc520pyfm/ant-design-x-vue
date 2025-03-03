@@ -26,6 +26,7 @@ function createDemoContainer(md: MarkdownIt): ContainerOpts {
     render(tokens, idx) {
       const m = tokens[idx].info.trim().match(/^demo\s*(.*)$/)
       if (tokens[idx].nesting === 1 /* means the tag is opening */) {
+        const title = tokens[idx - 2]?.children?.[0].content
         const description = m && m.length > 1 ? m[1] : ''
         const sourceFileToken = tokens[idx + 2]
         let source = ''
@@ -43,7 +44,7 @@ function createDemoContainer(md: MarkdownIt): ContainerOpts {
           md.render(`\`\`\` ts\n${source}\`\`\``)
         )}" path="${sourceFile}" raw-source="${encodeURIComponent(
           source
-        )}" description="${encodeURIComponent(md.render(description))}">
+        )}" description="${encodeURIComponent(md.render(description))}" title="${title}">
   <template #source><ax-${sourceFile.replaceAll('/', '-')}/></template>`
       } else {
         return '</Demo>\n'

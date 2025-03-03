@@ -6,7 +6,7 @@ import { XProvider } from 'ant-design-x-vue'
 import { CaretUpFilled, CodepenOutlined, ThunderboltOutlined, FunctionOutlined } from '@ant-design/icons-vue'
 // import { useLang } from '../composables/lang'
 import { useSourceCode } from '../composables/source-code'
-// import { usePlayground } from '../composables/use-playground'
+import { usePlayground } from '../composables/use-playground'
 // import demoBlockLocale from '../../i18n/component/demo-block.json'
 import SourceCode from './demo/vp-source-code.vue'
 import { useData } from 'vitepress'
@@ -16,6 +16,7 @@ const props = defineProps<{
   path: string
   rawSource: string
   description: string
+  title: string
 }>()
 
 const vm = getCurrentInstance()!
@@ -38,12 +39,11 @@ const sourceCodeRef = ref<HTMLButtonElement>()
 // const locale = computed(() => demoBlockLocale[lang.value])
 const locale = computed(() => ({}));
 const decodedDescription = computed(() => decodeURIComponent(props.description))
-
-const onPlaygroundClick = () => {
-  // const { link } = usePlayground(props.rawSource)
-  if (!isClient) return
-  // window.open(link)
-}
+const { onStackblitzPlayBtnClick } = usePlayground({
+  title: props.title,
+  rawSource: props.rawSource,
+  path: props.path,
+})
 
 const onSourceVisibleKeydown = (e: KeyboardEvent) => {
   if (['Enter', 'Space'].includes(e.code)) {
@@ -85,11 +85,11 @@ const copyCode = async () => {
       <Divider style="margin: 0;" />
 
       <div class="op-btns">
-        <!-- <Tooltip>
-        <template #title>在 Stackblitz 中打开</template>
-<ThunderboltOutlined tabindex="0" role="link" class="op-btn" @click="onPlaygroundClick"
-  @keydown.prevent.enter="onPlaygroundClick" @keydown.prevent.space="onPlaygroundClick" />
-</Tooltip> -->
+        <Tooltip>
+          <template #title>在 Stackblitz 中打开</template>
+          <ThunderboltOutlined tabindex="0" role="link" class="op-btn" @click="onStackblitzPlayBtnClick"
+            @keydown.prevent.enter="onStackblitzPlayBtnClick" @keydown.prevent.space="onStackblitzPlayBtnClick" />
+        </Tooltip>
         <!-- <Tooltip>
         <template #title>在 CodePen 中打开</template>
         <CodepenOutlined
