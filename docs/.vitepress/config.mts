@@ -10,6 +10,13 @@ import { MarkdownTransform } from './plugins/markdown-transform';
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          silenceDeprecations: ['legacy-js-api'],
+        },
+      },
+    },
     resolve: {
       alias: [
         {
@@ -98,7 +105,7 @@ export default defineConfig({
         ]
       }
     ],
-    outline:[2,3],
+    outline: [2, 3],
 
     sidebar: {
       '/component/': [
