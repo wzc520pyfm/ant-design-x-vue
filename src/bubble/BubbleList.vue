@@ -148,6 +148,7 @@ defineRender(() => {
           <Bubble
             {...bubble}
             key={key}
+            // 用于更新滚动的ref
             ref={(node) => {
               if (node) {
                 bubbleRefs.value[key] = node;
