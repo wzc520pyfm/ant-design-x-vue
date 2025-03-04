@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { useStorage } from '@vueuse/core';
 import { Switch, Descriptions, DescriptionsItem, theme } from 'ant-design-vue';
 import { onMounted, ref } from 'vue';
 
@@ -8,6 +9,8 @@ const { token } = theme.useToken();
 
 const checked = ref(false);
 
+const preferLocal = useStorage('antdx-docs-preference', 'tsx')
+
 const triggerPreference = (prefer: 'tsx' | 'setup') => {
   if (typeof localStorage === 'undefined') {
     return () => {}
@@ -15,14 +18,12 @@ const triggerPreference = (prefer: 'tsx' | 'setup') => {
   const classList = document.documentElement.classList
   classList.remove('prefer-tsx', 'prefer-setup')
   classList.add(`prefer-${prefer}`)
-  localStorage.setItem('antdx-docs-preference', prefer)
+  preferLocal.value = prefer
 };
 
 onMounted(() => {
-  const prefer = localStorage.getItem('antdx-docs-preference') as 'tsx' | 'setup'
-  if (prefer) {
-    checked.value = prefer === 'tsx'
-    triggerPreference(prefer)
+  if (preferLocal.value === 'tsx') {
+    checked.value = true
   }
 });
 </script>

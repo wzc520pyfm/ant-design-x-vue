@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, getCurrentInstance, ref, toRef } from 'vue'
-import { isClient, useClipboard, useToggle } from '@vueuse/core'
+import { isClient, useClipboard, useStorage, useToggle } from '@vueuse/core'
 import { App, Divider, Tooltip, theme } from 'ant-design-vue'
 import { XProvider } from 'ant-design-x-vue'
 import { CaretUpFilled, CodepenOutlined, ThunderboltOutlined, FunctionOutlined } from '@ant-design/icons-vue'
@@ -13,20 +13,24 @@ import { useData } from 'vitepress'
 
 const props = defineProps<{
   source: string
+  sourceSetup: string
   path: string
   rawSource: string
+  rawSourceSetup: string
   description: string
   title: string
 }>()
 
 const vm = getCurrentInstance()!
 
+const prefer = useStorage('antdx-docs-preference', 'tsx');
+
 const { isDark } = useData()
 
 const algorithm = computed(() => isDark.value ? theme.darkAlgorithm : theme.defaultAlgorithm)
 
 const { copy, isSupported } = useClipboard({
-  source: decodeURIComponent(props.rawSource),
+  source: () => decodeURIComponent(prefer.value === 'tsx' ? props.rawSource : props.rawSourceSetup),
   read: false,
 })
 
@@ -41,7 +45,7 @@ const locale = computed(() => ({}));
 const decodedDescription = computed(() => decodeURIComponent(props.description))
 const { onStackblitzPlayBtnClick } = usePlayground({
   title: props.title,
-  rawSource: props.rawSource,
+  rawSource: () => prefer.value === 'tsx' ? props.rawSource : props.rawSourceSetup,
   path: props.path,
 })
 
@@ -77,7 +81,12 @@ const copyCode = async () => {
 
     <div class="example">
       <div class="example-showcase">
-        <slot name="source" />
+        <template v-if="prefer === 'tsx'">
+          <slot name="source" />
+        </template>
+        <template v-if="prefer === 'setup'">
+          <slot name="source-setup" />
+        </template>
       </div>
 
       <Divider style="margin: 0;" />
@@ -109,7 +118,7 @@ const copyCode = async () => {
       </div>
 
       <Transition name="fade-in-linear">
-        <SourceCode :visible="sourceVisible" :source="source" />
+        <SourceCode :visible="sourceVisible" :source="prefer === 'tsx' ? source : sourceSetup" />
       </Transition>
 
       <Transition name="fade-in-linear">
