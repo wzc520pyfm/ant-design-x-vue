@@ -26,7 +26,7 @@ const items: {
       :key="index"
       :theme="{ algorithm }"
     >
-      <Card :style="{ borderradius: 0 }">
+      <Card :style="{ borderRadius: 0 }">
         <Welcome
           :style="{ backgroundImage: background, borderStartStartRadius: 4 }"
           icon="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp"
