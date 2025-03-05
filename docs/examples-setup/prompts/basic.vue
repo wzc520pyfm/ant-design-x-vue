@@ -6,11 +6,13 @@ import {
   SmileOutlined,
   WarningOutlined,
 } from '@ant-design/icons-vue';
-import { App } from 'ant-design-vue';
+import { message as messageAnt } from 'ant-design-vue';
 import { Prompts, type PromptsProps } from 'ant-design-x-vue';
 import { h } from 'vue';
 
 defineOptions({ name: 'AXPromptsBasicSetup' });
+
+const [message, contextHolder] = messageAnt.useMessage();
 
 const items: PromptsProps['items'] = [
   {
@@ -45,20 +47,15 @@ const items: PromptsProps['items'] = [
   },
 ];
 
-const { message } = App.useApp();
-
 </script>
 
 <template>
-  <App>
-    <Prompts
-      title="✨ Inspirational Sparks and Marvelous Tips"
-      :items="items"
-      :onItemClick="
-        (info) => {
-          message.success(`You clicked a prompt: ${info.data.label}`);
-        }
-      "
-    />
-  </App>
+  <context-holder />
+  <Prompts
+    title="✨ Inspirational Sparks and Marvelous Tips"
+    :items="items"
+    :on-item-click="(info) => {
+      message.success(`You clicked a prompt: ${info.data.label}`);
+    }"
+  />
 </template>
