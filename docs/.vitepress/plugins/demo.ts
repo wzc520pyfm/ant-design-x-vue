@@ -48,7 +48,7 @@ function createDemoContainer(md: MarkdownIt): ContainerOpts {
         return `<Demo source="${encodeURIComponent(
           md.render(`\`\`\` ts\n${source}\`\`\``)
         )}" source-setup="${encodeURIComponent(
-          md.render(`\`\`\` ts\n${sourceSetup}\`\`\``)
+          md.render(`\`\`\` vue\n${sourceSetup}\`\`\``)
         )}" path="${sourceFile}" raw-source="${encodeURIComponent(
           source
         )}" raw-source-setup="${encodeURIComponent(
