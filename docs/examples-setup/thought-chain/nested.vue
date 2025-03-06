@@ -11,7 +11,7 @@ const items: ThoughtChainProps['items'] = [
     title: '1 - Thought Chain Item',
     description: 'description',
     extra: h(Button, { type: 'text', icon: h(MoreOutlined) }),
-    footer: h(Button, {}, '1 - Thought Chain Item Footer'),
+    footer: h(Button, {}, () => '1 - Thought Chain Item Footer'),
     content: h(ThoughtChain, {
       items: [
         {
@@ -31,7 +31,7 @@ const items: ThoughtChainProps['items'] = [
     title: '2 - Thought Chain Item',
     description: 'description',
     extra: h(Button, { type: 'text', icon: h(MoreOutlined) }),
-    footer: h(Button, {}, '2 - Thought Chain Item Footer'),
+    footer: h(Button, {}, () => '2 - Thought Chain Item Footer'),
     content: h(ThoughtChain, {
       items: [
         {
