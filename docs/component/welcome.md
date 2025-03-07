@@ -62,5 +62,15 @@ welcome/background
 
 ## Semantic DOM
 
+:::semantic
+
+welcome/_semantic
+
+| icon | 图标容器 |
+| title | 标题容器 |
+| description | 描述容器 |
+| extra | 额外内容 |
+
+:::
 
 ## 主题变量（Design Token）

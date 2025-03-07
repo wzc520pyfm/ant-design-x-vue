@@ -6,6 +6,7 @@ import { mdPlugin } from './config/plugins'
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { MarkdownTransform } from './plugins/markdown-transform';
+import inspect from 'vite-plugin-inspect'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -76,6 +77,7 @@ export default defineConfig({
         // 覆盖插件选项
       }),
       MarkdownTransform(),
+      inspect()
     ],
   },
   markdown: {
