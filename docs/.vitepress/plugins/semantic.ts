@@ -27,43 +27,53 @@ function createSemanticContainer(md: MarkdownIt): ContainerOpts {
     render(tokens, idx) {
       if (tokens[idx].nesting === 1 /* means the tag is opening */) {
         const sourceFileToken = tokens[idx + 2]
-        const sourceFile = sourceFileToken.children?.[0].content ?? ''
-
+        const sourceFileName = sourceFileToken.children?.[0].content ?? '' // base
+        const sourceFile = `${sourceFileName.replace(/:$/, '')}`
+        let semanticTokenIdx = idx + 4
         const semantics: {
           name: string;
           desc: string
         }[] = []
-        const semanticToken = tokens[idx + 5]
-        const children = (semanticToken.children ?? []).filter(child => !!child.content)
-
-        for(const child of children){
-          const content = child.content || ''
-          const [name, desc] = content.replace(/\s/g, '').split('|').filter(Boolean)
-          if(name && desc) {
-            semantics.push({
-              name,
-              desc
-            })
+        while (tokens[semanticTokenIdx].type !== 'container_semantic_close') {
+          if (tokens[semanticTokenIdx].type !== 'inline') {
+            semanticTokenIdx++
+            continue
           }
+          const semanticToken = tokens[semanticTokenIdx]
+          const content = semanticToken.children?.[0].content ?? ''
+          if(content) {
+            const [name, desc] = content.replace(/\s/g, '').split(':').filter(Boolean)
+            if(name && desc) {
+              semantics.push({
+                name,
+                desc
+              })
+            }
+          }
+          semanticTokenIdx++
         }
 
-        const classNames: Record<string, string> = {};
-        semantics.forEach((semantic) => {
-          classNames[semantic.name] = getMarkClassName(semantic.name);
-        });
-        // 兼容没有script setup的场景
-        // 不一定是tokens[0]，需要更合理的判断
-        const scriptSetupREG = /(<script\s+setup\s*>)([\s\S]*)(<\/script>)/;
-        console.log('tokens[0].type', tokens[0].type)
-        if(tokens[0].type === 'html_block') {
-          if(scriptSetupREG.test(tokens[0].content)) {
-            tokens[0].content = tokens[0].content.replace(scriptSetupREG, `$1$2\nconst semantics = ${JSON.stringify(semantics)};\nconst classNames = ${JSON.stringify(classNames)}\n$3`)
-            console.log(tokens[0].content)
-            return `<Semantic :semantics="semantics"><template #semantic><ax-${sourceFile.replaceAll('/', '-').replaceAll('_', '')} /></template>`
+        if(semantics.length) {
+          const classNames: Record<string, string> = {};
+          semantics.forEach((semantic) => {
+            classNames[semantic.name] = getMarkClassName(semantic.name);
+          });
+
+          let semanticArrayStr = '[';
+          for(const semantic of semantics) {
+              semanticArrayStr += `{ name: '${semantic.name}', desc: '${semantic.desc}'},`
           }
+          semanticArrayStr += ']'
+
+          let classNamesObjStr = '{'
+          for(const className in classNames) {
+            classNamesObjStr += `${className}: '${classNames[className]}',`
+          }
+          classNamesObjStr += '}'
+          return `<Semantic :semantics="${semanticArrayStr}"><template #semantic><ax-semantic-${sourceFile.replaceAll('/', '-')} :classNames="${classNamesObjStr}" /></template>`
+        } else {
           return `<Semantic>`
         }
-        return `<Semantic>`
       } else {
         return `</Semantic>\n`
       }
