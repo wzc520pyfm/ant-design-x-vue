@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, onWatcherCleanup, Teleport, watch } from 'vue';
+import { computed, onMounted, onWatcherCleanup, Teleport, watch } from 'vue';
 import useState from '../_util/hooks/use-state';
 import { useAttachmentContextInject } from './context';
 import type { DropUploaderProps } from './interface';
@@ -15,6 +15,10 @@ const [container, setContainer] = useState<HTMLElement | null | undefined>();
 const [showArea, setShowArea] = useState<boolean | null>(null);
 
 // ========================== Container ===========================
+onMounted(() => {
+  setContainer(getDropContainer?.());
+})
+
 watch(() => getDropContainer, () => {
   const nextContainer = getDropContainer?.();
   if (container.value !== nextContainer) {
@@ -23,7 +27,7 @@ watch(() => getDropContainer, () => {
 });
 
 // ============================= Drop =============================
-watch(() => !!container.value, () => {
+watch(() => container.value, () => {
   // Add global drop event
   if (container.value) {
     const onDragEnter = () => {
