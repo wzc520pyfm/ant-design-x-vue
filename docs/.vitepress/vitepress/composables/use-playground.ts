@@ -1,7 +1,8 @@
 import stackblitzSdk from '@stackblitz/sdk';
 import type { Project as StackBlitzProject } from '@stackblitz/sdk';
 import pkg from '../../../../package.json' assert { type: 'json' };
-import { isClient } from '@vueuse/core'
+import { isClient, MaybeRefOrGetter } from '@vueuse/core'
+import { computed, toValue } from 'vue';
 
 const pkgDependencyList = {
   ...pkg.dependencies,
@@ -9,13 +10,13 @@ const pkgDependencyList = {
 }
 
 interface Playground {
-  title: string;
-  rawSource: string;
-  path: string;
+  title: MaybeRefOrGetter<string>;
+  rawSource: MaybeRefOrGetter<string>;
+  path: MaybeRefOrGetter<string>;
 }
 
 export function usePlayground({ title, rawSource, path }: Playground) {
-  const dependencies = (rawSource as string).split(/\n/).reduce<Record<PropertyKey, string>>(
+  const dependencies = computed(() => toValue(rawSource).split(/\n/).reduce<Record<PropertyKey, string>>(
     (acc, line) => {
       const matches = line.match(/import .+? from '(.+)';\r?$/);
       if (matches?.[1]) {
@@ -25,11 +26,11 @@ export function usePlayground({ title, rawSource, path }: Playground) {
       }
       return acc;
     },
-    { 'ant-design-vue': pkgDependencyList['ant-design-vue'],
+    {
+      'ant-design-vue': pkgDependencyList['ant-design-vue'],
       'ant-design-x-vue': pkg.version
-    
     },
-  );
+  ));
 
   const html = `<!doctype html>
 <html lang="en">
@@ -53,7 +54,7 @@ createApp(Demo).mount('#app')
 `
   const styleCssContent = ``
 
-  const demoVueContent = `${decodeURIComponent(rawSource)}`
+  const demoVueContent = computed(() => `${decodeURIComponent(toValue(rawSource))}`)
 
   const tsconfig = {
     compilerOptions: {
@@ -66,8 +67,8 @@ createApp(Demo).mount('#app')
     },
   };
 
-  const packageJson = {
-    "name": `${path.replaceAll('/', '-')}`,
+  const packageJson = computed(() => ({
+    "name": `${toValue(path).replaceAll('/', '-')}`,
     "private": true,
     "version": "0.0.0",
     "type": "module",
@@ -77,7 +78,7 @@ createApp(Demo).mount('#app')
       "preview": "vite preview"
     },
     "dependencies": {
-      ...dependencies
+      ...dependencies.value
     },
     "devDependencies": {
       "@vitejs/plugin-vue-jsx": pkg.devDependencies['@vitejs/plugin-vue-jsx'],
@@ -87,7 +88,7 @@ createApp(Demo).mount('#app')
       "vue-tsc": pkg.devDependencies['vue-tsc'],
       'unplugin-vue-macros': pkg.devDependencies['unplugin-vue-macros']
     }
-  }
+  }))
 
   const viteTsContent = `import { defineConfig } from 'vite'
 import VueMacros from 'unplugin-vue-macros/vite'
@@ -107,33 +108,33 @@ export default defineConfig({
 })
 `
   const vueEnvTsContent = `declare module '*.vue' {
-  import { DefineComponent } from 'vue';
+  import { DefineComponent, MaybeRefOrGetter, toValue } from 'vue';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   const component: DefineComponent<{}, {}, any>;
 
   export default component;
 }
 `
-  
+
 
   const stackblitzPrefillConfig: StackBlitzProject = {
-    title: `${title} - antd-design-x-vue@${pkg.version}`,
+    title: `${toValue(title)} - antd-design-x-vue@${pkg.version}`,
     template: 'node',
     description: '',
     files: {
       [`src/style.css`]: styleCssContent,
       [`src/main.ts`]: mainTsContent,
-      [`src/Demo.vue`]: demoVueContent,
+      [`src/Demo.vue`]: demoVueContent.value,
       'index.html': html,
       'tsconfig.json': JSON.stringify(tsconfig, null, 2),
-      'package.json': JSON.stringify(packageJson, null, 2),
+      'package.json': JSON.stringify(packageJson.value, null, 2),
       'vite.config.ts': viteTsContent,
       'vue.env.d.ts': vueEnvTsContent
     },
   };
 
   const onStackblitzPlayBtnClick = () => {
-    if(!isClient) {
+    if (!isClient) {
       return
     }
     stackblitzSdk.openProject(stackblitzPrefillConfig, {

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { CloudUploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
-import { App, Button, Flex, theme, Typography } from 'ant-design-vue';
+import { Button, Flex, theme, Typography, message as messageAnt } from 'ant-design-vue';
 import { Sender } from 'ant-design-x-vue';
 import { ref } from 'vue';
 
 defineOptions({ name: 'AXSenderHeaderSetup' });
 
 const { token } = theme.useToken();
-const { message } = App.useApp();
+const [message, contextHolder] = messageAnt.useMessage();
 
 const open = ref(false);
 
@@ -30,6 +30,7 @@ const selectFileClick = () => {
 </script>
 
 <template>
+  <context-holder />
   <Flex
     style="height: 350px;"
     align="end"
