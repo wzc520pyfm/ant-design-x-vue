@@ -23,7 +23,7 @@ watch(() => toValue(getDropContainer), () => {
 });
 
 // ============================= Drop =============================
-watch(() => container.value, () => {
+watch(() => !!container.value, () => {
   // Add global drop event
   if (container.value) {
     const onDragEnter = () => {
