@@ -15,6 +15,7 @@ const [container, setContainer] = useState<HTMLElement | null | undefined>();
 const [showArea, setShowArea] = useState<boolean | null>(null);
 
 // ========================== Container ===========================
+// Attachments children changed, unable watch getDropContainer, should setContainer on mounted
 onMounted(() => {
   setContainer(getDropContainer?.());
 })
