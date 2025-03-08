@@ -18,6 +18,11 @@ interface ContainerOpts {
   ): string
 }
 
+function getSemanticSourceFilePath(token: Token) {
+   const sourceFilePath = token.children?.[0].content ?? ''
+   return `${sourceFilePath.replace(/:$/, '')}`
+}
+
 function createSemanticContainer(md: MarkdownIt): ContainerOpts {
   return {
     validate(params) {
@@ -26,51 +31,70 @@ function createSemanticContainer(md: MarkdownIt): ContainerOpts {
 
     render(tokens, idx) {
       if (tokens[idx].nesting === 1 /* means the tag is opening */) {
-        const sourceFileToken = tokens[idx + 2]
-        const sourceFileName = sourceFileToken.children?.[0].content ?? '' // base
-        const sourceFile = `${sourceFileName.replace(/:$/, '')}`
-        let semanticTokenIdx = idx + 4
-        const semantics: {
-          name: string;
-          desc: string
-        }[] = []
-        while (tokens[semanticTokenIdx].type !== 'container_semantic_close') {
-          if (tokens[semanticTokenIdx].type !== 'inline') {
-            semanticTokenIdx++
+        const semanticBlocks: Record<string, {name: string;
+          desc: string;
+        }[]> = {}
+        let currentTokenIdx = idx
+        let currentSemanticBlock:{name: string;
+          desc: string;
+        }[] | undefined
+        let flag = false
+        while (tokens[currentTokenIdx].type !== 'container_semantic_close') {
+          if(tokens[currentTokenIdx].type === 'bullet_list_open') {
+            flag = true
+            const sourceFileToken = tokens[currentTokenIdx - 2]
+            const sourceFilePath = getSemanticSourceFilePath(sourceFileToken)
+            currentSemanticBlock = semanticBlocks[sourceFilePath] = []
+            currentTokenIdx++
             continue
           }
-          const semanticToken = tokens[semanticTokenIdx]
+          if(tokens[currentTokenIdx].type === 'bullet_list_close') {
+            flag = false
+            currentTokenIdx++
+            continue
+          }
+          if (!flag && tokens[currentTokenIdx].type !== 'inline') {
+            currentTokenIdx++
+            continue
+          }
+          const semanticToken = tokens[currentTokenIdx]
           const content = semanticToken.children?.[0].content ?? ''
           if(content) {
             const [name, desc] = content.replace(/\s/g, '').split(':').filter(Boolean)
             if(name && desc) {
-              semantics.push({
+              currentSemanticBlock!.push({
                 name,
                 desc
               })
             }
           }
-          semanticTokenIdx++
+          currentTokenIdx++
         }
+        
+        if(Object.keys(semanticBlocks).length) {
+          let result = ''
+          for(const path in semanticBlocks) {
+            const semanticBlock = semanticBlocks[path]
+            const classNames: Record<string, string> = {};
+            semanticBlock.forEach((semantic) => {
+              classNames[semantic.name] = getMarkClassName(semantic.name);
+            });
 
-        if(semantics.length) {
-          const classNames: Record<string, string> = {};
-          semantics.forEach((semantic) => {
-            classNames[semantic.name] = getMarkClassName(semantic.name);
-          });
+            let semanticArrayStr = '[';
+            for(const block of semanticBlock) {
+                semanticArrayStr += `{ name: '${block.name}', desc: '${block.desc}'},`
+            }
+            semanticArrayStr += ']'
 
-          let semanticArrayStr = '[';
-          for(const semantic of semantics) {
-              semanticArrayStr += `{ name: '${semantic.name}', desc: '${semantic.desc}'},`
+            let classNamesObjStr = '{'
+            for(const className in classNames) {
+              classNamesObjStr += `${className}: '${classNames[className]}',`
+            }
+            classNamesObjStr += '}'
+            result += `<Semantic :semantics="${semanticArrayStr}"><template #semantic><ax-semantic-${path.replaceAll('/', '-')} :classNames="${classNamesObjStr}" /></template></Semantic>`
           }
-          semanticArrayStr += ']'
-
-          let classNamesObjStr = '{'
-          for(const className in classNames) {
-            classNamesObjStr += `${className}: '${classNames[className]}',`
-          }
-          classNamesObjStr += '}'
-          return `<Semantic :semantics="${semanticArrayStr}"><template #semantic><ax-semantic-${sourceFile.replaceAll('/', '-')} :classNames="${classNamesObjStr}" /></template>`
+          console.log(result.replace(/<\/Semantic>$/, ''))
+          return result.replace(/<\/Semantic>$/, '')
         } else {
           return `<Semantic>`
         }

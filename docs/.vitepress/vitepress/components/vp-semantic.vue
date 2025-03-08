@@ -13,10 +13,6 @@ const { semantics, height} = defineProps<{
   height?: number;
 }>()
 
-const attrs = useAttrs()
-console.log({attrs})
-console.log({semantics})
-
 const MARK_BORDER_SIZE = 2
 
 const { token } = theme.useToken();
@@ -41,7 +37,7 @@ const semanticClassNames = computed(() => {
 // ======================== Hover =========================
 const containerRef = useTemplateRef('container');
 
-let timer: ReturnType<typeof setTimeout> = null;
+let timer: ReturnType<typeof setTimeout> | null = null;
 
 const positionMotion = ref(false)
 const hoverSemantic = ref<string | null>(null)

@@ -91,7 +91,16 @@ interface PlaceholderType {
 
 ## Semantic DOM
 
-<!-- <code src="./demo/_semantic.tsx" simplify="true"></code> -->
+:::semantic
+
+attachments/placeholder:
+  - placeholder: 占位符
+  
+attachments/base:
+  - list: 列表容器
+  - item: 列表项
+
+:::
 
 ## 主题变量（Design Token）
 
