@@ -152,18 +152,7 @@ type SpeechConfig = {
 
 ## Semantic DOM
 
-:::semantic
-
-sender/base
-  - prefix: 前缀
-  - input: 输入框
-  - actions: 操作列表
-
-sender/header
- - header: 头部
- - content: 内容
-
-:::
+<vp-semantic component="Sender"></vp-semantic>
 
 ## 主题变量（Design Token）
 

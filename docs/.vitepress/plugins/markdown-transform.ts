@@ -100,31 +100,20 @@ const transformComponentMarkdown = (
 
 const getExampleImports = (componentId: string) => {
   const examplePath = path.resolve(docRoot, 'examples', componentId)
-  const semanticPath = path.resolve(docRoot, 'semantics', componentId)
+  if (!fs.existsSync(examplePath)) return []
+  const files = fs.readdirSync(examplePath)
   const imports: string[] = []
-  if (fs.existsSync(examplePath)) {
-    const files = fs.readdirSync(examplePath)
 
-    for (const item of files) {
-      if (!/\.vue$/.test(item)) continue
-      const file = item.replace(/\.vue$/, '')
-      const name = camelize(`Ax-${componentId}-${file}`)
-      imports.push(
-        `import ${name} from '../examples/${componentId}/${file}.vue'`,
-        `import ${name}Setup from '../examples-setup/${componentId}/${file}.vue'`
-      )
-    }
-  }
-  if(fs.existsSync(semanticPath)) {
-    const files = fs.readdirSync(semanticPath)
+  for (const item of files) {
+    if (!/\.vue$/.test(item)) continue
+    const file = item.replace(/\.vue$/, '')
+    const name = camelize(`Ax-${componentId}-${file}`)
 
-    for (const item of files) {
-      const file = item.replace(/\.vue$/, '')
-      const name = camelize(`Ax-Semantic-${componentId}-${file}`)
-      imports.push(
-        `import ${name} from '../semantics/${componentId}/${file}.vue'`,
-      )
-    }
+    imports.push(
+      `import ${name} from '../examples/${componentId}/${file}.vue'`,
+      `import ${name}Setup from '../examples-setup/${componentId}/${file}.vue'`
+    )
   }
+
   return imports
 }

@@ -5,5 +5,5 @@ import createSemanticContainer from '../plugins/semantic'
 
 export const mdPlugin = (md: MarkdownIt) => {
   md.use(mdContainer, 'demo', createDemoContainer(md))
-  md.use(mdContainer, 'semantic', createSemanticContainer(md))
+  // md.use(mdContainer, 'semantic', createSemanticContainer(md))
 }

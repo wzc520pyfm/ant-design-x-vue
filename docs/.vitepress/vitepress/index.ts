@@ -4,5 +4,5 @@ import VPSemantic from './components/vp-semantic.vue'
 
 export const globals: [string, Component][] = [
   ['Demo', VPDemo],
-  ['Semantic', VPSemantic],
+  ['VpSemantic', VPSemantic],
 ]

@@ -91,16 +91,7 @@ interface PlaceholderType {
 
 ## Semantic DOM
 
-:::semantic
-
-attachments/placeholder:
-  - placeholder: 占位符
-  
-attachments/base:
-  - list: 列表容器
-  - item: 列表项
-
-:::
+<vp-semantic component="Attachments"></vp-semantic>
 
 ## 主题变量（Design Token）
 

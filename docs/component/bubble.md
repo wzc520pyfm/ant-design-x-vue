@@ -151,15 +151,7 @@ bubble/gpt-vis
 
 ## Semantic DOM
 
-:::semantic
-
-bubble/base:
-  - avatar: 头像的外层容器
-  - header: 头部的容器
-  - content: 聊天内容的容器
-  - footer: 底部的容器
-
-:::
+<vp-semantic component="Bubble"></vp-semantic>
 
 ## 主题变量（Design Token）
 
