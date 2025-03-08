@@ -100,7 +100,18 @@ type SemanticType = 'list' | 'item' | 'content' | 'title' | 'subList' | 'subItem
 
 ## Semantic DOM
 
-<!-- <code src="./demo/_semantic.tsx" simplify="true"></code> -->
+:::semantic
+
+prompts/base
+  - title: 标题容器
+  - list: 列表容器
+  - item: 列表项
+  - itemContent: 列表项内容
+
+prompts/nested
+  - subList: 子列表容器
+  - subItem: 子列表项
+
 
 ## 主题变量（Design Token）
 

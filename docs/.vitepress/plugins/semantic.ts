@@ -93,7 +93,6 @@ function createSemanticContainer(md: MarkdownIt): ContainerOpts {
             classNamesObjStr += '}'
             result += `<Semantic :semantics="${semanticArrayStr}"><template #semantic><ax-semantic-${path.replaceAll('/', '-')} :classNames="${classNamesObjStr}" /></template></Semantic>`
           }
-          console.log(result.replace(/<\/Semantic>$/, ''))
           return result.replace(/<\/Semantic>$/, '')
         } else {
           return `<Semantic>`

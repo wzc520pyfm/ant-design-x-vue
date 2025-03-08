@@ -152,7 +152,18 @@ type SpeechConfig = {
 
 ## Semantic DOM
 
-<!-- <code src="./demo/_semantic.tsx" simplify="true"></code> -->
+:::semantic
+
+sender/base
+  - prefix: 前缀
+  - input: 输入框
+  - actions: 操作列表
+
+sender/header
+ - header: 头部
+ - content: 内容
+
+:::
 
 ## 主题变量（Design Token）
 

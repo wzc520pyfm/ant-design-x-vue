@@ -122,6 +122,7 @@ onBeforeUnmount(() => {
   border: 1px solid var(--vp-border-color);
   border-radius: 8px;
   position: relative;
+  overflow: hidden;
   .col-wrap {
     border-right: 1px solid v-bind('token.colorBorderSecondary');
     display: flex;

@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { Attachments, AttachmentsProps } from 'ant-design-x-vue'
+import { Attachments, type AttachmentsProps } from 'ant-design-x-vue'
 
 const {classNames} = defineProps<{
   classNames: Record<string, string>

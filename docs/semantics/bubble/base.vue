@@ -1,10 +1,10 @@
 <script setup lang="tsx">
-import { Bubble } from 'ant-design-x-vue'
+import { Bubble, type BubbleProps } from 'ant-design-x-vue'
 import { Button, Space, Avatar, theme } from 'ant-design-vue';
 import {UserOutlined, SyncOutlined, CopyOutlined } from '@ant-design/icons-vue'
 
 const {classNames} = defineProps<{
-  classNames: Record<string, string>
+  classNames: BubbleProps['classNames']
 }>()
 
 const { token } = theme.useToken()
