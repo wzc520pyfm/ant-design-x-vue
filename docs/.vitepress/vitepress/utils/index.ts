@@ -16,8 +16,3 @@ export function createGitHubUrl(
     docsDir ? `${docsDir.replace(endingSlashRE, '')}/` : ''
   }${folder || ''}${path}${ext || ''}`
 }
-
-export function getMarkClassName(semanticKey: string) {
- return `semantic-mark-${semanticKey}`
-}
-  
