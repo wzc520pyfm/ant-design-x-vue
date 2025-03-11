@@ -47,27 +47,6 @@ const genSenderHeaderStyle: GenerateStyle<SenderToken> = (token) => {
             display: 'none',
           },
         },
-
-        // ========================= CollapseTransition ========================
-        '&-collapse-transition': {
-          '&-enter-active': {
-            transition: ['max-height', 'padding-top', 'padding-bottom']
-              .map(
-                (prop) =>
-                  `${prop} ${token.motionDurationSlow} ${token.motionEaseInOut}`,
-              )
-              .join(','),
-          },
-
-          '&-leave-active': {
-            transition: ['max-height', 'padding-top', 'padding-bottom']
-              .map(
-                (prop) =>
-                  `${prop} ${token.motionDurationSlow} ${token.motionEaseInOut}`,
-              )
-              .join(','),
-          },
-        },
       },
     },
   };
