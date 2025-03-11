@@ -1,18 +1,31 @@
 import { unit } from '../../_util/cssinjs';
 import { mergeToken } from '../../_util/cssinjs-utils';
-import type { FullToken, GenerateStyle, GetDefaultToken } from '../../theme/cssinjs-utils';
+import type {
+  FullToken,
+  GenerateStyle,
+  GetDefaultToken,
+} from '../../theme/cssinjs-utils';
 import { genStyleHooks } from '../../theme/genStyleUtils';
+import { genTransitionCollapseStyle } from '../../transition-collapse';
 import genSenderHeaderStyle from './header';
 
 // biome-ignore lint/suspicious/noEmptyInterface: ComponentToken need to be empty by default
-export interface ComponentToken { }
+export interface ComponentToken {}
 
 export interface SenderToken extends FullToken<'Sender'> {
   SenderContentMaxWidth: number | string;
 }
 
 const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
-  const { componentCls, padding, paddingSM, paddingXS, lineWidth, lineWidthBold, calc } = token;
+  const {
+    componentCls,
+    padding,
+    paddingSM,
+    paddingXS,
+    lineWidth,
+    lineWidthBold,
+    calc,
+  } = token;
 
   return {
     [componentCls]: {
@@ -137,10 +150,15 @@ export default genStyleHooks<'Sender'>(
   (token) => {
     const { paddingXS, calc } = token;
     const SenderToken = mergeToken<SenderToken>(token, {
-      SenderContentMaxWidth: `calc(100% - ${unit(calc(paddingXS).add(32).equal())})`,
+      SenderContentMaxWidth: `calc(100% - ${unit(
+        calc(paddingXS).add(32).equal(),
+      )})`,
     });
-    return [genSenderStyle(SenderToken), genSenderHeaderStyle(SenderToken)];
+    return [
+      genSenderStyle(SenderToken),
+      genSenderHeaderStyle(SenderToken),
+      genTransitionCollapseStyle(SenderToken),
+    ];
   },
   prepareComponentToken,
 );
-

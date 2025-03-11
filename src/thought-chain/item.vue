@@ -6,6 +6,7 @@ import type { ThoughtChainNodeProps } from './interface';
 import { useThoughtChainNodeContextInject } from './context';
 import { Avatar, Typography } from 'ant-design-vue';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
+import { TransitionCollapse } from '../transition-collapse'
 
 defineOptions({ name: 'AXThoughtChainNode' });
 
@@ -121,8 +122,9 @@ defineRender(() => {
         {extra.value && <div class={`${itemCls.value}-extra`}>{extra.value}</div>}
       </div>
       {/* Content */}
+
+    <TransitionCollapse prefixCls={prefixCls.value}>
       {content.value && (
-        // TODO: add animation
         <div
           v-show={contentVisible.value}
           class={classnames(`${itemCls.value}-content`)}
@@ -134,23 +136,10 @@ defineRender(() => {
             {content.value}
           </div>
         </div>
-        // <CSSMotion {...collapseMotion} visible={enableCollapse.value ? contentOpen.value : true}>
-        //   {({ className: motionClassName, style }, motionRef) => (
-        //     <div
-        //       className={classnames(`${itemCls}-content`, motionClassName)}
-        //       ref={motionRef}
-        //       style={style}
-        //     >
-        //       <div
-        //         className={classnames(`${itemCls}-content-box`, classNames.itemContent)}
-        //         style={styles.itemContent}
-        //       >
-        //         {content}
-        //       </div>
-        //     </div>
-        //   )}
-        // </CSSMotion>
       )}
+    </TransitionCollapse>
+
+
       {/* Footer */}
       {footer.value && (
         <div
