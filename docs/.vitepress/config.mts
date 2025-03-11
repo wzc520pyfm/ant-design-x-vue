@@ -3,7 +3,6 @@ import VueMacros from 'unplugin-vue-macros/vite'
 import path from 'node:path';
 import { fileURLToPath, URL } from 'node:url'
 import { mdPlugin } from './config/plugins'
-import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { MarkdownTransform } from './plugins/markdown-transform';
 
@@ -90,7 +89,15 @@ export default defineConfig({
     nav: [
       { text: '组件', link: '/component/overview' },
       { text: '演示', link: '/playground/independent' },
+      {
+        text: '更多',
+        items: [
+          { text: 'Ant Design X of React', link: 'https://x.ant.design/index-cn' },
+          { text: 'Ant Design Vue', link: 'https://www.antdv.com/components/overview-cn' },
+        ]
+      }
     ],
+    outline:[2,3],
 
     sidebar: {
       '/component/': [
@@ -116,7 +123,7 @@ export default defineConfig({
           text: '表达',
           items: [
             { text: 'Sender 输入框', link: '/component/sender' },
-            { text: 'Attachment 输入附件', link: '/component/attachment' },
+            { text: 'Attachments 输入附件', link: '/component/attachments' },
             { text: 'Suggestion 快捷指令', link: '/component/suggestion' }
           ]
         },

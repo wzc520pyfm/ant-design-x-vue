@@ -68,7 +68,7 @@ export type BubbleDataType = BubbleProps & {
 
 export type RoleType = Partial<Omit<BubbleProps, 'content'>>;
 
-export type RolesType = Record<string, RoleType> | ((bubbleDataP: BubbleDataType) => RoleType);
+export type RolesType = Record<string, RoleType> | ((bubbleDataP: BubbleDataType, index: number) => RoleType);
 
 export interface BubbleListProps extends /* @vue-ignore */ HTMLAttributes {
   prefixCls?: string;

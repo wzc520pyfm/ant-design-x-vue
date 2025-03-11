@@ -1,14 +1,14 @@
-<script setup lang="tsx" generic="T = any">
-import type { ButtonProps } from 'ant-design-vue';
+<script setup lang="tsx">
+import type { AntdButtonProps } from '../interface';
 import { ClearOutlined } from '@ant-design/icons-vue';
 import ActionButton from './ActionButton/index.vue';
 
 defineOptions({ name: 'AXSenderClearButton' });
 
-const props = defineProps<ButtonProps>();
+const { disabled = undefined, ...restProps} = defineProps<AntdButtonProps>();
 
 defineRender(() => {
-  return <ActionButton {...props} action="onClear">
+  return <ActionButton disabled={disabled} {...restProps} action="onClear">
     <ClearOutlined />
   </ActionButton>;
 })

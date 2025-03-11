@@ -57,6 +57,12 @@ type onTrigger<T> = (info: T | false) => void;
 
 Suggestion 接受泛型以自定义传递给 `items` renderProps 的参数类型，当传递 `false` 时，则关闭建议面板。
 
+### Suggestions Slots
+
+| 插槽名 | 说明 | 类型 |
+| --- | --- | --- |
+| default | 用于自定义输入框 | \{ onTrigger, onKeyDown \} |
+
 ### SuggestionItem
 
 | 属性     | 说明           | 类型             | 默认值 | 版本 |

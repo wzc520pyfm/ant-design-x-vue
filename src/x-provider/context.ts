@@ -2,13 +2,40 @@ import { objectType, type AnyObject } from '../_util/type';
 import { AttachmentsProps } from '../attachments';
 import type { BubbleProps } from '../bubble';
 import { computed, ComputedRef, CSSProperties, defineComponent, inject, InjectionKey, provide, shallowRef, triggerRef, unref, watch } from 'vue';
-import type { ConfigProviderProps as AntdConfigProviderProps } from 'ant-design-vue/es/config-provider';
+import type { ConfigProviderProps as OriAntdConfigProviderProps } from 'ant-design-vue/es/config-provider';
 import type { ConversationsProps } from '../conversations';
 import type { PromptsProps } from '../prompts';
 import type { SenderProps } from '../sender';
 import type { SuggestionProps } from '../suggestion';
 import type { ThoughtChainProps } from '../thought-chain';
 import type { WelcomeProps } from '../welcome';
+
+// refer from the ConfigProviderProps of ant-design-vue
+export interface AntdConfigProviderProps {
+  iconPrefixCls?: OriAntdConfigProviderProps['iconPrefixCls'];
+  getTargetContainer?: OriAntdConfigProviderProps['getTargetContainer'];
+  getPopupContainer?: OriAntdConfigProviderProps['getPopupContainer'];
+  prefixCls?: OriAntdConfigProviderProps['prefixCls'];
+  getPrefixCls?: OriAntdConfigProviderProps['getPrefixCls'];
+  renderEmpty?: OriAntdConfigProviderProps['renderEmpty'];
+  transformCellText?: OriAntdConfigProviderProps['transformCellText'];
+  csp?: OriAntdConfigProviderProps['csp'];
+  input?: OriAntdConfigProviderProps['input'];
+  autoInsertSpaceInButton?: OriAntdConfigProviderProps['autoInsertSpaceInButton'];
+  locale?: OriAntdConfigProviderProps['locale'];
+  pageHeader?: OriAntdConfigProviderProps['pageHeader'];
+  componentSize?: OriAntdConfigProviderProps['componentSize'];
+  componentDisabled?: OriAntdConfigProviderProps['componentDisabled'];
+  direction?: OriAntdConfigProviderProps['direction'];
+  space?: OriAntdConfigProviderProps['space'];
+  virtual?: OriAntdConfigProviderProps['virtual'];
+  dropdownMatchSelectWidth?: OriAntdConfigProviderProps['dropdownMatchSelectWidth'];
+  form?: OriAntdConfigProviderProps['form'];
+  pagination?: OriAntdConfigProviderProps['pagination'];
+  theme?: OriAntdConfigProviderProps['theme'];
+  select?: OriAntdConfigProviderProps['select'];
+  wave?: OriAntdConfigProviderProps['wave'];
+}
 
 export interface XComponentStyleConfig {
   classNames: Record<string, string>;
@@ -17,9 +44,9 @@ export interface XComponentStyleConfig {
   style: CSSProperties;
 }
 
-type DefaultPickType = keyof XComponentStyleConfig;
+export type DefaultPickType = keyof XComponentStyleConfig;
 
-type ComponentStyleConfig<
+export type ComponentStyleConfig<
   CompProps extends AnyObject,
   PickType extends keyof CompProps = DefaultPickType,
 > = Pick<CompProps, PickType | DefaultPickType>;

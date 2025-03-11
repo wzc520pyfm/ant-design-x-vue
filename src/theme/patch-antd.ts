@@ -1,6 +1,6 @@
-import { MapToken } from "ant-design-vue/es/theme/interface";
-import { AliasToken, OverrideToken, SeedToken } from "./cssinjs-utils";
-import { Theme } from "ant-design-vue";
+import type { MapToken } from "ant-design-vue/es/theme/interface";
+import type { AliasToken, OverrideToken, SeedToken } from "./cssinjs-utils";
+import type { Theme } from "ant-design-vue";
 
 export const ignore: {
   [key in keyof AliasToken]?: boolean;

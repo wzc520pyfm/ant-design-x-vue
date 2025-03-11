@@ -23,7 +23,7 @@ interface YourMessageType {
 const status = ref<ThoughtChainItem['status']>();
 const lines = ref<Record<string, string>[]>([]);
 
-const { agent } = useXAgent<YourMessageType>({
+const [ agent ] = useXAgent<YourMessageType>({
   baseURL: BASE_URL + PATH,
   model: MODEL,
   // dangerouslyApiKey: API_KEY

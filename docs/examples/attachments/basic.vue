@@ -1,8 +1,8 @@
 <script setup lang="tsx">
 import { CloudUploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
 import { App, Button, Flex, Switch } from 'ant-design-vue';
-import { Attachments } from 'ant-design-x-vue';
-import { ref, useTemplateRef } from 'vue';
+import { Sender, Attachments } from 'ant-design-x-vue';
+import { ref, computed, useTemplateRef } from 'vue';
 
 defineOptions({ name: 'AXAttachmentBasic' });
 
@@ -20,22 +20,25 @@ const Demo = () => {
     customContent.value = v
   }
 
+  const attachmentsNode = computed(() => (
+    <Attachments
+      beforeUpload={() => false}
+      onChange={({ file }) => {
+        message.info(`Mock upload: ${file.name}`);
+      }}
+      getDropContainer={() => (fullScreenDrop.value ? document.body : divRef.value)}
+      placeholder={{
+        icon: <CloudUploadOutlined />,
+        title: 'Drag & Drop files here',
+        description: 'Support file type: image, video, audio, document, etc.',
+      }}
+      children={customContent.value && <Button type="text" icon={<LinkOutlined />} />}
+    />));
+
   return (
     <div ref="basic-container">
       <Flex vertical gap="middle" align="flex-start">
-        <Attachments
-          beforeUpload={() => false}
-          onChange={({ file }) => {
-            message.info(`Mock upload: ${file.name}`);
-          }}
-          getDropContainer={() => (fullScreenDrop.value ? document.body : divRef.value)}
-          placeholder={{
-            icon: <CloudUploadOutlined />,
-            title: 'Drag & Drop files here',
-            description: 'Support file type: image, video, audio, document, etc.',
-          }}
-          children={customContent.value && <Button type="text" icon={<LinkOutlined />} />}
-        />
+        <Sender prefix={attachmentsNode.value} />
         <Switch
           checked={fullScreenDrop.value}
           onChange={(checked) => {

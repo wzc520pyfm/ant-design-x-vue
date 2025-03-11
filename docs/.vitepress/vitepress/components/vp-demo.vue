@@ -1,31 +1,36 @@
 <script setup lang="ts">
 import { computed, getCurrentInstance, ref, toRef } from 'vue'
-import { isClient, useClipboard, useToggle } from '@vueuse/core'
+import { isClient, useClipboard, useStorage, useToggle } from '@vueuse/core'
 import { App, Divider, Tooltip, theme } from 'ant-design-vue'
 import { XProvider } from 'ant-design-x-vue'
 import { CaretUpFilled, CodepenOutlined, ThunderboltOutlined, FunctionOutlined } from '@ant-design/icons-vue'
 // import { useLang } from '../composables/lang'
 import { useSourceCode } from '../composables/source-code'
-// import { usePlayground } from '../composables/use-playground'
+import { usePlayground } from '../composables/use-playground'
 // import demoBlockLocale from '../../i18n/component/demo-block.json'
 import SourceCode from './demo/vp-source-code.vue'
 import { useData } from 'vitepress'
 
 const props = defineProps<{
   source: string
+  sourceSetup: string
   path: string
   rawSource: string
+  rawSourceSetup: string
   description: string
+  title: string
 }>()
 
 const vm = getCurrentInstance()!
+
+const prefer = useStorage('antdx-docs-preference', 'tsx');
 
 const { isDark } = useData()
 
 const algorithm = computed(() => isDark.value ? theme.darkAlgorithm : theme.defaultAlgorithm)
 
 const { copy, isSupported } = useClipboard({
-  source: decodeURIComponent(props.rawSource),
+  source: () => decodeURIComponent(prefer.value === 'tsx' ? props.rawSource : props.rawSourceSetup),
   read: false,
 })
 
@@ -38,12 +43,11 @@ const sourceCodeRef = ref<HTMLButtonElement>()
 // const locale = computed(() => demoBlockLocale[lang.value])
 const locale = computed(() => ({}));
 const decodedDescription = computed(() => decodeURIComponent(props.description))
-
-const onPlaygroundClick = () => {
-  // const { link } = usePlayground(props.rawSource)
-  if (!isClient) return
-  // window.open(link)
-}
+const { onStackblitzPlayBtnClick } = usePlayground({
+  title: props.title,
+  rawSource: () => prefer.value === 'tsx' ? props.rawSource : props.rawSourceSetup,
+  path: props.path,
+})
 
 const onSourceVisibleKeydown = (e: KeyboardEvent) => {
   if (['Enter', 'Space'].includes(e.code)) {
@@ -77,19 +81,22 @@ const copyCode = async () => {
 
     <div class="example">
       <div class="example-showcase">
-        <App>
+        <template v-if="prefer === 'tsx'">
           <slot name="source" />
-        </App>
+        </template>
+        <template v-if="prefer === 'setup'">
+          <slot name="source-setup" />
+        </template>
       </div>
 
       <Divider style="margin: 0;" />
 
       <div class="op-btns">
-        <!-- <Tooltip>
-        <template #title>在 Stackblitz 中打开</template>
-<ThunderboltOutlined tabindex="0" role="link" class="op-btn" @click="onPlaygroundClick"
-  @keydown.prevent.enter="onPlaygroundClick" @keydown.prevent.space="onPlaygroundClick" />
-</Tooltip> -->
+        <Tooltip>
+          <template #title>在 Stackblitz 中打开</template>
+          <ThunderboltOutlined tabindex="0" role="link" class="op-btn" @click="onStackblitzPlayBtnClick"
+            @keydown.prevent.enter="onStackblitzPlayBtnClick" @keydown.prevent.space="onStackblitzPlayBtnClick" />
+        </Tooltip>
         <!-- <Tooltip>
         <template #title>在 CodePen 中打开</template>
         <CodepenOutlined
@@ -111,7 +118,7 @@ const copyCode = async () => {
       </div>
 
       <Transition name="fade-in-linear">
-        <SourceCode :visible="sourceVisible" :source="source" />
+        <SourceCode :visible="sourceVisible" :source="prefer === 'tsx' ? source : sourceSetup" />
       </Transition>
 
       <Transition name="fade-in-linear">

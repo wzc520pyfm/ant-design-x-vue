@@ -47,9 +47,11 @@ defineExpose({
   nativeElement: uploadDraggerRef
 })
 
+const isVNodeArray = (val: any) => Array.isArray(val) && val.every(isVNode);
+
 // ============================ Render ============================
 const node = computed(() => {
-  if (isVNode(placeholder)) {
+  if (isVNode(placeholder) || isVNodeArray(placeholder)) {
     return placeholder;
   }
   return (

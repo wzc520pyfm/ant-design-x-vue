@@ -50,7 +50,18 @@ welcome/background
 | title | 显示在提示列表顶部的标题。 | VNode \| string | - | - |
 | variant | 变体类型。 | 'filled' \| 'borderless' | 'filled' | - |
 
+### Welcome Slots
+
+| 插槽名 | 说明 |
+| --- | --- |
+| title | 显示在提示列表顶部的标题 |
+| description | 显示在提示列表中的描述 |
+| icon | 显示在提示列表前侧的图标 |
+| extra | 显示在提示列表末尾的额外操作 |
+
+
 ## Semantic DOM
 
+<vp-semantic component="Welcome"></vp-semantic>
 
 ## 主题变量（Design Token）

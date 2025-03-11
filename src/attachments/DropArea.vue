@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, onWatcherCleanup, Teleport, watch } from 'vue';
+import { computed, onMounted, onWatcherCleanup, Teleport, toValue, watch } from 'vue';
 import useState from '../_util/hooks/use-state';
 import { useAttachmentContextInject } from './context';
 import type { DropUploaderProps } from './interface';
@@ -15,7 +15,12 @@ const [container, setContainer] = useState<HTMLElement | null | undefined>();
 const [showArea, setShowArea] = useState<boolean | null>(null);
 
 // ========================== Container ===========================
-watch(() => getDropContainer, () => {
+// Attachments children changed, unable watch getDropContainer, should setContainer on mounted
+onMounted(() => {
+  setContainer(getDropContainer?.());
+})
+
+watch(() => toValue(getDropContainer), () => {
   const nextContainer = getDropContainer?.();
   if (container.value !== nextContainer) {
     setContainer(nextContainer);

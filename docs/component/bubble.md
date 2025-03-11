@@ -131,6 +131,16 @@ bubble/gpt-vis
 | messageRender | 自定义渲染内容 | (content?: string) => VNode | - |  |
 | onTypingComplete | 打字效果完成时的回调，如果没有设置 typing 将在渲染时立刻触发 | () => void | - |  |
 
+### Bubble Slots
+
+| 插槽名 | 说明 | 类型 |
+| --- | --- | --- |
+| avatar | 头像 | - |
+| header | 头部面板 | - |
+| footer | 底部内容 | - |
+| loading | loading占位 | - |
+| message | 消息内容 | \{ content: string \} |
+
 ### Bubble.List
 
 | 属性 | 说明 | 类型 | 默认值 | 版本 |
@@ -141,7 +151,7 @@ bubble/gpt-vis
 
 ## Semantic DOM
 
-<!-- <code src="./demo/_semantic.tsx" simplify="true"></code> -->
+<vp-semantic component="Bubble"></vp-semantic>
 
 ## 主题变量（Design Token）
 

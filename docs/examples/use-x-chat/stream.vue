@@ -21,7 +21,7 @@ const content = ref('');
 const senderLoading = ref(false);
 
 // Agent for request
-const { agent } = useXAgent({
+const [ agent ] = useXAgent({
   request: async ({ message }, { onSuccess, onUpdate }) => {
     senderLoading.value = true;
     const fullContent = `Streaming output instead of Bubble typing effect. You typed: ${message}`;

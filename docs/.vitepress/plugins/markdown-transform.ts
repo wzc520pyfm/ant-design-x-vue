@@ -27,7 +27,7 @@ export function MarkdownTransform(): Plugin {
 
     async transform(code, id) {
       if (!id.endsWith('.md')) return
-      if (!id.includes('/component')) return 
+      if (!id.includes('/component')) return
 
       const componentId = path.basename(id, '.md')
       const append: Append = {
@@ -110,7 +110,8 @@ const getExampleImports = (componentId: string) => {
     const name = camelize(`Ax-${componentId}-${file}`)
 
     imports.push(
-      `import ${name} from '../examples/${componentId}/${file}.vue'`
+      `import ${name} from '../examples/${componentId}/${file}.vue'`,
+      `import ${name}Setup from '../examples-setup/${componentId}/${file}.vue'`
     )
   }
 

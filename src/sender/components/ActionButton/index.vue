@@ -9,6 +9,8 @@ defineOptions({ name: 'AXSenderActionButton' });
 
 const {
   action,
+  type = "text",
+  disabled: propDisable = undefined,
   onClick: outClick,
   ...restProps
 } = defineProps<ActionButtonProps>();
@@ -21,7 +23,6 @@ const context = useActionButtonContextInject()
 
 const mergedDisabled = computed(() => {
   const rootDisabled = context.value.disabled;
-  const propDisable = restProps.disabled;
   const actionDisable = context.value?.[`${action}Disabled`];
   return rootDisabled ?? propDisable ?? actionDisable;
 });
@@ -37,7 +38,7 @@ const onClick = computed(() => {
 defineRender(() => {
   return (
     <Button
-      type="text"
+      type={type}
       {...restProps}
       onClick={(e) => {
         if (!mergedDisabled.value) {

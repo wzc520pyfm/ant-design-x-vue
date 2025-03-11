@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, ref, useTemplateRef, watch } from 'vue';
+import { computed, ref, useTemplateRef, type VNode, watch } from 'vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import type { Attachment, AttachmentsProps, AttachmentsRef, PlaceholderProps } from './interface';
@@ -32,6 +32,10 @@ const {
   styles = {},
   ...uploadProps
 } = defineProps<AttachmentsProps>();
+
+const slots = defineSlots<{
+  placeholder?(props?: { type: "inline" | "drop" }): VNode | string;
+}>();
 
 // ============================ PrefixCls ============================
 const { getPrefixCls, direction } = useXProviderContext();
@@ -86,7 +90,12 @@ const getPlaceholderNode = (
   props?: Pick<PlaceholderProps, 'style'>,
   ref?: InstanceType<typeof Upload>,
 ) => {
-  const placeholderContent = typeof placeholder === 'function' ? placeholder(type) : placeholder;
+  const placeholderContent =
+    slots.placeholder
+      ? slots.placeholder({ type })
+      : typeof placeholder === 'function'
+        ? placeholder(type)
+        : placeholder;
 
   return (
     <PlaceholderUploader
@@ -99,83 +108,13 @@ const getPlaceholderNode = (
         ...styles.placeholder,
         ...props?.style,
       }}
-      // TODO: Fix Dom Ref Err
-      // ref={ref}
+    // TODO: Fix Dom Ref Err
+    // ref={ref}
     />
   );
 };
 
-const renderChildren = computed(() => {
-  // TODO: render
-  if (children) {
-    return (
-      <>
-        <SilentUploader
-          upload={mergedUploadProps.value}
-          rootClassName={rootClassName}
-          ref="attachments-upload"
-          // TODO: need support slot alse
-          children={children}
-        />
-        <DropArea
-          getDropContainer={getDropContainer}
-          prefixCls={prefixCls}
-          className={classnames(cssinjsCls.value, rootClassName)}
-          // TODO: need support slot alse
-          children={getPlaceholderNode('drop')}
-        />
-      </>
-    )
-  }
-
-  const hasFileList = fileList.value.length > 0;
-  return (
-    <div
-      class={classnames(
-        prefixCls,
-        cssinjsCls.value,
-        {
-          [`${prefixCls}-rtl`]: direction.value === 'rtl',
-        },
-        className,
-        rootClassName,
-      )}
-      style={{
-        ...rootStyle,
-        ...style,
-      }}
-      dir={direction.value || 'ltr'}
-      ref="attachments-container"
-    >
-      <FileList
-        prefixCls={prefixCls}
-        items={fileList.value}
-        onRemove={onItemRemove}
-        overflow={overflow}
-        upload={mergedUploadProps.value}
-        listClassName={classnames(contextClassNames.value.list, classNames.list)}
-        listStyle={{
-          ...contextStyles.value.list,
-          ...styles.list,
-          ...(!hasFileList && { display: 'none' }),
-        }}
-        itemClassName={classnames(contextClassNames.value.item, classNames.item)}
-        itemStyle={{
-          ...contextStyles.value.item,
-          ...styles.item,
-        }}
-      />
-      {getPlaceholderNode('inline', hasFileList ? { style: { display: 'none' } } : {}, uploadRef.value)}
-      <DropArea
-        getDropContainer={getDropContainer || (() => containerRef.value)}
-        prefixCls={prefixCls}
-        className={cssinjsCls.value}
-      >
-        {getPlaceholderNode('drop')}
-      </DropArea>
-    </div>
-  )
-});
+const hasFileList = computed(() => fileList.value.length > 0);
 
 defineExpose<AttachmentsRef>({
   nativeElement: containerRef.value,
@@ -203,7 +142,68 @@ defineRender(() => {
         disabled,
       }}
     >
-      {renderChildren.value}
+      {children ? (
+        <>
+          <SilentUploader
+            upload={mergedUploadProps.value}
+            rootClassName={rootClassName}
+            ref="attachments-upload"
+            // TODO: need support slot alse
+            children={children}
+          />
+          <DropArea
+            getDropContainer={getDropContainer}
+            prefixCls={prefixCls}
+            className={classnames(cssinjsCls.value, rootClassName)}
+            // TODO: need support slot alse
+            children={getPlaceholderNode('drop')}
+          />
+        </>
+      ) : (
+        <div
+          class={classnames(
+            prefixCls,
+            cssinjsCls.value,
+            {
+              [`${prefixCls}-rtl`]: direction.value === 'rtl',
+            },
+            className,
+            rootClassName,
+          )}
+          style={{
+            ...rootStyle,
+            ...style,
+          }}
+          dir={direction.value || 'ltr'}
+          ref="attachments-container"
+        >
+          <FileList
+            prefixCls={prefixCls}
+            items={fileList.value}
+            onRemove={onItemRemove}
+            overflow={overflow}
+            upload={mergedUploadProps.value}
+            listClassName={classnames(contextClassNames.value.list, classNames.list)}
+            listStyle={{
+              ...contextStyles.value.list,
+              ...styles.list,
+              ...(!hasFileList.value && { display: 'none' }),
+            }}
+            itemClassName={classnames(contextClassNames.value.item, classNames.item)}
+            itemStyle={{
+              ...contextStyles.value.item,
+              ...styles.item,
+            }}
+          />
+          {getPlaceholderNode('inline', hasFileList.value ? { style: { display: 'none' } } : {}, uploadRef.value)}
+          <DropArea
+            getDropContainer={getDropContainer || (() => containerRef.value)}
+            prefixCls={prefixCls}
+            className={cssinjsCls.value}
+            children={getPlaceholderNode('drop')}
+          />
+        </div>
+      )}
     </AttachmentContextProvider>
   )
 });

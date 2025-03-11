@@ -1,11 +1,11 @@
 
-# Attachment 输入附件
+# Attachments 输入附件
 
 用于展示一组附件信息集合。
 
 ## 何时使用
 
-Attachment 组件用于需要展示一组附件信息集合的场景。
+Attachments 组件用于需要展示一组附件信息集合的场景。
 
 ## 代码演示
 
@@ -13,7 +13,7 @@ Attachment 组件用于需要展示一组附件信息集合的场景。
 
 :::demo 基础用法，可以通过 `getDropContainer` 支持拖拽上传。
 
-attachment/basic
+attachments/basic
 
 :::
 
@@ -21,7 +21,7 @@ attachment/basic
 
 :::demo 修改占位信息。
 
-attachment/placeholder
+attachments/placeholder
 
 :::
 
@@ -29,7 +29,15 @@ attachment/placeholder
 
 :::demo 控制附件超出区域长度时的展示方式。
 
-attachment/overflow
+attachments/overflow
+
+:::
+
+### 组合示例
+
+:::demo 配合 Sender.Header 使用，在对话中插入附件。
+
+attachments/with-sender
 
 :::
 
@@ -37,7 +45,7 @@ attachment/overflow
 
 :::demo 单独的文件卡片，用于一些展示场景。
 
-attachment/files
+attachments/files
 
 :::
 
@@ -45,7 +53,7 @@ attachment/files
 
 <!-- 通用属性参考：[通用属性](/docs/react/common-props)。 -->
 
-### Attachment Props
+### Attachments Props
 
 继承 antdv [Upload](https://www.antdv.com/components/upload-cn) 属性。
 
@@ -69,6 +77,12 @@ interface PlaceholderType {
 }
 ```
 
+### Attachments Slots
+
+| 插槽名 | 说明 | 类型 |
+| --- | --- | --- |
+| placeholder | 没有文件时的占位信息 | \{ type: "inline" \| "drop" \} |
+
 ### Attachments Expose
 
 | 属性          | 说明             | 类型                 | 版本 |
@@ -76,9 +90,16 @@ interface PlaceholderType {
 | nativeElement | 获取原生节点     | HTMLElement          | -    |
 | upload        | 手工调用上传文件 | (file: File) => void | -    |
 
+### Attachments.FileCard Props
+
+| 属性 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| item | 附件，同 Upload `UploadFile` | Attachment | - | - |
+| onRemove | 附件移除时的回调函数 | (item: Attachment) => void | - | - |
+
 ## Semantic DOM
 
-<!-- <code src="./demo/_semantic.tsx" simplify="true"></code> -->
+<vp-semantic component="Attachments"></vp-semantic>
 
 ## 主题变量（Design Token）
 

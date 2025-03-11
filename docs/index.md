@@ -12,7 +12,7 @@ hero:
       link: /component/overview
     - theme: alt
       text: 设计语言
-      link: /api-examples
+      link: https://x.ant.design/docs/spec/introduce-cn
 
 features:
   - title: AI 设计范式 - RICH
