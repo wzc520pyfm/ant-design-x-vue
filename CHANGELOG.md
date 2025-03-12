@@ -1,6 +1,42 @@
 # Changelog
 
 
+## v1.0.4
+
+[compare changes](https://undefined/undefined/compare/v1.0.3...v1.0.4)
+
+### 🚀 Enhancements
+
+- Add preference-switch for docs (#124)
+- Semantic dom (#140)
+
+### 🩹 Fixes
+
+- **docs:** Fix md lang for vue setup demo source (#130)
+- **attachment:** Fix placeholder slot no work (#144)
+
+### 📖 Documentation
+
+- Add welcome and x-stream setup usage example (#127, #128)
+- Add prompts/basic.vue setup usage example (#127, #128, #131)
+- Add thought-chain setup usage example (#132)
+- Add bubble  setup usage example (#127, #135)
+- Add use-x-agent setup usage example (#137)
+- **attachments:** Add basic demo for setup examples (#139)
+- **suggestion:** Add suggestion setup example (#142)
+- **attachments:** Add with sender demo and update basic demo (#100)
+- **attachments:** Add with-sender setup demo file (a03e6d1)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Linhf123 ([@linhf123](http://github.com/linhf123))
+- Bao ([@Bao0630](http://github.com/Bao0630))
+- Zoey Zhao ([@zoeyzhao19](http://github.com/zoeyzhao19))
+- 归谜 ([@vhxubo](http://github.com/vhxubo))
+- LIKUN ([@StudyDayByDay](http://github.com/StudyDayByDay))
+- Zhangqiang ([@JACK-ZHANG-coming](http://github.com/JACK-ZHANG-coming))
+
 ## v1.0.3
 
 [compare changes](https://undefined/undefined/compare/v1.0.2...v1.0.3)

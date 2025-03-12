@@ -33,6 +33,14 @@ attachments/overflow
 
 :::
 
+### 组合示例
+
+:::demo 配合 Sender.Header 使用，在对话中插入附件。
+
+attachments/with-sender
+
+:::
+
 ### 文件卡片
 
 :::demo 单独的文件卡片，用于一些展示场景。
@@ -91,7 +99,7 @@ interface PlaceholderType {
 
 ## Semantic DOM
 
-<!-- <code src="./demo/_semantic.tsx" simplify="true"></code> -->
+<vp-semantic component="Attachments"></vp-semantic>
 
 ## 主题变量（Design Token）
 

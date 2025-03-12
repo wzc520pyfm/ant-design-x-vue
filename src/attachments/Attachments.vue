@@ -200,9 +200,8 @@ defineRender(() => {
             getDropContainer={getDropContainer || (() => containerRef.value)}
             prefixCls={prefixCls}
             className={cssinjsCls.value}
-          >
-            {getPlaceholderNode('drop')}
-          </DropArea>
+            children={getPlaceholderNode('drop')}
+          />
         </div>
       )}
     </AttachmentContextProvider>

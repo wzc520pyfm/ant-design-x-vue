@@ -152,7 +152,7 @@ type SpeechConfig = {
 
 ## Semantic DOM
 
-<!-- <code src="./demo/_semantic.tsx" simplify="true"></code> -->
+<vp-semantic component="Sender"></vp-semantic>
 
 ## 主题变量（Design Token）
 

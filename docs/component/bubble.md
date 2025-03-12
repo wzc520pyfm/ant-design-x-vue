@@ -151,7 +151,7 @@ bubble/gpt-vis
 
 ## Semantic DOM
 
-<!-- <code src="./demo/_semantic.tsx" simplify="true"></code> -->
+<vp-semantic component="Bubble"></vp-semantic>
 
 ## 主题变量（Design Token）
 
