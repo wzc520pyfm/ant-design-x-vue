@@ -100,7 +100,7 @@ type SemanticType = 'list' | 'item' | 'content' | 'title' | 'subList' | 'subItem
 
 ## Semantic DOM
 
-<!-- <code src="./demo/_semantic.tsx" simplify="true"></code> -->
+<vp-semantic component="Prompts"></vp-semantic>
 
 ## 主题变量（Design Token）
 

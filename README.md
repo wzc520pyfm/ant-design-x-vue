@@ -7,6 +7,8 @@
 ![Netlify Build][netlify-build-src]
 [![License][license-src]][license-href]
 
+[![](https://data.jsdelivr.com/v1/package/npm/ant-design-x-vue/badge)](https://www.jsdelivr.com/package/npm/ant-design-x-vue)
+
 Ant Design X For Vue. 🔥 [English](./README.en.md)
 
 这里是[Ant Design X](https://github.com/ant-design/x)的Vue实现。

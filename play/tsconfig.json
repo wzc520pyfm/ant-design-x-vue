@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "moduleResolution": "node",
+    "strictNullChecks": false,
+    "baseUrl": "./",
+    "types": ["unplugin-vue-macros/macros-global", "node"],
+    "paths": {
+      "ant-design-x-vue": ["src/index.ts"],
+      "ant-design-x-vue/*": ["src/*"],
+    }
+  },
+  "vueCompilerOptions": {
+    "plugins": ["unplugin-vue-macros/volar"]
+  },
+  "include": ["src/**/*", "docs/**/*", "internal/**/*"],
+}

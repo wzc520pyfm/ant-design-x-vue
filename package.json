@@ -1,6 +1,6 @@
 {
   "name": "ant-design-x-vue",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Craft AI-driven interfaces effortlessly",
   "keywords": [
     "AI",
@@ -24,7 +24,8 @@
     "release": "pnpm test && changelogen --release && npm publish && git push --follow-tags",
     "test": "vitest",
     "test:cov": "vitest --coverage",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "play": "vite ./play"
   },
   "author": {
     "name": "wzc520pyfm",
@@ -113,6 +114,7 @@
     "typescript": "~5.5.4",
     "unplugin-vue-macros": "^2.13.6",
     "vite": "^5.4.8",
+    "vite-plugin-inspect": "^0.8.9",
     "vitepress": "^1.5.0",
     "vitest": "^2.1.1",
     "vue": "^3.5.10",
