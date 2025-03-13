@@ -26,6 +26,14 @@ conversations/with-menu
 
 :::
 
+### 可编辑
+
+:::demo 可编辑对话名
+
+conversations/editable
+
+:::
+
 ### 受控模式
 
 :::demo 使用 `activeKey`、`onChange` 属性，控制当前选中的会话
