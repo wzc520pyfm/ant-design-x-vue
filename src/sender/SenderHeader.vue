@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import type { SenderHeaderProps } from './interface';
 import { useSenderHeaderContextInject } from './context';
 import { computed, useAttrs } from 'vue';
-import CollapseTransition from './CollapseTransition.vue'
+import { TransitionCollapse } from '../transition-collapse'
 
 const slots = defineSlots<{
   default(props?: any): any
@@ -35,10 +35,14 @@ const headerCls = computed(() => `${SendHeaderContext.value.prefixCls}-header`)
 const attrs = useAttrs();
 defineRender(() => {
   return (
-    <CollapseTransition prefixCls={headerCls.value}>
+    <TransitionCollapse
+      prefixCls={SendHeaderContext.value.prefixCls}
+    >
       {
-        open && <div
+        <div
           {...attrs}
+          v-if={open || forceRender}
+          v-show={open}
           class={classNames(headerCls.value, className)}
           style={{
             ...style,
@@ -87,7 +91,7 @@ defineRender(() => {
         </div>
       }
 
-    </CollapseTransition>
+    </TransitionCollapse>
   )
 });
 </script>

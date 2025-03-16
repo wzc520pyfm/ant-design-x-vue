@@ -24,7 +24,8 @@
     "release": "pnpm test && changelogen --release && npm publish && git push --follow-tags",
     "test": "vitest",
     "test:cov": "vitest --coverage",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "play": "vite ./play"
   },
   "author": {
     "name": "wzc520pyfm",

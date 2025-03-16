@@ -1,14 +1,19 @@
-<script lang="ts" setup>
+<script lang="tsx" setup>
 import { computed, Transition, type RendererElement } from 'vue'
+defineOptions({ name: 'AXTransitionCollapse' })
 
-defineOptions({ name: 'AXCollapseTransition' })
-
-const props = defineProps<{
-  prefixCls: string
+const props = withDefaults(defineProps<{
+  prefixCls?: string
+}>(), {
+  prefixCls: 'ax',
+})
+const slots = defineSlots<{
+  default(props?: any): any
 }>()
 
+
 const name = computed(() => {
-  return props.prefixCls + '-collapse-transition'
+  return props.prefixCls + '-transition-collapse'
 })
 
 const on = {
@@ -19,9 +24,9 @@ const on = {
     el.dataset.oldPaddingTop = el.style.paddingTop
     el.dataset.oldPaddingBottom = el.style.paddingBottom
 
-    el.style.maxHeight = 0
-    el.style.paddingTop = 0
-    el.style.paddingBottom = 0
+    el.style.maxHeight = '0'
+    el.style.paddingTop = '0'
+    el.style.paddingBottom = '0'
   },
 
   enter (el: RendererElement) {
@@ -33,7 +38,7 @@ const on = {
       el.style.paddingBottom = el.dataset.oldPaddingBottom
     }
     else {
-      el.style.maxHeight = `${el.dataset.oldMaxHeight || 999}px`
+      el.style.maxHeight = `${el.dataset.oldMaxHeight || '999'}px`
       el.style.paddingTop = el.dataset.oldPaddingTop
       el.style.paddingBottom = el.dataset.oldPaddingBottom
     }
@@ -60,9 +65,9 @@ const on = {
 
   leave (el: RendererElement) {
     if (el.scrollHeight !== 0) {
-      el.style.maxHeight = 0
-      el.style.paddingTop = 0
-      el.style.paddingBottom = 0
+      el.style.maxHeight = '0'
+      el.style.paddingTop = '0'
+      el.style.paddingBottom = '0'
     }
   },
 
@@ -73,14 +78,18 @@ const on = {
     el.style.paddingBottom = el.dataset.oldPaddingBottom
   },
 }
-</script>
-
-<template>
-  <Transition
-    :name="name"
-    v-on="on"
+defineRender(() => {
+  return <Transition
+      name={name.value}
+      onBeforeEnter={on.beforeEnter}
+      onEnter={on.enter}
+      onAfterEnter={on.afterEnter}
+      onBeforeLeave={on.beforeLeave}
+      onLeave={on.leave}
+      onAfterLeave={on.afterLeave}
   >
-    <slot />
+    { slots.default?.() }
   </Transition>
-</template>
+})
+</script>
 
