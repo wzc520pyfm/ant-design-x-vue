@@ -75,6 +75,8 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
       // 会话名
       [`& ${componentCls}-label`]: {
         flex: 1,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
         color: token.colorText,
       },
       // 会话操作菜单
