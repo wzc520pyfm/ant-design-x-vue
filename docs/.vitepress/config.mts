@@ -87,6 +87,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     logo: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original',
     nav: [
+      { text: '研发', link: '/development/introduce' },
       { text: '组件', link: '/component/overview' },
       { text: '演示', link: '/playground/independent' },
       {
@@ -100,6 +101,12 @@ export default defineConfig({
     outline:[2,3],
 
     sidebar: {
+      '/development': [
+        {
+          text: 'Ant Design X of Vue',
+          link: '/development/introduce'
+        },
+      ],
       '/component/': [
         {
           text: '总览',
