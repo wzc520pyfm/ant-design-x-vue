@@ -16,7 +16,7 @@ export default function useListData(
     }
 
     if (roles) {
-      return roles.value[bubble.role!] || {};
+      return roles.value?.[bubble.role!] || {};
     }
 
     return {};
