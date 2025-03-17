@@ -87,6 +87,8 @@ const messages = [
 </template>
 ```
 
+这里有一个基本的示例项目，你可以参考：[Example project](https://github.com/wzc520pyfm/ant-design-x-vue/tree/main/play)
+
 ::: warning
 
 文档中 tsx 风格的代码示例采用 [`defineRender`](https://vue-macros.dev/zh-CN/macros/define-render.html) 编写，要运行它们，你还需要集成 [`Vue Macros`](https://vue-macros.dev/zh-CN/guide/bundler-integration.html).
