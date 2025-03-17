@@ -235,6 +235,7 @@ const actionNode = computed(() => {
       SendButton,
       ClearButton,
       LoadingButton,
+      SpeechButton
     },
   }
 
