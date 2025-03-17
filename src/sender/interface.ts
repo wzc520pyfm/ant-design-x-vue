@@ -9,6 +9,7 @@ import type { AvoidValidation } from '../type-utility';
 import SendButton from "./components/SendButton.vue";
 import ClearButton from "./components/ClearButton.vue";
 import LoadingButton from "./components/LoadingButton.vue";
+import SpeechButton from "./components/SpeechButton/index.vue";
 
 export type SubmitType = 'enter' | 'shiftEnter' | false;
 
@@ -23,6 +24,7 @@ export type ActionsRender = (
       SendButton: typeof SendButton;
       ClearButton: typeof ClearButton;
       LoadingButton: typeof LoadingButton;
+      SpeechButton: typeof SpeechButton;
     };
   },
 ) => VNode;
