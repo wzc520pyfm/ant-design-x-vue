@@ -25,7 +25,17 @@ export interface AntDesignXResolverOptions {
 /**
  * set of components that are contained in the package
  */
-const primitiveNames = new Set<string>(['Attachments','Bubble'])
+const primitiveNames = new Set<string>([
+  'Attachments',
+  'Bubble',
+  'Conversations',
+  'Prompts',
+  'Sender',
+  'Suggestion',
+  'Theme',
+  'ThoughtChain',
+  'Welcome',
+])
 
 function isAntdXVueComponent(name: string) {
   return primitiveNames.has(name)
