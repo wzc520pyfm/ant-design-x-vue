@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "lib": ["WebWorker"],
+    "paths": {
+      "ant-design-x-vue": ["../packages/ant-design-x-vue"],
+      "~/*": ["./.vitepress/vitepress/*"]
+    },
+    "jsx": "preserve"
+  },
+  "include": ["**/*", ".vitepress/**/*", "../typings/global.d.ts"],
+  "exclude": ["node_modules"]
+}

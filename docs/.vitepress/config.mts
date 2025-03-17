@@ -18,10 +18,10 @@ export default defineConfig({
     },
     resolve: {
       alias: [
-        {
-          find: /^ant-design-x-vue$/,
-          replacement: path.resolve(__dirname, '../../src')
-        },
+        // {
+        //   find: /^ant-design-x-vue$/,
+        //   replacement: path.resolve(__dirname, '../../src')
+        // },
         {
           find: /^.*\/VPHero\.vue$/,
           replacement: fileURLToPath(

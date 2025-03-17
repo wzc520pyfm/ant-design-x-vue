@@ -5,7 +5,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "emitDeclarationOnly": true,
-    "declarationDir": "./typings",
+    "declarationDir": "packages/ant-design-x-vue/dist/typings",
     "lib": ["esnext", "dom"],
     "jsx": "preserve",
     "jsxImportSource": "vue",
@@ -14,14 +14,19 @@
     "baseUrl": "./",
     "types": ["unplugin-vue-macros/macros-global", "node"],
     "paths": {
-      "ant-design-x-vue": ["src/index.ts"],
-      "ant-design-x-vue/*": ["src/*"],
+      "ant-design-x-vue": ["./packages/ant-design-x-vue/src/index.ts"],
+      "@ant-design-x-vue/components": ["./packages/components"],
       "ant-design-x-vue/resolver/*": ["src/resolver/*"],
     }
   },
   "vueCompilerOptions": {
     "plugins": ["unplugin-vue-macros/volar"]
   },
-  "include": ["src/index.ts", "src/x-provider/**/*", "src/theme/**/*", "src/bubble/**/*"],
-  "exclude": ["src/**/__tests__/**/*"]
+  "include": [
+    "packages/components/**/*.ts",
+    "packages/components/x-provider/**/*",
+    "packages/components/theme/**/*",
+    "packages/components/bubble/**/*"
+  ],
+  "exclude": ["packages/components/**/__tests__/**/*"]
 }
