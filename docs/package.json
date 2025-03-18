@@ -16,6 +16,6 @@
     "@ant-design-x-vue/build-utils": "workspace:*"
   },
   "dependencies": {
-    "ant-design-x-vue": "workspace:*"
+    "ant-design-x-vue": "^1.0.5"
   }
 }
