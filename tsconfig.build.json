@@ -16,6 +16,7 @@
     "paths": {
       "ant-design-x-vue": ["src/index.ts"],
       "ant-design-x-vue/*": ["src/*"],
+      "ant-design-x-vue/resolver/*": ["src/resolver/*"],
     }
   },
   "vueCompilerOptions": {
