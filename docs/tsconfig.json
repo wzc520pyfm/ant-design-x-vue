@@ -14,7 +14,7 @@
     "lib": ["WebWorker", "DOM"],
     "types": ["unplugin-vue-macros/macros-global", "node"],
     "paths": {
-      "ant-design-x-vue": ["../packages/ant-design-x-vue"],
+      "ant-design-x-vue": ["../packages/ant-design-x-vue/src"],
       "~/*": ["./.vitepress/vitepress/*"]
     },
     "jsx": "preserve"
@@ -22,6 +22,6 @@
   "vueCompilerOptions": {
     "plugins": ["unplugin-vue-macros/volar"]
   },
-  "include": ["**/*", ".vitepress/**/*", "../typings/global.d.ts"],
+  "include": ["*/*", "**/*", ".vitepress/**/*"],
   "exclude": ["node_modules"]
 }
