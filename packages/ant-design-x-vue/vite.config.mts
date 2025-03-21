@@ -1,10 +1,8 @@
-import { defineConfig } from 'vite';
-import { resolve } from 'node:path';
-import VueMacros from 'unplugin-vue-macros/vite'
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-
-
+import { resolve } from 'node:path';
+import VueMacros from 'unplugin-vue-macros/vite';
+import { defineConfig } from 'vite';
 const externals = ['vue'];
 
 export default defineConfig({
@@ -27,7 +25,7 @@ export default defineConfig({
       external: [...externals],
       output: {
         globals: {
-          'vue': 'Vue',
+          vue: 'Vue',
         },
       },
     },

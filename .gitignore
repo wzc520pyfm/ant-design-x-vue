@@ -1,11 +1,22 @@
+# Dependencies
 node_modules
-/dist
-.dumi/tmp
-.dumi/tmp-test
-.dumi/tmp-production
+
+
+# System Files
 .DS_Store
-/coverage
+
+# Package Manager
+.pnpm-debug.log*
+
+# Bundle
+dist
+coverage
+
+# local env files
 docs/.vitepress/cache
 docs/.vitepress/dist
 docs/.vitepress/.temp
 .vitepress/cache
+.dumi/tmp
+.dumi/tmp-test
+.dumi/tmp-production

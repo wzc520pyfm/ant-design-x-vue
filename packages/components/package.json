@@ -1,0 +1,16 @@
+{
+  "name": "@ant-design-x-vue/components",
+  "version": "0.0.1",
+  "description": "all components are settled here",
+  "main": "index.ts",
+  "module": "index.ts",
+  "scripts": {
+    "test": "vitest",
+    "test:cov": "vitest --coverage",
+    "typecheck": "vue-tsc --noEmit",
+    "lint": "eslint \"{src,test}/**/*.{js,jsx,ts,tsx,vue}\""
+  },
+  "peerDependencies": {
+    "vue": "^3.2.0"
+  }
+}

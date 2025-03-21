@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { camelize } from '@vue/shared'
 import glob from 'fast-glob'
-import { docRoot } from '../../../internal/build-utils/src'
+import { docRoot } from '@ant-design-x-vue/build-utils'
 import type { Plugin } from 'vite'
 
 type Append = Record<'headers' | 'footers' | 'scriptSetups', string[]>
