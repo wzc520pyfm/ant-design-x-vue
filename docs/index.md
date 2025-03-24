@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "Ant Design X Vue"
   text: "AI 体验新秩序"
-  tagline: Ant Design X For Vue。Ant Design 团队匠心呈现 RICH 设计范式，打造卓越 AI 界面解决方案，引领智能新体验。
+  tagline: Ant Design X For Vue。基于 RICH 设计范式，打造卓越 AI 界面解决方案，引领智能新体验。
   actions:
     - theme: brand
       text: 开始使用
