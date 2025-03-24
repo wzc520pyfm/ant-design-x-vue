@@ -51,6 +51,92 @@ $ bun add ant-design-x-vue
 
 <span style="display: flex;gap: 4px;align-items: center;">你可以通过 [![](https://data.jsdelivr.com/v1/package/npm/ant-design-x-vue/badge)](https://www.jsdelivr.com/package/npm/ant-design-x-vue) 进行下载。</span>
 
+### 自动导入
+
+在项目中自动导入组件，需要使用 `unplugin-vue-components` 插件，如果未安装，你可以通过以下命令安装：
+
+::: code-group
+
+```sh [npm]
+$ npm install unplugin-vue-components -D
+```
+
+```sh [pnpm]
+$ pnpm install unplugin-vue-components -D
+```
+
+```sh [yarn]
+$ yarn add unplugin-vue-components -D
+```
+
+```sh [bun]
+$ bun add unplugin-vue-components -d
+```
+
+:::
+
+在 `Vite` 或 `Webpack` 的配置文件中，添加以下依赖和插件：
+
+::: code-group
+
+```js [vite.config.js]
+// vite.config.js
+import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
+
+// add the following dependencies
+import components from 'unplugin-vue-components/vite';
+import { AntDesignXVueResolver } from 'ant-design-x-vue/resolver';
+
+export default defineConfig({
+  // ...
+  plugins: [
+    // add the following plugin
+    components({
+      resolvers: [AntDesignXVueResolver()]
+    })
+  ]
+});
+```
+
+```js [webpack.config.js]
+// webpack.config.js
+
+// add the following dependencies
+const Components = require('unplugin-vue-components/webpack');
+const { AntDesignXVueResolver } = require('ant-design-x-vue/resolver');
+
+module.exports = {
+  configureWebpack: {
+    plugins: [
+      // add the following plugin
+      Components.default({
+        resolvers: [AntDesignXVueResolver()]
+      })
+    ]
+  }
+};
+```
+
+:::
+
+更多打包工具的示例，可以参考 [unplugin-vue-components](https://github.com/unplugin/unplugin-vue-components#installation)
+
+在项目中，以 `AX` 开头的组件，将被自动解析为 `ant-design-x-vue` 组件并导入到文件中，你可以直接在模板中使用它们：
+
+```html
+<script setup>
+// auto import equals to
+// import { Bubble as AXBubble } from 'ant-design-x-vue';
+</script>
+
+<template>
+  <AXBubble content="Hello AI" />
+</template>
+```
+
+
+
 ## 🧩 原子组件
 
 我们基于 RICH 交互范式，在不同的交互阶段提供了大量的原子组件，帮助你灵活搭建你的 AI 对话应用：
