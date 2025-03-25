@@ -110,7 +110,7 @@ sender/focus
 | rootClassName | 根元素样式类 | string | - | - |
 | styles | 语义化定义样式 | [见下](#semantic-dom) | - | - |
 | submitType | 提交模式 | SubmitType | `enter` \| `shiftEnter` | - |
-| value | 输入框值 | string | - | - |
+| value(v-model) | 输入框值 | string | - | - |
 | onSubmit | 点击发送按钮的回调 | (message: string) => void | - | - |
 | onChange | 输入框值改变的回调 | (value: string, event?: FormEvent \| ChangeEvent ) => void | - | - |
 | onCancel | 点击取消按钮的回调 | () => void | - | - |
