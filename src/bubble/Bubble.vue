@@ -218,7 +218,7 @@ defineRender(() => {
       ref={divRef}
     >
       {/* Avatar */}
-      {toValue(avatarNode) && (
+      {(slots.avatar || avatar) && (
         <div
           style={{
             ...contextConfig.value.styles.avatar,
