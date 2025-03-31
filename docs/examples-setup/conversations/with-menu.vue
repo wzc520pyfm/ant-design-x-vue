@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { DeleteOutlined, EditOutlined, StopOutlined } from '@ant-design/icons-vue';
-import { App, theme } from 'ant-design-vue';
+import { theme, message } from 'ant-design-vue';
 import { Conversations, type ConversationsProps } from 'ant-design-x-vue';
 import { computed, h } from 'vue';
 
@@ -12,7 +12,7 @@ const items: ConversationsProps['items'] = Array.from({ length: 4 }).map((_, ind
   disabled: index === 3,
 }));
 
-const { message } = App.useApp();
+const [messageApi, contextHolder] = message.useMessage();
 const { token } = theme.useToken();
 
 const style = computed(() => ({
@@ -42,17 +42,16 @@ const menuConfig: ConversationsProps['menu'] = (conversation) => ({
     },
   ],
   onClick: (menuInfo) => {
-    message.info(`Click ${conversation.key} - ${menuInfo.key}`);
+    messageApi.info(`Click ${conversation.key} - ${menuInfo.key}`);
   },
 });
 </script>
 <template>
-  <App>
-    <Conversations
-      default-active-key="item1"
-      :menu="menuConfig"
-      :items="items"
-      :style="style"
-    />
-  </App>
+  <contextHolder />
+  <Conversations
+    default-active-key="item1"
+    :menu="menuConfig"
+    :items="items"
+    :style="style"
+  />
 </template>
