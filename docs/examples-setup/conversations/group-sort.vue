@@ -45,7 +45,7 @@ const groupable: ConversationsProps['groupable'] = {
   <Conversations
     :style="style"
     :groupable="groupable"
-    default-active-key="demo1"
+    default-active-key="item1"
     :items="items"
   />
 </template>
