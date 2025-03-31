@@ -100,7 +100,7 @@ MIT
 
 [npm-version-src]: https://img.shields.io/npm/v/ant-design-x-vue.svg?style=flat
 [npm-version-href]: https://npmjs.com/package/ant-design-x-vue
-[npm-downloads-src]: https://img.shields.io/npm/dm/ant-design-x-vue.svg?style=flat
+[npm-downloads-src]: https://img.shields.io/npm/dt/ant-design-x-vue.svg?style=flat
 [npm-downloads-href]: https://npmjs.com/package/ant-design-x-vue
 [bundle-src]: https://img.shields.io/bundlephobia/minzip/ant-design-x-vue?style=flat
 [bundle-href]: https://bundlephobia.com/result?p=ant-design-x-vue

@@ -20,7 +20,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'index',
+      name: 'antdx',
       fileName: 'index',
     },
     rollupOptions: {

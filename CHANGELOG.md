@@ -1,6 +1,100 @@
 # Changelog
 
 
+## v1.0.7
+
+[compare changes](https://undefined/undefined/compare/v1.0.5...v1.0.7)
+
+### 🚀 Enhancements
+
+- Add unplugin-vue-components resolver (#172)
+
+### 🩹 Fixes
+
+- **conversation:** Fixed display issue where long Conversation names would not be truncated (#166)
+- **bubble:** Fix avatar slot no work (#180)
+- **bubble:** Fix avatar visible err (#186)
+
+### 📖 Documentation
+
+- Update slogan (101db11)
+- Add auto import resolver doc (#179)
+- **sender:** Add basic setup demo (#181)
+
+### 🏡 Chore
+
+- **release:** V1.0.6 (5e743e9)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Bao ([@Bao0630](http://github.com/Bao0630))
+- YuePeng ([@erupts](http://github.com/erupts))
+
+## v1.0.6
+[compare changes](https://undefined/undefined/compare/v1.0.5...v1.0.6)
+### 🚀 Enhancements
+- Add unplugin-vue-components resolver (#172)
+### 🩹 Fixes
+- **conversation:** Fixed display issue where long Conversation names would not be truncated (#166)
+- **bubble:** Fix avatar slot no work (#180)
+### 📖 Documentation
+- Update slogan (101db11)
+- Add auto import resolver doc (#179)
+- **sender:** Add basic setup demo (c2049ca)
+### ❤️ Contributors
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Bao ([@Bao0630](http://github.com/Bao0630))
+- YuePeng ([@erupts](http://github.com/erupts))
+
+## v1.0.5
+
+[compare changes](https://undefined/undefined/compare/v1.0.4...v1.0.5)
+
+### 🚀 Enhancements
+
+- Thought-chain TransitionCollapse (#152)
+- **play:** Add playground (#150)
+- **sender:** Add SpeechButton to actions (#168)
+
+### 🩹 Fixes
+
+- **sender:** Fix force-render no work (e8e69fc)
+- **bubble:** Fix useListData error when roles null (#165)
+
+### 📖 Documentation
+
+- Fix markdown-it type error (e62429f)
+- **attachments:** Add placeholder setup demo (38613ca)
+- Add bubble setup usage example「markdown」 (#154)
+- **useXChat:** Add use-x-chat setup example (#155)
+- **Attachments:** Add all example for template (#160)
+- **x-request:** Add x-request setup example (#158)
+- Add bubble setup usage example (done) (#127, #164)
+- Remove legacy-js-api warning (#118)
+- Add development introduce (#167)
+- Update img path (c4bcfec)
+
+### 📦 Build
+
+- Update umd global variable to antdx (e772226)
+
+### 🏡 Chore
+
+- Add jsdelivr badge (fe0be75)
+- Update badge (ca87e46)
+- Add unpkg conf (#146)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Wang Hao <710876099@qq.com>
+- LIKUN ([@StudyDayByDay](http://github.com/StudyDayByDay))
+- Bao ([@Bao0630](http://github.com/Bao0630))
+- Linhf123 ([@linhf123](http://github.com/linhf123))
+- 雨溪 ([@yuxi-ovo](http://github.com/yuxi-ovo))
+- EralChen ([@EralChen](http://github.com/EralChen))
+
 ## v1.0.4
 
 [compare changes](https://undefined/undefined/compare/v1.0.3...v1.0.4)

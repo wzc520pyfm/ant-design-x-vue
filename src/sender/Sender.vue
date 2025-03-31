@@ -70,6 +70,7 @@ const slots = defineSlots<{
         SendButton: typeof SendButton;
         ClearButton: typeof ClearButton;
         LoadingButton: typeof LoadingButton;
+        SpeechButton: typeof SpeechButton;
       };
     }
   }): VNode;
@@ -235,6 +236,7 @@ const actionNode = computed(() => {
       SendButton,
       ClearButton,
       LoadingButton,
+      SpeechButton
     },
   }
 

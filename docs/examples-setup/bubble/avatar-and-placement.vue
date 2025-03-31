@@ -23,7 +23,10 @@ const hideAvatar: CSSProperties = {
 </script>
 
 <template>
-  <Flex gap="middle" vertical>
+  <Flex
+    gap="middle"
+    vertical
+  >
     <Bubble
       placement="start"
       content="Good morning, how are you?"
@@ -38,8 +41,14 @@ const hideAvatar: CSSProperties = {
     <Bubble
       placement="end"
       content="Hi, good morning, I'm fine!"
-      :avatar="{ icon: h(UserOutlined), style: barAvatar }"
-    />
+    >
+      <template #avatar>
+        <Avatar
+          :icon="h(UserOutlined)"
+          :style="barAvatar"
+        />
+      </template>
+    </Bubble>
     <Bubble
       placement="end"
       content="Thank you!"

@@ -1,6 +1,6 @@
 {
   "name": "ant-design-x-vue",
-  "version": "1.0.4",
+  "version": "1.0.7",
   "description": "Craft AI-driven interfaces effortlessly",
   "keywords": [
     "AI",
@@ -13,7 +13,7 @@
     "vue"
   ],
   "scripts": {
-    "build": "vite build && vue-tsc --project ./tsconfig.build.json",
+    "build": "vite build && vue-tsc --project ./tsconfig.build.json && tsc resolver/index.ts --outDir dist/resolver --declaration",
     "build:watch": "vite build --watch",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
@@ -42,10 +42,15 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.umd.js"
     },
-    "./dist/style.css": "./dist/style.css"
+    "./dist/style.css": "./dist/style.css",
+    "./resolver": {
+      "types": "./dist/typings/resolver/index.d.ts",
+      "import": "./dist/resolver/index.js"
+    }
   },
   "main": "./dist/index.umd.js",
   "module": "./dist/index.mjs",
+  "unpkg": "dist/index.umd.js",
   "types": "./dist/typings/index.d.ts",
   "files": [
     "dist"
