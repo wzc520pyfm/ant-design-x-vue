@@ -12,7 +12,6 @@ const items: ConversationsProps['items'] = Array.from({ length: 4 }).map((_, ind
   disabled: index === 3,
 }));
 
-const { message } = App.useApp();
 const { token } = theme.useToken();
 
 const style = computed(() => ({
@@ -22,6 +21,8 @@ const style = computed(() => ({
 }));
 
 const Demo = () => {
+  const { message } = App.useApp();
+
   const menuConfig: ConversationsProps['menu'] = (conversation) => ({
     items: [
       {
