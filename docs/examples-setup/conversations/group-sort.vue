@@ -36,8 +36,8 @@ const groupable: ConversationsProps['groupable'] = {
   title: (group, { components: { GroupTitle } }) =>
     group ? h(
       GroupTitle,
-      {},
-      [h(Space, {}, [h(CommentOutlined), h('span', {}, group)])]
+      null,
+      () => [h(Space, null, () => [h(CommentOutlined), h('span', null, group)])]
     ) : h(GroupTitle),
 };
 </script>
