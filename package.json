@@ -44,7 +44,7 @@
     },
     "./dist/style.css": "./dist/style.css",
     "./resolver": {
-      "types": "./dist/typings/resolver/index.d.ts",
+      "types": "./dist/resolver/index.d.ts",
       "import": "./dist/resolver/index.js"
     }
   },
