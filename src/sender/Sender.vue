@@ -198,10 +198,10 @@ const onInternalKeyPress: SenderProps['onKeyPress'] = (e) => {
 
 // ============================ Paste =============================
 const onInternalPaste: ClipboardEventHandler = (e) => {
-  // Get file
-  const file = e.clipboardData?.files[0];
-  if (file && onPasteFile) {
-    onPasteFile(file);
+  // Get files
+  const files = e.clipboardData?.files;
+  if (files?.length && onPasteFile) {
+    onPasteFile(files[0], files);
     e.preventDefault();
   }
 

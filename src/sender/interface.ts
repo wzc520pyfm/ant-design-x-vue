@@ -49,7 +49,7 @@ export interface SenderProps {
   onCancel?: VoidFunction;
   onKeyDown?: KeyboardEventHandler;
   onPaste?: ClipboardEventHandler;
-  onPasteFile?: (file: File) => void;
+  onPasteFile?: (firstFile: File, files: FileList) => void;
   components?: SenderComponents;
   styles?: {
     prefix?: CSSProperties;
