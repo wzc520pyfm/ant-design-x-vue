@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, onWatcherCleanup, ref, useTemplateRef, watch, watchEffect } from 'vue';
+import { computed, nextTick, onWatcherCleanup, ref, useTemplateRef, watch, watchEffect } from 'vue';
 import { Button } from 'ant-design-vue';
 import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons-vue';
 import type { FileListProps } from '../interface';
@@ -66,8 +66,10 @@ const checkPing = () => {
   }
 };
 
-watch(() => overflow, () => {
-  checkPing();
+watch([() => overflow, () => items.length], () => {
+  nextTick(() => {
+    checkPing();
+  });
 }, { immediate: true });
 
 const onScrollOffset = (offset: -1 | 1) => {
