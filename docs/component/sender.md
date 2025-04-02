@@ -73,9 +73,9 @@ sender/sendStyle
 
 :::
 
-### 黏贴图片
+### 黏贴文件
 
-:::demo 配合 Attachments 进行黏贴文件上传。
+:::demo 使用 `onPasteFile` 获取黏贴的文件，配合 Attachments 进行文件上传。
 
 sender/pasteImage
 
@@ -114,6 +114,7 @@ sender/focus
 | onSubmit | 点击发送按钮的回调 | (message: string) => void | - | - |
 | onChange | 输入框值改变的回调 | (value: string, event?: FormEvent \| ChangeEvent ) => void | - | - |
 | onCancel | 点击取消按钮的回调 | () => void | - | - |
+| onPasteFile | 黏贴文件的回调 | (firstFile: File, files: FileList) => void | - | - |
 
 ```typescript | pure
 type SpeechConfig = {
