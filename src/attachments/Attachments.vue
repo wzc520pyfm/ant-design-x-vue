@@ -26,6 +26,7 @@ const {
   getDropContainer,
   placeholder,
   onChange,
+  onRemove,
   overflow,
   disabled,
   classNames = {},
@@ -77,13 +78,19 @@ const mergedUploadProps = computed<UploadProps>(() => ({
   onChange: triggerChange,
 }));
 
-const onItemRemove = (item: Attachment) => {
-  const newFileList = fileList.value.filter((fileItem) => fileItem.uid !== item.uid);
-  triggerChange({
-    file: item,
-    fileList: newFileList,
+const onItemRemove = (item: Attachment) =>
+  Promise.resolve(typeof onRemove === 'function' ? onRemove(item) : onRemove).then((ret) => {
+    // Prevent removing file
+    if (ret === false) {
+      return;
+    }
+
+    const newFileList = fileList.value.filter((fileItem) => fileItem.uid !== item.uid);
+    triggerChange({
+      file: { ...item, status: 'removed' },
+      fileList: newFileList,
+    });
   });
-};
 
 const getPlaceholderNode = (
   type: 'inline' | 'drop',
