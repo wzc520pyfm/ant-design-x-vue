@@ -32,6 +32,7 @@ watch(loading, () => {
     <Sender
       v-model:value="value"
       :loading="loading"
+      :auto-size="{ minRows: 2, maxRows: 6 }"
       @submit="() => {
         value = '';
         loading = true
