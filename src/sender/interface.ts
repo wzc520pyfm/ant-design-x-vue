@@ -31,6 +31,8 @@ export type ActionsRender = (
 
 export interface SenderProps {
   onKeyPress?: KeyboardEventHandler;
+  onFocus?: TextAreaProps['onFocus'];
+  onBlur?: TextAreaProps['onBlur'];
 
   prefixCls?: string;
   defaultValue?: string;
