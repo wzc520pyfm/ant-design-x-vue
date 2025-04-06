@@ -95,7 +95,7 @@ interface PlaceholderType {
 | 属性 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | item | 附件，同 Upload `UploadFile` | Attachment | - | - |
-| onRemove | 附件移除时的回调函数 | (item: Attachment) => void | - | - |
+| onRemove | 点击移除文件时的回调，返回值为 false 时不移除。支持返回一个 Promise 对象，Promise 对象 resolve(false) 或 reject 时不移除 | (item: Attachment) => boolean \| Promise | - | - |
 
 ## Semantic DOM
 
