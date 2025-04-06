@@ -23,6 +23,7 @@ const {
   listStyle,
   itemClassName,
   itemStyle,
+  imageProps,
 } = defineProps<FileListProps>();
 
 const listCls = computed(() => `${prefixCls}-list`);
@@ -113,6 +114,7 @@ defineRender(() => {
           item={item}
           onRemove={onRemove}
           className={classnames(itemClassName)}
+          imageProps={imageProps}
           style={{
             ...itemStyle,
           }}

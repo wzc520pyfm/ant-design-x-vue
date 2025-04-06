@@ -10,7 +10,7 @@ import { useXProviderContext } from '../../x-provider';
 import { previewImage } from '../util';
 import useStyle from '../style';
 import useState from '../../_util/hooks/use-state';
-import { Progress } from 'ant-design-vue';
+import { Progress, Image } from 'ant-design-vue';
 
 defineOptions({ name: 'AXAttachmentsFileListCard' });
 
@@ -89,7 +89,7 @@ function getSize(size: number) {
   return `${retSize.toFixed(0)} ${units[unitIndex]}`;
 }
 
-const { prefixCls: customizePrefixCls, item, onRemove, className, style } = defineProps<FileListCardProps>();
+const { prefixCls: customizePrefixCls, item, onRemove, className, style, imageProps } = defineProps<FileListCardProps>();
 
 const context = useAttachmentContextInject();
 const disabled = computed(() => context.value.disabled);
@@ -185,7 +185,15 @@ const content = computed(() => {
     // Preview Image style
     return (
       <>
-        {previewUrl.value && <img alt="preview" src={previewUrl.value} />}
+        {previewUrl.value && (
+          <Image
+            {...imageProps}
+            // TODO antdv type error
+            // @ts-expect-error
+            alt="preview"
+            src={previewUrl.value}
+          />
+        )}
 
         {status.value !== 'done' && (
           <div class={`${cardCls}-img-mask`}>

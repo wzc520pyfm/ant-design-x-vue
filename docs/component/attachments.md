@@ -68,6 +68,7 @@ attachments/files
 | rootClassName | 根节点的样式类名 | string | - | - |
 | rootStyle | 根节点的样式对象 | CSSProperties | - | - |
 | styles | 自定义样式对象，[见下](#semantic-dom) | Record<string, CSSProperties> | - | - |
+| imageProps | 图片属性，同 antdv [Image](https://www.antdv.com/components/image-cn) 属性 | ImageProps | - | - |
 
 ```tsx | pure
 interface PlaceholderType {

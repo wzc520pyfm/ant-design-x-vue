@@ -1,4 +1,4 @@
-import type { UploadChangeParam, UploadFile, UploadProps } from "ant-design-vue";
+import type { ImageProps, UploadChangeParam, UploadFile, UploadProps } from "ant-design-vue";
 import type { CSSProperties, VNode } from "vue";
 
 export interface AttachmentContextProps {
@@ -42,6 +42,7 @@ export interface FileListProps {
   onRemove: (item: Attachment) => void;
   overflow?: 'scrollX' | 'scrollY' | 'wrap';
   upload: UploadProps;
+  imageProps?: ImageProps;
 
   // Semantic
   listClassName?: string;
@@ -57,6 +58,7 @@ export interface FileListCardProps {
   onRemove?: (item: Attachment) => void;
   className?: string;
   style?: CSSProperties;
+  imageProps?: ImageProps;
 }
 
 export interface ProgressProps {
@@ -141,6 +143,7 @@ export interface AttachmentsProps extends AntdUploadProps {
   // ============== File List ==============
   items?: Attachment[];
   overflow?: FileListProps['overflow'];
+  imageProps?: FileListProps['imageProps'];
 
   onChange?: (info: UploadChangeParam<UploadFile>) => void;
 }

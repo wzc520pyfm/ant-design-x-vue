@@ -27,6 +27,7 @@ const {
   placeholder,
   onChange,
   overflow,
+  imageProps,
   disabled,
   classNames = {},
   styles = {},
@@ -194,6 +195,7 @@ defineRender(() => {
               ...contextStyles.value.item,
               ...styles.item,
             }}
+            imageProps={imageProps}
           />
           {getPlaceholderNode('inline', hasFileList.value ? { style: { display: 'none' } } : {}, uploadRef.value)}
           <DropArea
