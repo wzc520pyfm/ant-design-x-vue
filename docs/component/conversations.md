@@ -26,6 +26,14 @@ conversations/with-menu
 
 :::
 
+### 自定义操作
+
+:::demo 自定义菜单入口
+
+conversations/menu-trigger
+
+:::
+
 ### 受控模式
 
 :::demo 使用 `activeKey`、`onChange` 属性，控制当前选中的会话
@@ -85,5 +93,13 @@ conversations/group-sort
 | --- | --- | --- | --- | --- |
 | `sort` | 分组排序函数 | (a: string, b: string) => number | - | - |
 | `title` | 自定义渲染组件 | ((group: string, info: { components: { GroupTitle: typeof GroupTitle } }) => VNode) | - | - |
+
+### MenuProps
+
+继承 antdv [MenuProps](https://www.antdv.com/components/menu-cn#api) 属性。
+
+| 属性 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| `trigger` | 自定义menu触发器 | VNode \| ((conversation: Conversation, info: \{ originNode: VNode \}) => VNode) | - | - |
 
 ## 主题变量（Design Token）

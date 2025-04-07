@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
 import type { EventHandler, MouseEventHandler } from 'ant-design-vue/es/_util/EventInterface';
-import type { ConversationsItemProps } from './interface';
+import type { Conversation, ConversationsItemProps } from './interface';
 import pickAttrs from '../_util/pick-attrs';
 import { computed } from 'vue';
 import { Dropdown, Menu, Tooltip, Typography } from 'ant-design-vue';
@@ -61,6 +61,25 @@ const onOpenChange = (open: boolean) => {
   }
 };
 
+// ============================ Menu ============================
+const trigger = computed(() => menu?.trigger);
+const dropdownMenu = computed(() => {
+  const { trigger, ...dropdownMenu } = menu || {};
+  return dropdownMenu;
+});
+
+const renderMenuTrigger = (conversation: Conversation) => {
+  const originTriggerNode = (
+    <EllipsisOutlined onClick={stopPropagation} class={`${prefixCls}-menu-icon`} />
+  );
+  if (trigger.value) {
+    return typeof trigger.value === 'function'
+      ? trigger.value(conversation, { originNode: originTriggerNode })
+      : trigger.value;
+  }
+  return originTriggerNode;
+};
+
 defineRender(() => {
   return (
     <Tooltip
@@ -78,20 +97,15 @@ defineRender(() => {
             onEllipsis,
           }}
         >{info.label}</Typography.Text>
-        {menu && !disabled.value && (
+        {!disabled.value && menu && (
           <Dropdown
             placement={direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
             trigger={['click']}
             disabled={disabled.value}
             onOpenChange={onOpenChange}
           >{{
-            default: () => <EllipsisOutlined
-              onClick={stopPropagation}
-              // @ts-expect-error
-              disabled={disabled.value}
-              class={`${prefixCls}-menu-icon`}
-            />,
-            overlay: () => <Menu { ...menu} />
+            default: () => renderMenuTrigger(info),
+            overlay: () => <Menu {...dropdownMenu.value} />
           }}
           </Dropdown>
         )}
