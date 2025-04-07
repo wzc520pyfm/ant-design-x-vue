@@ -81,7 +81,7 @@ export interface ConversationsProps extends HTMLAttributes {
    * @desc 会话操作菜单
    * @descEN Operation menu for conversations
    */
-  menu?: MenuProps | ((value: Conversation) => MenuProps);
+  menu?: ConversationsItemProps['menu'] | ((value: Conversation) => ConversationsItemProps['menu']);
 
   /**
    * @desc 是否支持分组, 开启后默认按 {@link Conversation.group} 字段分组
@@ -118,7 +118,11 @@ export interface ConversationsItemProps extends Omit<HTMLAttributes, 'onClick'> 
   info: Conversation;
   prefixCls?: string;
   direction?: DirectionType;
-  menu?: MenuProps;
+  menu?: MenuProps & {
+    trigger?:
+      | VNode
+      | ((conversation: Conversation, info: { originNode: VNode }) => VNode);
+  };
   active?: boolean;
   onClick?: (info: Conversation) => void;
 }
