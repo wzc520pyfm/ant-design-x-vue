@@ -25,6 +25,14 @@ function getComponent<T>(
   return getValue(components, path) || defaultComponent;
 }
 
+/** Used for actions render needed components */
+const sharedRenderComponents = {
+  SendButton,
+  ClearButton,
+  LoadingButton,
+  SpeechButton,
+};
+
 defineOptions({ name: 'AXSender' });
 
 const {
@@ -50,6 +58,7 @@ const {
   disabled = undefined,
   allowSpeech,
   prefix,
+  footer,
   header,
   onPaste,
   onPasteFile,
@@ -223,7 +232,7 @@ const onContentMouseDown: MouseEventHandler = (e) => {
 
 // ============================ Action ============================
 const actionNode = computed(() => {
-  let _actionNode: VNode = (
+  let _actionNode: VNode | false = (
     <Flex class={`${actionListCls.value}-presets`}>
       {allowSpeech && <SpeechButton />}
       {/* Loading or Send */}
@@ -232,12 +241,7 @@ const actionNode = computed(() => {
   );
 
   const info = {
-    components: {
-      SendButton,
-      ClearButton,
-      LoadingButton,
-      SpeechButton
-    },
+    components: sharedRenderComponents,
   }
 
   // Custom actions
@@ -245,10 +249,38 @@ const actionNode = computed(() => {
     _actionNode = slots.actions({ ori: _actionNode, info });
   } else if (typeof actions === 'function') {
     _actionNode = actions(_actionNode, info);
-  } else if (actions) {
+  } else if (actions || actions === false) {
     _actionNode = actions;
   }
   return _actionNode;
+});
+
+// Custom actions context props
+const actionsButtonContextProps = computed(() => ({
+  prefixCls: actionBtnCls.value,
+  onSend: triggerSend,
+  onSendDisabled: !innerValue.value,
+  onClear: triggerClear,
+  onClearDisabled: !innerValue.value,
+  onCancel,
+  onCancelDisabled: !loading,
+  onSpeech: () => triggerSpeech(false),
+  onSpeechDisabled: !speechPermission.value,
+  speechRecording: speechRecording.value,
+  disabled,
+}));
+
+// ============================ Footer ============================
+const footerNode = computed(() => {
+  let _footerNode: VNode = null;
+  if (typeof footer === 'function') {
+    _footerNode = footer({
+      components: sharedRenderComponents,
+    });
+  } else if (footer) {
+    _footerNode = footer;
+  }
+  return _footerNode;
 });
 
 const headerComp = computed(() => {
@@ -272,76 +304,77 @@ defineRender(() => {
       {headerComp.value && (
         <SenderHeaderContextProvider value={{ prefixCls: prefixCls.value }}>{headerComp.value}</SenderHeaderContextProvider>
       )}
+      <ActionButtonContextProvider value={actionsButtonContextProps.value}>
 
-      <div class={`${prefixCls.value}-content`} onMousedown={onContentMouseDown}>
-        {/* Prefix */}
-        {prefixComp.value && (
-          <div
-            class={classnames(
-              `${prefixCls.value}-prefix`,
-              contextConfig.value.classNames.prefix,
-              classNames.prefix,
-            )}
-            style={{ ...contextConfig.value.styles.prefix, ...styles.prefix }}
-          >
-            {prefixComp.value}
-          </div>
-        )}
-
-        {/* Input */}
-        <InputTextArea
-          {...inputProps.value}
-          disabled={disabled}
-          style={{ ...contextConfig.value.styles.input, ...styles.input }}
-          class={classnames(inputCls.value, contextConfig.value.classNames.input, classNames.input)}
-          autoSize={{ maxRows: 8 }}
-          value={innerValue.value}
-          onChange={(event: Event) => {
-            triggerValueChange(
-              (event.target as HTMLTextAreaElement).value,
-              event as ChangeEvent,
-            );
-            triggerSpeech(true);
-          }}
-          onPressEnter={onInternalKeyPress}
-          onCompositionstart={onInternalCompositionStart}
-          onCompositionend={onInternalCompositionEnd}
-          onKeydown={onKeyDown}
-          placeholder={placeholder}
-          // @ts-expect-error
-          onPaste={onInternalPaste}
-          bordered={false}
-          readOnly={readOnly}
-        />
-
-        {/* Action List */}
-        <div
-          class={classnames(
-            actionListCls.value,
-            contextConfig.value.classNames.actions,
-            classNames.actions,
+        <div class={`${prefixCls.value}-content`} onMousedown={onContentMouseDown}>
+          {/* Prefix */}
+          {prefixComp.value && (
+            <div
+              class={classnames(
+                `${prefixCls.value}-prefix`,
+                contextConfig.value.classNames.prefix,
+                classNames.prefix,
+              )}
+              style={{ ...contextConfig.value.styles.prefix, ...styles.prefix }}
+            >
+              {prefixComp.value}
+            </div>
           )}
-          style={{ ...contextConfig.value.styles.actions, ...styles.actions }}
-        >
-          <ActionButtonContextProvider
-            value={{
-              prefixCls: actionBtnCls.value,
-              onSend: triggerSend,
-              onSendDisabled: !innerValue.value,
-              onClear: triggerClear,
-              onClearDisabled: !innerValue.value,
-              onCancel,
-              onCancelDisabled: !loading,
-              onSpeech: () => triggerSpeech(false),
-              onSpeechDisabled: !speechPermission.value,
-              speechRecording: speechRecording.value,
-              disabled,
+
+          {/* Input */}
+          <InputTextArea
+            {...inputProps.value}
+            disabled={disabled}
+            style={{ ...contextConfig.value.styles.input, ...styles.input }}
+            class={classnames(inputCls.value, contextConfig.value.classNames.input, classNames.input)}
+            autoSize={{ maxRows: 8 }}
+            value={innerValue.value}
+            onChange={(event: Event) => {
+              triggerValueChange(
+                (event.target as HTMLTextAreaElement).value,
+                event as ChangeEvent,
+              );
+              triggerSpeech(true);
             }}
+            onPressEnter={onInternalKeyPress}
+            onCompositionstart={onInternalCompositionStart}
+            onCompositionend={onInternalCompositionEnd}
+            onKeydown={onKeyDown}
+            placeholder={placeholder}
+            // @ts-expect-error
+            onPaste={onInternalPaste}
+            bordered={false}
+            readOnly={readOnly}
+          />
+
+          {/* Action List */}
+          {actionNode.value && (<div
+            class={classnames(
+              actionListCls.value,
+              contextConfig.value.classNames.actions,
+              classNames.actions,
+            )}
+            style={{ ...contextConfig.value.styles.actions, ...styles.actions }}
           >
             {actionNode.value}
-          </ActionButtonContextProvider>
+          </div>)}
         </div>
-      </div>
+        {footerNode.value && (
+          <div
+            class={classnames(
+              `${prefixCls.value}-footer`,
+              contextConfig.value.classNames.footer,
+              classNames.footer,
+            )}
+            style={{
+              ...contextConfig.value.styles.footer,
+              ...styles.footer,
+            }}
+          >
+            {footerNode.value}
+          </div>
+        )}
+      </ActionButtonContextProvider>
     </div>,
   );
 });

@@ -17,17 +17,21 @@ export interface SenderComponents {
   input?: typeof Input.TextArea;
 }
 
+export type ActionsComponents = {
+  SendButton: typeof SendButton;
+  ClearButton: typeof ClearButton;
+  LoadingButton: typeof LoadingButton;
+  SpeechButton: typeof SpeechButton;
+}
+
 export type ActionsRender = (
   ori: VNode,
   info: {
-    components: {
-      SendButton: typeof SendButton;
-      ClearButton: typeof ClearButton;
-      LoadingButton: typeof LoadingButton;
-      SpeechButton: typeof SpeechButton;
-    };
+    components: ActionsComponents;
   },
 ) => VNode;
+
+export type FooterRender = (info: { components: ActionsComponents }) => VNode;
 
 export interface SenderProps {
   onKeyPress?: KeyboardEventHandler;
@@ -55,18 +59,21 @@ export interface SenderProps {
     prefix?: CSSProperties;
     input?: CSSProperties;
     actions?: CSSProperties;
+    footer?: CSSProperties;
   };
   rootClassName?: string;
   classNames?: {
     prefix?: string;
     input?: string;
     actions?: string;
+    footer?: string;
   };
   style?: CSSProperties;
   className?: string;
-  actions?: VNode | ActionsRender;
+  actions?: VNode | ActionsRender | false;
   allowSpeech?: AvoidValidation<AllowSpeech>;
   prefix?: VNode;
+  footer?: VNode | FooterRender;
   header?: VNode;
 }
 

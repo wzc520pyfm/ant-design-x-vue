@@ -22,6 +22,7 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
     padding,
     paddingSM,
     paddingXS,
+    paddingXXS,
     lineWidth,
     lineWidthBold,
     calc,
@@ -138,6 +139,15 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
           width: '1.2em',
           verticalAlign: 'top',
         },
+      },
+
+      // ============================ Footer =============================
+      [`${componentCls}-footer`]: {
+        paddingInlineStart: padding,
+        paddingInlineEnd: paddingSM,
+        paddingBlockEnd: paddingSM,
+        paddingBlockStart: paddingXXS,
+        boxSizing: 'border-box',
       },
     },
   };

@@ -65,6 +65,14 @@ sender/headerFixed
 
 :::
 
+### 自定义底部内容
+
+:::demo 使用 `footer` 自定义底部内容。
+
+sender/footer
+
+:::
+
 ### 调整样式
 
 :::demo 通过 `actions` 属性，调整默认样式。
@@ -97,7 +105,7 @@ sender/focus
 
 | 属性 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| actions | 自定义按钮 | VNode \| (oriNode, info: { components }) => VNode | - | - |
+| actions | 自定义按钮，当不需要默认操作按钮时，可以设为 `actions={false}` | VNode \| (oriNode, info: \{ components: ActionsComponents \}) => VNode | - | - |
 | allowSpeech | 是否允许语音输入 | boolean \| SpeechConfig | false | - |
 | classNames | 样式类名 | [见下](#semantic-dom) | - | - |
 | components | 自定义组件 | Record<'input', ComponentType> | - | - |
@@ -106,6 +114,7 @@ sender/focus
 | loading | 是否加载中 | boolean | false | - |
 | header | 头部面板 | VNode | - | - |
 | prefix | 前缀内容 | VNode | - | - |
+| footer | 底部内容 | ReactNode \| (info: \{ components: ActionsComponents \}) => ReactNode | - | - |
 | readOnly | 是否让输入框只读 | boolean | false | - |
 | rootClassName | 根元素样式类 | string | - | - |
 | styles | 语义化定义样式 | [见下](#semantic-dom) | - | - |
@@ -122,6 +131,15 @@ type SpeechConfig = {
   // 交由开发者实现三方语音输入的功能。
   recording?: boolean;
   onRecordingChange?: (recording: boolean) => void;
+};
+```
+
+```typescript | pure
+type ActionsComponents = {
+  SendButton: InstanceType<ButtonProps>;
+  ClearButton: InstanceType<ButtonProps>;
+  LoadingButton: InstanceType<ButtonProps>;
+  SpeechButton: InstanceType<ButtonProps>;
 };
 ```
 
