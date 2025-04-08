@@ -24,7 +24,7 @@ const context = useActionButtonContextInject()
 const mergedDisabled = computed(() => {
   const rootDisabled = context.value.disabled;
   const actionDisable = context.value?.[`${action}Disabled`];
-  return rootDisabled ?? propDisable ?? actionDisable;
+  return propDisable ?? rootDisabled ?? actionDisable;
 });
 
 const prefixCls = computed(() => {
