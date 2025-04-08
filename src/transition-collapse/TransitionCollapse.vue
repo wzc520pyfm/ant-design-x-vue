@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<{
   prefixCls: 'ax',
 })
 const slots = defineSlots<{
-  default(props?: any): any
+  default?(props?: any): any
 }>()
 
 
