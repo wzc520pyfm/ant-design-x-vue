@@ -11,7 +11,7 @@ const {
   action,
   type = "text",
   disabled: propDisable = undefined,
-  onClick: outClick,
+  onClick,
   ...restProps
 } = defineProps<ActionButtonProps>();
 
@@ -29,10 +29,6 @@ const mergedDisabled = computed(() => {
 
 const prefixCls = computed(() => {
   return context.value.prefixCls
-})
-
-const onClick = computed(() => {
-  return context.value?.[action]
 });
 
 defineRender(() => {
@@ -41,13 +37,12 @@ defineRender(() => {
       type={type}
       {...restProps}
       onClick={(e) => {
-        if (!mergedDisabled.value) {
-          if (onClick.value) {
-            onClick.value();
-          }
-          if (outClick && !Array.isArray(outClick)) {
-            outClick(e);
-          }
+        if (mergedDisabled.value) {
+          return;
+        }
+        context.value?.[action]?.();
+        if (onClick && !Array.isArray(onClick)) {
+          onClick(e);
         }
       }}
       class={classNames(prefixCls.value, {
