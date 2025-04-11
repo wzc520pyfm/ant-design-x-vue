@@ -39,7 +39,7 @@ $ pnpm add ant-design-vue ant-design-x-vue
 
 ## 🔨 Usage
 
-```ts
+```html
 <script setup lang="ts">
 import { Bubble, XProvider } from 'ant-design-x-vue';
 </script>
@@ -93,11 +93,9 @@ Please reference the [Roadmap](https://github.com/wzc520pyfm/ant-design-x-vue/is
 
 ## 💬 Contact Us
 
-### Wechat Public Account
-![Ant-Design-X Vue](./docs/public/images//wechat_public_account.jpg)
-
-### QQ Group
-![QQ 群](./docs/public/images/QQ_group_1.jpg)
+| Wechat Public Account                                         | QQ Group                                                               |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| <img src="./docs/public/images//wechat_public_account.jpg" /> | <img src="./docs/public/images/QQ_group_1.jpg" style="width: 260px" /> |
 
 ## 📄 LICENSE
 

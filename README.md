@@ -40,7 +40,7 @@ $ pnpm add ant-design-vue ant-design-x-vue
 
 ## 🔨 示例
 
-```ts
+```html
 <script setup lang="ts">
 import { Bubble, XProvider } from 'ant-design-x-vue';
 </script>
@@ -94,11 +94,9 @@ $ pnpm lint
 
 ## 💬 交流
 
-### 微信公众号
-![Ant-Design-X Vue](./docs/public/images//wechat_public_account.jpg)
-
-### QQ 群
-![QQ 群](./docs/public/images/QQ_group_1.jpg)
+| 微信公众号                                                      | QQ 交流群                                                               |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| <img src="./docs/public/images//wechat_public_account.jpg" /> | <img src="./docs/public/images/QQ_group_1.jpg" style="width: 260px" /> |
 
 ## 📄 LICENSE
 
