@@ -17,6 +17,9 @@ export default defineConfig({
       // 覆盖插件选项
     }),
   ],
+  define: {
+    'process.env.NODE_ENV': JSON.stringify('production'),
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
