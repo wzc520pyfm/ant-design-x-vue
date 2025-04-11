@@ -7,6 +7,8 @@
 ![Netlify Build][netlify-build-src]
 [![License][license-src]][license-href]
 
+[![jsDelivr][jsdelivr-src]][jsdelivr-href]
+
 Ant Design X For Vue. 🔥 [中文](./README.md)
 
 This is the implementation of [Ant Design X](https://github.com/ant-design/x) for Vue.
@@ -21,14 +23,21 @@ This is the implementation of [Ant Design X](https://github.com/ant-design/x) fo
 - 🛡 Developed with TypeScript, ensuring robust type coverage to improve the development experience and reliability.
 - 🎨 Supports fine-grained style adjustments to meet diverse use cases and personalization needs.
 
+## 📦 Install
 
-## Usage
+```bash
+$ npm i ant-design-vue ant-design-x-vue
+```
 
-First, install packages `ant-design-vue` and `ant-design-x-vue` to your project, you can run following commands in your project directory:
+```bash
+$ yarn add ant-design-vue ant-design-x-vue
+```
 
-> pnpm add ant-design-vue ant-design-x-vue
+```bash
+$ pnpm add ant-design-vue ant-design-x-vue
+```
 
-Second, import components from `ant-design-vue` library:
+## 🔨 Usage
 
 ```ts
 <script setup lang="ts">
@@ -40,7 +49,7 @@ import { Bubble, XProvider } from 'ant-design-x-vue';
 </template>
 ```
 
-## Development
+## ⌨️ Development
 
 ```bash
 # install dependencies
@@ -62,7 +71,7 @@ $ pnpm run docs:preview
 $ pnpm lint
 ```
 
-## Links
+## 🔗 Links
 
 * [Vue](https://vuejs.org/)
 
@@ -70,22 +79,29 @@ $ pnpm lint
 
 * [Ant Design X Of React](https://x.ant.design/)
 
-## Contributing
+## 🤝 Contributing
 
 Would you like to change the world with us?
 
 Please reference the [Roadmap](https://github.com/wzc520pyfm/ant-design-x-vue/issues/1) and pick up any one you like.
 
-## Contributors
+## 👥 Contributors
 
 <a href="https://github.com/wzc520pyfm/ant-design-x-vue/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=wzc520pyfm/ant-design-x-vue" />
 </a>
 
+## 💬 Contact Us
 
-## LICENSE
+### Wechat Public Account
+![Ant-Design-X Vue](./docs/public/images//wechat_public_account.jpg)
 
-MIT
+### QQ Group
+![QQ 群](./docs/public/images/QQ_group_1.jpg)
+
+## 📄 LICENSE
+
+[MIT](./LICENSE)
 
 <!-- Badges -->
 
@@ -100,10 +116,5 @@ MIT
 [netlify-build-src]: https://img.shields.io/netlify/cb006e4e-afce-4c3e-9652-6f8a065b5b6e
 [license-src]: https://img.shields.io/github/license/wzc520pyfm/ant-design-x-vue?style=flat
 [license-href]: https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/LICENSE
-
-## Connect Us
-### Wechat Public Account
-![Ant-Design-X Vue](./docs/public/images//wechat_public_account.jpg)
-
-### QQ Group
-![QQ 群](./docs/public/images/QQ_group_1.jpg)
+[jsdelivr-src]: https://data.jsdelivr.com/v1/package/npm/ant-design-x-vue/badge
+[jsdelivr-href]: https://www.jsdelivr.com/package/npm/ant-design-x-vue

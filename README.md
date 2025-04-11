@@ -7,11 +7,11 @@
 ![Netlify Build][netlify-build-src]
 [![License][license-src]][license-href]
 
-[![](https://data.jsdelivr.com/v1/package/npm/ant-design-x-vue/badge)](https://www.jsdelivr.com/package/npm/ant-design-x-vue)
+[![jsDelivr][jsdelivr-src]][jsdelivr-href]
 
 Ant Design X For Vue. 🔥 [English](./README.en.md)
 
-这里是[Ant Design X](https://github.com/ant-design/x)的Vue实现。
+这里是 [Ant Design X](https://github.com/ant-design/x) 的 Vue 实现。
 
 ## ✨ 特性
 
@@ -24,13 +24,21 @@ Ant Design X For Vue. 🔥 [English](./README.en.md)
 - 🎨 支持细粒度的样式调整，满足各种场景的个性化需求
 
 
-## Usage
+## 📦 安装
 
-安装两个依赖 `ant-design-vue` and `ant-design-x-vue` 到你的项目中, 你可以参照如下命令行：
+```bash
+$ npm i ant-design-vue ant-design-x-vue
+```
 
-> pnpm add ant-design-vue ant-design-x-vue
+```bash
+$ yarn add ant-design-vue ant-design-x-vue
+```
 
-然后在你的项目里导入 `ant-design-vue`:
+```bash
+$ pnpm add ant-design-vue ant-design-x-vue
+```
+
+## 🔨 示例
 
 ```ts
 <script setup lang="ts">
@@ -42,7 +50,7 @@ import { Bubble, XProvider } from 'ant-design-x-vue';
 </template>
 ```
 
-## 开发
+## ⌨️ 开发
 
 ```bash
 # install dependencies
@@ -64,7 +72,7 @@ $ pnpm run docs:preview
 $ pnpm lint
 ```
 
-## 链接
+## 🔗 链接
 
 * [Vue](https://vuejs.org/)
 
@@ -72,19 +80,19 @@ $ pnpm lint
 
 * [Ant Design X Of React](https://x.ant.design/)
 
-## Contributing
+## 🤝 贡献
 
 您的贡献至关重要！
 
 您可以参考[Roadmap](https://github.com/wzc520pyfm/ant-design-x-vue/issues/1)，从中挑选您感兴趣的部分。
 
-## 贡献者
+## 👥 贡献者
 
 <a href="https://github.com/wzc520pyfm/ant-design-x-vue/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=wzc520pyfm/ant-design-x-vue" />
 </a>
 
-## 交流
+## 💬 交流
 
 ### 微信公众号
 ![Ant-Design-X Vue](./docs/public/images//wechat_public_account.jpg)
@@ -92,15 +100,15 @@ $ pnpm lint
 ### QQ 群
 ![QQ 群](./docs/public/images/QQ_group_1.jpg)
 
-## LICENSE
+## 📄 LICENSE
 
-MIT
+[MIT](./LICENSE)
 
 <!-- Badges -->
 
 [npm-version-src]: https://img.shields.io/npm/v/ant-design-x-vue.svg?style=flat
 [npm-version-href]: https://npmjs.com/package/ant-design-x-vue
-[npm-downloads-src]: https://img.shields.io/npm/dt/ant-design-x-vue.svg?style=flat
+[npm-downloads-src]: https://img.shields.io/npm/dm/ant-design-x-vue.svg?style=flat
 [npm-downloads-href]: https://npmjs.com/package/ant-design-x-vue
 [bundle-src]: https://img.shields.io/bundlephobia/minzip/ant-design-x-vue?style=flat
 [bundle-href]: https://bundlephobia.com/result?p=ant-design-x-vue
@@ -109,3 +117,5 @@ MIT
 [netlify-build-src]: https://img.shields.io/netlify/cb006e4e-afce-4c3e-9652-6f8a065b5b6e
 [license-src]: https://img.shields.io/github/license/wzc520pyfm/ant-design-x-vue?style=flat
 [license-href]: https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/LICENSE
+[jsdelivr-src]: https://data.jsdelivr.com/v1/package/npm/ant-design-x-vue/badge
+[jsdelivr-href]: https://www.jsdelivr.com/package/npm/ant-design-x-vue
