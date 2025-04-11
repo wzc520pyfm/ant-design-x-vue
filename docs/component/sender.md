@@ -128,10 +128,11 @@ type SpeechConfig = {
 
 ### Sender Slots
 
-| 插槽名 | 说明 |
-| --- | --- |
-| header | 头部面板 |
-| prefix | 前缀内容 |
+| 插槽名   | 说明    | 类型 |
+| ------- | ------ | ---- |
+| header  | 头部面板 | -   |
+| prefix  | 前缀内容 | _   |
+| actions | 操作按钮 | \{ ori?: VNode; info?: \{ components: \{ SendButton: InstanceType\<Button\>; ClearButton: InstanceType\<Button\>; LoadingButton: InstanceType\<Button\>; SpeechButton: InstanceType\<Button\>; \} \} \} |
 
 #### Sender Ref
 
