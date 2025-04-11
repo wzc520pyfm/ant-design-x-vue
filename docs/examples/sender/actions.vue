@@ -52,7 +52,7 @@ const Demo = () => {
             <ClearButton />
             <SpeechButton />
             {loading.value ? (
-              <LoadingButton type="default" icon={<Spin size="small" />} disabled />
+              <LoadingButton type="default" icon={<Spin size="small" />} disabled style={{ display: 'block' }} />
             ) : (
               <SendButton type="primary" disabled={false} />
             )}
