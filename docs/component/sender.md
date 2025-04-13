@@ -151,6 +151,7 @@ type ActionsComponents = {
 | header  | 头部面板 | -   |
 | prefix  | 前缀内容 | _   |
 | actions | 操作按钮 | \{ ori?: VNode; info?: \{ components: \{ SendButton: InstanceType\<Button\>; ClearButton: InstanceType\<Button\>; LoadingButton: InstanceType\<Button\>; SpeechButton: InstanceType\<Button\>; \} \} \} |
+| footer  | 底部内容 | \{ info?: \{ components: \{ SendButton: InstanceType\<Button\>; ClearButton: InstanceType\<Button\>; LoadingButton: InstanceType\<Button\>; SpeechButton: InstanceType\<Button\>; \} \} \}              |
 
 #### Sender Ref
 
