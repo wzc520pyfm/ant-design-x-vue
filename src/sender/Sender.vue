@@ -84,6 +84,16 @@ const slots = defineSlots<{
       };
     }
   }): VNode;
+  footer?(props?: {
+    info?: {
+      components: {
+        SendButton: typeof SendButton;
+        ClearButton: typeof ClearButton;
+        LoadingButton: typeof LoadingButton;
+        SpeechButton: typeof SpeechButton;
+      };
+    }
+  }): VNode;
 }>();
 
 // ============================= MISC =============================
@@ -274,7 +284,14 @@ const actionsButtonContextProps = computed(() => ({
 // ============================ Footer ============================
 const footerNode = computed(() => {
   let _footerNode: VNode = null;
-  if (typeof footer === 'function') {
+
+  const info = {
+    components: sharedRenderComponents,
+  }
+
+  if (slots.footer) {
+    _footerNode = slots.footer({ info });
+  } else if (typeof footer === 'function') {
     _footerNode = footer({
       components: sharedRenderComponents,
     });
