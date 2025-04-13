@@ -16,25 +16,30 @@ defineRender(() => {
         {({ classNames }) => {
           return (
             <Sender classNames={classNames} prefix={<Button type="text" icon={<SmileOutlined />} />} />
-            ) 
+            )
           }
         }
       </SemanticPreview>
       <SemanticPreview semantics={[
             { name: 'header', desc: '头部' },
-            { name: 'content', desc: '内容' },
+            { name: 'header-content', desc: '头部内容' },
+            { name: 'footer', desc: '尾部' },
           ]}
         >
         {({ classNames }) => {
           return (
               <Sender
+                classNames={classNames}
                 header={
-                  <Sender.Header open title="Header" classNames={classNames}>
+                  <Sender.Header open title="Header" classNames={{ header: classNames.header, content: classNames['header-content']}}>
                     Content
                   </Sender.Header>
                 }
+                footer={
+                  <div>Footer</div>
+                }
               />
-            ) 
+            )
           }
         }
       </SemanticPreview>
