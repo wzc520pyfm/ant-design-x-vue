@@ -52,7 +52,7 @@ const {
   components,
   onCancel,
   onChange,
-  actions,
+  actions = undefined,
   onKeyPress,
   onKeyDown,
   disabled = undefined,
