@@ -38,7 +38,7 @@ const bubbleItemList = [
     content: 'Hello World!',
   },
   {
-    key: '2',
+    key: '3',
     content: '',
     loading: true,
   },
