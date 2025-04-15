@@ -12,7 +12,7 @@ const text = ref('');
 
 const senderRef = ref<InstanceType<typeof Sender>>(null);
 
-const senderHeader = computed(() => 
+const senderHeader = computed(() =>
   h(Sender.Header, {
     title: "Attachments",
     styles: {
@@ -40,7 +40,7 @@ const senderHeader = computed(() =>
   })
 );
 
-const badgeNode = computed(() => 
+const badgeNode = computed(() =>
   h(Badge, { dot: items.value.length > 0 && !open.value }, {
     default: () => h(Button, {
       onClick: () => open.value = !open.value,
@@ -60,10 +60,10 @@ const badgeNode = computed(() =>
       :header="senderHeader"
       :prefix="badgeNode"
       :value="text"
-      @change="v => text.value = v"
+      @change="v => text = v"
       @submit="() => {
-        items.value = [];
-        text.value = '';
+        items = [];
+        text = '';
       }"
     />
   </Flex>
