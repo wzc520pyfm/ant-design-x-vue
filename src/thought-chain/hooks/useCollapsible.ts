@@ -66,6 +66,11 @@ const useCollapsible: UseCollapsible = (collapsible, prefixCls, rootPrefixCls) =
     if (!collapsibleState.value.enableCollapse) {
       return;
     }
+
+    if (typeof toValue(collapsible) !== "boolean" && !collapsibleState.value.customizeExpandedKeys.includes(curKey)) {
+      return
+    }
+
     const keys = mergedExpandedKeys.value.includes(curKey)
       ? mergedExpandedKeys.value.filter((key) => key !== curKey)
       : [...mergedExpandedKeys.value, curKey];
