@@ -74,8 +74,8 @@ const slots = defineSlots<{
   header?(): VNode;
   prefix?(): VNode;
   actions?(props?: {
-    ori?: VNode,
-    info?: {
+    ori: VNode,
+    info: {
       components: {
         SendButton: typeof SendButton;
         ClearButton: typeof ClearButton;
@@ -85,7 +85,7 @@ const slots = defineSlots<{
     }
   }): VNode;
   footer?(props?: {
-    info?: {
+    info: {
       components: {
         SendButton: typeof SendButton;
         ClearButton: typeof ClearButton;
