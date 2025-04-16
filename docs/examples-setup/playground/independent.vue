@@ -247,12 +247,51 @@ const onConversationClick: ConversationsProps['onActiveChange'] = (key) => {
 
 const handleFileChange: AttachmentsProps['onChange'] = info => attachedFiles.value = info.fileList
 
-const items = computed<BubbleListProps['items']>(() => messages.value.map(({ id, message, status }) => ({
-  key: id,
-  loading: status === 'loading',
-  role: status === 'local' ? 'local' : 'ai',
-  content: message,
-})))
+// ==================== Nodes ====================
+const placeholderNode = computed(() => h(
+  Space,
+  { direction: "vertical", size: 16, style: styles.value.placeholder },
+  [
+    h(
+      Welcome,
+      {
+        variant: "borderless",
+        icon: "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp",
+        title: "Hello, I'm Ant Design X",
+        description: "Base on Ant Design, AGI product interface solution, create a better intelligent vision~",
+        extra: h(Space, {}, [h(Button, { icon: h(ShareAltOutlined) }), h(Button, { icon: h(EllipsisOutlined) })]),
+      }
+    ),
+    h(
+      Prompts,
+      {
+        title: "Do you want?",
+        items: placeholderPromptsItems,
+        styles: {
+          list: {
+            width: '100%',
+          },
+          item: {
+            flex: 1,
+          },
+        },
+        onItemClick: onPromptsItemClick,
+      }
+    )
+  ]
+))
+
+const items = computed<BubbleListProps['items']>(() => {
+  if (messages.value.length === 0) {
+    return [{ content: placeholderNode, variant: 'borderless' }]
+  }
+  return messages.value.map(({ id, message, status }) => ({
+    key: id,
+    loading: status === 'loading',
+    role: status === 'local' ? 'local' : 'ai',
+    content: message,
+  }))
+})
 </script>
 
 <template>
@@ -291,53 +330,10 @@ const items = computed<BubbleListProps['items']>(() => messages.value.map(({ id,
     <div :style="styles.chat">
       <!-- 🌟 消息列表 -->
       <Bubble.List
-        v-if="items && items.length > 0"
         :items="items"
         :roles="roles"
         :style="styles.messages"
       />
-      <template v-else>
-        <Space
-          direction="vertical"
-          :size="16"
-          :style="styles.placeholder"
-        >
-          <Welcome
-            variant="borderless"
-            icon="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp"
-            title="Hello, I'm Ant Design X"
-            description="Base on Ant Design, AGI product interface solution, create a better intelligent vision~"
-          >
-            <template #extra>
-              <Space>
-                <Button>
-                  <template #icon>
-                    <ShareAltOutlined />
-                  </template>
-                </Button>
-                <Button>
-                  <template #icon>
-                    <EllipsisOutlined />
-                  </template>
-                </Button>
-              </Space>
-            </template>
-          </Welcome>
-          <Prompts
-            title="Do you want?"
-            :items="placeholderPromptsItems"
-            :styles="{
-              list: {
-                width: '100%',
-              },
-              item: {
-                flex: 1,
-              },
-            }"
-            @item-click="onPromptsItemClick"
-          />
-        </Space>
-      </template>
 
       <!-- 🌟 提示词 -->
       <Prompts
