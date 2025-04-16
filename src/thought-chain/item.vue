@@ -160,7 +160,7 @@ defineRender(() => {
               type="secondary"
             >
               {hideTooltip.value ? (
-                title.value
+                description.value
               ) : (
                 <Tooltip {...tooltip.value.descriptionConfig}>
                   {description.value}
