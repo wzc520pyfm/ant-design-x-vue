@@ -139,7 +139,7 @@ const placeholderPromptsItems: PromptsProps['items'] = [
   },
   {
     key: '2',
-    label: h(ReadOutlined, { style: { color: '#1890FF' } }, 'Design Guide'),
+    label: renderTitle(h(ReadOutlined, { style: { color: '#1890FF' } }), 'Design Guide'),
     description: 'How to design a good product?',
     children: [
       {
@@ -311,10 +311,14 @@ const items = computed<BubbleListProps['items']>(() => messages.value.map(({ id,
             <template #extra>
               <Space>
                 <Button>
-                  <ShareAltOutlined />
+                  <template #icon>
+                    <ShareAltOutlined />
+                  </template>
                 </Button>
                 <Button>
-                  <EllipsisOutlined />
+                  <template #icon>
+                    <EllipsisOutlined />
+                  </template>
                 </Button>
               </Space>
             </template>
@@ -355,7 +359,9 @@ const items = computed<BubbleListProps['items']>(() => messages.value.map(({ id,
               type="text"
               @click="() => headerOpen = !headerOpen"
             >
-              <PaperClipOutlined />
+              <template #icon>
+                <PaperClipOutlined />
+              </template>
             </Button>
           </Badge>
         </template>
