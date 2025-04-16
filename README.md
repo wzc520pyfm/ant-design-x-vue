@@ -3,6 +3,7 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![bundle][bundle-src]][bundle-href]
+![vue][vue-version-src]
 [![Github Actions][github-actions-src]][github-actions-href]
 ![Netlify Build][netlify-build-src]
 [![License][license-src]][license-href]
@@ -110,6 +111,7 @@ $ pnpm lint
 [npm-downloads-href]: https://npmjs.com/package/ant-design-x-vue
 [bundle-src]: https://img.shields.io/bundlephobia/minzip/ant-design-x-vue?style=flat
 [bundle-href]: https://bundlephobia.com/result?p=ant-design-x-vue
+[vue-version-src]: https://img.shields.io/badge/vue-%20%3E%3D%203.5-47c219
 [github-actions-src]: https://img.shields.io/github/actions/workflow/status/wzc520pyfm/ant-design-x-vue/ci.yml?branch=main&style=flat
 [github-actions-href]: https://github.com/wzc520pyfm/ant-design-x-vue/actions?query=workflow%3Aci
 [netlify-build-src]: https://img.shields.io/netlify/cb006e4e-afce-4c3e-9652-6f8a065b5b6e

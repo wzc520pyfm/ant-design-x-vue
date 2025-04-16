@@ -82,7 +82,7 @@
   },
   "peerDependencies": {
     "ant-design-vue": ">=4.0.0",
-    "vue": ">=3.3.0"
+    "vue": ">=3.5.0"
   },
   "devDependencies": {
     "@ant-design/icons-vue": "^7.0.1",
