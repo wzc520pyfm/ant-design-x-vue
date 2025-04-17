@@ -345,7 +345,7 @@ defineRender(() => {
             disabled={disabled}
             style={{ ...contextConfig.value.styles.input, ...styles.input }}
             class={classnames(inputCls.value, contextConfig.value.classNames.input, classNames.input)}
-            autoSize={{ maxRows: 8 }}
+            autoSize={autoSize}
             value={innerValue.value}
             onChange={(event: Event) => {
               triggerValueChange(
