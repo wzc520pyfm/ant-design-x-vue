@@ -1,23 +1,22 @@
 <script setup lang="tsx">
-import { App, Space, Spin, Typography } from 'ant-design-vue';
+import { message, Space, Spin, Typography } from 'ant-design-vue';
 import { Sender } from 'ant-design-x-vue';
 import { onWatcherCleanup, ref, watch } from 'vue';
 
 defineOptions({ name: 'AXSenderActions' });
+const [messageApi, contextHolder] = message.useMessage();
 
 const value = ref('');
 const loading = ref<boolean>(false);
 
 const Demo = () => {
-  const { message } = App.useApp();
-
   // Mock send message
   watch(loading, () => {
     if (loading.value) {
       const timer = setTimeout(() => {
         loading.value = false;
         value.value = '';
-        message.success('Send message successfully!');
+        messageApi.success('Send message successfully!');
       }, 2000);
 
       onWatcherCleanup(() => {
@@ -65,10 +64,10 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <App>
+    <>
+      <context-holder />
       <Demo />
-    </App>
+    </>
   )
 });
-
 </script>

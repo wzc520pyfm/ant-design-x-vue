@@ -1,18 +1,17 @@
 <script setup lang="tsx">
-import { App } from 'ant-design-vue';
+import { message } from 'ant-design-vue';
 import { Sender } from 'ant-design-x-vue';
 
 defineOptions({ name: 'AXSenderSubmitType' });
+const [messageApi, contextHolder] = message.useMessage();
 
 const Demo = () => {
-  const { message } = App.useApp();
-
   return (
     <Sender
       submitType="shiftEnter"
       placeholder="Press Shift + Enter to send message"
       onSubmit={() => {
-        message.success('Send message successfully!');
+        messageApi.success('Send message successfully!');
       }}
     />
   );
@@ -20,10 +19,10 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <App>
+    <>
+      <context-holder />
       <Demo />
-    </App>
+    </>
   )
 });
-
 </script>

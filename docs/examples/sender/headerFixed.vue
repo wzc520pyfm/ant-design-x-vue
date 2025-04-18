@@ -1,16 +1,15 @@
 <script setup lang="tsx">
 import { EnterOutlined } from '@ant-design/icons-vue';
-import { App, Flex, Space, Switch, Typography } from 'ant-design-vue';
+import { message, Flex, Space, Switch, Typography } from 'ant-design-vue';
 import { Sender } from 'ant-design-x-vue';
 import { computed, ref } from 'vue';
 
 defineOptions({ name: 'AXSenderHeaderFixed' });
+const [messageApi, contextHolder] = message.useMessage();
 
 const hasRef = ref(true);
 
 const Demo = () => {
-  const { message } = App.useApp();
-
   const headerNode = computed(() => (
     <Sender.Header
       open={hasRef.value}
@@ -35,7 +34,7 @@ const Demo = () => {
       <Sender
         header={headerNode.value}
         onSubmit={() => {
-          message.success('Send message successfully!');
+          messageApi.success('Send message successfully!');
         }}
       />
     </Flex>
@@ -44,10 +43,10 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <App>
+    <>
+      <context-holder />
       <Demo />
-    </App>
+    </>
   )
 });
-
 </script>

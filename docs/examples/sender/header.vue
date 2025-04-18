@@ -1,17 +1,16 @@
 <script setup lang="tsx">
 import { CloudUploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
-import { App, Button, Flex, theme, Typography } from 'ant-design-vue';
+import { message, Button, Flex, theme, Typography } from 'ant-design-vue';
 import { Sender } from 'ant-design-x-vue';
 import { computed, ref } from 'vue';
 
 defineOptions({ name: 'AXSenderHeader' });
+const [messageApi, contextHolder] = message.useMessage();
 
 const { token } = theme.useToken();
 const open = ref(false);
 
 const Demo = () => {
-  const { message } = App.useApp();
-
   const headerNode = computed(() => (
     <Sender.Header title="Upload Sample" open={open.value} onOpenChange={v => open.value = v}>
       <Flex vertical align="center" gap="small" style={{ marginBlock: token.value.paddingLG }}>
@@ -28,7 +27,7 @@ const Demo = () => {
         </Typography.Text >
         < Button
           onClick={() => {
-            message.info('Mock select file');
+            messageApi.info('Mock select file');
           }}
         >
           Select File
@@ -52,7 +51,7 @@ const Demo = () => {
         }
         placeholder="← Click to open"
         onSubmit={() => {
-          message.success('Send message successfully!');
+          messageApi.success('Send message successfully!');
         }}
       />
     </Flex>
@@ -61,10 +60,10 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <App>
+    <>
+      <context-holder />
       <Demo />
-    </App>
+    </>
   )
 });
-
 </script>
