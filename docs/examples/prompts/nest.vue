@@ -1,10 +1,11 @@
 <script setup lang="tsx">
 import { CommentOutlined, FireOutlined, HeartOutlined, ReadOutlined, RocketOutlined, SmileOutlined } from '@ant-design/icons-vue';
-import { App, Card, ConfigProvider, Space, theme } from 'ant-design-vue';
+import { message, Card, ConfigProvider, Space, theme } from 'ant-design-vue';
 import { Prompts, type PromptsProps } from 'ant-design-x-vue';
 import { type VNode } from 'vue';
 
 defineOptions({ name: 'AXPromptsNest' });
+const [messageApi, contextHolder] = message.useMessage();
 
 const renderTitle = (icon: VNode, title: string) => (
   <Space align="start">
@@ -75,8 +76,6 @@ const items: PromptsProps['items'] = [
 ];
 
 const Demo = () => {
-  const { message } = App.useApp();
-
   return (
     <ConfigProvider
       theme={{
@@ -101,7 +100,7 @@ const Demo = () => {
             },
           }}
           onItemClick={(info) => {
-            message.success(`You clicked a prompt: ${info.data.key}`);
+            messageApi.success(`You clicked a prompt: ${info.data.key}`);
           }}
         />
       </Card>
@@ -111,9 +110,10 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <App>
+    <>
+      <context-holder />
       <Demo />
-    </App>
+    </>
   )
-});
+})
 </script>

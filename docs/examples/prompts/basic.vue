@@ -1,10 +1,10 @@
 <script setup lang="tsx">
 import { BulbOutlined, InfoCircleOutlined, RocketOutlined, SmileOutlined, WarningOutlined } from '@ant-design/icons-vue';
-import { App } from 'ant-design-vue';
+import { message } from 'ant-design-vue';
 import { Prompts, type PromptsProps } from 'ant-design-x-vue';
 
-
 defineOptions({ name: 'AXPromptsBasic' });
+const [messageApi, contextHolder] = message.useMessage();
 
 const items: PromptsProps['items'] = [
   {
@@ -40,14 +40,12 @@ const items: PromptsProps['items'] = [
 ];
 
 const Demo = () => {
-  const { message } = App.useApp();
-
   return (
     <Prompts
       title="✨ Inspirational Sparks and Marvelous Tips"
       items={items}
       onItemClick={(info) => {
-        message.success(`You clicked a prompt: ${info.data.label}`);
+        messageApi.success(`You clicked a prompt: ${info.data.label}`);
       }}
     />
   );
@@ -55,9 +53,10 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <App>
+    <>
+      <context-holder />
       <Demo />
-    </App>
+    </>
   )
-});
+})
 </script>
