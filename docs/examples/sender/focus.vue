@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { Button, Flex } from 'ant-design-vue';
+import { App, Button, Flex } from 'ant-design-vue';
 import { Sender } from 'ant-design-x-vue';
 import { ref } from 'vue';
 
@@ -67,7 +67,10 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <Demo />
+    <App>
+      <Demo />
+    </App>
   )
 });
+
 </script>

@@ -1,11 +1,10 @@
 <script setup lang="tsx">
 import { SendOutlined } from '@ant-design/icons-vue';
-import { type ButtonProps, message, Flex, Tooltip } from 'ant-design-vue';
+import { type ButtonProps, App, Flex, Tooltip } from 'ant-design-vue';
 import { Sender, theme } from 'ant-design-x-vue';
 import { type CSSProperties, onWatcherCleanup, ref, watch } from 'vue';
 
 defineOptions({ name: 'AXSenderSendStyle' });
-const [messageApi, contextHolder] = message.useMessage();
 
 const { token } = theme.useToken();
 
@@ -13,6 +12,8 @@ const value = ref('Ask something?');
 const loading = ref(false);
 
 const Demo = () => {
+  const { message } = App.useApp();
+
   watch(loading, () => {
     if (loading.value) {
       const timer = setTimeout(() => {
@@ -36,7 +37,7 @@ const Demo = () => {
         onChange={v => value.value = v}
         loading={loading.value}
         onSubmit={(msg) => {
-          messageApi.success(`Send: ${msg}`);
+          message.success(`Send: ${msg}`);
           value.value = ''
           loading.value = true
         }}
@@ -92,10 +93,10 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <>
-      <context-holder />
+    <App>
       <Demo />
-    </>
+    </App>
   )
 });
+
 </script>

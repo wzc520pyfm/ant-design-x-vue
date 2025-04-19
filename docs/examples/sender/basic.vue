@@ -1,21 +1,22 @@
 <script setup lang="tsx">
-import { message, Flex } from 'ant-design-vue';
+import { App, Flex } from 'ant-design-vue';
 import { Sender } from 'ant-design-x-vue';
 import { onWatcherCleanup, ref, watch } from 'vue';
 
 defineOptions({ name: 'AXSenderBasic' });
-const [messageApi, contextHolder] = message.useMessage();
 
 const value = ref('Hello? this is X!');
 const loading = ref<boolean>(false);
 
 const Demo = () => {
+  const { message } = App.useApp();
+
   // Mock send message
   watch(loading, () => {
     if (loading.value) {
       const timer = setTimeout(() => {
         loading.value = false;
-        messageApi.success('Send message successfully!');
+        message.success('Send message successfully!');
       }, 3000);
       onWatcherCleanup(() => {
         clearTimeout(timer);
@@ -34,11 +35,11 @@ const Demo = () => {
         onSubmit={() => {
           value.value = '';
           loading.value = true
-          messageApi.info('Send message!');
+          message.info('Send message!');
         }}
         onCancel={() => {
           loading.value = false
-          messageApi.error('Cancel sending!');
+          message.error('Cancel sending!');
         }}
         autoSize={{ minRows: 2, maxRows: 6 }}
       />
@@ -50,10 +51,10 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <>
-      <context-holder />
+    <App>
       <Demo />
-    </>
+    </App>
   )
 });
+
 </script>

@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { CloudUploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
-import { Button, Flex } from 'ant-design-vue';
+import { App, Button, Flex } from 'ant-design-vue';
 import { Attachments, Sender } from 'ant-design-x-vue';
 import { computed, ref } from 'vue';
 
@@ -81,7 +81,10 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <Demo />
+    <App>
+      <Demo />
+    </App>
   )
 });
+
 </script>
