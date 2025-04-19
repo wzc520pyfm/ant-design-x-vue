@@ -18,7 +18,7 @@ const { token } = theme.useToken();
 const style = computed(() => ({
   width: '256px',
   background: token.value.colorBgContainer,
-  borderRadius: `${token.value.borderRadius}px`,
+  borderRadius: token.value.borderRadius,
 }));
 
 defineRender(() => {
