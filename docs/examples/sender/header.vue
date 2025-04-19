@@ -61,7 +61,7 @@ const Demo = () => {
 defineRender(() => {
   return (
     <>
-      <context-holder />
+      <contextHolder />
       <Demo />
     </>
   )
