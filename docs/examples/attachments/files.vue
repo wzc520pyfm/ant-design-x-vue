@@ -1,7 +1,6 @@
 <script setup lang="tsx">
-import { App, Flex } from 'ant-design-vue';
+import { Flex } from 'ant-design-vue';
 import { Attachments } from 'ant-design-x-vue';
-
 
 defineOptions({ name: 'AXAttachmentFiles' });
 
@@ -73,9 +72,7 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <App>
-      <Demo />
-    </App>
+    <Demo />
   )
 });
 </script>
