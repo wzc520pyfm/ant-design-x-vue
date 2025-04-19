@@ -1,13 +1,14 @@
 <script setup lang="tsx">
 import { CloudUploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
-import { Button, Flex, Switch, message } from 'ant-design-vue';
+import { App, Button, Flex, Switch } from 'ant-design-vue';
 import { Sender, Attachments } from 'ant-design-x-vue';
 import { ref, computed, useTemplateRef } from 'vue';
 
 defineOptions({ name: 'AXAttachmentBasic' });
-const [messageApi, contextHolder] = message.useMessage();
 
 const Demo = () => {
+  const { message } = App.useApp();
+
   const fullScreenDrop = ref(false);
   const customContent = ref(true);
   const divRef = useTemplateRef<HTMLDivElement>('basic-container');
@@ -23,7 +24,7 @@ const Demo = () => {
     <Attachments
       beforeUpload={() => false}
       onChange={({ file }) => {
-        messageApi.info(`Mock upload: ${file.name}`);
+        message.info(`Mock upload: ${file.name}`);
       }}
       getDropContainer={() => (fullScreenDrop.value ? document.body : divRef.value)}
       placeholder={{
@@ -61,10 +62,9 @@ const Demo = () => {
 
 defineRender(() => {
   return (
-    <>
-      <context-holder />
+    <App>
       <Demo />
-    </>
+    </App>
   )
 });
 </script>
