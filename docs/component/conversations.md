@@ -20,11 +20,15 @@ conversations/basic
 
 ### 会话操作
 
+<ClientOnly>
+
 :::demo 配合 `menu` 属性，配置操作菜单
 
 conversations/with-menu
 
 :::
+
+</ClientOnly>
 
 ### 自定义操作
 

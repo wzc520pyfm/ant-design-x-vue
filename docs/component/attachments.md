@@ -11,11 +11,15 @@ Attachments 组件用于需要展示一组附件信息集合的场景。
 
 ### 基本
 
+<ClientOnly>
+
 :::demo 基础用法，可以通过 `getDropContainer` 支持拖拽上传。
 
 attachments/basic
 
 :::
+
+</ClientOnly>
 
 ### 占位信息
 
@@ -35,19 +39,27 @@ attachments/overflow
 
 ### 组合示例
 
+<ClientOnly>
+
 :::demo 配合 Sender.Header 使用，在对话中插入附件。
 
 attachments/with-sender
 
 :::
 
+</ClientOnly>
+
 ### 文件卡片
+
+<ClientOnly>
 
 :::demo 单独的文件卡片，用于一些展示场景。
 
 attachments/files
 
 :::
+
+</ClientOnly>
 
 ## API
 

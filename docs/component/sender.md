@@ -11,13 +11,19 @@
 
 ### 基本用法
 
+<ClientOnly>
+
 :::demo 基础用法，受控进行状态管理。自定义触发器。
 
 sender/basic
 
 :::
 
+</ClientOnly>
+
 ### 提交用法
+
+<ClientOnly>
 
 :::demo 通过 `submitType` 控制换行与提交模式。
 
@@ -25,7 +31,11 @@ sender/submitType
 
 :::
 
+</ClientOnly>
+
 ### 语音输入
+
+<ClientOnly>
 
 :::demo 语音输入，需要用户同意麦克风权限。
 
@@ -33,7 +43,11 @@ sender/speech
 
 :::
 
+</ClientOnly>
+
 ### 自定义语音输入
+
+<ClientOnly>
 
 :::demo 自定义语音逻辑，从而实现调用三方库的语音识别功能。
 
@@ -41,7 +55,11 @@ sender/speechCustom
 
 :::
 
+</ClientOnly>
+
 ### 自定义按钮
+
+<ClientOnly>
 
 :::demo 通过 `actions` 属性，可以自定义发送按钮的行为。
 
@@ -49,7 +67,11 @@ sender/actions
 
 :::
 
+</ClientOnly>
+
 ### 展开面板
+
+<ClientOnly>
 
 :::demo 使用 `header` 自定义文件上传示例。
 
@@ -57,13 +79,19 @@ sender/header
 
 :::
 
+</ClientOnly>
+
 ### 引用
+
+<ClientOnly>
 
 :::demo 使用 `header` 做引用效果。
 
 sender/headerFixed
 
 :::
+
+</ClientOnly>
 
 ### 自定义底部内容
 
@@ -75,13 +103,19 @@ sender/footer
 
 ### 调整样式
 
+<ClientOnly>
+
 :::demo 通过 `actions` 属性，调整默认样式。
 
 sender/sendStyle
 
 :::
 
+</ClientOnly>
+
 ### 黏贴文件
+
+<ClientOnly>
 
 :::demo 使用 `onPasteFile` 获取黏贴的文件，配合 Attachments 进行文件上传。
 
@@ -89,13 +123,19 @@ sender/pasteImage
 
 :::
 
+</ClientOnly>
+
 ### 聚焦
+
+<ClientOnly>
 
 :::demo 使用 `ref` 选项控制聚焦。
 
 sender/focus
 
 :::
+
+</ClientOnly>
 
 ## API
 
