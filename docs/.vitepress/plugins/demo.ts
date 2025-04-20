@@ -46,7 +46,7 @@ function createDemoContainer(md: MarkdownRenderer): ContainerOpts {
         )}" raw-source-setup="${encodeURIComponent(
           sourceSetup
         )}" description="${encodeURIComponent(md.render(description))}" title="${title}">
-  <template #source><ClientOnly><ax-${sourceFile.replaceAll('/', '-')}/></ClientOnly></template><template #source-setup><ClientOnly><ax-${sourceFile.replaceAll('/', '-')}-setup/></ClientOnly></template>`
+  <template #source><ax-${sourceFile.replaceAll('/', '-')}/></template><template #source-setup><ax-${sourceFile.replaceAll('/', '-')}-setup/></template>`
       } else {
         return '</Demo>\n'
       }
