@@ -1,7 +1,7 @@
 import type { ButtonProps, TextAreaProps } from "ant-design-vue";
 import { Input } from "ant-design-vue";
 import type { ChangeEvent, ClipboardEventHandler, KeyboardEventHandler } from "ant-design-vue/es/_util/EventInterface";
-import type { ConfigProviderProps } from "ant-design-vue/es/config-provider/context";
+import type { ConfigProviderProps } from "ant-design-vue";
 import type { CSSProperties, VNode } from "vue";
 import type { AllowSpeech } from "./useSpeech";
 import type { InputRef } from "ant-design-vue/es/vc-input/inputProps";
