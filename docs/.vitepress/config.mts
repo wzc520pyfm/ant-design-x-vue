@@ -89,6 +89,9 @@ export default defineConfig({
   },
   title: "Ant Design X Vue",
   description: "Ant Design X For Vue",
+  head: [
+    ['link', { rel: 'icon', href: '/images/x-logo.svg' }],
+  ],
   appearance: 'dark',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
