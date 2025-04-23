@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'node:path';
+import { globSync } from 'glob';
+import { fileURLToPath } from 'node:url';
+import { resolve, relative, extname } from 'node:path';
 import VueMacros from 'unplugin-vue-macros/vite'
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 
-
-const externals = ['vue'];
+const externals = ['vue', 'ant-design-vue'];
 
 export default defineConfig({
   plugins: [
@@ -24,20 +25,68 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'antdx',
-      fileName: 'index',
+      formats: ['es', 'cjs', 'umd'],
+      fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
       external: [...externals],
-      output: {
-        globals: {
-          'vue': 'Vue',
+      input: Object.fromEntries(
+        globSync('src/**/*.*').filter(file => !file.includes('test')).map(file => [
+          // 删除 `src/` 以及每个文件的扩展名: src/nested/foo.js => nested/foo
+          relative(
+            'src',
+            file.slice(0, file.length - extname(file).length)
+          ),
+          // 将相对路径扩展为绝对路径: src/nested/foo => /project/src/nested/foo.js
+          fileURLToPath(new URL(file, import.meta.url))
+        ])
+      ),
+      output: [
+        // TODO: 单独创建一个vite.config.mts文件，构建umd时inlineDynamicImports（不支持多入口文件）必须启用
+        // {
+        //   format: 'umd',
+        //   dir: 'dist/umd',
+        //   name: 'antdx',
+        //   entryFileNames: '[name].umd.js',
+        //   globals: { vue: 'Vue', 'ant-design-vue': 'antd' },
+        // },
+        {
+          format: 'es',
+          dir: 'dist/es',
+          entryFileNames: '[name].mjs',
+          manualChunks: (id) => {
+            if (id.includes('node_modules')) {
+              return null;
+            }
+            if (id.includes('src/')) {
+              return id.split('src/')[1].split('.vue')[0]
+            }
+          },
+          chunkFileNames: (chunkInfo) => `${chunkInfo.name}2.mjs`,
+          globals: { vue: 'Vue', 'ant-design-vue': 'antd' },
         },
-      },
+        {
+          format: 'cjs',
+          dir: 'dist/lib',
+          entryFileNames: '[name].js',
+          manualChunks: (id) => {
+            if (id.includes('node_modules')) {
+              return null;
+            }
+            if (id.includes('src/')) {
+              return id.split('src/')[1].split('.vue')[0]
+            }
+          },
+          chunkFileNames: (chunkInfo) => `${chunkInfo.name}2.js`,
+          exports: 'named',
+          globals: { vue: 'Vue', 'ant-design-vue': 'antd' },
+        },
+      ],
     },
     outDir: 'dist',
   },
   resolve: {
-    dedupe: ['vue'],
+    dedupe: ['vue', 'ant-design-vue'],
   },
   optimizeDeps: {
     include: [...externals],
