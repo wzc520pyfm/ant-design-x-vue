@@ -10,7 +10,7 @@ import { TransitionCollapse } from '../transition-collapse';
 
 defineOptions({ name: 'AXThoughtChainNode' });
 
-const { info = {}, nextStatus, onClick, ...restProps} = defineProps<ThoughtChainNodeProps>();
+const { info = {}, nextStatus, onClick, ...restProps } = defineProps<ThoughtChainNodeProps>();
 
 const domProps = computed(() => pickAttrs(restProps, {
   attr: true,
@@ -107,7 +107,7 @@ defineRender(() => {
         {/* Header */}
         <div
           class={classnames(`${itemCls.value}-header-box`, {
-            [`${itemCls.value}-collapsible`]: enableCollapse.value && content.value
+            [`${itemCls.value}-collapsible`]: enableCollapse.value && content.value,
           })}
         >
           {/* Title */}
@@ -153,7 +153,7 @@ defineRender(() => {
           )}
         </div>
         {/* Extra */}
-        {extra.value && (<div class={`${itemCls.value}-extra`}>{extra.value}</div>)}
+        {extra.value && <div class={`${itemCls.value}-extra`}>{extra.value}</div>}
       </div>
       {/* Content */}
 
@@ -176,10 +176,7 @@ defineRender(() => {
       {/* Footer */}
       {footer.value && (
         <div
-          class={classnames(
-            `${itemCls.value}-footer`,
-            classNames.value.itemFooter,
-          )}
+          class={classnames(`${itemCls.value}-footer`, classNames.value.itemFooter)}
           style={styles.value.itemFooter}
         >
           {footer.value}
