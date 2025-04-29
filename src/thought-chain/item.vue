@@ -10,28 +10,19 @@ import { TransitionCollapse } from '../transition-collapse';
 
 defineOptions({ name: 'AXThoughtChainNode' });
 
-const {
-  info = {},
-  nextStatus,
-  onClick,
-  ...restProps
-} = defineProps<ThoughtChainNodeProps>();
+const { info = {}, nextStatus, onClick, ...restProps} = defineProps<ThoughtChainNodeProps>();
 
-const domProps = computed(() =>
-  pickAttrs(restProps, {
-    attr: true,
-    aria: true,
-    data: true,
-  }),
-);
+const domProps = computed(() => pickAttrs(restProps, {
+  attr: true,
+  aria: true,
+  data: true,
+}));
 
 // ================= ThoughtChainNodeContext ====================
 const thoughtChainNodeContext = useThoughtChainNodeContextInject();
 const prefixCls = computed(() => thoughtChainNodeContext.value.prefixCls);
 // const collapseMotion = computed(() => thoughtChainNodeContext.value.collapseMotion);
-const enableCollapse = computed(
-  () => thoughtChainNodeContext.value.enableCollapse,
-);
+const enableCollapse = computed(() => thoughtChainNodeContext.value.enableCollapse);
 const expandedKeys = computed(() => thoughtChainNodeContext.value.expandedKeys);
 const direction = computed(() => thoughtChainNodeContext.value.direction);
 const classNames = computed(() => thoughtChainNodeContext.value.classNames);
@@ -90,9 +81,7 @@ const onThoughtChainNodeClick = () => onClick?.(key.value);
 
 // ============================ Content Open ============================
 const contentOpen = computed(() => expandedKeys.value?.includes(key.value));
-const contentVisible = computed(() =>
-  enableCollapse.value ? contentOpen.value : true,
-);
+const contentVisible = computed(() => enableCollapse.value ? contentOpen.value : true);
 
 defineRender(() => {
   return (
@@ -101,9 +90,7 @@ defineRender(() => {
       class={classnames(
         itemCls.value,
         {
-          [`${itemCls.value}-${status.value}${
-            nextStatus ? `-${nextStatus}` : ''
-          }`]: status.value,
+          [`${itemCls.value}-${status.value}${nextStatus ? `-${nextStatus}` : ''}`]: status.value,
         },
         restProps.class,
       )}
@@ -111,10 +98,7 @@ defineRender(() => {
     >
       {/* Header */}
       <div
-        class={classnames(
-          `${itemCls.value}-header`,
-          classNames.value.itemHeader,
-        )}
+        class={classnames(`${itemCls.value}-header`, classNames.value.itemHeader)}
         style={styles.value.itemHeader}
         onClick={onThoughtChainNodeClick}
       >
@@ -123,8 +107,7 @@ defineRender(() => {
         {/* Header */}
         <div
           class={classnames(`${itemCls.value}-header-box`, {
-            [`${itemCls.value}-collapsible`]:
-              enableCollapse.value && content.value,
+            [`${itemCls.value}-collapsible`]: enableCollapse.value && content.value
           })}
         >
           {/* Title */}
@@ -170,9 +153,7 @@ defineRender(() => {
           )}
         </div>
         {/* Extra */}
-        {extra.value && (
-          <div class={`${itemCls.value}-extra`}>{extra.value}</div>
-        )}
+        {extra.value && (<div class={`${itemCls.value}-extra`}>{extra.value}</div>)}
       </div>
       {/* Content */}
 
@@ -183,10 +164,7 @@ defineRender(() => {
             class={classnames(`${itemCls.value}-content`)}
           >
             <div
-              class={classnames(
-                `${itemCls.value}-content-box`,
-                classNames.value.itemContent,
-              )}
+              class={classnames(`${itemCls.value}-content-box`, classNames.value.itemContent)}
               style={styles.value.itemContent}
             >
               {content.value}
