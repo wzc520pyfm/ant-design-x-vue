@@ -68,10 +68,7 @@ const tooltip = computed(() => {
     },
   };
 });
-
-const hideTooltip = computed(
-  () => typeof info.tooltip === 'boolean' && !info.tooltip,
-);
+const hideTooltip = computed(() => !info.tooltip);
 
 // ============================ Style ============================
 const itemCls = computed(() => `${prefixCls.value}-item`);
