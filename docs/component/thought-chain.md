@@ -64,6 +64,8 @@ thought-chain/nested
 
 thought-chain/tooltip
 
+:::
+
 ## API
 
 <!-- 通用属性参考：[通用属性](/docs/react/common-props) -->
