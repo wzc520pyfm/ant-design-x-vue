@@ -4,7 +4,7 @@ import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import useTypedEffect from './hooks/useTypedEffect';
 import useTypingConfig from './hooks/useTypingConfig';
-import type { BubbleProps } from './interface';
+import type { BubbleContentType, BubbleProps } from './interface';
 import Loading from './loading.vue';
 import useStyle from './style';
 import { useBubbleContextInject } from './context';
@@ -38,7 +38,9 @@ const {
 const slots = defineSlots<{
   avatar?(): VNode;
   header?(): VNode | string;
-  footer?(): VNode | string;
+  footer?(props?: {
+    content: BubbleContentType;
+  }): VNode | string;
   loading?(): VNode;
   message?(props?: {
     content: string;
@@ -123,7 +125,7 @@ const avatarNode = computed(() => {
 // =========================== Content ============================
 const mergedContent = computed(() => {
   if (slots.message) {
-    return slots.message({ content: typedContent.value as any});
+    return slots.message({ content: typedContent.value as any });
   }
   return messageRender ? messageRender(typedContent.value as any) : typedContent.value
 });
@@ -164,7 +166,11 @@ const fullContent = computed<VNode>(() => {
     </div>
   );
   const _header = slots.header ? slots.header() : header;
-  const _footer = slots.footer ? slots.footer() : footer;
+  const _footer = slots.footer
+    ? slots.footer({ content: mergedContent.value })
+    : typeof footer === 'function'
+      ? footer(mergedContent.value)
+      : footer;
 
   if (_header || _footer) {
     return (

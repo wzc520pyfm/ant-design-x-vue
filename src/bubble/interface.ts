@@ -1,6 +1,7 @@
 import type { AvatarProps } from 'ant-design-vue';
 import type { AvoidValidation } from '../type-utility';
 import type { CSSProperties, HTMLAttributes, VNode } from 'vue';
+import { AnyObject } from '../_util/type';
 
 export interface TypingOption {
   /**
@@ -18,6 +19,8 @@ export interface TypingOption {
 }
 
 export type SemanticType = 'avatar' | 'content' | 'header' | 'footer';
+
+export type BubbleContentType = VNode | string | AnyObject;
 
 export interface _AvatarProps extends AvatarProps {
   class: string;
@@ -40,7 +43,7 @@ export interface BubbleProps extends /* @vue-ignore */ Omit<HTMLAttributes, 'con
   shape?: 'round' | 'corner';
   onTypingComplete?: VoidFunction;
   header?: VNode | string;
-  footer?: VNode | string;
+  footer?: VNode | string | ((content: BubbleContentType) => VNode | string);
 }
 
 export interface BubbleRef {
