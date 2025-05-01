@@ -1,10 +1,10 @@
-<script setup lang="tsx">
+<script setup lang="tsx" generic="T extends BubbleContentType = string">
 import { Avatar } from 'ant-design-vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import useTypedEffect from './hooks/useTypedEffect';
 import useTypingConfig from './hooks/useTypingConfig';
-import type { BubbleProps } from './interface';
+import type { BubbleContentType, BubbleProps } from './interface';
 import Loading from './loading.vue';
 import useStyle from './style';
 import { useBubbleContextInject } from './context';
@@ -33,7 +33,7 @@ const {
   header,
   footer,
   ...otherHtmlProps
-} = defineProps<BubbleProps>();
+} = defineProps<BubbleProps<T>>();
 
 const slots = defineSlots<{
   avatar?(): VNode;
