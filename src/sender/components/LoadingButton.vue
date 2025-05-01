@@ -19,6 +19,7 @@ defineRender(() => {
     // variant="text"
     disabled={disabled}
     shape={shape}
+    icon={icon}
     {...restProps}
     style={{ backgroundColor: 'transparent', color: token.value.colorPrimary }}
     class={classNames(`${context.value.prefixCls}-loading-button`)}
