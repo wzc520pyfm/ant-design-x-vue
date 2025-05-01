@@ -119,7 +119,7 @@ bubble/gpt-vis
 | avatar | 展示头像 | VNode | - |  |
 | classNames | 语义化结构 class | [Record<SemanticDOM, string>](#semantic-dom) | - |  |
 | content | 聊天内容 | string | - |  |
-| footer | 底部内容 | VNode | - |  |
+| footer | 底部内容 | VNode \| (content: [BubbleContentType](https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/src/bubble/interface.ts#L23)) => VNode | - |  |
 | header | 头部内容 | VNode | - |  |
 | loading | 聊天内容加载状态 | boolean | - |  |
 | placement | 信息位置 | `start` \| `end` | `start` |  |
@@ -137,7 +137,7 @@ bubble/gpt-vis
 | --- | --- | --- |
 | avatar | 头像 | - |
 | header | 头部面板 | - |
-| footer | 底部内容 | - |
+| footer | 底部内容 | \{ content: [BubbleContentType](https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/src/bubble/interface.ts#L23) \} |
 | loading | loading占位 | - |
 | message | 消息内容 | \{ content: string \} |
 

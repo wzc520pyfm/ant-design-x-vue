@@ -19,10 +19,19 @@ const { token } = theme.useToken();
     :avatar="{ icon: h(UserOutlined) }"
     header="Ant Design X"
   >
-    <template #footer>
+    <template #footer="{ content }">
       <Space :size="token.paddingXXS">
-        <Button type="text" size="small" :icon="h(SyncOutlined)"></Button>
-        <Button type="text" size="small" :icon="h(CopyOutlined)" />
+        <Button
+          type="text"
+          size="small"
+          :icon="h(SyncOutlined)"
+        />
+        <Button
+          type="text"
+          size="small"
+          :icon="h(CopyOutlined)"
+          @click="() => console.log('Copy message:', content)"
+        />
       </Space>
     </template>
   </Bubble>
