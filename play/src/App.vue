@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Card, Typography } from 'ant-design-vue';
 import { ThoughtChain, type ThoughtChainProps } from 'ant-design-x-vue';
-import { cloneVNode, h } from 'vue';
+import { cloneVNode, h, ref } from 'vue';
 
 defineOptions({ name: 'AXThoughtChainCollapsibleSetup' });
 
@@ -40,13 +40,25 @@ const items: ThoughtChainProps['items'] = [
     content: cloneVNode(h(mockContent)),
   },
 ];
+
+const expandedKeys = ref(['1']);
+
+setTimeout(() => {
+  expandedKeys.value = ["2"]
+}, 3000);
+
+const onExpand = (keys) => {
+  // 注释这行代码，验证必须设置节点展示列表
+  expandedKeys.value = keys;
+};
 </script>
 <template>
   <Card :style="{ width: '500px' }">
     <ThoughtChain
       :items="items"
       :collapsible="{
-        expandedKeys: ['1'], //固定值
+        expandedKeys,
+        onExpand,
       }"
     />
   </Card>
