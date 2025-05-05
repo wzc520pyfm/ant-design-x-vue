@@ -52,7 +52,7 @@ export default defineConfig({
         // },
         {
           format: 'es',
-          dir: 'dist/es',
+          dir: 'es',
           entryFileNames: '[name].mjs',
           manualChunks: (id) => {
             if (id.includes('node_modules')) {
@@ -67,7 +67,7 @@ export default defineConfig({
         },
         {
           format: 'cjs',
-          dir: 'dist/lib',
+          dir: 'lib',
           entryFileNames: '[name].js',
           manualChunks: (id) => {
             if (id.includes('node_modules')) {

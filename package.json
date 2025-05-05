@@ -13,7 +13,7 @@
     "vue"
   ],
   "scripts": {
-    "build": "vite build && vue-tsc --project ./tsconfig.build.json && tsc resolver/index.ts --outDir dist/resolver --declaration",
+    "build": "vite build && vue-tsc --project ./tsconfig.build.json && tsc resolver/index.ts --outDir resolver --declaration",
     "build:watch": "vite build --watch",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
@@ -38,22 +38,26 @@
   "license": "MIT",
   "exports": {
     ".": {
-      "types": "./dist/typings/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.umd.js"
+      "types": "./typings/index.d.ts",
+      "import": "./es/index.mjs",
+      "require": "./lib/index.js"
     },
     "./dist/style.css": "./dist/style.css",
     "./resolver": {
-      "types": "./dist/resolver/index.d.ts",
-      "import": "./dist/resolver/index.js"
+      "types": "./resolver/index.d.ts",
+      "import": "./resolver/index.js"
     }
   },
-  "main": "./dist/index.umd.js",
-  "module": "./dist/index.mjs",
-  "unpkg": "dist/index.umd.js",
-  "types": "./dist/typings/index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./es/index.mjs",
+  "unpkg": "./dist/index.umd.js",
+  "types": "./typings/index.d.ts",
   "files": [
-    "dist"
+    "es",
+    "lib",
+    "dist",
+    "typings",
+    "resolver"
   ],
   "commitlint": {
     "extends": [
