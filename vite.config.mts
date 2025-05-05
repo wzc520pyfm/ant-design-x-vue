@@ -42,14 +42,6 @@ export default defineConfig({
         ])
       ),
       output: [
-        // TODO: 单独创建一个vite.config.mts文件，构建umd时inlineDynamicImports（不支持多入口文件）必须启用
-        // {
-        //   format: 'umd',
-        //   dir: 'dist/umd',
-        //   name: 'antdx',
-        //   entryFileNames: '[name].umd.js',
-        //   globals: { vue: 'Vue', 'ant-design-vue': 'antd' },
-        // },
         {
           format: 'es',
           dir: 'es',
