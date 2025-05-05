@@ -3,7 +3,7 @@ node_modules
 /es
 /lib
 /typings
-/resolver
+/resolver-dist
 .dumi/tmp
 .dumi/tmp-test
 .dumi/tmp-production

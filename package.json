@@ -13,7 +13,10 @@
     "vue"
   ],
   "scripts": {
-    "build": "vite build && vue-tsc --project ./tsconfig.build.json && tsc resolver/index.ts --outDir resolver --declaration",
+    "build": "npm run build:es && npm run build:umd && npm run build:resolver",
+    "build:es": "vite build && vue-tsc --project ./tsconfig.build.json",
+    "build:umd": "vite build --config ./vite.config.umd.mts && vue-tsc --project ./tsconfig.build.json",
+    "build:resolver": "tsc resolver/index.ts --outDir resolver-dist --declaration",
     "build:watch": "vite build --watch",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
@@ -44,8 +47,8 @@
     },
     "./dist/style.css": "./dist/style.css",
     "./resolver": {
-      "types": "./resolver/index.d.ts",
-      "import": "./resolver/index.js"
+      "types": "./resolver-dist/index.d.ts",
+      "import": "./resolver-dist/index.js"
     }
   },
   "main": "./lib/index.js",
@@ -57,7 +60,7 @@
     "lib",
     "dist",
     "typings",
-    "resolver"
+    "resolver-dist"
   ],
   "commitlint": {
     "extends": [
