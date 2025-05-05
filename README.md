@@ -10,6 +10,8 @@
 
 [![jsDelivr][jsdelivr-src]][jsdelivr-href]
 
+[![deepwiki][deepwiki-src]][deepwiki-href]
+
 Ant Design X For Vue. 🔥 [English](./README.en.md)
 
 这里是 [Ant Design X](https://github.com/ant-design/x) 的 Vue 实现。
@@ -119,3 +121,6 @@ $ pnpm lint
 [license-href]: https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/LICENSE
 [jsdelivr-src]: https://data.jsdelivr.com/v1/package/npm/ant-design-x-vue/badge
 [jsdelivr-href]: https://www.jsdelivr.com/package/npm/ant-design-x-vue
+
+[deepwiki-src]: https://img.shields.io/badge/deepwiki-f8f7f6?style=flat
+[deepwiki-href]: https://deepwiki.com/wzc520pyfm/ant-design-x-vue
