@@ -1,4 +1,5 @@
 import XRequest from '../x-request';
+import { XStreamOptions } from '../x-stream';
 
 import type { AnyObject } from '../_util/type';
 import { computed } from 'vue';
@@ -14,7 +15,9 @@ export type RequestFn<Message> = (
     onUpdate: (message: Message) => void;
     onSuccess: (message: Message) => void;
     onError: (error: Error) => void;
+    onStream?: (abortController: AbortController) => void;
   },
+  transformStream?: XStreamOptions<Message>['transformStream'],
 ) => void;
 
 export interface XAgentConfigPreset {
@@ -45,15 +48,20 @@ export class XAgent<Message = string> {
     delete this.requestingMap[id];
   }
 
-  public request: RequestFn<Message> = (info, callbacks) => {
+  public request: RequestFn<Message> = (info, callbacks, transformStream?) => {
     const { request } = this.config;
-    const { onUpdate, onSuccess, onError } = callbacks;
+    const { onUpdate, onSuccess, onError, onStream } = callbacks;
 
     const id = uuid;
     uuid += 1;
     this.requestingMap[id] = true;
 
     request?.(info, {
+      onStream: (abortController) => {
+        if (this.requestingMap[id]) {
+          onStream?.(abortController);
+        }
+      },
       // Status should be unique.
       // One get success or error should not get more message
       onUpdate: (message) => {
@@ -73,7 +81,8 @@ export class XAgent<Message = string> {
           this.finishRequest(id);
         }
       },
-    });
+    },
+    transformStream);
   };
 
   public isRequesting() {

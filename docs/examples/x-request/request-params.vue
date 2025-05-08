@@ -1,26 +1,21 @@
-<script setup lang="tsx">
+<script lang="tsx" setup>
 import { LoadingOutlined, TagsOutlined } from '@ant-design/icons-vue';
 import { Button, Descriptions, Flex } from 'ant-design-vue';
 import { ThoughtChain, type ThoughtChainItem, XRequest } from 'ant-design-x-vue';
 import { ref } from 'vue';
 
-defineOptions({ name: 'AXXRequestBasic' });
+defineOptions({ name: 'AXXRequestRequestParams' });
 
-/**
- * 🔔 Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.
- */
-const BASE_URL = 'https://api.example.com';
-const PATH = '/chat';
-const MODEL = 'gpt-3.5-turbo';
-// const API_KEY = '';
+const BASE_URL = 'https://api.example.com/agent';
 
 const exampleRequest = XRequest({
-  baseURL: BASE_URL + PATH,
-  model: MODEL,
-
-  /** 🔥🔥 Its dangerously! */
-  // dangerouslyApiKey: API_KEY
+  baseURL: BASE_URL,
 });
+
+interface RequestParams {
+  agentId: number;
+  query: string;
+}
 
 const status = ref<ThoughtChainItem['status']>();
 const lines = ref<Record<string, string>[]>([]);
@@ -28,10 +23,9 @@ const lines = ref<Record<string, string>[]>([]);
 async function request() {
   status.value = 'pending';
 
-  await exampleRequest.create(
+  await exampleRequest.create<RequestParams>(
     {
-      messages: [{ role: 'user', content: 'hello, who are u?' }],
-      stream: true,
+      query: 'Search for the latest technology news',
       agentId: 111,
     },
     {
@@ -53,10 +47,9 @@ async function request() {
 
 defineRender(() => {
   return (
-    <Flex align="start" gap={16} style={{ overflow: 'auto' }}>
+    <Flex>
       <Button type="primary" disabled={status.value === 'pending'} onClick={request}>
         Request - {BASE_URL}
-        {PATH}
       </Button>
       <ThoughtChain
         items={[
@@ -66,8 +59,8 @@ defineRender(() => {
             icon: status.value === 'pending' ? <LoadingOutlined /> : <TagsOutlined />,
             description:
               status.value === 'error' &&
-              exampleRequest.baseURL === BASE_URL + PATH &&
-              'Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.',
+              exampleRequest.baseURL === BASE_URL &&
+              'Please replace the BASE_URL, RequestParams with your own values.',
             content: (
               <Descriptions column={1}>
                 <Descriptions.Item label="Status">{status.value || '-'}</Descriptions.Item>
@@ -78,6 +71,6 @@ defineRender(() => {
         ]}
       />
     </Flex>
-  )
+  );
 });
 </script>

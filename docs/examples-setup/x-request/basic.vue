@@ -32,6 +32,7 @@ async function request() {
     {
       messages: [{ role: 'user', content: 'hello, who are u?' }],
       stream: true,
+      agentId: 111,
     },
     {
       onSuccess: (messages) => {
