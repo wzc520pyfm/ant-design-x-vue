@@ -2,7 +2,7 @@
 import { UserOutlined } from '@ant-design/icons-vue';
 import { Flex } from 'ant-design-vue';
 import { Bubble, Sender, useXAgent, useXChat } from 'ant-design-x-vue';
-import { computed, ref } from 'vue';
+import { ref, watch } from 'vue';
 
 defineOptions({ name: 'AXUseXChatModel' });
 
@@ -83,8 +83,10 @@ const { onRequest, messages } = useXChat({
   },
 });
 
-const senderLoading = computed(() => {
-  return agent.value.isRequesting();
+const senderLoading = ref(false);
+
+watch(() => agent.value.isRequesting(), () => {
+  senderLoading.value = agent.value.isRequesting();
 });
 
 defineRender(() => {
