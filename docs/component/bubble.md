@@ -97,6 +97,14 @@ bubble/list-custom
 
 :::
 
+### 深度思考
+
+:::demo 带深度思考。
+
+bubble/with-think
+
+:::
+
 ### 使用 GPT-Vis 渲染图表 (no support)
 
 @antv/GPT-Vis 仅支持React。
