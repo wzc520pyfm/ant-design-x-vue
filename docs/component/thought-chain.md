@@ -42,6 +42,14 @@ thought-chain/collapsible
 
 :::
 
+### 受控模式
+
+:::demo `collapsible` 支持传入对象，开启受控模式
+
+thought-chain/controlled
+
+:::
+
 ### 客制化
 
 :::demo `items` 属性支持灵活的客制化配置，详情参考 `ThoughtChainItem` 定义
