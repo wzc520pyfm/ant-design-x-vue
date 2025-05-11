@@ -1,6 +1,6 @@
-import type { MaybeRefOrGetter, Ref } from 'vue';
-import { computed, toValue, watch } from 'vue';
 import useState from '../../_util/hooks/use-state';
+import { computed, toValue, watch } from 'vue';
+import type { MaybeRefOrGetter, Ref } from 'vue';
 
 export type CollapsibleOptions = {
   /**
@@ -25,31 +25,26 @@ type UseCollapsible = (
   prefixCls?: string,
   rootPrefixCls?: string,
 ) => [
-  Ref<boolean>,
-  Ref<RequiredCollapsibleOptions['expandedKeys']>,
-  ((curKey: string) => void) | undefined,
-  // CSSMotionProps,
-];
+    Ref<boolean>,
+    Ref<RequiredCollapsibleOptions['expandedKeys']>,
+    ((curKey: string) => void) | undefined,
+    // CSSMotionProps,
+  ];
 
-const useCollapsible: UseCollapsible = (
-  collapsible,
-  prefixCls,
-  rootPrefixCls,
-) => {
+const useCollapsible: UseCollapsible = (collapsible, prefixCls, rootPrefixCls) => {
   // ============================ Collapsible ============================
   const collapsibleState = computed(() => {
     const _collapsible = toValue(collapsible);
-
     let baseConfig: RequiredCollapsibleOptions = {
       expandedKeys: [],
-      onExpand: () => {},
+      onExpand: () => { },
     };
     if (!_collapsible) {
       return {
         enableCollapse: false,
         customizeExpandedKeys: baseConfig.expandedKeys,
-        customizeOnExpand: baseConfig.onExpand,
-      };
+        customizeOnExpand: baseConfig.onExpand
+      }
     }
     if (typeof _collapsible === 'object') {
       baseConfig = { ...baseConfig, ..._collapsible };
@@ -63,22 +58,20 @@ const useCollapsible: UseCollapsible = (
   });
 
   // ============================ ExpandedKeys ============================
-  const [mergedExpandedKeys, setMergedExpandedKeys] = useState<
-    RequiredCollapsibleOptions['expandedKeys']
-  >(collapsibleState.value.customizeExpandedKeys);
+  const [mergedExpandedKeys, setMergedExpandedKeys] =
+    useState<RequiredCollapsibleOptions['expandedKeys']>(collapsibleState.value.customizeExpandedKeys);
 
   // ============================ Event ============================
   const onItemExpand = (curKey: string) => {
     if (!collapsibleState.value.enableCollapse) {
       return;
     }
-
     const keys = mergedExpandedKeys.value.includes(curKey)
       ? mergedExpandedKeys.value.filter((key) => key !== curKey)
       : [...mergedExpandedKeys.value, curKey];
 
     collapsibleState.value.customizeOnExpand?.(keys);
-    
+
     // 受控模式下，由监听函数设置节点展开/关闭状态
     if (typeof toValue(collapsible) !== 'object') {
       setMergedExpandedKeys(keys);
@@ -114,6 +107,6 @@ const useCollapsible: UseCollapsible = (
     onItemExpand,
     // collapseMotion,
   ];
-};
+}
 
 export default useCollapsible;
