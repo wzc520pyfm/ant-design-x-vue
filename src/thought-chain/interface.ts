@@ -1,6 +1,6 @@
-import type { CSSProperties, HTMLAttributes, VNode } from "vue";
-import type { Collapsible } from "./hooks/useCollapsible";
-import type { ConfigProviderProps } from "ant-design-vue";
+import type { ConfigProviderProps, TooltipProps } from 'ant-design-vue';
+import type { CSSProperties, HTMLAttributes, VNode } from 'vue';
+import type { Collapsible } from './hooks/useCollapsible';
 
 export enum THOUGHT_CHAIN_ITEM_STATUS {
   /**
@@ -15,6 +15,20 @@ export enum THOUGHT_CHAIN_ITEM_STATUS {
    * @desc 错误状态
    */
   ERROR = 'error',
+}
+
+export interface TooltipConfig {
+  /**
+   * @desc Title tooltip 配置
+   * @descEN Title tooltip configuration
+   */
+  titleConfig?: TooltipProps;
+
+  /**
+   * @desc Description tooltip 配置
+   * @descEN Description tooltip configuration
+   */
+  descriptionConfig?: TooltipProps;
 }
 
 export interface ThoughtChainItem {
@@ -65,6 +79,8 @@ export interface ThoughtChainItem {
    * @descEN Thought chain item status
    */
   status?: `${THOUGHT_CHAIN_ITEM_STATUS}`;
+
+  tooltip?: boolean | TooltipConfig;
 }
 
 export type SemanticType = 'item' | 'itemHeader' | 'itemContent' | 'itemFooter';

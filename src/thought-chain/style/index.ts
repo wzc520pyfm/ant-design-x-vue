@@ -197,6 +197,9 @@ const genThoughtChainItemStyle: GenerateThoughtChainItemStyle = (token) => {
             lineHeight: `${unit(token.itemSize)}`,
             maxHeight: token.itemSize,
             fontSize: token.itemFontSize,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
 
             [`& ${itemCls}-collapse-icon`]: {
               marginInlineEnd: token.marginXS,
@@ -204,6 +207,9 @@ const genThoughtChainItemStyle: GenerateThoughtChainItemStyle = (token) => {
           },
           [`& ${itemCls}-desc`]: {
             fontSize: token.itemFontSize,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
           },
         },
       },
