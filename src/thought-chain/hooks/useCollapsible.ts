@@ -1,6 +1,6 @@
-import useState from '../../_util/hooks/use-state';
-import { computed, toValue, watch } from 'vue';
-import type { MaybeRefOrGetter, Ref } from 'vue';
+import useState from "../../_util/hooks/use-state";
+import { computed, toValue, watch } from "vue";
+import type { MaybeRefOrGetter, Ref } from "vue";
 
 export type CollapsibleOptions = {
   /**
@@ -53,8 +53,8 @@ const useCollapsible: UseCollapsible = (collapsible, prefixCls, rootPrefixCls) =
     return {
       enableCollapse: true,
       customizeExpandedKeys: baseConfig.expandedKeys,
-      customizeOnExpand: baseConfig.onExpand,
-    };
+      customizeOnExpand: baseConfig.onExpand
+    }
   });
 
   // ============================ ExpandedKeys ============================
