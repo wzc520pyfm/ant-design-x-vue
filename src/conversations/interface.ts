@@ -123,6 +123,7 @@ export interface ConversationsItemProps extends Omit<HTMLAttributes, 'onClick'> 
     trigger?:
       | VNode
       | ((conversation: Conversation, info: { originNode: VNode }) => VNode);
+      getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
   };
   active?: boolean;
   onClick?: (info: Conversation) => void;

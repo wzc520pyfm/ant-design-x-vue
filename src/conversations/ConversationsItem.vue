@@ -68,6 +68,8 @@ const dropdownMenu = computed(() => {
   return dropdownMenu;
 });
 
+const getPopupContainer = computed(() => dropdownMenu.value?.getPopupContainer);
+
 const renderMenuTrigger = (conversation: Conversation) => {
   const originTriggerNode = (
     <EllipsisOutlined onClick={stopPropagation} class={`${prefixCls}-menu-icon`} />
@@ -103,6 +105,7 @@ defineRender(() => {
             trigger={['click']}
             disabled={disabled.value}
             onOpenChange={onOpenChange}
+            getPopupContainer={getPopupContainer.value}
           >{{
             default: () => renderMenuTrigger(info),
             overlay: () => <Menu {...dropdownMenu.value} />
