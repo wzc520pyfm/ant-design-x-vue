@@ -1,7 +1,8 @@
 import XRequest from '../x-request';
+import { XStreamOptions } from '../x-stream';
 
 import type { AnyObject } from '../_util/type';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 interface RequestFnInfo<Message> extends Partial<XAgentConfigPreset>, AnyObject {
   messages?: Message[];
@@ -14,7 +15,9 @@ export type RequestFn<Message> = (
     onUpdate: (message: Message) => void;
     onSuccess: (message: Message) => void;
     onError: (error: Error) => void;
+    onStream?: (abortController: AbortController) => void;
   },
+  transformStream?: XStreamOptions<Message>['transformStream'],
 ) => void;
 
 export interface XAgentConfigPreset {
@@ -35,49 +38,55 @@ let uuid = 0;
 export class XAgent<Message = string> {
   config: XAgentConfig<Message>;
 
-  private requestingMap: Record<number, boolean> = {};
+  private requestingMap = ref<Record<number, boolean>>({});
 
   constructor(config: XAgentConfig<Message>) {
     this.config = config;
   }
 
   private finishRequest(id: number) {
-    delete this.requestingMap[id];
+    delete this.requestingMap.value[id];
   }
 
-  public request: RequestFn<Message> = (info, callbacks) => {
+  public request: RequestFn<Message> = (info, callbacks, transformStream?) => {
     const { request } = this.config;
-    const { onUpdate, onSuccess, onError } = callbacks;
+    const { onUpdate, onSuccess, onError, onStream } = callbacks;
 
     const id = uuid;
     uuid += 1;
-    this.requestingMap[id] = true;
+    this.requestingMap.value[id] = true;
 
     request?.(info, {
+      onStream: (abortController) => {
+        if (this.requestingMap.value[id]) {
+          onStream?.(abortController);
+        }
+      },
       // Status should be unique.
       // One get success or error should not get more message
       onUpdate: (message) => {
-        if (this.requestingMap[id]) {
+        if (this.requestingMap.value[id]) {
           onUpdate(message);
         }
       },
       onSuccess: (message) => {
-        if (this.requestingMap[id]) {
+        if (this.requestingMap.value[id]) {
           onSuccess(message);
           this.finishRequest(id);
         }
       },
       onError: (error) => {
-        if (this.requestingMap[id]) {
+        if (this.requestingMap.value[id]) {
           onError(error);
           this.finishRequest(id);
         }
       },
-    });
+    },
+    transformStream);
   };
 
   public isRequesting() {
-    return Object.keys(this.requestingMap).length > 0;
+    return Object.keys(this.requestingMap.value).length > 0;
   }
 }
 

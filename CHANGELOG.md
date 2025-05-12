@@ -1,6 +1,34 @@
 # Changelog
 
 
+## v1.2.1
+
+[compare changes](https://undefined/undefined/compare/v1.2.0...v1.2.1)
+
+### 🚀 Enhancements
+
+- Support XRequest & useXChat & useXAgent to model access (#297)
+
+### 🩹 Fixes
+
+- **thought-chain:** Fix controlled mode not working (#241)
+- **sender:** Fix loading icon err (#298)
+- **use-x-agent:** Fix is-requesting reactive (#301)
+
+### 📖 Documentation
+
+- Update a new contributions charts (#292)
+
+### 🏡 Chore
+
+- Add deepwiki badge and href (#288)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- InCBle ([@inCBle](http://github.com/inCBle))
+- Shinji-Li <1349021570@qq.com>
+
 ## v1.2.0
 
 [compare changes](https://undefined/undefined/compare/v1.1.2...v1.2.0)

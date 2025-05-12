@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { Button, Divider, Form, Input, Typography } from 'ant-design-vue';
 import { useXAgent } from 'ant-design-x-vue';
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 
 defineOptions({ name: 'AXUseXAgentCustom' });
 
@@ -51,6 +51,12 @@ const onFinish = ({ question }: { question: string }) => {
   );
 };
 
+const requesting = ref(false);
+
+watch(() => agent.value.isRequesting(), () => {
+  requesting.value = agent.value.isRequesting();
+});
+
 defineRender(() => {
   return (
     <>
@@ -65,7 +71,7 @@ defineRender(() => {
           <Input v-model:value={modelRef.question} />
         </Form.Item>
         <Form.Item>
-          <Button htmlType="submit" type="primary" loading={agent.value.isRequesting()}>
+          <Button htmlType="submit" type="primary" loading={requesting.value}>
             submit
           </Button>
         </Form.Item>

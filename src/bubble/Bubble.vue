@@ -43,7 +43,7 @@ const slots = defineSlots<{
   }): VNode | string;
   loading?(): VNode;
   message?(props?: {
-    content: string;
+    content: BubbleContentType;
   }): VNode | string;
 }>();
 
