@@ -91,6 +91,10 @@ $ pnpm lint
 
 ## 👥 贡献者
 
+<a href="https://openomy.app/github/wzc520pyfm/ant-design-x-vue" target="_blank" style="display: block; width: 100%;" align="center">
+  <img src="https://openomy.app/svg?repo=wzc520pyfm/ant-design-x-vue&chart=bubble&latestMonth=3" target="_blank" alt="Contribution Leaderboard" style="display: block; width: 100%;" />
+ </a>
+
 <a href="https://github.com/wzc520pyfm/ant-design-x-vue/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=wzc520pyfm/ant-design-x-vue" />
 </a>
