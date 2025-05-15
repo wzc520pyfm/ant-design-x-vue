@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { ref, useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import type { SilentUploaderProps } from './interface';
 import { Upload } from 'ant-design-vue';
 
@@ -10,8 +10,10 @@ const { children, upload, rootClassName } = defineProps<SilentUploaderProps>();
 const uploadRef = useTemplateRef<InstanceType<typeof Upload>>('upload');
 // const uploadRef = ref<InstanceType<typeof Upload>>(null);
 
+const nativeElement = computed<HTMLElement>(() => uploadRef.value?.$el);
+
 defineExpose({
-  nativeElement: uploadRef
+  nativeElement,
 });
 
 /**
