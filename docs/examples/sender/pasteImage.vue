@@ -66,7 +66,7 @@ const Demo = () => {
         onChange={v => text.value = v}
         onPasteFile={(_, files) => {
           for (const file of files) {
-            attachmentsRef.value.current?.upload(file);
+            attachmentsRef.value?.upload(file);
           }
           open.value = true;
         }}
