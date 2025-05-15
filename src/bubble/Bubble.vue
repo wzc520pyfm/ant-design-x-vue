@@ -167,9 +167,9 @@ const fullContent = computed<VNode>(() => {
   );
   const _header = slots.header ? slots.header() : header;
   const _footer = slots.footer
-    ? slots.footer({ content: mergedContent.value })
+    ? slots.footer({ content: typedContent.value })
     : typeof footer === 'function'
-      ? footer(mergedContent.value)
+      ? footer(typedContent.value)
       : footer;
 
   if (_header || _footer) {
