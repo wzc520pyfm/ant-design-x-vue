@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button, Divider, Form, Input, Typography } from 'ant-design-vue';
 import { useXAgent } from 'ant-design-x-vue';
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 
 defineOptions({ name: 'AXUseXAgentCustomSetup' });
 
@@ -51,6 +51,12 @@ const onFinish = ({ question }: { question: string }) => {
   );
 };
 
+const requesting = ref(false);
+
+watch(() => agent.value.isRequesting(), () => {
+  requesting.value = agent.value.isRequesting();
+});
+
 </script>
 <template>
   <Form
@@ -69,7 +75,7 @@ const onFinish = ({ question }: { question: string }) => {
       <Button
         html-type="submit"
         type="primary"
-        :loading="agent.isRequesting()"
+        :loading="requesting"
       >
         submit
       </Button>

@@ -5,7 +5,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "emitDeclarationOnly": true,
-    "declarationDir": "./dist/typings",
+    "declarationDir": "./typings",
     "lib": ["esnext", "dom"],
     "jsx": "preserve",
     "jsxImportSource": "vue",

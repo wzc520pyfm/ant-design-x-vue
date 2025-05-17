@@ -1,38 +1,33 @@
-<script setup lang="tsx">
+<script lang="tsx" setup>
 import { LoadingOutlined, TagsOutlined } from '@ant-design/icons-vue';
 import { Button, Descriptions, Flex } from 'ant-design-vue';
-import { ThoughtChain, type ThoughtChainItem, XRequest } from 'ant-design-x-vue';
+import { ThoughtChain, type ThoughtChainItem, useXAgent } from 'ant-design-x-vue';
 import { ref } from 'vue';
 
-defineOptions({ name: 'AXXRequestBasic' });
+defineOptions({ name: 'AXUseXAgentRequestParams' });
 
-/**
- * 🔔 Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.
- */
-const BASE_URL = 'https://api.example.com';
-const PATH = '/chat';
-const MODEL = 'gpt-3.5-turbo';
-// const API_KEY = '';
+const BASE_URL = 'https://api.example.com/agent';
 
-const exampleRequest = XRequest({
-  baseURL: BASE_URL + PATH,
-  model: MODEL,
-
-  /** 🔥🔥 Its dangerously! */
-  // dangerouslyApiKey: API_KEY
-});
+interface YourMessageType {
+  role: string;
+  content: string;
+}
 
 const status = ref<ThoughtChainItem['status']>();
-const lines = ref<Record<string, string>[]>([]);
+const lines = ref<any[]>([]);
+
+const [agent] = useXAgent<YourMessageType>({
+  baseURL: BASE_URL,
+});
 
 async function request() {
   status.value = 'pending';
 
-  await exampleRequest.create(
+  agent.value.request(
     {
-      messages: [{ role: 'user', content: 'hello, who are u?' }],
+      agentId: 1234,
+      query: 'Search for the latest technology news',
       stream: true,
-      agentId: 111,
     },
     {
       onSuccess: (messages) => {
@@ -53,21 +48,21 @@ async function request() {
 
 defineRender(() => {
   return (
-    <Flex align="start" gap={16} style={{ overflow: 'auto' }}>
+    <Flex>
       <Button type="primary" disabled={status.value === 'pending'} onClick={request}>
-        Request - {BASE_URL}
-        {PATH}
+        Agent Request
       </Button>
       <ThoughtChain
+        style={{ marginLeft: '16px' }}
         items={[
           {
-            title: 'Request Log',
+            title: 'Agent Request Log',
             status: status.value,
             icon: status.value === 'pending' ? <LoadingOutlined /> : <TagsOutlined />,
             description:
               status.value === 'error' &&
-              exampleRequest.baseURL === BASE_URL + PATH &&
-              'Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.',
+              agent.value.config.baseURL === BASE_URL &&
+              'Please replace the BASE_URL,RequestParams with your own values.',
             content: (
               <Descriptions column={1}>
                 <Descriptions.Item label="Status">{status.value || '-'}</Descriptions.Item>
@@ -78,6 +73,6 @@ defineRender(() => {
         ]}
       />
     </Flex>
-  )
+  );
 });
 </script>
