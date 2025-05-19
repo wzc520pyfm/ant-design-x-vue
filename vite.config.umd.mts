@@ -27,7 +27,7 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: [...externals],
+      external: [...externals, /^ant-design-vue/],
       output: [
         {
           format: 'umd',

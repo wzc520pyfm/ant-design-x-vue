@@ -29,7 +29,7 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: [...externals],
+      external: [...externals, /^ant-design-vue/],
       input: Object.fromEntries(
         globSync('src/**/*.*').filter(file => !file.includes('test')).map(file => [
           // 删除 `src/` 以及每个文件的扩展名: src/nested/foo.js => nested/foo
