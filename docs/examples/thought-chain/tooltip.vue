@@ -1,5 +1,4 @@
-<script setup lang="ts">
-import { h } from 'vue';
+<script setup lang="tsx">
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { Button, Card } from 'ant-design-vue';
 import { ThoughtChain, type ThoughtChainProps } from 'ant-design-x-vue';
@@ -10,13 +9,13 @@ const items: ThoughtChainProps['items'] = [
   {
     title: '显示 tooltip',
     description: 'description',
-    extra: h(Button, { type: 'text', icon: h(MoreOutlined) }),
+    extra: <Button type="text" icon={<MoreOutlined />} />,
     tooltip: true,
   },
   {
     title: 'Thought Chain Item Title',
     description: 'description',
-    extra: h(Button, { type: 'text', icon: h(MoreOutlined) }),
+    extra: <Button type="text" icon={<MoreOutlined />} />,
     tooltip: {
       titleConfig: {
         title: '自定义 Tooltip 标题',
@@ -29,7 +28,7 @@ const items: ThoughtChainProps['items'] = [
   {
     title: '配置不显示 description',
     description: 'description',
-    extra: h(Button, { type: 'text', icon: h(MoreOutlined) }),
+    extra: <Button type="text" icon={<MoreOutlined />} />,
     tooltip: {
       descriptionConfig: {
         open: false,
@@ -38,9 +37,12 @@ const items: ThoughtChainProps['items'] = [
     },
   },
 ];
+
+defineRender(() => {
+  return (
+    <Card style={{ width: '250px' }}>
+      <ThoughtChain items={items} />
+    </Card>
+  );
+});
 </script>
-<template>
-  <Card style="width: 250px">
-    <ThoughtChain :items="items" />
-  </Card>
-</template>
