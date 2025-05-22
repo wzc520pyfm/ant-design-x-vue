@@ -74,9 +74,9 @@ export interface SenderProps {
   className?: string;
   actions?: VNode | ActionsRender | false;
   allowSpeech?: AvoidValidation<AllowSpeech>;
-  prefix?: VNode;
+  prefix?: VNode | (() => VNode);
   footer?: VNode | FooterRender;
-  header?: VNode;
+  header?: VNode | (() => VNode);
   autoSize?: AvoidValidation<boolean | { minRows?: number; maxRows?: number }>;
 }
 
