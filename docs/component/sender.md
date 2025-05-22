@@ -152,8 +152,8 @@ sender/focus
 | defaultValue | 输入框默认值 | string | - | - |
 | disabled | 是否禁用 | boolean | false | - |
 | loading | 是否加载中 | boolean | false | - |
-| header | 头部面板 | VNode | - | - |
-| prefix | 前缀内容 | VNode | - | - |
+| header | 头部面板 | VNode \| () => VNode | - | - |
+| prefix | 前缀内容 | VNode \| () => VNode | - | - |
 | footer | 底部内容 | ReactNode \| (info: \{ components: ActionsComponents \}) => ReactNode | - | - |
 | readOnly | 是否让输入框只读 | boolean | false | - |
 | rootClassName | 根元素样式类 | string | - | - |
