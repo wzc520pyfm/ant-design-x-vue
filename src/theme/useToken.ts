@@ -1,7 +1,6 @@
 import { createTheme, useCacheToken } from '../_util/cssinjs';
 import { theme as antdTheme } from 'ant-design-vue';
 import { ignore, unitless } from './patch-antd';
-import formatToken from 'ant-design-vue/es/theme/util/alias';
 
 import version from '../version';
 
@@ -52,7 +51,7 @@ export const getComputedToken = (
   };
 
   // Format if needed
-  mergedDerivativeToken = formatToken(mergedDerivativeToken);
+  mergedDerivativeToken = antdTheme.formatToken(mergedDerivativeToken);
 
   if (components) {
     Object.entries(components).forEach(([key, value]) => {
