@@ -1,9 +1,9 @@
-import { useConfigContextInject } from 'ant-design-vue/es/config-provider/context';
+import { ConfigProvider } from 'ant-design-vue';
 
 export const defaultPrefixCls = 'ant';
 
 function useXProviderContext() {
-  const { getPrefixCls, direction, csp, iconPrefixCls, theme } = useConfigContextInject();
+  const { getPrefixCls, direction, csp, iconPrefixCls, theme } = ConfigProvider.useConfigContextInject();
 
   return {
     theme,
