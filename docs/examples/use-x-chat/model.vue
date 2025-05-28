@@ -6,13 +6,23 @@ import { ref, watch } from 'vue';
 
 defineOptions({ name: 'AXUseXChatModel' });
 
-const BASE_URL = 'https://api.siliconflow.cn/v1/chat/completions';
-const MODEL = 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B';
-const API_KEY = 'Bearer sk-ravoadhrquyrkvaqsgyeufqdgphwxfheifujmaoscudjgldr';
-
 /**
  * 🔔 Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.
  */
+
+const BASE_URL = 'https://api.x.ant.design/api/llm_siliconflow_deepseekr1';
+
+/**
+ * 🔔 The MODEL is fixed in the current request, please replace it with your BASE_UR and MODEL
+ */
+
+const MODEL = 'deepseek-ai/DeepSeek-R1';
+
+/**
+ * 🔔 the API_KEY is a placeholder indicator interface that has a built-in real API_KEY
+ */
+
+const API_KEY = 'Bearer sk-xxxxxxxxxxxxxxxxxxxx';
 
 type YourMessageType = {
   role: string;
