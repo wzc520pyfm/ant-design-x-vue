@@ -1,4 +1,4 @@
-<script setup lang="tsx" generic="T = any">
+<script setup lang="tsx">
 import { CloseOutlined } from '@ant-design/icons-vue';
 import { Button } from 'ant-design-vue';
 import classNames from 'classnames';

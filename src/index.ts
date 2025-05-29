@@ -1,14 +1,23 @@
-export * from './x-provider';
-export * from './bubble';
-export * from './conversations';
-export * from './welcome';
-export * from './prompts';
-export * from './suggestion';
-export * from './sender';
-export * from './attachments';
-export * from './thought-chain';
-export * from './x-stream';
-export * from './x-request';
-export * from './use-x-agent';
-export * from './use-x-chat';
+import type { App } from 'vue';
+
+import * as components from './components';
+
+export * from './components';
+export * from './hooks';
+
 export * from './theme';
+
+export const install = function (app: App) {
+  Object.keys(components).forEach(key => {
+    // @ts-ignore
+    const component = components[key];
+    if (component.install) {
+      app.use(component);
+    }
+  });
+  return app;
+};
+
+export default {
+  install,
+};
