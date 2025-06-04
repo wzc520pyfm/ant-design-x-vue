@@ -305,14 +305,14 @@ const headerComp = computed(() => {
   if (slots.header) {
     return slots.header();
   }
-  return header;
+  return typeof header === 'function' ? header() : header;
 });
 
 const prefixComp = computed(() => {
   if (slots.prefix) {
     return slots.prefix();
   }
-  return prefix;
+  return typeof prefix === 'function' ? prefix() : prefix;
 });
 
 defineRender(() => {
