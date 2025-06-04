@@ -37,7 +37,9 @@ const {
 
 const slots = defineSlots<{
   avatar?(): VNode;
-  header?(): VNode | string;
+  header?(props?: {
+    content: BubbleContentType;
+  }): VNode | string;
   footer?(props?: {
     content: BubbleContentType;
   }): VNode | string;
@@ -165,7 +167,11 @@ const fullContent = computed<VNode>(() => {
       {toValue(contentNode)}
     </div>
   );
-  const _header = slots.header ? slots.header() : header;
+  const _header = slots.header
+    ? slots.header({ content: typedContent.value })
+    : typeof header === 'function'
+      ? header(typedContent.value)
+      : header;
   const _footer = slots.footer
     ? slots.footer({ content: typedContent.value })
     : typeof footer === 'function'
