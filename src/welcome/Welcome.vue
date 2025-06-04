@@ -47,7 +47,12 @@ const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 
 // ============================= Icon =============================
 const iconNode = computed(() => {
-  const _icon = slots.icon ? slots.icon() : icon;
+  const _icon = slots.icon
+    ? slots.icon()
+    : typeof icon === 'function'
+      ? icon()
+      : icon;
+
   if (!_icon) {
     return null;
   }
@@ -67,7 +72,12 @@ const iconNode = computed(() => {
 });
 
 const titleNode = computed(() => {
-  const _title = slots.title ? slots.title() : title;
+  const _title = slots.title
+    ? slots.title()
+    : typeof title === 'function'
+      ? title()
+      : title;
+
   if (!_title) {
     return null;
   }
@@ -92,11 +102,16 @@ const descriptionNode = computed(() => {
   if (slots.description) {
     return slots.description();
   }
-  return description;
+  return typeof description === 'function' ? description() : description;
 })
 
 const extraNode = computed(() => {
-  const _extra = slots.extra ? slots.extra() : extra;
+  const _extra = slots.extra
+    ? slots.extra()
+    : typeof extra === 'function'
+      ? extra()
+      : extra;
+
   if (!_extra) {
     return null;
   }
