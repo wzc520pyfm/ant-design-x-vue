@@ -8,32 +8,37 @@ defineOptions({ name: 'AXThoughtChainBasic' });
 
 const items: ThoughtChainProps['items'] = [
   {
-    title: '显示 tooltip',
-    description: 'description',
+    title: 'Thought Chain Item Title',
+    description: 'Description of the thought chain item',
+    extra: h(Button, { type: 'text', icon: h(MoreOutlined) }),
+  },
+  {
+    title: 'Visible tooltip： Thought Chain Item Title',
+    description: 'Description of the thought chain item',
     extra: h(Button, { type: 'text', icon: h(MoreOutlined) }),
     tooltip: true,
   },
   {
     title: 'Thought Chain Item Title',
-    description: 'description',
+    description: 'Description of the thought chain item',
     extra: h(Button, { type: 'text', icon: h(MoreOutlined) }),
     tooltip: {
       titleConfig: {
-        title: '自定义 Tooltip 标题',
+        title: 'Custom title tooltip',
       },
       descriptionConfig: {
-        title: '自定义 Tooltip 副标题',
+        title: 'Custom description tooltip',
       },
     },
   },
   {
-    title: '配置不显示 description',
-    description: 'description',
+    title: 'Hidden description tooltip',
+    description: 'Description of the thought chain item',
     extra: h(Button, { type: 'text', icon: h(MoreOutlined) }),
     tooltip: {
       descriptionConfig: {
         open: false,
-        title: '配置不显示 description ',
+        title: 'This text does not display the description tooltip',
       },
     },
   },
