@@ -42,7 +42,7 @@ export interface BubbleProps<ContentType extends BubbleContentType = string> ext
   variant?: 'filled' | 'borderless' | 'outlined' | 'shadow';
   shape?: 'round' | 'corner';
   onTypingComplete?: VoidFunction;
-  header?: VNode | string;
+  header?: VNode | string | ((content: BubbleContentType) => VNode | string);
   footer?: VNode | string | ((content: BubbleContentType) => VNode | string);
 }
 
