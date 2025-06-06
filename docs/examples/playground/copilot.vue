@@ -279,7 +279,6 @@ const Copilot = (props: CopilotProps) => {
           }
         >
           <Button type="text" icon={<CommentOutlined />} style={styles.value.headerButton} />
-          {[]}
         </Popover>
         <Button
           type="text"

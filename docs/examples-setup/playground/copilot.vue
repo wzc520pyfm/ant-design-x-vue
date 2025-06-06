@@ -166,11 +166,11 @@ const { messages, onRequest, setMessages } = useXChat({
 });
 watch(curSession, () => {
   if (curSession.value !== undefined) {
-    setMessages(messageHistory.value?.[curSession.value] || [])
+    setMessages(messageHistory.value?.[curSession.value] || []);
   } else {
-    setMessages([]) 
+    setMessages([]);
   }
-}, { immediate: true })
+}, { immediate: true });
 
 watch(
   () => messages.value,
@@ -183,7 +183,7 @@ watch(
       }
     }
   }
-)
+);
 
 
 // ==================== Event ====================
@@ -399,10 +399,10 @@ const roles: (typeof Bubble.List)['roles'] = {
   assistant: {
     placement: 'start',
     footer: h('div', {style:{ display: 'flex' }}, [
-      h('Button', {type: 'text', size: 'small', icon: h(ReloadOutlined), onClick: () => {}}, []),
-      h('Button', {type: 'text', size: 'small', icon: h(CopyOutlined), onClick: () => {}}, []),
-      h('Button', {type: 'text', size:'small', icon: h(LikeOutlined), onClick: () => {}}, []),
-      h('Button', {type: 'text', size:'small', icon: h(DislikeOutlined), onClick: () => {}}, []),
+      h('Button', {type: 'text', size: 'small', icon: h(ReloadOutlined), onClick: () => {}}),
+      h('Button', {type: 'text', size: 'small', icon: h(CopyOutlined), onClick: () => {}}),
+      h('Button', {type: 'text', size:'small', icon: h(LikeOutlined), onClick: () => {}}),
+      h('Button', {type: 'text', size:'small', icon: h(DislikeOutlined), onClick: () => {}}),
     ]),
     loadingRender: () => h(
       Space,
