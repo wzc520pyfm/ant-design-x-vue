@@ -106,8 +106,8 @@ const inputValue = ref('');
  * 🔔 Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.
  */
 const [agent] = useXAgent<BubbleDataType>({
-  baseURL: 'https://api.x.ant.design/api/llm_siliconflow_deepSeek-r1-distill-1wen-7b',
-  model: 'DeepSeek-R1-Distill-Qwen-7B',
+  baseURL: 'https://api.x.ant.design/api/model-url-path',
+  model: 'model-name',
   dangerouslyApiKey: 'Bearer sk-xxxxxxxxxxxxxxxxxxxx',
 });
 
