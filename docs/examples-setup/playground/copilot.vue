@@ -320,10 +320,10 @@ const styles = computed(() => {
       'margin-bottom': '12px',
       gap: '8px',
     },
-    speechButton: `
-      font-size: 18px;
-      color: ${token.value.colorText} !important;
-    `,
+    speechButton: {
+      'font-size': '18px',
+      color: `${token.value.colorText} !important`,
+    },
   } as const;
 });
 const workareaStyles = computed(() => {
