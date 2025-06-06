@@ -165,7 +165,8 @@ export default defineConfig({
         {
           text: '样板间',
           items: [
-            { text: '独立式', link: '/playground/independent' }
+            { text: '独立式', link: '/playground/independent' },
+            { text: '助手式', link: '/playground/copilot' }
           ]
         },
       ]

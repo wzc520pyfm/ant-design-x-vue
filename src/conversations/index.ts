@@ -1,6 +1,6 @@
 import Conversations from './Conversations.vue';
 
-export type { ConversationsProps } from './interface';
+export type { ConversationsProps, Conversation } from './interface';
 
 export default Conversations;
 

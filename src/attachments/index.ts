@@ -5,7 +5,7 @@ const Attachments = Object.assign(AttachmentsComponent, {
   FileCard: FileListCard,
 });
 
-export type { AttachmentsProps } from './interface';
+export type { Attachment, AttachmentsProps } from './interface';
 
 export default Attachments;
 
