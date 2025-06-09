@@ -9,7 +9,7 @@ import useDisplayData from './hooks/useDisplayData';
 import useListData from './hooks/useListData';
 import type { BubbleListProps } from './interface';
 import useStyle from './style';
-import { computed, type HTMLAttributes, mergeProps, onWatcherCleanup, ref, unref, useAttrs, watch, watchEffect, nextTick } from 'vue';
+import { computed, type HTMLAttributes, mergeProps, ref, unref, useAttrs, watch, watchEffect, nextTick } from 'vue';
 import useState from '../_util/hooks/use-state';
 import type { AvoidValidation } from '../type-utility';
 import BubbleContextProvider from './context';
@@ -62,11 +62,11 @@ const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 // ============================ Typing ============================
 const [initialized, setInitialized] = useState(false);
 
-watchEffect(() => {
+watchEffect((onCleanup) => {
   setInitialized(true);
-  onWatcherCleanup(() => {
-    setInitialized(false);
-  })
+  onCleanup(() => {
+    setInitialized(false); 
+  });
 });
 
 // ============================= Data =============================
