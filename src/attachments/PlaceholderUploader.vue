@@ -3,7 +3,8 @@ import classNames from 'classnames';
 import type { PlaceholderConfig, PlaceholderProps } from './interface';
 import { useAttachmentContextInject } from './context';
 import useState from '../_util/hooks/use-state';
-import { computed, isVNode, useTemplateRef } from 'vue';
+import { useTemplateRef } from '../_util/hooks/useTemplateRefPolyfill'
+import { computed, isVNode } from 'vue';
 import { Flex, Typography, Upload } from 'ant-design-vue';
 
 defineOptions({ name: 'AXAttachmentsPlaceholderUploader' });

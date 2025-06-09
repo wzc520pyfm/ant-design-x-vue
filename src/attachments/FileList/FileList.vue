@@ -1,10 +1,11 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, nextTick, useTemplateRef, watch, watchEffect } from 'vue';
+import { computed, nextTick, watch, watchEffect } from 'vue';
 import { Button } from 'ant-design-vue';
 import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons-vue';
 import type { FileListProps } from '../interface';
 import useState from '../../_util/hooks/use-state';
+import { useTemplateRef } from '../../_util/hooks/useTemplateRefPolyfill'
 import { useAttachmentContextInject } from '../context';
 import SilentUploader from '../SilentUploader.vue';
 import FileListCard from './FileListCard.vue';
