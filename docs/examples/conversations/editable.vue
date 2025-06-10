@@ -7,7 +7,7 @@ import { computed, ref } from 'vue';
 
 defineOptions({ name: 'AXConversationsEditable' });
 
-const EditableItem = (props: { index: number }) => {
+const EditableItem = (props: { index: number; disabled: boolean; }) => {
   const editing = ref(false);
   const label = ref(`Conversation Item ${props.index + 1}`)
 
@@ -25,6 +25,7 @@ const EditableItem = (props: { index: number }) => {
             <Button
               type="text"
               icon={<EditOutlined />}
+              disabled={props.disabled}
               onClick={() => editing.value = true}
             />
           </>
@@ -35,7 +36,7 @@ const EditableItem = (props: { index: number }) => {
 
 const items: ConversationsProps['items'] = Array.from({ length: 4 }).map((_, index) => ({
   key: `item${index + 1}`,
-  label: <EditableItem index={index} />,
+  label: <EditableItem index={index} disabled={index === 3} />,
   disabled: index === 3,
 }));
 
