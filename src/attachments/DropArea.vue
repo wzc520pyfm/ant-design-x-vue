@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, onMounted, onWatcherCleanup, Teleport, toValue, watch } from 'vue';
+import { computed, onMounted, Teleport, toValue, watch } from 'vue';
 import useState from '../_util/hooks/use-state';
 import { useAttachmentContextInject } from './context';
 import type { DropUploaderProps } from './interface';
@@ -28,7 +28,7 @@ watch(() => toValue(getDropContainer), () => {
 });
 
 // ============================= Drop =============================
-watch(() => !!container.value, () => {
+watch(() => !!container.value, (_, __, onCleanup) => {
   // Add global drop event
   if (container.value) {
     const onDragEnter = () => {
@@ -54,7 +54,7 @@ watch(() => !!container.value, () => {
     document.addEventListener('dragover', onDragOver);
     document.addEventListener('dragleave', onDragLeave);
     document.addEventListener('drop', onDrop);
-    onWatcherCleanup(() => {
+    onCleanup(() => {
       document.removeEventListener('dragenter', onDragEnter);
       document.removeEventListener('dragover', onDragOver);
       document.removeEventListener('dragleave', onDragLeave);

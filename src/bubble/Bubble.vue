@@ -8,7 +8,7 @@ import type { BubbleContentType, BubbleProps } from './interface';
 import Loading from './loading.vue';
 import useStyle from './style';
 import { useBubbleContextInject } from './context';
-import { computed, isVNode, ref, toRef, toValue, unref, useTemplateRef, watch, watchEffect } from 'vue';
+import { computed, isVNode, ref, toRef, toValue, unref, watch, watchEffect } from 'vue';
 import type { VNode } from 'vue'
 
 defineOptions({ name: "AXBubble" });
