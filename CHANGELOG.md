@@ -1,6 +1,29 @@
 # Changelog
 
 
+## v1.2.4
+
+[compare changes](https://undefined/undefined/compare/v1.2.3...v1.2.4)
+
+### 🔥 Performance
+
+- Build script (#328)
+
+### 🩹 Fixes
+
+- **Sender:** Fix pasted file is invalid in setup demo (#332)
+- Specify the file suffix for antdv (#334)
+
+### 📖 Documentation
+
+- Fix warning for independent setup demo (#333)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- 专注的小眼神 ([@Jarvis2018](http://github.com/Jarvis2018))
+- 菠萝吹雪 ([@yuguaa](http://github.com/yuguaa))
+
 ## v1.2.3
 
 [compare changes](https://undefined/undefined/compare/v1.2.2...v1.2.3)

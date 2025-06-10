@@ -1,7 +1,7 @@
 import { createTheme, useCacheToken } from '../_util/cssinjs';
 import { theme as antdTheme } from 'ant-design-vue';
 import { ignore, unitless } from './patch-antd';
-import formatToken from 'ant-design-vue/es/theme/util/alias';
+import formatToken from 'ant-design-vue/es/theme/util/alias.js';
 
 import version from '../version';
 

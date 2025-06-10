@@ -1,6 +1,6 @@
 {
   "name": "ant-design-x-vue",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Craft AI-driven interfaces effortlessly",
   "keywords": [
     "AI",
@@ -13,7 +13,7 @@
     "vue"
   ],
   "scripts": {
-    "build": "npm run build:es && npm run build:umd && npm run build:resolver",
+    "build": "run-p build:es build:umd build:resolver",
     "build:es": "vite build && vue-tsc --project ./tsconfig.build.json",
     "build:umd": "vite build --config ./vite.config.umd.mts && vue-tsc --project ./tsconfig.build.json",
     "build:resolver": "tsc resolver/index.ts --outDir resolver-dist --declaration",
@@ -120,6 +120,7 @@
     "lint-staged": "^13.0.3",
     "markdown-it": "^14.1.0",
     "markdown-it-container": "^4.0.0",
+    "npm-run-all2": "^8.0.3",
     "prettier": "^2.7.1",
     "prettier-plugin-organize-imports": "^3.0.0",
     "prettier-plugin-packagejson": "^2.2.18",
