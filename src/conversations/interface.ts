@@ -3,6 +3,7 @@ import type { AnyObject } from '../_util/type';
 import GroupTitle from './GroupTitle.vue';
 import type { ConfigProviderProps, DirectionType } from 'ant-design-vue/es/config-provider';
 import type { MenuProps } from 'ant-design-vue';
+import type { AvoidValidation } from '../type-utility';
 
 type GroupType = string;
 
@@ -81,13 +82,13 @@ export interface ConversationsProps extends HTMLAttributes {
    * @desc 会话操作菜单
    * @descEN Operation menu for conversations
    */
-  menu?: MenuProps | ((value: Conversation) => MenuProps);
+  menu?: ConversationsItemProps['menu'] | ((value: Conversation) => ConversationsItemProps['menu']);
 
   /**
    * @desc 是否支持分组, 开启后默认按 {@link Conversation.group} 字段分组
    * @descEN If grouping is supported, it defaults to the {@link Conversation.group} field
    */
-  groupable?: boolean | Groupable;
+  groupable?: AvoidValidation<boolean | Groupable>;
 
   /**
    * @desc 语义化结构 style
@@ -118,7 +119,12 @@ export interface ConversationsItemProps extends Omit<HTMLAttributes, 'onClick'> 
   info: Conversation;
   prefixCls?: string;
   direction?: DirectionType;
-  menu?: MenuProps;
+  menu?: MenuProps & {
+    trigger?:
+      | VNode
+      | ((conversation: Conversation, info: { originNode: VNode }) => VNode);
+      getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
+  };
   active?: boolean;
   onClick?: (info: Conversation) => void;
 }

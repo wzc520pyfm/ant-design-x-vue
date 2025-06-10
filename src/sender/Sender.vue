@@ -25,6 +25,14 @@ function getComponent<T>(
   return getValue(components, path) || defaultComponent;
 }
 
+/** Used for actions render needed components */
+const sharedRenderComponents = {
+  SendButton,
+  ClearButton,
+  LoadingButton,
+  SpeechButton,
+};
+
 defineOptions({ name: 'AXSender' });
 
 const {
@@ -44,15 +52,17 @@ const {
   components,
   onCancel,
   onChange,
-  actions,
+  actions = undefined,
   onKeyPress,
   onKeyDown,
   disabled = undefined,
   allowSpeech,
   prefix,
+  footer,
   header,
   onPaste,
   onPasteFile,
+  autoSize = { maxRows: 8 },
   ...rest
 } = defineProps<SenderProps>();
 
@@ -64,12 +74,23 @@ const slots = defineSlots<{
   header?(): VNode;
   prefix?(): VNode;
   actions?(props?: {
-    ori?: VNode,
-    info?: {
+    ori: VNode,
+    info: {
       components: {
         SendButton: typeof SendButton;
         ClearButton: typeof ClearButton;
         LoadingButton: typeof LoadingButton;
+        SpeechButton: typeof SpeechButton;
+      };
+    }
+  }): VNode;
+  footer?(props?: {
+    info: {
+      components: {
+        SendButton: typeof SendButton;
+        ClearButton: typeof ClearButton;
+        LoadingButton: typeof LoadingButton;
+        SpeechButton: typeof SpeechButton;
       };
     }
   }): VNode;
@@ -197,10 +218,10 @@ const onInternalKeyPress: SenderProps['onKeyPress'] = (e) => {
 
 // ============================ Paste =============================
 const onInternalPaste: ClipboardEventHandler = (e) => {
-  // Get file
-  const file = e.clipboardData?.files[0];
-  if (file && onPasteFile) {
-    onPasteFile(file);
+  // Get files
+  const files = e.clipboardData?.files;
+  if (files?.length && onPasteFile) {
+    onPasteFile(files[0], files);
     e.preventDefault();
   }
 
@@ -222,7 +243,7 @@ const onContentMouseDown: MouseEventHandler = (e) => {
 
 // ============================ Action ============================
 const actionNode = computed(() => {
-  let _actionNode: VNode = (
+  let _actionNode: VNode | false = (
     <Flex class={`${actionListCls.value}-presets`}>
       {allowSpeech && <SpeechButton />}
       {/* Loading or Send */}
@@ -231,11 +252,7 @@ const actionNode = computed(() => {
   );
 
   const info = {
-    components: {
-      SendButton,
-      ClearButton,
-      LoadingButton,
-    },
+    components: sharedRenderComponents,
   }
 
   // Custom actions
@@ -243,24 +260,59 @@ const actionNode = computed(() => {
     _actionNode = slots.actions({ ori: _actionNode, info });
   } else if (typeof actions === 'function') {
     _actionNode = actions(_actionNode, info);
-  } else if (actions) {
+  } else if (actions || actions === false) {
     _actionNode = actions;
   }
   return _actionNode;
+});
+
+// Custom actions context props
+const actionsButtonContextProps = computed(() => ({
+  prefixCls: actionBtnCls.value,
+  onSend: triggerSend,
+  onSendDisabled: !innerValue.value,
+  onClear: triggerClear,
+  onClearDisabled: !innerValue.value,
+  onCancel,
+  onCancelDisabled: !loading,
+  onSpeech: () => triggerSpeech(false),
+  onSpeechDisabled: !speechPermission.value,
+  speechRecording: speechRecording.value,
+  disabled,
+}));
+
+// ============================ Footer ============================
+const footerNode = computed(() => {
+  let _footerNode: VNode = null;
+
+  const info = {
+    components: sharedRenderComponents,
+  }
+
+  if (slots.footer) {
+    _footerNode = slots.footer({ info });
+  } else if (typeof footer === 'function') {
+    _footerNode = footer({
+      components: sharedRenderComponents,
+    });
+  } else if (footer) {
+    _footerNode = footer;
+  }
+  return _footerNode;
 });
 
 const headerComp = computed(() => {
   if (slots.header) {
     return slots.header();
   }
-  return header;
+  return typeof header === 'function' ? header() : header;
 });
 
 const prefixComp = computed(() => {
   if (slots.prefix) {
     return slots.prefix();
   }
-  return prefix;
+  return typeof prefix === 'function' ? prefix() : prefix;
 });
 
 defineRender(() => {
@@ -270,76 +322,77 @@ defineRender(() => {
       {headerComp.value && (
         <SenderHeaderContextProvider value={{ prefixCls: prefixCls.value }}>{headerComp.value}</SenderHeaderContextProvider>
       )}
+      <ActionButtonContextProvider value={actionsButtonContextProps.value}>
 
-      <div class={`${prefixCls.value}-content`} onMousedown={onContentMouseDown}>
-        {/* Prefix */}
-        {prefixComp.value && (
-          <div
-            class={classnames(
-              `${prefixCls.value}-prefix`,
-              contextConfig.value.classNames.prefix,
-              classNames.prefix,
-            )}
-            style={{ ...contextConfig.value.styles.prefix, ...styles.prefix }}
-          >
-            {prefixComp.value}
-          </div>
-        )}
-
-        {/* Input */}
-        <InputTextArea
-          {...inputProps.value}
-          disabled={disabled}
-          style={{ ...contextConfig.value.styles.input, ...styles.input }}
-          class={classnames(inputCls.value, contextConfig.value.classNames.input, classNames.input)}
-          autoSize={{ maxRows: 8 }}
-          value={innerValue.value}
-          onChange={(event: Event) => {
-            triggerValueChange(
-              (event.target as HTMLTextAreaElement).value,
-              event as ChangeEvent,
-            );
-            triggerSpeech(true);
-          }}
-          onPressEnter={onInternalKeyPress}
-          onCompositionstart={onInternalCompositionStart}
-          onCompositionend={onInternalCompositionEnd}
-          onKeydown={onKeyDown}
-          placeholder={placeholder}
-          // @ts-expect-error
-          onPaste={onInternalPaste}
-          bordered={false}
-          readOnly={readOnly}
-        />
-
-        {/* Action List */}
-        <div
-          class={classnames(
-            actionListCls.value,
-            contextConfig.value.classNames.actions,
-            classNames.actions,
+        <div class={`${prefixCls.value}-content`} onMousedown={onContentMouseDown}>
+          {/* Prefix */}
+          {prefixComp.value && (
+            <div
+              class={classnames(
+                `${prefixCls.value}-prefix`,
+                contextConfig.value.classNames.prefix,
+                classNames.prefix,
+              )}
+              style={{ ...contextConfig.value.styles.prefix, ...styles.prefix }}
+            >
+              {prefixComp.value}
+            </div>
           )}
-          style={{ ...contextConfig.value.styles.actions, ...styles.actions }}
-        >
-          <ActionButtonContextProvider
-            value={{
-              prefixCls: actionBtnCls.value,
-              onSend: triggerSend,
-              onSendDisabled: !innerValue.value,
-              onClear: triggerClear,
-              onClearDisabled: !innerValue.value,
-              onCancel,
-              onCancelDisabled: !loading,
-              onSpeech: () => triggerSpeech(false),
-              onSpeechDisabled: !speechPermission.value,
-              speechRecording: speechRecording.value,
-              disabled,
+
+          {/* Input */}
+          <InputTextArea
+            {...inputProps.value}
+            disabled={disabled}
+            style={{ ...contextConfig.value.styles.input, ...styles.input }}
+            class={classnames(inputCls.value, contextConfig.value.classNames.input, classNames.input)}
+            autoSize={autoSize}
+            value={innerValue.value}
+            onChange={(event: Event) => {
+              triggerValueChange(
+                (event.target as HTMLTextAreaElement).value,
+                event as ChangeEvent,
+              );
+              triggerSpeech(true);
             }}
+            onPressEnter={onInternalKeyPress}
+            onCompositionstart={onInternalCompositionStart}
+            onCompositionend={onInternalCompositionEnd}
+            onKeydown={onKeyDown}
+            placeholder={placeholder}
+            // @ts-expect-error
+            onPaste={onInternalPaste}
+            bordered={false}
+            readOnly={readOnly}
+          />
+
+          {/* Action List */}
+          {actionNode.value && (<div
+            class={classnames(
+              actionListCls.value,
+              contextConfig.value.classNames.actions,
+              classNames.actions,
+            )}
+            style={{ ...contextConfig.value.styles.actions, ...styles.actions }}
           >
             {actionNode.value}
-          </ActionButtonContextProvider>
+          </div>)}
         </div>
-      </div>
+        {footerNode.value && (
+          <div
+            class={classnames(
+              `${prefixCls.value}-footer`,
+              contextConfig.value.classNames.footer,
+              classNames.footer,
+            )}
+            style={{
+              ...contextConfig.value.styles.footer,
+              ...styles.footer,
+            }}
+          >
+            {footerNode.value}
+          </div>
+        )}
+      </ActionButtonContextProvider>
     </div>,
   );
 });

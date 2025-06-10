@@ -43,13 +43,17 @@ const onDrop = () => {
   setDragIn(false);
 };
 
+const nativeElement = computed<HTMLElement>(() => uploadDraggerRef.value?.$el);
+
 defineExpose({
-  nativeElement: uploadDraggerRef
+  nativeElement,
 })
+
+const isVNodeArray = (val: any) => Array.isArray(val) && val.every(isVNode);
 
 // ============================ Render ============================
 const node = computed(() => {
-  if (isVNode(placeholder)) {
+  if (isVNode(placeholder) || isVNodeArray(placeholder)) {
     return placeholder;
   }
   return (

@@ -1,10 +1,10 @@
-<script setup lang="tsx">
+<script setup lang="tsx" generic="T extends BubbleContentType = string">
 import { Avatar } from 'ant-design-vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import useTypedEffect from './hooks/useTypedEffect';
 import useTypingConfig from './hooks/useTypingConfig';
-import type { BubbleProps } from './interface';
+import type { BubbleContentType, BubbleProps } from './interface';
 import Loading from './loading.vue';
 import useStyle from './style';
 import { useBubbleContextInject } from './context';
@@ -33,15 +33,19 @@ const {
   header,
   footer,
   ...otherHtmlProps
-} = defineProps<BubbleProps>();
+} = defineProps<BubbleProps<T>>();
 
 const slots = defineSlots<{
   avatar?(): VNode;
-  header?(): VNode | string;
-  footer?(): VNode | string;
+  header?(props?: {
+    content: BubbleContentType;
+  }): VNode | string;
+  footer?(props?: {
+    content: BubbleContentType;
+  }): VNode | string;
   loading?(): VNode;
   message?(props?: {
-    content: string;
+    content: BubbleContentType;
   }): VNode | string;
 }>();
 
@@ -123,7 +127,7 @@ const avatarNode = computed(() => {
 // =========================== Content ============================
 const mergedContent = computed(() => {
   if (slots.message) {
-    return slots.message({ content: typedContent.value as any});
+    return slots.message({ content: typedContent.value as any });
   }
   return messageRender ? messageRender(typedContent.value as any) : typedContent.value
 });
@@ -163,8 +167,16 @@ const fullContent = computed<VNode>(() => {
       {toValue(contentNode)}
     </div>
   );
-  const _header = slots.header ? slots.header() : header;
-  const _footer = slots.footer ? slots.footer() : footer;
+  const _header = slots.header
+    ? slots.header({ content: typedContent.value })
+    : typeof header === 'function'
+      ? header(typedContent.value)
+      : header;
+  const _footer = slots.footer
+    ? slots.footer({ content: typedContent.value })
+    : typeof footer === 'function'
+      ? footer(typedContent.value)
+      : footer;
 
   if (_header || _footer) {
     return (
@@ -218,7 +230,7 @@ defineRender(() => {
       ref={divRef}
     >
       {/* Avatar */}
-      {avatar && (
+      {(slots.avatar || avatar) && (
         <div
           style={{
             ...contextConfig.value.styles.avatar,

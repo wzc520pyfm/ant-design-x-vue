@@ -1,7 +1,7 @@
 import type { ButtonProps, TextAreaProps } from "ant-design-vue";
 import { Input } from "ant-design-vue";
 import type { ChangeEvent, ClipboardEventHandler, KeyboardEventHandler } from "ant-design-vue/es/_util/EventInterface";
-import type { ConfigProviderProps } from "ant-design-vue/es/config-provider/context";
+import type { ConfigProviderProps } from "ant-design-vue";
 import type { CSSProperties, VNode } from "vue";
 import type { AllowSpeech } from "./useSpeech";
 import type { InputRef } from "ant-design-vue/es/vc-input/inputProps";
@@ -9,6 +9,7 @@ import type { AvoidValidation } from '../type-utility';
 import SendButton from "./components/SendButton.vue";
 import ClearButton from "./components/ClearButton.vue";
 import LoadingButton from "./components/LoadingButton.vue";
+import SpeechButton from "./components/SpeechButton/index.vue";
 
 export type SubmitType = 'enter' | 'shiftEnter' | false;
 
@@ -16,19 +17,26 @@ export interface SenderComponents {
   input?: typeof Input.TextArea;
 }
 
+export type ActionsComponents = {
+  SendButton: typeof SendButton;
+  ClearButton: typeof ClearButton;
+  LoadingButton: typeof LoadingButton;
+  SpeechButton: typeof SpeechButton;
+}
+
 export type ActionsRender = (
   ori: VNode,
   info: {
-    components: {
-      SendButton: typeof SendButton;
-      ClearButton: typeof ClearButton;
-      LoadingButton: typeof LoadingButton;
-    };
+    components: ActionsComponents;
   },
 ) => VNode;
 
+export type FooterRender = (info: { components: ActionsComponents }) => VNode;
+
 export interface SenderProps {
   onKeyPress?: KeyboardEventHandler;
+  onFocus?: TextAreaProps['onFocus'];
+  onBlur?: TextAreaProps['onBlur'];
 
   prefixCls?: string;
   defaultValue?: string;
@@ -47,25 +55,29 @@ export interface SenderProps {
   onCancel?: VoidFunction;
   onKeyDown?: KeyboardEventHandler;
   onPaste?: ClipboardEventHandler;
-  onPasteFile?: (file: File) => void;
+  onPasteFile?: (firstFile: File, files: FileList) => void;
   components?: SenderComponents;
   styles?: {
     prefix?: CSSProperties;
     input?: CSSProperties;
     actions?: CSSProperties;
+    footer?: CSSProperties;
   };
   rootClassName?: string;
   classNames?: {
     prefix?: string;
     input?: string;
     actions?: string;
+    footer?: string;
   };
   style?: CSSProperties;
   className?: string;
-  actions?: VNode | ActionsRender;
+  actions?: VNode | ActionsRender | false;
   allowSpeech?: AvoidValidation<AllowSpeech>;
-  prefix?: VNode;
-  header?: VNode;
+  prefix?: VNode | (() => VNode);
+  footer?: VNode | FooterRender;
+  header?: VNode | (() => VNode);
+  autoSize?: AvoidValidation<boolean | { minRows?: number; maxRows?: number }>;
 }
 
 export type SenderRef = {

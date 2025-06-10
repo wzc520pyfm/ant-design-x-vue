@@ -8,7 +8,7 @@ import { theme } from 'ant-design-vue';
 
 defineOptions({ name: 'AXSenderLoadingButton' });
 
-const { type = "primary", shape = "circle", icon = null, disabled = undefined, ...restProps } = defineProps<AntdButtonProps>();
+const { type = "primary", shape = "circle", icon = undefined, disabled = undefined, ...restProps } = defineProps<AntdButtonProps>();
 const context = useActionButtonContextInject()
 const { token } = theme.useToken();
 
@@ -19,6 +19,7 @@ defineRender(() => {
     // variant="text"
     disabled={disabled}
     shape={shape}
+    icon={icon}
     {...restProps}
     style={{ backgroundColor: 'transparent', color: token.value.colorPrimary }}
     class={classNames(`${context.value.prefixCls}-loading-button`)}

@@ -48,7 +48,7 @@ const groupable: ConversationsProps['groupable'] = {
 
 defineRender(() => {
   return (
-    <Conversations style={style.value} groupable={groupable} defaultActiveKey="demo1" items={items} />
+    <Conversations style={style.value} groupable={groupable} defaultActiveKey="item1" items={items} />
   )
 });
 </script>

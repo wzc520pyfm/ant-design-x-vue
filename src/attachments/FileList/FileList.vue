@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, onWatcherCleanup, ref, useTemplateRef, watch, watchEffect } from 'vue';
+import { computed, nextTick, onWatcherCleanup, ref, useTemplateRef, watch, watchEffect } from 'vue';
 import { Button } from 'ant-design-vue';
 import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons-vue';
 import type { FileListProps } from '../interface';
@@ -23,6 +23,7 @@ const {
   listStyle,
   itemClassName,
   itemStyle,
+  imageProps,
 } = defineProps<FileListProps>();
 
 const listCls = computed(() => `${prefixCls}-list`);
@@ -66,8 +67,10 @@ const checkPing = () => {
   }
 };
 
-watch(() => overflow, () => {
-  checkPing();
+watch([() => overflow, () => items.length], () => {
+  nextTick(() => {
+    checkPing();
+  });
 }, { immediate: true });
 
 const onScrollOffset = (offset: -1 | 1) => {
@@ -113,6 +116,7 @@ defineRender(() => {
           item={item}
           onRemove={onRemove}
           className={classnames(itemClassName)}
+          imageProps={imageProps}
           style={{
             ...itemStyle,
           }}

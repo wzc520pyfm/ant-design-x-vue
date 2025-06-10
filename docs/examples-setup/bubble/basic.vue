@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { Bubble } from 'ant-design-x-vue';
+
 defineOptions({ name: 'AXBubbleBasicSetup' });
 </script>
+
 <template>
-  <div>Needs to be supplemented.</div>
+  <Bubble content="hello world  !" />
 </template>

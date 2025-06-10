@@ -5,7 +5,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "emitDeclarationOnly": true,
-    "declarationDir": "./dist/typings",
+    "declarationDir": "./typings",
     "lib": ["esnext", "dom"],
     "jsx": "preserve",
     "jsxImportSource": "vue",
@@ -16,6 +16,7 @@
     "paths": {
       "ant-design-x-vue": ["src/index.ts"],
       "ant-design-x-vue/*": ["src/*"],
+      "ant-design-x-vue/resolver/*": ["src/resolver/*"],
     }
   },
   "vueCompilerOptions": {

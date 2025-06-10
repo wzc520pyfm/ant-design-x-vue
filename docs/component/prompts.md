@@ -11,11 +11,15 @@ Prompts 组件用于显示一组与当前上下文相关的预定义的问题或
 
 ### 基本
 
+<ClientOnly>
+
 :::demo 基础用法。
 
 prompts/basic
 
 :::
+
+</ClientOnly>
 
 ### 不可用状态
 
@@ -51,11 +55,15 @@ prompts/flex-wrap-fixed
 
 ### 嵌套组合
 
+<ClientOnly>
+
 :::demo 嵌套组合。
 
 prompts/nest
 
 :::
+
+</ClientOnly>
 
 ## API
 
@@ -100,7 +108,7 @@ type SemanticType = 'list' | 'item' | 'content' | 'title' | 'subList' | 'subItem
 
 ## Semantic DOM
 
-<!-- <code src="./demo/_semantic.tsx" simplify="true"></code> -->
+<vp-semantic component="Prompts"></vp-semantic>
 
 ## 主题变量（Design Token）
 

@@ -22,6 +22,13 @@ const genSenderHeaderStyle: GenerateStyle<SenderToken> = (token) => {
           paddingInlineEnd: token.paddingXS,
           display: 'flex',
 
+          borderRadius: {
+            _skip_check_: true,
+            value: calc(token.borderRadius).mul(2).equal(),
+          },
+          borderBottomRightRadius: 0,
+          borderBottomLeftRadius: 0,
+
           [`${headerCls}-title`]: {
             flex: 'auto',
           },
@@ -45,27 +52,6 @@ const genSenderHeaderStyle: GenerateStyle<SenderToken> = (token) => {
 
           '&-hidden': {
             display: 'none',
-          },
-        },
-
-        // ========================= CollapseTransition ========================
-        '&-collapse-transition': {
-          '&-enter-active': {
-            transition: ['max-height', 'padding-top', 'padding-bottom']
-              .map(
-                (prop) =>
-                  `${prop} ${token.motionDurationSlow} ${token.motionEaseInOut}`,
-              )
-              .join(','),
-          },
-
-          '&-leave-active': {
-            transition: ['max-height', 'padding-top', 'padding-bottom']
-              .map(
-                (prop) =>
-                  `${prop} ${token.motionDurationSlow} ${token.motionEaseInOut}`,
-              )
-              .join(','),
           },
         },
       },

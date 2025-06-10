@@ -15,11 +15,27 @@ x-request/basic
 
 :::
 
+### 自定义入参
+
+:::demo 自定义 RequestParams，可以向智能体等发送消息。
+
+x-request/request-params
+
+:::
+
 ### 自定义转换器
 
 :::demo 为 `XRequest` 配置自定义的 `transformStream`, 示例中使用 `application/x-ndjson` 数据演示
 
 x-request/custom-transformer
+
+:::
+
+### 模型接入
+
+:::demo 接入云服务平台，可发送请求、终止消息。
+
+x-request/model
 
 :::
 

@@ -1,6 +1,7 @@
 import type { AvatarProps } from 'ant-design-vue';
 import type { AvoidValidation } from '../type-utility';
 import type { CSSProperties, HTMLAttributes, VNode } from 'vue';
+import { AnyObject } from '../_util/type';
 
 export interface TypingOption {
   /**
@@ -19,12 +20,14 @@ export interface TypingOption {
 
 export type SemanticType = 'avatar' | 'content' | 'header' | 'footer';
 
+export type BubbleContentType = VNode | string | AnyObject;
+
 export interface _AvatarProps extends AvatarProps {
   class: string;
   style: CSSProperties;
 }
 
-export interface BubbleProps extends /* @vue-ignore */ Omit<HTMLAttributes, 'content'> {
+export interface BubbleProps<ContentType extends BubbleContentType = string> extends /* @vue-ignore */ Omit<HTMLAttributes, 'content'> {
   prefixCls?: string;
   rootClassName?: string;
   styles?: Partial<Record<SemanticType, CSSProperties>>;
@@ -33,14 +36,14 @@ export interface BubbleProps extends /* @vue-ignore */ Omit<HTMLAttributes, 'con
   placement?: 'start' | 'end';
   loading?: boolean;
   typing?: AvoidValidation<TypingOption | boolean>;
-  content?: VNode | object | string;
-  messageRender?: (content: string) => VNode | string;
+  content?: BubbleContentType;
+  messageRender?: (content: ContentType) => VNode | string;
   loadingRender?: () => VNode;
   variant?: 'filled' | 'borderless' | 'outlined' | 'shadow';
   shape?: 'round' | 'corner';
   onTypingComplete?: VoidFunction;
-  header?: VNode | string;
-  footer?: VNode | string;
+  header?: VNode | string | ((content: BubbleContentType) => VNode | string);
+  footer?: VNode | string | ((content: BubbleContentType) => VNode | string);
 }
 
 export interface BubbleRef {

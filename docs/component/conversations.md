@@ -20,9 +20,29 @@ conversations/basic
 
 ### 会话操作
 
+<ClientOnly>
+
 :::demo 配合 `menu` 属性，配置操作菜单
 
 conversations/with-menu
+
+:::
+
+</ClientOnly>
+
+### 自定义操作
+
+:::demo 自定义菜单入口
+
+conversations/menu-trigger
+
+:::
+
+### 可编辑
+
+:::demo 可编辑对话名
+
+conversations/editable
 
 :::
 
@@ -85,5 +105,13 @@ conversations/group-sort
 | --- | --- | --- | --- | --- |
 | `sort` | 分组排序函数 | (a: string, b: string) => number | - | - |
 | `title` | 自定义渲染组件 | ((group: string, info: { components: { GroupTitle: typeof GroupTitle } }) => VNode) | - | - |
+
+### MenuProps
+
+继承 antdv [MenuProps](https://www.antdv.com/components/menu-cn#api) 属性。
+
+| 属性 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| `trigger` | 自定义menu触发器 | VNode \| ((conversation: Conversation, info: \{ originNode: VNode \}) => VNode) | - | - |
 
 ## 主题变量（Design Token）

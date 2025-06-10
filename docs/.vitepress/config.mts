@@ -3,13 +3,19 @@ import VueMacros from 'unplugin-vue-macros/vite'
 import path from 'node:path';
 import { fileURLToPath, URL } from 'node:url'
 import { mdPlugin } from './config/plugins'
-import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { MarkdownTransform } from './plugins/markdown-transform';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          silenceDeprecations: ['legacy-js-api'],
+        },
+      },
+    },
     resolve: {
       alias: [
         {
@@ -83,11 +89,15 @@ export default defineConfig({
   },
   title: "Ant Design X Vue",
   description: "Ant Design X For Vue",
+  head: [
+    ['link', { rel: 'icon', href: '/images/x-logo.svg' }],
+  ],
   appearance: 'dark',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original',
     nav: [
+      { text: '研发', link: '/development/introduce' },
       { text: '组件', link: '/component/overview' },
       { text: '演示', link: '/playground/independent' },
       {
@@ -98,9 +108,15 @@ export default defineConfig({
         ]
       }
     ],
-    outline:[2,3],
+    outline: [2, 3],
 
     sidebar: {
+      '/development': [
+        {
+          text: 'Ant Design X of Vue',
+          link: '/development/introduce'
+        },
+      ],
       '/component/': [
         {
           text: '总览',

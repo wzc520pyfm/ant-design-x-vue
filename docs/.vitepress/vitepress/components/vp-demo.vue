@@ -151,6 +151,7 @@ const copyCode = async () => {
   .example-showcase {
     padding: 1.5rem;
     margin: 0.5px;
+    overflow-x: auto;
 
     :deep(table) {
       margin: 0;

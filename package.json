@@ -1,6 +1,6 @@
 {
   "name": "ant-design-x-vue",
-  "version": "1.0.3",
+  "version": "1.2.4",
   "description": "Craft AI-driven interfaces effortlessly",
   "keywords": [
     "AI",
@@ -13,7 +13,10 @@
     "vue"
   ],
   "scripts": {
-    "build": "vite build && vue-tsc --project ./tsconfig.build.json",
+    "build": "run-p build:es build:umd build:resolver",
+    "build:es": "vite build && vue-tsc --project ./tsconfig.build.json",
+    "build:umd": "vite build --config ./vite.config.umd.mts && vue-tsc --project ./tsconfig.build.json",
+    "build:resolver": "tsc resolver/index.ts --outDir resolver-dist --declaration",
     "build:watch": "vite build --watch",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
@@ -24,7 +27,8 @@
     "release": "pnpm test && changelogen --release && npm publish && git push --follow-tags",
     "test": "vitest",
     "test:cov": "vitest --coverage",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "play": "vite ./play"
   },
   "author": {
     "name": "wzc520pyfm",
@@ -37,17 +41,26 @@
   "license": "MIT",
   "exports": {
     ".": {
-      "types": "./dist/typings/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.umd.js"
+      "types": "./typings/index.d.ts",
+      "import": "./es/index.mjs",
+      "require": "./lib/index.js"
     },
-    "./dist/style.css": "./dist/style.css"
+    "./dist/style.css": "./dist/style.css",
+    "./resolver": {
+      "types": "./resolver-dist/index.d.ts",
+      "import": "./resolver-dist/index.js"
+    }
   },
-  "main": "./dist/index.umd.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/typings/index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./es/index.mjs",
+  "unpkg": "./dist/index.umd.js",
+  "types": "./typings/index.d.ts",
   "files": [
-    "dist"
+    "es",
+    "lib",
+    "dist",
+    "typings",
+    "resolver-dist"
   ],
   "commitlint": {
     "extends": [
@@ -76,7 +89,7 @@
   },
   "peerDependencies": {
     "ant-design-vue": ">=4.0.0",
-    "vue": ">=3.3.0"
+    "vue": ">=3.5.0"
   },
   "devDependencies": {
     "@ant-design/icons-vue": "^7.0.1",
@@ -100,19 +113,22 @@
     "eslint": "^8.57.1",
     "eslint-plugin-vue": "^9.17.0",
     "fast-glob": "^3.3.2",
+    "glob": "^11.0.1",
     "happy-dom": "^15.7.4",
     "husky": "^8.0.1",
     "less": "^4.2.0",
     "lint-staged": "^13.0.3",
     "markdown-it": "^14.1.0",
     "markdown-it-container": "^4.0.0",
+    "npm-run-all2": "^8.0.3",
     "prettier": "^2.7.1",
     "prettier-plugin-organize-imports": "^3.0.0",
     "prettier-plugin-packagejson": "^2.2.18",
     "stylelint": "^14.9.1",
-    "typescript": "~5.5.4",
-    "unplugin-vue-macros": "^2.13.6",
-    "vite": "^5.4.8",
+    "typescript": "~5.8.0",
+    "unplugin-vue-macros": "^2.14.5",
+    "vite": "^6.2.0",
+    "vite-plugin-inspect": "^0.8.9",
     "vitepress": "^1.5.0",
     "vitest": "^2.1.1",
     "vue": "^3.5.10",

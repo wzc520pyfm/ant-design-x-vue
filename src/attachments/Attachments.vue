@@ -1,11 +1,11 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, ref, useTemplateRef, type VNode, watch } from 'vue';
+import { computed, useTemplateRef, type VNode, watch } from 'vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import type { Attachment, AttachmentsProps, AttachmentsRef, PlaceholderProps } from './interface';
 import PlaceholderUploader from './PlaceholderUploader.vue';
-import type { Upload, UploadProps } from 'ant-design-vue';
+import type { UploadProps } from 'ant-design-vue';
 import DropArea from './DropArea.vue';
 import SilentUploader from './SilentUploader.vue';
 import { FileList } from './FileList';
@@ -26,7 +26,9 @@ const {
   getDropContainer,
   placeholder,
   onChange,
+  onRemove,
   overflow,
+  imageProps,
   disabled,
   classNames = {},
   styles = {},
@@ -52,8 +54,7 @@ const contextStyles = computed(() => contextConfig.value.styles);
 const containerRef = useTemplateRef<HTMLDivElement>('attachments-container');
 // const containerRef = ref<HTMLDivElement>(null);
 
-const uploadRef = useTemplateRef<InstanceType<typeof Upload>>('attachments-upload');
-// const uploadRef = ref<InstanceType<typeof Upload>>(null);
+const placeholderUploaderRef = useTemplateRef<InstanceType<typeof PlaceholderUploader>>('placeholder-uploader');
 
 // ============================ Style ============================
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
@@ -77,18 +78,23 @@ const mergedUploadProps = computed<UploadProps>(() => ({
   onChange: triggerChange,
 }));
 
-const onItemRemove = (item: Attachment) => {
-  const newFileList = fileList.value.filter((fileItem) => fileItem.uid !== item.uid);
-  triggerChange({
-    file: item,
-    fileList: newFileList,
+const onItemRemove = (item: Attachment) =>
+  Promise.resolve(typeof onRemove === 'function' ? onRemove(item) : onRemove).then((ret) => {
+    // Prevent removing file
+    if (ret === false) {
+      return;
+    }
+
+    const newFileList = fileList.value.filter((fileItem) => fileItem.uid !== item.uid);
+    triggerChange({
+      file: { ...item, status: 'removed' },
+      fileList: newFileList,
+    });
   });
-};
 
 const getPlaceholderNode = (
   type: 'inline' | 'drop',
   props?: Pick<PlaceholderProps, 'style'>,
-  ref?: InstanceType<typeof Upload>,
 ) => {
   const placeholderContent =
     slots.placeholder
@@ -108,8 +114,7 @@ const getPlaceholderNode = (
         ...styles.placeholder,
         ...props?.style,
       }}
-    // TODO: Fix Dom Ref Err
-    // ref={ref}
+      ref={type === 'inline' ? 'placeholder-uploader' : undefined}
     />
   );
 };
@@ -119,10 +124,8 @@ const hasFileList = computed(() => fileList.value.length > 0);
 defineExpose<AttachmentsRef>({
   nativeElement: containerRef.value,
   upload: (file) => {
-    // TODO: get native element
-    const fileInput =
-      // @ts-expect-error
-      uploadRef.value?.nativeElement?.querySelector<HTMLInputElement>('input[type="file"]');
+    // get native element
+    const fileInput = placeholderUploaderRef.value?.nativeElement.querySelector?.('input[type="file"]') as HTMLInputElement;
 
     // Trigger native change event
     if (fileInput) {
@@ -194,15 +197,15 @@ defineRender(() => {
               ...contextStyles.value.item,
               ...styles.item,
             }}
+            imageProps={imageProps}
           />
-          {getPlaceholderNode('inline', hasFileList.value ? { style: { display: 'none' } } : {}, uploadRef.value)}
+          {getPlaceholderNode('inline', hasFileList.value ? { style: { display: 'none' } } : {})}
           <DropArea
             getDropContainer={getDropContainer || (() => containerRef.value)}
             prefixCls={prefixCls}
             className={cssinjsCls.value}
-          >
-            {getPlaceholderNode('drop')}
-          </DropArea>
+            children={getPlaceholderNode('drop')}
+          />
         </div>
       )}
     </AttachmentContextProvider>

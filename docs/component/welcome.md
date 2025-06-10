@@ -62,5 +62,6 @@ welcome/background
 
 ## Semantic DOM
 
+<vp-semantic component="Welcome"></vp-semantic>
 
 ## 主题变量（Design Token）

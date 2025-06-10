@@ -1,4 +1,4 @@
-import { useConfigContextInject } from 'ant-design-vue/es/config-provider/context';
+import { useConfigContextInject } from 'ant-design-vue/es/config-provider/context.js';
 
 export const defaultPrefixCls = 'ant';
 

@@ -17,11 +17,27 @@ use-x-agent/preset
 
 :::
 
+### 自定义入参
+
+:::demo 自定义 `RequestParams`，可以向智能体等发送消息。
+
+use-x-agent/request-params
+
+:::
+
 ### 自定义请求
 
 :::demo 通过定制能力，返回多个推荐内容。
 
 use-x-agent/custom
+
+:::
+
+### 模型接入
+
+:::demo 接入云服务平台，可发送消息、转换流数据、终止消息。
+
+use-x-agent/model
 
 :::
 
@@ -67,7 +83,9 @@ export type RequestFn<Message> = (
     onUpdate: (message: Message) => void;
     onSuccess: (message: Message) => void;
     onError: (error: Error) => void;
+    onStream?: (abortController: AbortController) => void;
   },
+  transformStream?: XStreamOptions<Message>['transformStream'],
 ) => void;
 ```
 
@@ -75,5 +93,5 @@ export type RequestFn<Message> = (
 
 | 属性         | 说明                        | 类型          | 版本 |
 | ------------ | --------------------------- | ------------- | ---- |
-| request      | 调用 `useXAgent` 配置的请求 | RequestFn     |      |
+| request      | 调用 `useXAgent` 配置的请求，[详情](https://antd-design-x-vue.netlify.app/component/x-request) | RequestFn     |      |
 | isRequesting | 是否正在请求                | () => boolean |      |

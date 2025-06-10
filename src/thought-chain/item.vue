@@ -1,11 +1,12 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, toRefs, useId } from 'vue';
+import { computed, useId } from 'vue';
 import pickAttrs from '../_util/pick-attrs';
 import type { ThoughtChainNodeProps } from './interface';
 import { useThoughtChainNodeContextInject } from './context';
-import { Avatar, Typography } from 'ant-design-vue';
+import { Avatar, Typography, Tooltip, type TooltipProps } from 'ant-design-vue';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
+import { TransitionCollapse } from '../transition-collapse';
 
 defineOptions({ name: 'AXThoughtChainNode' });
 
@@ -38,6 +39,36 @@ const content = computed(() => info.content);
 const footer = computed(() => info.footer);
 const status = computed(() => info.status);
 const description = computed(() => info.description);
+const tooltip = computed(() => {
+  const tooltipConfig = info.tooltip ?? true;
+  const placement = direction.value === 'rtl' ? 'topRight' : 'topLeft';
+  const titleConfig: TooltipProps = {
+    title: title.value,
+    placement,
+  };
+  const descriptionConfig: TooltipProps = {
+    title: description.value,
+    placement,
+  };
+
+  if (typeof tooltipConfig === 'boolean') {
+    return { titleConfig, descriptionConfig };
+  }
+
+  return {
+    titleConfig: {
+      ...titleConfig,
+      ...(tooltipConfig.titleConfig ? tooltipConfig.titleConfig : {}),
+    },
+    descriptionConfig: {
+      ...descriptionConfig,
+      ...(tooltipConfig.descriptionConfig
+        ? tooltipConfig.descriptionConfig
+        : {}),
+    },
+  };
+});
+const hideTooltip = computed(() => !info.tooltip);
 
 // ============================ Style ============================
 const itemCls = computed(() => `${prefixCls.value}-item`);
@@ -79,9 +110,6 @@ defineRender(() => {
           {/* Title */}
           <Typography.Text
             strong
-            ellipsis={{
-              tooltip: { placement: direction.value === 'rtl' ? 'topRight' : 'topLeft', title: title.value },
-            }}
             // @ts-expect-error
             class={`${itemCls.value}-title`}
           >
@@ -98,22 +126,26 @@ defineRender(() => {
                   rotate={contentOpen.value ? 90 : 0}
                 />
               ))}
-            {title.value}
+            {hideTooltip.value ? (
+              title.value
+            ) : (
+              <Tooltip {...tooltip.value.titleConfig}>{title.value}</Tooltip>
+            )}
           </Typography.Text>
           {/* Description */}
           {description.value && (
             <Typography.Text
               // @ts-expect-error
               class={`${itemCls.value}-desc`}
-              ellipsis={{
-                tooltip: {
-                  placement: direction.value === 'rtl' ? 'topRight' : 'topLeft',
-                  title: description.value,
-                },
-              }}
               type="secondary"
             >
-              {description.value}
+              {hideTooltip.value ? (
+                description.value
+              ) : (
+                <Tooltip {...tooltip.value.descriptionConfig}>
+                  {description.value}
+                </Tooltip>
+              )}
             </Typography.Text>
           )}
         </div>
@@ -121,36 +153,23 @@ defineRender(() => {
         {extra.value && <div class={`${itemCls.value}-extra`}>{extra.value}</div>}
       </div>
       {/* Content */}
-      {content.value && (
-        // TODO: add animation
-        <div
-          v-show={contentVisible.value}
-          class={classnames(`${itemCls.value}-content`)}
-        >
+
+      <TransitionCollapse prefixCls={prefixCls.value}>
+        {content.value && (
           <div
-            class={classnames(`${itemCls.value}-content-box`, classNames.value.itemContent)}
-            style={styles.value.itemContent}
+            v-show={contentVisible.value}
+            class={classnames(`${itemCls.value}-content`)}
           >
-            {content.value}
+            <div
+              class={classnames(`${itemCls.value}-content-box`, classNames.value.itemContent)}
+              style={styles.value.itemContent}
+            >
+              {content.value}
+            </div>
           </div>
-        </div>
-        // <CSSMotion {...collapseMotion} visible={enableCollapse.value ? contentOpen.value : true}>
-        //   {({ className: motionClassName, style }, motionRef) => (
-        //     <div
-        //       className={classnames(`${itemCls}-content`, motionClassName)}
-        //       ref={motionRef}
-        //       style={style}
-        //     >
-        //       <div
-        //         className={classnames(`${itemCls}-content-box`, classNames.itemContent)}
-        //         style={styles.itemContent}
-        //       >
-        //         {content}
-        //       </div>
-        //     </div>
-        //   )}
-        // </CSSMotion>
-      )}
+        )}
+      </TransitionCollapse>
+
       {/* Footer */}
       {footer.value && (
         <div
@@ -161,6 +180,6 @@ defineRender(() => {
         </div>
       )}
     </div>
-  )
+  );
 });
 </script>

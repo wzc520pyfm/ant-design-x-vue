@@ -42,6 +42,14 @@ thought-chain/collapsible
 
 :::
 
+### 受控模式
+
+:::demo `collapsible` 支持传入对象，开启受控模式
+
+thought-chain/controlled
+
+:::
+
 ### 客制化
 
 :::demo `items` 属性支持灵活的客制化配置，详情参考 `ThoughtChainItem` 定义
@@ -54,7 +62,15 @@ thought-chain/customization
 
 :::demo ThoughtChain 组件支持嵌套使用
 
-thought-chain/nested
+thought-chain/nested 
+
+:::
+
+### tooltip 提示
+
+:::demo 配置 `tooltip` 可开启对思维链节点内容区域的 tooltip 提示功能
+
+thought-chain/tooltip
 
 :::
 
@@ -86,6 +102,7 @@ thought-chain/nested
 | key         | 思维节点唯一标识符 | string                            | -      | -    |
 | status      | 思维节点状态       | 'pending' \| 'success' \| 'error' | -      | -    |
 | title       | 思维节点标题       | VNode \| string          | -      | -    |
+| tooltip     | 思维节点 tooltip   | boolean \| TooltipConfig | -      | -    |
 
 ### CollapsibleOptions
 
@@ -93,6 +110,13 @@ thought-chain/nested
 | ------------ | ---------------------- | -------------------------------- | ------ | ---- |
 | expandedKeys | 当前展开的节点         | string[]                         | -      | -    |
 | onExpand     | 展开节点变化的回调函数 | (expandedKeys: string[]) => void | -      | -    |
+
+### TooltipConfig
+
+| 属性               | 说明                | 类型          | 默认值 | 版本 |
+| ------------------ | ------------------- | ------------ | ------ | ---- |
+| titleConfig        | 标题 Tooltip 配置    | [TooltipProps](https://www.antdv.com/components/tooltip-cn#api) | -      | -    |
+| descriptionConfig  | 副标题 Tooltip 配置  | [TooltipProps](https://www.antdv.com/components/tooltip-cn#api) | -      | -    |
 
 ## Semantic DOM
 

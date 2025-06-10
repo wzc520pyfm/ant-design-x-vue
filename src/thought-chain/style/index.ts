@@ -1,9 +1,10 @@
+import type { ConfigProviderProps } from 'ant-design-vue';
 import { type CSSObject, unit } from '../../_util/cssinjs';
+import { mergeToken } from '../../_util/cssinjs-utils';
 import type { FullToken, GenerateStyle } from '../../theme/cssinjs-utils';
 import { genStyleHooks } from '../../theme/genStyleUtils';
-import { mergeToken } from '../../_util/cssinjs-utils';
+import { genTransitionCollapseStyle } from '../../transition-collapse';
 import { THOUGHT_CHAIN_ITEM_STATUS } from '../interface';
-import type { ConfigProviderProps } from 'ant-design-vue';
 
 export interface ComponentToken {}
 
@@ -46,9 +47,14 @@ export interface ThoughtChainToken extends FullToken<'ThoughtChain'> {
   itemGapSM: number;
 }
 
-type GenerateThoughtChainItemStyle = GenerateStyle<ThoughtChainToken, CSSObject>;
+type GenerateThoughtChainItemStyle = GenerateStyle<
+  ThoughtChainToken,
+  CSSObject
+>;
 
-const genThoughtChainItemStatusStyle: GenerateThoughtChainItemStyle = (token) => {
+const genThoughtChainItemStatusStyle: GenerateThoughtChainItemStyle = (
+  token,
+) => {
   const { componentCls } = token;
   const itemCls = `${componentCls}-item`;
 
@@ -85,7 +91,9 @@ const genThoughtChainItemStatusStyle: GenerateThoughtChainItemStyle = (token) =>
   }, {} as CSSObject);
 };
 
-const genThoughtChainItemBeforePseudoStyle: GenerateThoughtChainItemStyle = (token) => {
+const genThoughtChainItemBeforePseudoStyle: GenerateThoughtChainItemStyle = (
+  token,
+) => {
   const { calc, componentCls } = token;
   const itemCls = `${componentCls}-item`;
 
@@ -123,7 +131,10 @@ const genThoughtChainItemBeforePseudoStyle: GenerateThoughtChainItemStyle = (tok
 
         '&::before': {
           ...beforePseudoBaseStyle,
-          insetInlineStart: calc(token.itemSize).div(2).sub(token.lineWidth).equal(),
+          insetInlineStart: calc(token.itemSize)
+            .div(2)
+            .sub(token.lineWidth)
+            .equal(),
         },
       },
       [`& ${itemCls}-header::before`]: {
@@ -136,7 +147,10 @@ const genThoughtChainItemBeforePseudoStyle: GenerateThoughtChainItemStyle = (tok
       [`& ${itemCls}-footer::before`]: {
         ...beforePseudoBaseStyle,
         top: 0,
-        insetInlineStart: calc(token.itemSize).div(-2).sub(token.lineWidth).equal(),
+        insetInlineStart: calc(token.itemSize)
+          .div(-2)
+          .sub(token.lineWidth)
+          .equal(),
       },
     },
   } as CSSObject;
@@ -183,6 +197,9 @@ const genThoughtChainItemStyle: GenerateThoughtChainItemStyle = (token) => {
             lineHeight: `${unit(token.itemSize)}`,
             maxHeight: token.itemSize,
             fontSize: token.itemFontSize,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
 
             [`& ${itemCls}-collapse-icon`]: {
               marginInlineEnd: token.marginXS,
@@ -190,6 +207,9 @@ const genThoughtChainItemStyle: GenerateThoughtChainItemStyle = (token) => {
           },
           [`& ${itemCls}-desc`]: {
             fontSize: token.itemFontSize,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
           },
         },
       },
@@ -203,7 +223,9 @@ const genThoughtChainItemStyle: GenerateThoughtChainItemStyle = (token) => {
           maxWidth: `calc(100% - ${token.itemSize})`,
           borderRadius: token.borderRadiusLG,
           backgroundColor: token.colorBgContainer,
-          border: `${unit(token.lineWidth)} ${token.lineType} ${token.colorBorderSecondary}`,
+          border: `${unit(token.lineWidth)} ${token.lineType} ${
+            token.colorBorderSecondary
+          }`,
         },
       },
       [`& ${itemCls}-footer`]: {
@@ -287,15 +309,23 @@ export default genStyleHooks('ThoughtChain', (token) => {
     itemGapSM: token.marginSM,
     // default size tokens
     itemFontSize: token.fontSize,
-    itemSize: token.calc(token.controlHeightSM).add(token.controlHeight).div(2).equal() as number,
+    itemSize: token
+      .calc(token.controlHeightSM)
+      .add(token.controlHeight)
+      .div(2)
+      .equal() as number,
     itemGap: token.margin,
     // large size tokens
     itemFontSizeLG: token.fontSizeLG,
-    itemSizeLG: token.calc(token.controlHeight).add(token.controlHeightLG).div(2).equal() as number,
+    itemSizeLG: token
+      .calc(token.controlHeight)
+      .add(token.controlHeightLG)
+      .div(2)
+      .equal() as number,
     itemGapLG: token.marginLG,
   });
   return [
     genThoughtChainStyle(compToken),
-    // genCollapseMotion(compToken)
+    genTransitionCollapseStyle(compToken),
   ];
 });

@@ -3,13 +3,19 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![bundle][bundle-src]][bundle-href]
+![vue][vue-version-src]
 [![Github Actions][github-actions-src]][github-actions-href]
 ![Netlify Build][netlify-build-src]
 [![License][license-src]][license-href]
 
+[![jsDelivr][jsdelivr-src]][jsdelivr-href]
+[![unpkg][unpkg-src]][unpkg-href]
+
+[![deepwiki][deepwiki-src]][deepwiki-href]
+
 Ant Design X For Vue. 🔥 [English](./README.en.md)
 
-这里是[Ant Design X](https://github.com/ant-design/x)的Vue实现。
+这里是 [Ant Design X](https://github.com/ant-design/x) 的 Vue 实现。
 
 ## ✨ 特性
 
@@ -22,15 +28,23 @@ Ant Design X For Vue. 🔥 [English](./README.en.md)
 - 🎨 支持细粒度的样式调整，满足各种场景的个性化需求
 
 
-## Usage
+## 📦 安装
 
-安装两个依赖 `ant-design-vue` and `ant-design-x-vue` 到你的项目中, 你可以参照如下命令行：
+```bash
+$ npm i ant-design-vue ant-design-x-vue
+```
 
-> pnpm add ant-design-vue ant-design-x-vue
+```bash
+$ yarn add ant-design-vue ant-design-x-vue
+```
 
-然后在你的项目里导入 `ant-design-vue`:
+```bash
+$ pnpm add ant-design-vue ant-design-x-vue
+```
 
-```ts
+## 🔨 示例
+
+```html
 <script setup lang="ts">
 import { Bubble, XProvider } from 'ant-design-x-vue';
 </script>
@@ -40,7 +54,7 @@ import { Bubble, XProvider } from 'ant-design-x-vue';
 </template>
 ```
 
-## 开发
+## ⌨️ 开发
 
 ```bash
 # install dependencies
@@ -62,7 +76,7 @@ $ pnpm run docs:preview
 $ pnpm lint
 ```
 
-## 链接
+## 🔗 链接
 
 * [Vue](https://vuejs.org/)
 
@@ -70,29 +84,31 @@ $ pnpm lint
 
 * [Ant Design X Of React](https://x.ant.design/)
 
-## Contributing
+## 🤝 贡献
 
 您的贡献至关重要！
 
 您可以参考[Roadmap](https://github.com/wzc520pyfm/ant-design-x-vue/issues/1)，从中挑选您感兴趣的部分。
 
-## 贡献者
+## 👥 贡献者
+
+<a href="https://openomy.app/github/wzc520pyfm/ant-design-x-vue" target="_blank" style="display: block; width: 100%;" align="center">
+  <img src="https://openomy.app/svg?repo=wzc520pyfm/ant-design-x-vue&chart=bubble&latestMonth=3" target="_blank" alt="Contribution Leaderboard" style="display: block; width: 100%;" />
+ </a>
 
 <a href="https://github.com/wzc520pyfm/ant-design-x-vue/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=wzc520pyfm/ant-design-x-vue" />
 </a>
 
-## 交流
+## 💬 交流
 
-### 微信公众号
-![Ant-Design-X Vue](./docs/public/images//wechat_public_account.jpg)
+| 微信公众号                                                      | QQ 交流群                                                               |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| <img src="./docs/public/images//wechat_public_account.jpg" /> | <img src="./docs/public/images/QQ_group_1.jpg" style="width: 260px" /> |
 
-### QQ 群
-![QQ 群](./docs/public/images/QQ_group_1.jpg)
+## 📄 LICENSE
 
-## LICENSE
-
-MIT
+[MIT](./LICENSE)
 
 <!-- Badges -->
 
@@ -102,8 +118,15 @@ MIT
 [npm-downloads-href]: https://npmjs.com/package/ant-design-x-vue
 [bundle-src]: https://img.shields.io/bundlephobia/minzip/ant-design-x-vue?style=flat
 [bundle-href]: https://bundlephobia.com/result?p=ant-design-x-vue
+[vue-version-src]: https://img.shields.io/badge/vue-%20%3E%3D%203.5-47c219
 [github-actions-src]: https://img.shields.io/github/actions/workflow/status/wzc520pyfm/ant-design-x-vue/ci.yml?branch=main&style=flat
 [github-actions-href]: https://github.com/wzc520pyfm/ant-design-x-vue/actions?query=workflow%3Aci
 [netlify-build-src]: https://img.shields.io/netlify/cb006e4e-afce-4c3e-9652-6f8a065b5b6e
 [license-src]: https://img.shields.io/github/license/wzc520pyfm/ant-design-x-vue?style=flat
 [license-href]: https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/LICENSE
+[jsdelivr-src]: https://data.jsdelivr.com/v1/package/npm/ant-design-x-vue/badge
+[jsdelivr-href]: https://www.jsdelivr.com/package/npm/ant-design-x-vue
+[unpkg-src]: https://img.shields.io/badge/unpkg-white?style=flat-square
+[unpkg-href]: https://unpkg.com/ant-design-x-vue
+[deepwiki-src]: https://img.shields.io/badge/deepwiki-f8f7f6?style=flat
+[deepwiki-href]: https://deepwiki.com/wzc520pyfm/ant-design-x-vue

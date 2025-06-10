@@ -12,13 +12,18 @@ defineRender(() => {
     <Bubble
       content="Hello, welcome to use Ant Design X! Just ask if you have any questions."
       avatar={{ icon: <UserOutlined /> }}
-      header="Ant Design X"
-      footer={
+      header="Ant Design X Vue"
+      footer={(messageContext) => (
         <Space size={token.value.paddingXXS}>
           <Button type="text" size="small" icon={<SyncOutlined />} />
-          <Button type="text" size="small" icon={<CopyOutlined />} />
+          <Button
+            onClick={() => console.log('Copy message:', messageContext)}
+            type="text"
+            size="small"
+            icon={<CopyOutlined />}
+          />
         </Space>
-      }
+      )}
     />
   )
 });
