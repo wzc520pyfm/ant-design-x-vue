@@ -19,6 +19,7 @@ export default function useDisplayData(items: Ref<ListItemType[]>): UseDisplayDa
   watch(
     items,
     () => {
+      setDisplayCount(items.value.length);
       if (unref(displayList).length && unref(displayList).every((item, index) => item.key === items.value[index]?.key)) {
         return;
       }
