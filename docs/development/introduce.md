@@ -174,7 +174,7 @@ const messages = [
 </template>
 ```
 
-这里有一个基本的示例项目，你可以参考：[Example project](https://github.com/wzc520pyfm/ant-design-x-vue/tree/main/play)
+这里有一个在线示例可供参考：[Example Project](https://stackblitz.com/edit/atgajqmx?file=src%2FDemo.vue)，也推荐fork该示例反馈bug。
 
 ::: warning
 
