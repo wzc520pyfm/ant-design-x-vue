@@ -4,10 +4,11 @@ import type { RenderChildrenProps, SuggestionItem, SuggestionProps } from './int
 import { useXProviderContext } from '../x-provider';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import useStyle from './style';
-import { computed, type VNode } from 'vue';
+import { computed, type VNode, ref } from 'vue';
 import useState from '../_util/hooks/use-state';
 import { Cascader, type CascaderProps } from 'ant-design-vue';
 import useActive from './useActive';
+import { useElementWidth } from '../_util/hooks/use-element-width';
 
 defineOptions({ name: 'AXSuggestion' });
 
@@ -38,11 +39,21 @@ const isRTL = computed(() => direction.value === 'rtl');
 // ===================== Component Config =========================
 const contextConfig = useXComponentConfig('suggestion');
 
+// ============================ Refs =============================
+const cascaderSlotRef = ref<HTMLElement>();
+
 // ============================ Styles ============================
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 
+const slotActiveWidth = useElementWidth(cascaderSlotRef)
+
+const dropdownStyle = computed(() => {
+  return block ? {width:slotActiveWidth.value + 'px'} : null
+})
+
 // =========================== Trigger ============================
 const [mergedOpen, setOpen] = useState(open);
+
 
 const [info, setInfo] = useState<T | undefined>();
 
@@ -116,10 +127,11 @@ defineRender(() => {
         [`${prefixCls.value}-block`]: block,
       })}
       onChange={onInternalChange as CascaderProps['onChange']}
-      dropdownMatchSelectWidth={block}
+      dropdownStyle={dropdownStyle.value}
     >
       {{
         default: () => <div
+        ref={cascaderSlotRef}
         class={classnames(
           prefixCls.value,
           contextConfig.value.className,
