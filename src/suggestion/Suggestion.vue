@@ -48,7 +48,9 @@ const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 const slotActiveWidth = useElementWidth(cascaderSlotRef)
 
 const dropdownStyle = computed(() => {
-  return block ? {width:slotActiveWidth.value + 'px'} : null
+  if(!block) return undefined
+  if (!slotActiveWidth.value) return undefined
+  return {width: `${slotActiveWidth.value}px`}
 })
 
 // =========================== Trigger ============================
