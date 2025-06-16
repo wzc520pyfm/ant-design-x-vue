@@ -73,7 +73,7 @@ const emit = defineEmits<{
 const slots = defineSlots<{
   header?(): VNode;
   prefix?(): VNode;
-  actions?(props?: {
+  actions?(props: {
     ori: VNode,
     info: {
       components: {
@@ -84,7 +84,7 @@ const slots = defineSlots<{
       };
     }
   }): VNode;
-  footer?(props?: {
+  footer?(props: {
     info: {
       components: {
         SendButton: typeof SendButton;
