@@ -37,14 +37,14 @@ const {
 
 const slots = defineSlots<{
   avatar?(): VNode;
-  header?(props?: {
+  header?(props: {
     content: BubbleContentType;
   }): VNode | string;
-  footer?(props?: {
+  footer?(props: {
     content: BubbleContentType;
   }): VNode | string;
   loading?(): VNode;
-  message?(props?: {
+  message?(props: {
     content: BubbleContentType;
   }): VNode | string;
 }>();
