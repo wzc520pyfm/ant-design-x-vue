@@ -48,7 +48,8 @@
     "./dist/style.css": "./dist/style.css",
     "./resolver": {
       "types": "./resolver-dist/index.d.ts",
-      "import": "./resolver-dist/index.js"
+      "import": "./resolver-dist/index.js",
+      "require":"./resolver-dist/index.js"
     }
   },
   "main": "./lib/index.js",
