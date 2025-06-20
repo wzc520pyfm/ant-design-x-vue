@@ -8,6 +8,10 @@ export type { XProviderProps } from './context';
 // @ts-ignore
 XProvider.install = function(app: App) {
   app.component(XProvider.name, XProvider);
+
+  // @deprecated
+  app.component('AXConfigProvider', XProvider);
+
   return app;
 }
 
