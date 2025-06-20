@@ -152,8 +152,8 @@ sender/focus
 | defaultValue | 输入框默认值 | string | - | - |
 | disabled | 是否禁用 | boolean | false | - |
 | loading | 是否加载中 | boolean | false | - |
-| header | 头部面板 | VNode | - | - |
-| prefix | 前缀内容 | VNode | - | - |
+| header | 头部面板 | VNode \| () => VNode | - | - |
+| prefix | 前缀内容 | VNode \| () => VNode | - | - |
 | footer | 底部内容 | ReactNode \| (info: \{ components: ActionsComponents \}) => ReactNode | - | - |
 | readOnly | 是否让输入框只读 | boolean | false | - |
 | rootClassName | 根元素样式类 | string | - | - |
@@ -190,8 +190,8 @@ type ActionsComponents = {
 | ------- | ------ | ---- |
 | header  | 头部面板 | -   |
 | prefix  | 前缀内容 | _   |
-| actions | 操作按钮 | \{ ori?: VNode; info?: \{ components: \{ SendButton: InstanceType\<Button\>; ClearButton: InstanceType\<Button\>; LoadingButton: InstanceType\<Button\>; SpeechButton: InstanceType\<Button\>; \} \} \} |
-| footer  | 底部内容 | \{ info?: \{ components: \{ SendButton: InstanceType\<Button\>; ClearButton: InstanceType\<Button\>; LoadingButton: InstanceType\<Button\>; SpeechButton: InstanceType\<Button\>; \} \} \}              |
+| actions | 操作按钮 | \{ ori: VNode; info: \{ components: \{ SendButton: InstanceType\<Button\>; ClearButton: InstanceType\<Button\>; LoadingButton: InstanceType\<Button\>; SpeechButton: InstanceType\<Button\>; \} \} \} |
+| footer  | 底部内容 | \{ info: \{ components: \{ SendButton: InstanceType\<Button\>; ClearButton: InstanceType\<Button\>; LoadingButton: InstanceType\<Button\>; SpeechButton: InstanceType\<Button\>; \} \} \}              |
 
 #### Sender Ref
 

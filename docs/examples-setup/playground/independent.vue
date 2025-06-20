@@ -107,7 +107,7 @@ defineOptions({ name: 'PlaygroundIndependentSetup' })
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500))
 
 function renderTitle(icon: VNode, title: string) {
-  return h(Space, { align: 'start' }, [icon, h('span', title)])
+  return h(Space, { align: 'start' }, () => [icon, h('span', title)])
 }
 
 const defaultConversationsItems = [
@@ -251,7 +251,7 @@ const handleFileChange: AttachmentsProps['onChange'] = info => attachedFiles.val
 const placeholderNode = computed(() => h(
   Space,
   { direction: "vertical", size: 16, style: styles.value.placeholder },
-  [
+  () => [
     h(
       Welcome,
       {
@@ -259,7 +259,7 @@ const placeholderNode = computed(() => h(
         icon: "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp",
         title: "Hello, I'm Ant Design X",
         description: "Base on Ant Design, AGI product interface solution, create a better intelligent vision~",
-        extra: h(Space, {}, [h(Button, { icon: h(ShareAltOutlined) }), h(Button, { icon: h(EllipsisOutlined) })]),
+        extra: h(Space, {}, () => [h(Button, { icon: h(ShareAltOutlined) }), h(Button, { icon: h(EllipsisOutlined) })]),
       }
     ),
     h(

@@ -29,7 +29,7 @@ const getDropContainer = () => senderRef.value?.nativeElement;
 const pastFile = (_, files) => {
   console.log("past")
   for (const file of files) {
-    attachmentsRef.value?.current?.upload(file);
+    attachmentsRef.value?.upload(file);
   }
   open.value = true;
 }

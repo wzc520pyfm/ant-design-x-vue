@@ -65,7 +65,7 @@ const titleNode = computed(() => {
   if (slots.title) {
     return slots.title();
   }
-  return title;
+  return typeof title === 'function' ? title() : title;
 });
 
 defineRender(() => {

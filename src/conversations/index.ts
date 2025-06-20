@@ -1,7 +1,7 @@
 import type { App } from 'vue';
 import Conversations from './Conversations.vue';
 
-export type { ConversationsProps } from './interface';
+export type { ConversationsProps, Conversation } from './interface';
 
 // @ts-ignore
 Conversations.install = function(app: App) {

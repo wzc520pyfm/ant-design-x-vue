@@ -42,8 +42,8 @@ export interface BubbleProps<ContentType extends BubbleContentType = string> ext
   variant?: 'filled' | 'borderless' | 'outlined' | 'shadow';
   shape?: 'round' | 'corner';
   onTypingComplete?: VoidFunction;
-  header?: VNode | string;
-  footer?: VNode | string | ((content: BubbleContentType) => VNode | string);
+  header?: AvoidValidation<VNode | string | ((content: BubbleContentType) => VNode | string)>;
+  footer?: AvoidValidation<VNode | string | ((content: BubbleContentType) => VNode | string)>;
 }
 
 export interface BubbleRef {

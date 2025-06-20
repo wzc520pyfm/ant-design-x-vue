@@ -1,6 +1,77 @@
 # Changelog
 
 
+## v1.2.6
+
+[compare changes](https://undefined/undefined/compare/v1.2.5...v1.2.6)
+
+### 🩹 Fixes
+
+- **bubble:** Fix header and footer warning of runtime prop checked (#353)
+- **bubble:** Fix display count reactive (#354)
+
+### 📖 Documentation
+
+- **playground:** Add playground copilot demo (#346)
+- Update basic demo stackblitz link (#355)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Bao ([@Bao0630](http://github.com/Bao0630))
+
+## v1.2.5
+
+[compare changes](https://undefined/undefined/compare/v1.2.4...v1.2.5)
+
+### 🚀 Enhancements
+
+- **bubble:** Header support function (#341)
+- **sender:** Header and prefix support getter (#324)
+
+### 🩹 Fixes
+
+- Passing Conversations menu.getPopupContainer to Dropdown (#303)
+- **thought-chain:** Fixed ellipsis not taking effect. (#254)
+
+### 📖 Documentation
+
+- Remove api key and add description for api key (#335)
+- **thought-chain:** Add controlled setup demo (#321)
+- **conversations:** Add editable demo (#91)
+- **bubble:** Add think demo (#138)
+- **bubble:** Add think setup demo (#299)
+
+### ❤️ Contributors
+
+- Superlollipop ([@quanbisen](http://github.com/quanbisen))
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- InCBle ([@inCBle](http://github.com/inCBle))
+- Linhf123 ([@linhf123](http://github.com/linhf123))
+
+## v1.2.4
+
+[compare changes](https://undefined/undefined/compare/v1.2.3...v1.2.4)
+
+### 🔥 Performance
+
+- Build script (#328)
+
+### 🩹 Fixes
+
+- **Sender:** Fix pasted file is invalid in setup demo (#332)
+- Specify the file suffix for antdv (#334)
+
+### 📖 Documentation
+
+- Fix warning for independent setup demo (#333)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- 专注的小眼神 ([@Jarvis2018](http://github.com/Jarvis2018))
+- 菠萝吹雪 ([@yuguaa](http://github.com/yuguaa))
+
 ## v1.2.3
 
 [compare changes](https://undefined/undefined/compare/v1.2.2...v1.2.3)
