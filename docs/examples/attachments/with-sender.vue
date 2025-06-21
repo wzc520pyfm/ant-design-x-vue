@@ -1,10 +1,12 @@
 <script setup lang="tsx">
 import { CloudUploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
-import { App, Button, Flex, Badge } from 'ant-design-vue';
+import { App, Button, Flex, Badge, type UploadProps } from 'ant-design-vue';
 import { Attachments, Sender } from 'ant-design-x-vue';
 import { computed, ref } from 'vue';
 
 defineOptions({ name: 'AXAttachmentWithSender' });
+
+type FileType = Parameters<UploadProps['beforeUpload']>[0];
 
 const Demo = () => {
   const open = ref(true);
@@ -29,7 +31,21 @@ const Demo = () => {
         // Mock not real upload file
         beforeUpload={() => false}
         items={items.value}
-        onChange={({ fileList }) => items.value = fileList}
+        onChange={({ file, fileList }) => {
+          if (file.status === 'removed') {
+            items.value = fileList;
+            return;
+          }
+          file.url = window.URL.createObjectURL(file as FileType)
+          // file.thumbUrl = 缩略图url
+          items.value = fileList.toSpliced(
+            items.value.findIndex(
+              (item) => item.uid === file.uid
+            ),
+            1,
+            file
+          );
+        }}
         placeholder={(type) =>
           type === 'drop'
             ? {
