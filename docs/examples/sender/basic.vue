@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { App, Flex } from 'ant-design-vue';
 import { Sender } from 'ant-design-x-vue';
-import { onWatcherCleanup, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 defineOptions({ name: 'AXSenderBasic' });
 
@@ -12,15 +12,15 @@ const Demo = () => {
   const { message } = App.useApp();
 
   // Mock send message
-  watch(loading, () => {
+  watch(loading, (_, __, onCleanup) => {
     if (loading.value) {
       const timer = setTimeout(() => {
         loading.value = false;
         message.success('Send message successfully!');
       }, 3000);
-      onWatcherCleanup(() => {
-        clearTimeout(timer);
-      })
+      onCleanup(() => {
+        clearTimeout(timer); 
+      });
     }
   });
 
