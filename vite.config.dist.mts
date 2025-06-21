@@ -23,7 +23,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'antdx',
-      formats: ['umd'],
+      formats: ['es', 'umd'],
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
@@ -33,8 +33,17 @@ export default defineConfig({
           format: 'umd',
           dir: 'dist',
           inlineDynamicImports: true,
+          exports: 'named',
           name: 'antdx',
           entryFileNames: '[name].umd.js',
+          globals: { vue: 'Vue' },
+        },
+        {
+          format: 'es',
+          dir: 'dist',
+          inlineDynamicImports: true,
+          exports: 'named',
+          entryFileNames: '[name].esm.js',
           globals: { vue: 'Vue' },
         },
       ],
