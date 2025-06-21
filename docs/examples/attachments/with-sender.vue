@@ -39,7 +39,7 @@ const Demo = () => {
           file.url = window.URL.createObjectURL(file as FileType)
           // file.thumbUrl = 缩略图url
           items.value = fileList.toSpliced(
-            items.value.findIndex(
+            fileList.findIndex(
               (item) => item.uid === file.uid
             ),
             1,
