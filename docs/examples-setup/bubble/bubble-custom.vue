@@ -27,7 +27,7 @@ const roles: BubbleListProps['roles'] = {
       },
     },
     loadingRender: () =>
-      h(Space, null, [h(Spin, { size: 'small' }), 'Custom loading...']),
+      h(Space, null, () => [h(Spin, { size: 'small' }), 'Custom loading...']),
   },
   user: {
     placement: 'end',
@@ -49,7 +49,7 @@ const listRef = ref<InstanceType<typeof BubbleList>>(null);
         key: 'welcome',
         role: 'ai',
         content: 'Mock welcome content. '.repeat(10),
-        footer: h(Flex, null, [
+        footer: h(Flex, null, () => [
           h(Button, {
             size: 'small',
             type: 'text',

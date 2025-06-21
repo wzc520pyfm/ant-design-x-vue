@@ -33,7 +33,7 @@ const roles: BubbleListProps['roles'] = {
       h(
         Flex,
         { vertical: true, gap: 'middle' },
-        items.map((item: any) =>
+        () => items.map((item: any) =>
           h(Attachments.FileCard, { key: item.uid, item: item }),
         ),
       ),
@@ -56,7 +56,7 @@ const roles: BubbleListProps['roles'] = {
       {
         key: 1,
         role: 'ai',
-        content: h(Typography.Text, { type: 'danger' }, 'ReactNode message'),
+        content: h(Typography.Text, { type: 'danger' }, () => 'ReactNode message'),
       },
 
       // Role: suggestion

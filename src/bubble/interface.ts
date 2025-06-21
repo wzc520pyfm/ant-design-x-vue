@@ -15,7 +15,7 @@ export interface TypingOption {
   /**
    * @default null
    */
-  suffix?: VNode;
+  suffix?: VNode | string;
 }
 
 export type SemanticType = 'avatar' | 'content' | 'header' | 'footer';

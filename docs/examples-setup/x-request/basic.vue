@@ -74,7 +74,7 @@ async function request() {
             status === 'error' &&
             exampleRequest.baseURL === BASE_URL + PATH &&
             'Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.',
-          content: h(Descriptions, { column: 1 }, [
+          content: h(Descriptions, { column: 1 }, () => [
             h(Descriptions.Item, { label: 'Status' }, status || '-'),
             h(Descriptions.Item, { label: 'Update Times' }, lines.length.toString())
           ]),
