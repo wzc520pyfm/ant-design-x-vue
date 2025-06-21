@@ -13,9 +13,9 @@
     "vue"
   ],
   "scripts": {
-    "build": "run-p build:es build:umd build:resolver",
+    "build": "run-p build:es build:dist build:resolver",
     "build:es": "vite build && vue-tsc --project ./tsconfig.build.json",
-    "build:umd": "vite build --config ./vite.config.umd.mts && vue-tsc --project ./tsconfig.build.json",
+    "build:dist": "vite build --config ./vite.config.dist.mts && vue-tsc --project ./tsconfig.build.json",
     "build:resolver": "tsc resolver/index.ts --outDir resolver-dist --declaration",
     "build:watch": "vite build --watch",
     "docs:dev": "vitepress dev docs",
