@@ -1,3 +1,7 @@
+<script>
+import { useStorage } from '@vueuse/core';
+const preferLocal = useStorage('antdx-docs-preference', 'tsx');
+</script>
 
 # Bubble 对话气泡
 
@@ -89,6 +93,16 @@ bubble/bubble-custom
 
 :::
 
+<span v-if="preferLocal === 'setup'">
+
+:::demo 还可以使用插槽：
+
+bubble/bubble-custom-slot
+
+:::
+
+</span>
+
 ### 自定义列表内容
 
 :::demo 自定义气泡列表内容，这对于个性化定制场景非常有用。
@@ -156,6 +170,16 @@ bubble/gpt-vis
 | autoScroll | 当内容更新时，自动滚动到最新位置。如果用户滚动，则会暂停自动滚动。 | boolean | true |  |
 | items | 气泡数据列表 | (BubbleProps & { key?: string \| number, role?: string })[] | - |  |
 | roles | 设置气泡默认属性，`items` 中的 `role` 会进行自动对应 | Record<string, BubbleProps> \| (bubble, index) => BubbleProps | - |  |
+
+### Bubble.List Slots
+
+| 插槽名 | 说明 | 类型 |
+| --- | --- | --- |
+| avatar | 头像 | \{ item: BubbleProps & \{ key?: string \| number, role?: string \} \} |
+| header | 头部面板 | \{ item: BubbleProps & \{ key?: string \| number, role?: string \} \} |
+| footer | 底部内容 | \{ item: BubbleProps & \{ key?: string \| number, role?: string \} \} |
+| loading | loading占位 | \{ item: BubbleProps & \{ key?: string \| number, role?: string \} \} |
+| message | 消息内容 | \{ item: BubbleProps & \{ key?: string \| number, role?: string \} \} |
 
 ## Semantic DOM
 
