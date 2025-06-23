@@ -63,6 +63,9 @@ const {
   onPaste,
   onPasteFile,
   autoSize = { maxRows: 8 },
+  audioIcon,
+  audioDisabledIcon,
+  audioRecordingIcon,
   ...rest
 } = defineProps<SenderProps>();
 
@@ -245,7 +248,7 @@ const onContentMouseDown: MouseEventHandler = (e) => {
 const actionNode = computed(() => {
   let _actionNode: VNode | false = (
     <Flex class={`${actionListCls.value}-presets`}>
-      {allowSpeech && <SpeechButton />}
+      {allowSpeech && (<SpeechButton audioIcon={audioIcon} audioDisabledIcon={audioDisabledIcon} audioRecordingIcon={audioRecordingIcon} />)}
       {/* Loading or Send */}
       {loading ? <LoadingButton /> : <SendButton />}
     </Flex>
@@ -263,6 +266,7 @@ const actionNode = computed(() => {
   } else if (actions || actions === false) {
     _actionNode = actions;
   }
+  console.log('actionNode:', _actionNode);
   return _actionNode;
 });
 

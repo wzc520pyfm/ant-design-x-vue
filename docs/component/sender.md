@@ -45,6 +45,18 @@ sender/speech
 
 </ClientOnly>
 
+### 语音输入图标
+
+<ClientOnly>
+
+:::demo 调整语音输入显示的图标，包含正在录音的图标。
+
+sender/speechIcon
+
+:::
+
+</ClientOnly>
+
 ### 自定义语音输入
 
 <ClientOnly>
