@@ -18,8 +18,8 @@ const roles: BubbleListProps['roles'] = {
     avatar: { icon: h(UserOutlined), style: { background: '#fde3cf' } },
     typing: { step: 5, interval: 20 },
     style: {
-      maxWidth: 600,
-      marginInlineEnd: 44,
+      maxWidth: '600px',
+      marginInlineEnd: '44px',
     },
     styles: {
       footer: {
@@ -42,7 +42,7 @@ const listRef = ref<InstanceType<typeof BubbleList>>(null);
 <template>
   <BubbleList
     ref="listRef"
-    :style="{ maxHeight: 300 }"
+    :style="{ maxHeight: '300px' }"
     :roles="roles"
     :items="[
       {
