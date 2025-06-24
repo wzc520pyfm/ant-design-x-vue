@@ -266,7 +266,6 @@ const actionNode = computed(() => {
   } else if (actions || actions === false) {
     _actionNode = actions;
   }
-  console.log('actionNode:', _actionNode);
   return _actionNode;
 });
 
