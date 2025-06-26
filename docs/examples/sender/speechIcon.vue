@@ -11,13 +11,14 @@ const Demo = () => {
 
   return (
     <Sender
-      allowSpeech
+      allowSpeech={{
+        audioIcon: h(SoundOutlined),
+        audioDisabledIcon: h(SoundOutlined, { style: { color: 'gray' } }),
+        audioRecordingIcon: h(EllipsisOutlined)
+      }}
       onSubmit={() => {
         message.success('Send message successfully!');
       }}
-      audioIcon={h(SoundOutlined)}
-      audioDisabledIcon={h(SoundOutlined, { style: { color: 'gray' } })}
-      audioRecordingIcon={h(EllipsisOutlined)}
     />
   );
 };

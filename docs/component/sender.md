@@ -1,4 +1,3 @@
-
 # Sender 输入框
 
 用于聊天的输入框组件。
@@ -155,31 +154,28 @@ sender/focus
 
 ### SenderProps
 
-| 属性               | 说明                                                                        | 类型                                                                   | 默认值                  | 版本 |
-| ------------------ | --------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------- | ---- |
-| actions            | 自定义按钮，当不需要默认操作按钮时，可以设为 `actions={false}`              | VNode \| (oriNode, info: \{ components: ActionsComponents \}) => VNode | -                       | -    |
-| allowSpeech        | 是否允许语音输入                                                            | boolean \| SpeechConfig                                                | false                   | -    |
-| classNames         | 样式类名                                                                    | [见下](#semantic-dom)                                                  | -                       | -    |
-| components         | 自定义组件                                                                  | Record<'input', ComponentType>                                         | -                       | -    |
-| defaultValue       | 输入框默认值                                                                | string                                                                 | -                       | -    |
-| disabled           | 是否禁用                                                                    | boolean                                                                | false                   | -    |
-| loading            | 是否加载中                                                                  | boolean                                                                | false                   | -    |
-| header             | 头部面板                                                                    | VNode \| () => VNode                                                   | -                       | -    |
-| prefix             | 前缀内容                                                                    | VNode \| () => VNode                                                   | -                       | -    |
-| footer             | 底部内容                                                                    | ReactNode \| (info: \{ components: ActionsComponents \}) => ReactNode  | -                       | -    |
-| readOnly           | 是否让输入框只读                                                            | boolean                                                                | false                   | -    |
-| rootClassName      | 根元素样式类                                                                | string                                                                 | -                       | -    |
-| styles             | 语义化定义样式                                                              | [见下](#semantic-dom)                                                  | -                       | -    |
-| submitType         | 提交模式                                                                    | SubmitType                                                             | `enter` \| `shiftEnter` | -    |
-| value(v-model)     | 输入框值                                                                    | string                                                                 | -                       | -    |
-| onSubmit           | 点击发送按钮的回调                                                          | (message: string) => void                                              | -                       | -    |
-| onChange           | 输入框值改变的回调                                                          | (value: string, event?: FormEvent \| ChangeEvent ) => void             | -                       | -    |
-| onCancel           | 点击取消按钮的回调                                                          | () => void                                                             | -                       | -    |
-| onPasteFile        | 黏贴文件的回调                                                              | (firstFile: File, files: FileList) => void                             | -                       | -    |
-| autoSize           | 自适应内容高度，可设置为 true \| false 或对象：\{ minRows: 2, maxRows: 6 \} | boolean \| \{ minRows?: number; maxRows?: number \}                    | \{ maxRows: 8 \}        | -    |
-| audioIcon          | 自定义语音输入图标                                                          | VNode                                                                  | AudioOutlined           | -    |
-| audioDisabledIcon  | 自定义麦克风禁用时语音输入图标                                              | VNode                                                                  | AudioMutedOutlined      | -    |
-| audioRecordingIcon | 自定义语音输入时的图标                                                      | VNode                                                                  | RecordingIcon（内部实现，非 `@ant-design/icons-vue`）           | -    |
+| 属性           | 说明                                                                        | 类型                                                                   | 默认值                  | 版本 |
+| -------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------- | ---- |
+| actions        | 自定义按钮，当不需要默认操作按钮时，可以设为 `actions={false}`              | VNode \| (oriNode, info: \{ components: ActionsComponents \}) => VNode | -                       | -    |
+| allowSpeech    | 是否允许语音输入                                                            | boolean \| SpeechConfig                                                | false                   | -    |
+| classNames     | 样式类名                                                                    | [见下](#semantic-dom)                                                  | -                       | -    |
+| components     | 自定义组件                                                                  | Record<'input', ComponentType>                                         | -                       | -    |
+| defaultValue   | 输入框默认值                                                                | string                                                                 | -                       | -    |
+| disabled       | 是否禁用                                                                    | boolean                                                                | false                   | -    |
+| loading        | 是否加载中                                                                  | boolean                                                                | false                   | -    |
+| header         | 头部面板                                                                    | VNode \| () => VNode                                                   | -                       | -    |
+| prefix         | 前缀内容                                                                    | VNode \| () => VNode                                                   | -                       | -    |
+| footer         | 底部内容                                                                    | ReactNode \| (info: \{ components: ActionsComponents \}) => ReactNode  | -                       | -    |
+| readOnly       | 是否让输入框只读                                                            | boolean                                                                | false                   | -    |
+| rootClassName  | 根元素样式类                                                                | string                                                                 | -                       | -    |
+| styles         | 语义化定义样式                                                              | [见下](#semantic-dom)                                                  | -                       | -    |
+| submitType     | 提交模式                                                                    | SubmitType                                                             | `enter` \| `shiftEnter` | -    |
+| value(v-model) | 输入框值                                                                    | string                                                                 | -                       | -    |
+| onSubmit       | 点击发送按钮的回调                                                          | (message: string) => void                                              | -                       | -    |
+| onChange       | 输入框值改变的回调                                                          | (value: string, event?: FormEvent \| ChangeEvent ) => void             | -                       | -    |
+| onCancel       | 点击取消按钮的回调                                                          | () => void                                                             | -                       | -    |
+| onPasteFile    | 黏贴文件的回调                                                              | (firstFile: File, files: FileList) => void                             | -                       | -    |
+| autoSize       | 自适应内容高度，可设置为 true \| false 或对象：\{ minRows: 2, maxRows: 6 \} | boolean \| \{ minRows?: number; maxRows?: number \}                    | \{ maxRows: 8 \}        | -    |
 
 ```typescript | pure
 type SpeechConfig = {
@@ -187,6 +183,9 @@ type SpeechConfig = {
   // 交由开发者实现三方语音输入的功能。
   recording?: boolean;
   onRecordingChange?: (recording: boolean) => void;
+  audioIcon?: ButtonProps['icon'] | VNode;
+  audioDisabledIcon?: ButtonProps['icon'] | VNode;
+  audioRecordingIcon?: ButtonProps['icon'] | VNode;
 };
 ```
 

@@ -16,11 +16,12 @@ const submit = () => {
   <App>
     <context-holder />
     <Sender
-      :allow-speech="true"
+      :allow-speech="{
+        audioIcon: h(SoundOutlined),
+        audioDisabledIcon: h(SoundOutlined, { style: { color: 'gray' } }),
+        audioRecordingIcon: h(EllipsisOutlined)
+      }"
       :on-submit="submit"
-      :audio-icon="h(SoundOutlined)"
-      :audio-disabled-icon="h(SoundOutlined, { style: { color: 'gray' } })"
-      :audio-recording-icon="h(EllipsisOutlined)"
     />
   </App>
 </template>

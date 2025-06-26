@@ -86,9 +86,6 @@ export interface SenderProps {
   footer?: VNode | FooterRender;
   header?: VNode | (() => VNode);
   autoSize?: AvoidValidation<boolean | { minRows?: number; maxRows?: number }>;
-  audioIcon?: ButtonProps['icon'];
-  audioDisabledIcon?: ButtonProps['icon']
-  audioRecordingIcon?: ButtonProps['icon'];
 }
 
 export interface InputFocusOptions extends FocusOptions {
@@ -158,9 +155,9 @@ export interface AntdButtonProps {
   title?: ButtonProps['title'];
   onClick?: ButtonProps['onClick'];
   onMousedown?: ButtonProps['onMousedown'];
-  audioIcon?: ButtonProps['icon'];
-  audioDisabledIcon?: ButtonProps['icon']
-  audioRecordingIcon?: ButtonProps['icon'];
+  audioIcon?: ButtonProps['icon'] | VNode;
+  audioDisabledIcon?: ButtonProps['icon'] | VNode
+  audioRecordingIcon?: ButtonProps['icon'] | VNode;
 }
 
 export interface ActionButtonProps extends AntdButtonProps {
