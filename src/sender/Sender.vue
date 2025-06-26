@@ -63,9 +63,6 @@ const {
   onPaste,
   onPasteFile,
   autoSize = { maxRows: 8 },
-  audioIcon,
-  audioDisabledIcon,
-  audioRecordingIcon,
   ...rest
 } = defineProps<SenderProps>();
 
