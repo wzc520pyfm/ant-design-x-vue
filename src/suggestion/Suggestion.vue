@@ -8,7 +8,7 @@ import { computed, type VNode, ref } from 'vue';
 import useState from '../_util/hooks/use-state';
 import { Cascader, type CascaderProps } from 'ant-design-vue';
 import useActive from './useActive';
-import { useElementWidth } from '../_util/hooks/use-element-width';
+import { useElementSize } from '@vueuse/core';
 
 defineOptions({ name: 'AXSuggestion' });
 
@@ -45,7 +45,7 @@ const cascaderSlotRef = ref<HTMLElement>();
 // ============================ Styles ============================
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 
-const slotActiveWidth = useElementWidth(cascaderSlotRef)
+const {width: slotActiveWidth} = useElementSize(cascaderSlotRef)
 
 const dropdownStyle = computed(() => {
   if(!block) return undefined
