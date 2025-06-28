@@ -11,7 +11,7 @@ if (!SpeechRecognition && typeof window !== 'undefined') {
 
 export type ControlledSpeechConfig = {
   recording?: boolean;
-  onRecordingChange: (recording: boolean) => void;
+  onRecordingChange?: (recording: boolean) => void;
   audioIcon?: ButtonProps['icon'];
   audioDisabledIcon?: ButtonProps['icon']
   audioRecordingIcon?: ButtonProps['icon'];
