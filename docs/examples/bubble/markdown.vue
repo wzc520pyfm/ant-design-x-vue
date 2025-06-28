@@ -4,7 +4,7 @@ import { Bubble } from 'ant-design-x-vue';
 import type { BubbleProps } from 'ant-design-x-vue';
 import { Typography } from 'ant-design-vue';
 import markdownit from 'markdown-it';
-import { onWatcherCleanup, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 
 defineOptions({ name: 'BubbleMarkdown' });
 
@@ -24,16 +24,16 @@ const renderMarkdown: BubbleProps['messageRender'] = (content) => (
 
 const renderKey = ref(0);
 
-watchEffect(() => {
+watchEffect((onCleanup) => {
   const id = setTimeout(
     () => {
       renderKey.value = renderKey.value + 1;
     },
     text.length * 100 + 2000,
   );
-  onWatcherCleanup(() => {
-    clearTimeout(id);
-  });
+  onCleanup(() => {
+    clearTimeout(id); 
+  })
 });
 
 defineRender(() => {

@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, useTemplateRef, type VNode, watch } from 'vue';
+import { computed, type VNode, watch } from 'vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import type { Attachment, AttachmentsProps, AttachmentsRef, PlaceholderProps } from './interface';
@@ -11,6 +11,7 @@ import SilentUploader from './SilentUploader.vue';
 import { FileList } from './FileList';
 import useStyle from './style';
 import useState from '../_util/hooks/use-state';
+import { useTemplateRef } from '../_util/hooks/useTemplateRefPolyfill'
 import AttachmentContextProvider from './context';
 
 defineOptions({ name: 'AXAttachments' });

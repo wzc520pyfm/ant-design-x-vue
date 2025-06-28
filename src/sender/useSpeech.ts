@@ -1,6 +1,6 @@
 import { ButtonProps } from 'ant-design-vue';
 import useMergedState from '../_util/hooks/useMergedState';
-import { computed, ref, watchEffect, type MaybeRefOrGetter, toValue, onWatcherCleanup, type ComputedRef, type Ref } from 'vue';
+import { computed, ref, watchEffect, type MaybeRefOrGetter, toValue, type ComputedRef, type Ref } from 'vue';
 
 // Ensure that the SpeechRecognition API is available in the browser
 let SpeechRecognition: any;
@@ -57,7 +57,7 @@ export default function useSpeech(
   // ======================== Speech Permission ========================
   const permissionState = ref<PermissionState | null>(null);
 
-  watchEffect(() => {
+  watchEffect((onCleanup) => {
     if (typeof navigator !== 'undefined' && 'permissions' in navigator) {
       let lastPermission: PermissionStatus | null = null;
 
@@ -74,7 +74,7 @@ export default function useSpeech(
           lastPermission = permissionStatus;
         });
 
-      onWatcherCleanup(() => {
+      onCleanup(() => {
         // Avoid memory leaks
         if (lastPermission) {
           lastPermission.onchange = null;
