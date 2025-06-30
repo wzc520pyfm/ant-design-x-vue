@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, nextTick, onWatcherCleanup, ref, useTemplateRef, watch, watchEffect } from 'vue';
+import { computed, nextTick, onWatcherCleanup, ref, useTemplateRef, watch, watchEffect, TransitionGroup } from 'vue';
 import { Button } from 'ant-design-vue';
 import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons-vue';
 import type { FileListProps } from '../interface';
@@ -108,9 +108,9 @@ defineRender(() => {
       onScroll={checkPing}
       style={listStyle}
     >
-      { /** TODO: use rc-motion for items */}
-      {items.map((item) => {
-        return <FileListCard
+      <TransitionGroup name="file-list-card">
+         {items.map((item) => {
+         return <FileListCard
           key={item.uid}
           prefixCls={prefixCls}
           item={item}
@@ -122,6 +122,7 @@ defineRender(() => {
           }}
         />
       })}
+      </TransitionGroup>
       {!attachmentContext.value.disabled && (
         <SilentUploader
           upload={upload}
@@ -156,3 +157,53 @@ defineRender(() => {
   )
 })
 </script>
+
+<style lang="scss" scoped>
+.file-list-card-enter-active {
+  animation: card-enter 0.3s ease-in;
+
+}
+
+.file-list-card-leave-active {
+  animation: card-leave 0.3s ease-out;
+}
+
+@keyframes card-enter {
+  0% {
+    opacity: 0;
+    transform:  scale(0.7);
+    filter: blur(2px);
+  }
+  25% {
+    opacity: 0.5;
+    transform:scale(0.8);
+    filter: blur(1px);
+  }
+  50% {
+    opacity: 0.75;
+    transform:scale(0.9);
+    filter: blur(0.5px);
+  }
+  75% {
+    opacity: 0.9;
+    transform:scale(0.95);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform:scale(1);
+  }
+}
+
+@keyframes card-leave {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.2);
+    filter: blur(2px);
+  }
+}
+</style>
