@@ -59,6 +59,7 @@ export interface FileListCardProps {
   className?: string;
   style?: CSSProperties;
   imageProps?: ImageProps;
+  fileIcons?: AttachmentFilesIcons;
 }
 
 export interface ProgressProps {
@@ -152,3 +153,11 @@ export interface AttachmentsRef {
   nativeElement: HTMLDivElement | null;
   upload: (file: File) => void;
 }
+
+export interface AttachmentFilesIcon {
+  ext: string[];
+  color: string;
+  icon: VNode;
+}
+
+export type AttachmentFilesIcons = AttachmentFilesIcon[]

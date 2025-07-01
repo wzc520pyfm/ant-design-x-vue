@@ -1,10 +1,10 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
 import { CloseCircleFilled, FileExcelFilled, FileImageFilled, FileMarkdownFilled, FilePdfFilled, FilePptFilled, FileTextFilled, FileWordFilled, FileZipFilled } from '@ant-design/icons-vue';
-import { computed, onWatcherCleanup, useTemplateRef, watch, type VNode } from 'vue';
+import { computed, onWatcherCleanup, useTemplateRef, watch } from 'vue';
 import AudioIcon from './AudioIcon.vue';
 import VideoIcon from './VideoIcon.vue';
-import type { FileListCardProps } from '../interface';
+import type { AttachmentFilesIcons, FileListCardProps } from '../interface';
 import { useAttachmentContextInject } from '../context';
 import { useXProviderContext } from '../../x-provider';
 import { previewImage } from '../util';
@@ -20,57 +20,53 @@ const DEFAULT_ICON_COLOR = '#8c8c8c';
 
 const IMG_EXTS = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'];
 
-const PRESET_FILE_ICONS: {
-  ext: string[];
-  color: string;
-  icon: VNode;
-}[] = [
-    {
-      icon: <FileExcelFilled />,
-      color: '#22b35e',
-      ext: ['xlsx', 'xls'],
-    },
-    {
-      icon: <FileImageFilled />,
-      color: DEFAULT_ICON_COLOR,
-      ext: IMG_EXTS,
-    },
-    {
-      icon: <FileMarkdownFilled />,
-      color: DEFAULT_ICON_COLOR,
-      ext: ['md', 'mdx'],
-    },
-    {
-      icon: <FilePdfFilled />,
-      color: '#ff4d4f',
-      ext: ['pdf'],
-    },
-    {
-      icon: <FilePptFilled />,
-      color: '#ff6e31',
-      ext: ['ppt', 'pptx'],
-    },
-    {
-      icon: <FileWordFilled />,
-      color: '#1677ff',
-      ext: ['doc', 'docx'],
-    },
-    {
-      icon: <FileZipFilled />,
-      color: '#fab714',
-      ext: ['zip', 'rar', '7z', 'tar', 'gz'],
-    },
-    {
-      icon: <VideoIcon />,
-      color: '#ff4d4f',
-      ext: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'],
-    },
-    {
-      icon: <AudioIcon />,
-      color: '#8c8c8c',
-      ext: ['mp3', 'wav', 'flac', 'ape', 'aac', 'ogg'],
-    },
-  ];
+const PRESET_FILE_ICONS: AttachmentFilesIcons = [
+  {
+    icon: <FileExcelFilled />,
+    color: '#22b35e',
+    ext: ['xlsx', 'xls'],
+  },
+  {
+    icon: <FileImageFilled />,
+    color: DEFAULT_ICON_COLOR,
+    ext: IMG_EXTS,
+  },
+  {
+    icon: <FileMarkdownFilled />,
+    color: DEFAULT_ICON_COLOR,
+    ext: ['md', 'mdx'],
+  },
+  {
+    icon: <FilePdfFilled />,
+    color: '#ff4d4f',
+    ext: ['pdf'],
+  },
+  {
+    icon: <FilePptFilled />,
+    color: '#ff6e31',
+    ext: ['ppt', 'pptx'],
+  },
+  {
+    icon: <FileWordFilled />,
+    color: '#1677ff',
+    ext: ['doc', 'docx'],
+  },
+  {
+    icon: <FileZipFilled />,
+    color: '#fab714',
+    ext: ['zip', 'rar', '7z', 'tar', 'gz'],
+  },
+  {
+    icon: <VideoIcon />,
+    color: '#ff4d4f',
+    ext: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'],
+  },
+  {
+    icon: <AudioIcon />,
+    color: '#8c8c8c',
+    ext: ['mp3', 'wav', 'flac', 'ape', 'aac', 'ogg'],
+  },
+];
 
 function matchExt(suffix: string, ext: string[]) {
   return ext.some((e) => suffix.toLowerCase() === `.${e}`);
@@ -89,7 +85,7 @@ function getSize(size: number) {
   return `${retSize.toFixed(0)} ${units[unitIndex]}`;
 }
 
-const { prefixCls: customizePrefixCls, item, onRemove, className, style, imageProps } = defineProps<FileListCardProps>();
+const { prefixCls: customizePrefixCls, item, onRemove, className, style, imageProps, fileIcons } = defineProps<FileListCardProps>();
 
 const context = useAttachmentContextInject();
 const disabled = computed(() => context.value.disabled);
@@ -143,7 +139,8 @@ const desc = computed(() => {
 
 // ============================== Icon ==============================
 const iconState = computed(() => {
-  for (const { ext, icon, color } of PRESET_FILE_ICONS) {
+  const iconOptions = fileIcons || PRESET_FILE_ICONS;
+  for (const { ext, icon, color } of iconOptions) {
     if (matchExt(nameState.value.nameSuffix, ext)) {
       return {
         icon,
