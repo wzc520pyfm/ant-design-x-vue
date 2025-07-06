@@ -1,6 +1,7 @@
 <script setup lang="tsx">
-import { computed, useTemplateRef } from 'vue';
+import { computed } from 'vue';
 import type { SilentUploaderProps } from './interface';
+import { useTemplateRef } from '../_util/hooks/useTemplateRefPolyfill'
 import { Upload } from 'ant-design-vue';
 
 defineOptions({ name: 'AXAttachmentsSilentUploader' });

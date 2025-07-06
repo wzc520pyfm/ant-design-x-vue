@@ -1,5 +1,5 @@
 import useState from '../../_util/hooks/use-state';
-import { computed, onWatcherCleanup, unref, watch } from 'vue';
+import { computed, unref, watch } from 'vue';
 import type { Ref, VNode } from 'vue'
 
 function isString(str: any): str is string {
@@ -33,14 +33,14 @@ const useTypedEffect = (
   });
 
   // Start typing
-  watch([typingIndex, typingEnabled, content], () => {
+  watch([typingIndex, typingEnabled, content], (_, __, onCleanup) => {
     if (mergedTypingEnabled.value && isString(content.value) && unref(typingIndex) < content.value.length) {
       const id = setTimeout(() => {
         setTypingIndex(unref(typingIndex) + typingStep.value);
       }, typingInterval.value);
 
-      onWatcherCleanup(() => {
-        clearTimeout(id);
+      onCleanup(() => {
+        clearTimeout(id); 
       });
     }
   }, { immediate: true });

@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
 import { CloseCircleFilled, FileExcelFilled, FileImageFilled, FileMarkdownFilled, FilePdfFilled, FilePptFilled, FileTextFilled, FileWordFilled, FileZipFilled } from '@ant-design/icons-vue';
-import { computed, onWatcherCleanup, useTemplateRef, watch, type VNode } from 'vue';
+import { computed, watch, type VNode } from 'vue';
 import AudioIcon from './AudioIcon.vue';
 import VideoIcon from './VideoIcon.vue';
 import type { FileListCardProps } from '../interface';
@@ -10,6 +10,7 @@ import { useXProviderContext } from '../../x-provider';
 import { previewImage } from '../util';
 import useStyle from '../style';
 import useState from '../../_util/hooks/use-state';
+import { useTemplateRef } from '../../_util/hooks/useTemplateRefPolyfill'
 import { Progress, Image } from 'ant-design-vue';
 
 defineOptions({ name: 'AXAttachmentsFileListCard' });
@@ -161,7 +162,7 @@ const iconState = computed(() => {
 // ========================== ImagePreview ==========================
 const [previewImg, setPreviewImg] = useState<string>();
 
-watch(() => item.originFileObj, () => {
+watch(() => item.originFileObj, (_, __, onCleanup) => {
   if (item.originFileObj) {
     let synced = true;
     previewImage(item.originFileObj).then((url) => {
@@ -170,8 +171,8 @@ watch(() => item.originFileObj, () => {
       }
     });
 
-    onWatcherCleanup(() => {
-      synced = false;
+    onCleanup(() => {
+      synced = false; 
     });
   }
   setPreviewImg(undefined);
