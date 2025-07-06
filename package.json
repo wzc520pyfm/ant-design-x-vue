@@ -56,6 +56,7 @@
   "module": "./es/index.mjs",
   "unpkg": "./dist/index.umd.js",
   "types": "./typings/index.d.ts",
+  "sideEffects": false,
   "files": [
     "es",
     "lib",
