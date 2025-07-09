@@ -1,12 +1,13 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, useId } from 'vue';
+import { computed } from 'vue';
 import pickAttrs from '../_util/pick-attrs';
 import type { ThoughtChainNodeProps } from './interface';
 import { useThoughtChainNodeContextInject } from './context';
 import { Avatar, Typography, Tooltip, type TooltipProps } from 'ant-design-vue';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { TransitionCollapse } from '../transition-collapse';
+import useId from '../_util/hooks/useId'
 
 defineOptions({ name: 'AXThoughtChainNode' });
 
