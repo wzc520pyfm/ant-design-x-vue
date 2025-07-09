@@ -1,11 +1,19 @@
+import type { App } from 'vue';
 import AttachmentsComponent from './Attachments.vue';
 import { FileListCard } from './FileList';
+
+export type { Attachment, AttachmentsProps } from './interface';
 
 const Attachments = Object.assign(AttachmentsComponent, {
   FileCard: FileListCard,
 });
 
-export type { Attachment, AttachmentsProps } from './interface';
+// @ts-ignore
+Attachments.install = function(app: App) {
+  app.component(Attachments.name, Attachments);
+  app.component(FileListCard.name, FileListCard);
+  return app;
+}
 
 export default Attachments;
 

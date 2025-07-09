@@ -50,7 +50,11 @@ $ bun add ant-design-x-vue
 
 在浏览器中使用 `script` 和 `link` 标签直接引入文件，并使用全局变量 `antdx`。
 
-<span style="display: flex;gap: 4px;align-items: center;">你可以通过 [![](https://data.jsdelivr.com/v1/package/npm/ant-design-x-vue/badge)](https://www.jsdelivr.com/package/npm/ant-design-x-vue) 进行下载。</span>
+<span style="display: flex;gap: 4px;align-items: center;">你可以通过 [![](https://data.jsdelivr.com/v1/package/npm/ant-design-x-vue/badge)](https://www.jsdelivr.com/package/npm/ant-design-x-vue) 或[UNPKG](https://unpkg.com/ant-design-x-vue/dist/)进行下载。</span>
+
+无任何构建的原始 HTML 在线示例：[CodePen 示例 >](https://codepen.io/wzc520pyfm/pen/vEOVQLa)
+
+现代浏览器大多已原生支持 ES 模块，还可以启用 [导入映射表 (Import Maps)](https://caniuse.com/import-maps)：[CodePen 示例 >](https://codepen.io/wzc520pyfm/pen/gbpBQLq)
 
 ### 自动导入
 

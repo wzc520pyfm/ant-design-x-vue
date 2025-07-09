@@ -245,7 +245,17 @@ const onContentMouseDown: MouseEventHandler = (e) => {
 const actionNode = computed(() => {
   let _actionNode: VNode | false = (
     <Flex class={`${actionListCls.value}-presets`}>
-      {allowSpeech && <SpeechButton />}
+      {allowSpeech && (
+        <SpeechButton
+          {...(typeof allowSpeech === 'object' ? 
+            { 
+              audioIcon: allowSpeech.audioIcon, 
+              audioDisabledIcon: allowSpeech.audioDisabledIcon, 
+              audioRecordingIcon: allowSpeech.audioRecordingIcon 
+            } : {}
+          )}
+        />
+      )}
       {/* Loading or Send */}
       {loading ? <LoadingButton /> : <SendButton />}
     </Flex>

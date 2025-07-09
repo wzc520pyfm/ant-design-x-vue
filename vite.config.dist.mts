@@ -4,7 +4,7 @@ import VueMacros from 'unplugin-vue-macros/vite'
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 
-const externals = ['vue', 'ant-design-vue'];
+const externals = ['vue'];
 
 export default defineConfig({
   plugins: [
@@ -23,26 +23,35 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'antdx',
-      formats: ['umd'],
+      formats: ['es', 'umd'],
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: [...externals, /^ant-design-vue/],
+      external: [...externals],
       output: [
         {
           format: 'umd',
           dir: 'dist',
           inlineDynamicImports: true,
+          exports: 'named',
           name: 'antdx',
           entryFileNames: '[name].umd.js',
-          globals: { vue: 'Vue', 'ant-design-vue': 'antd' },
+          globals: { vue: 'Vue' },
+        },
+        {
+          format: 'es',
+          dir: 'dist',
+          inlineDynamicImports: true,
+          exports: 'named',
+          entryFileNames: '[name].esm.js',
+          globals: { vue: 'Vue' },
         },
       ],
     },
     outDir: 'dist',
   },
   resolve: {
-    dedupe: ['vue', 'ant-design-vue'],
+    dedupe: ['vue'],
   },
   optimizeDeps: {
     include: [...externals],

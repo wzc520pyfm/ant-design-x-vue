@@ -87,7 +87,7 @@ async function request() {
               status === 'error' &&
               agent.config.baseURL === BASE_URL + PATH &&
               'Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.',
-            content: h(Descriptions, { column: 1 }, [
+            content: h(Descriptions, { column: 1 }, () => [
               h(
                 Descriptions.Item,
                 {

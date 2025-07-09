@@ -1,10 +1,8 @@
 import type { ButtonProps, TextAreaProps } from "ant-design-vue";
 import { Input } from "ant-design-vue";
-import type { ChangeEvent, ClipboardEventHandler, KeyboardEventHandler } from "ant-design-vue/es/_util/EventInterface";
 import type { ConfigProviderProps } from "ant-design-vue";
 import type { CSSProperties, VNode } from "vue";
 import type { AllowSpeech } from "./useSpeech";
-import type { InputRef } from "ant-design-vue/es/vc-input/inputProps";
 import type { AvoidValidation } from '../type-utility';
 import SendButton from "./components/SendButton.vue";
 import ClearButton from "./components/ClearButton.vue";
@@ -12,6 +10,16 @@ import LoadingButton from "./components/LoadingButton.vue";
 import SpeechButton from "./components/SpeechButton/index.vue";
 
 export type SubmitType = 'enter' | 'shiftEnter' | false;
+
+export type KeyboardEventHandler = (e: KeyboardEvent) => void;
+
+export type ClipboardEventHandler = (e: ClipboardEvent) => void;
+
+export type ChangeEvent = Event & {
+  target: {
+    value?: string | undefined;
+  };
+}
 
 export interface SenderComponents {
   input?: typeof Input.TextArea;
@@ -80,9 +88,14 @@ export interface SenderProps {
   autoSize?: AvoidValidation<boolean | { minRows?: number; maxRows?: number }>;
 }
 
+export interface InputFocusOptions extends FocusOptions {
+  cursor?: 'start' | 'end' | 'all';
+}
 export type SenderRef = {
   nativeElement: HTMLDivElement;
-} & Pick<InputRef, 'focus' | 'blur'>;
+  focus: (options?: InputFocusOptions) => void;
+  blur: () => void;
+};
 
 export interface SenderHeaderContextProps {
   prefixCls?: ConfigProviderProps['prefixCls'];
@@ -105,6 +118,9 @@ export interface SenderHeaderProps {
 
 export interface RecordingIconProps {
   className?: string;
+  audioIcon?: ButtonProps['icon'];
+  audioDisabledIcon?: ButtonProps['icon'];
+  audioRecordingIcon?: ButtonProps['icon'];
 }
 
 export interface ActionButtonContextProps {
@@ -139,6 +155,9 @@ export interface AntdButtonProps {
   title?: ButtonProps['title'];
   onClick?: ButtonProps['onClick'];
   onMousedown?: ButtonProps['onMousedown'];
+  audioIcon?: ButtonProps['icon'] | VNode;
+  audioDisabledIcon?: ButtonProps['icon'] | VNode
+  audioRecordingIcon?: ButtonProps['icon'] | VNode;
 }
 
 export interface ActionButtonProps extends AntdButtonProps {
