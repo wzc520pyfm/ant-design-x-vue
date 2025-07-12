@@ -11,7 +11,7 @@
 
 ### 预设请求
 
-:::demo 我们将 XRequest 作为预设请求，仅需配置 `baseURL`、`model` 即可
+:::demo 我们将 XRequest 作为预设请求，仅需配置 `baseURL`、`model` 即可。
 
 use-x-agent/preset
 
@@ -71,17 +71,19 @@ type useXAgent<AgentMessage> = (
 
 #### RequestFn
 
+更多请查看 [XStreamOptions](/component/x-stream#xstreamoptions)。
+
 ```tsx | pure
-interface RequestFnInfo<Message> extends Partial<XAgentConfigPreset>, AnyObject {
+interface RequestFnInfo<Message> extends AnyObject {
   messages?: Message[];
   message?: Message;
-}
+};
 
-export type RequestFn<Message> = (
-  info: RequestFnInfo<Message>,
+export type RequestFn<Message, Input, Output> = (
+  info: RequestFnInfo<Message, Input>,
   callbacks: {
-    onUpdate: (message: Message) => void;
-    onSuccess: (message: Message) => void;
+    onUpdate: (chunk: Output) => void;
+    onSuccess: (chunks: Output[]) => void;
     onError: (error: Error) => void;
     onStream?: (abortController: AbortController) => void;
   },

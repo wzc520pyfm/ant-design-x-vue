@@ -202,12 +202,12 @@ const attachedFiles = ref<AttachmentsProps['items']>([]);
 const agentRequestLoading = ref(false);
 
 // ==================== Runtime ====================
-const [ agent ] = useXAgent({
+const [ agent ] = useXAgent<string, { message: string }, string>({
   request: async ({ message }, { onSuccess }) => {
     agentRequestLoading.value = true;
     await sleep();
     agentRequestLoading.value = false;
-    onSuccess(`Mock success return. You said: ${message}`);
+    onSuccess([`Mock success return. You said: ${message}`]);
   },
 });
 

@@ -32,17 +32,15 @@ const setContent = (v: string) => {
 }
 
 // Agent for request
-const [agent] = useXAgent({
+const [agent] = useXAgent<string, { message: string }, string>({
   request: async ({ message }, { onSuccess, onError }) => {
     senderLoading.value = true;
     await sleep();
-
     senderLoading.value = false;
-
     mockSuccess.value = !mockSuccess.value;
 
     if (mockSuccess.value) {
-      onSuccess(`Mock success return. You said: ${message}`);
+      onSuccess([`Mock success return. You said: ${message}`]);
     }
 
     onError(new Error('Mock request failed'));
