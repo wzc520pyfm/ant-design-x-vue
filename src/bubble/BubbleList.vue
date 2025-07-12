@@ -144,25 +144,25 @@ defineRender(() => {
         ref={listRef}
         onScroll={onInternalScroll}
       >
-        {unref(displayData).map(({ key, onTypingComplete: onTypingCompleteBubble, ...bubble }) => (
-          <Bubble
-            {...bubble}
-            key={key}
-            // 用于更新滚动的ref
-            ref={(node) => {
-              if (node) {
-                bubbleRefs.value[key] = node;
-              } else {
-                delete bubbleRefs.value[key];
-              }
-            }}
-            typing={initialized.value ? bubble.typing : false}
-            onTypingComplete={() => {
-              onTypingCompleteBubble?.();
-              onTypingComplete(key);
-            }}
-          />
-        ))}
+        <Bubble
+          v-for={({ key, onTypingComplete: onTypingCompleteBubble, ...bubble }) in unref(displayData)}
+          {...bubble}
+          key={key}
+          v-memo={[key]}
+          // 用于更新滚动的ref
+          ref={(node) => {
+            if (node) {
+              bubbleRefs.value[key] = node;
+            } else {
+              delete bubbleRefs.value[key];
+            }
+          }}
+          typing={initialized.value ? bubble.typing : false}
+          onTypingComplete={() => {
+            onTypingCompleteBubble?.();
+            onTypingComplete(key);
+          }}
+        />
       </div>
     </BubbleContextProvider>,
   )
