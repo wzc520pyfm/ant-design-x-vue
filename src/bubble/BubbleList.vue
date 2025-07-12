@@ -29,10 +29,10 @@ const {
   ...restProps
 } = defineProps<BubbleListProps>();
 
-const domProps = pickAttrs(mergeProps(restProps, attrs), {
+const domProps = computed(() => pickAttrs(mergeProps(restProps, attrs), {
   attr: true,
   aria: true,
-}) as HTMLAttributes;
+}) as HTMLAttributes);
 
 const items = ref<BubbleListProps['items']>(itemsProp);
 const roles = ref<AvoidValidation<RolesType>>(rolesProp);
@@ -137,7 +137,7 @@ defineRender(() => {
   return wrapCSSVar(
     <BubbleContextProvider value={context.value}>
       <div
-        {...domProps}
+        {...domProps.value}
         class={classnames(listPrefixCls, rootClassName, hashId.value, cssVarCls, {
           [`${listPrefixCls}-reach-end`]: scrollReachEnd.value,
         })}
