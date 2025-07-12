@@ -28,7 +28,7 @@ const lines = ref<Record<string, string>[]>([]);
 async function request() {
   status.value = 'pending';
 
-  await exampleRequest.create(
+  await exampleRequest.value.create(
     {
       messages: [{ role: 'user', content: 'hello, who are u?' }],
       stream: true,
