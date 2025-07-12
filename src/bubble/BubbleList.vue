@@ -162,30 +162,30 @@ defineRender(() => {
         ref={listRef}
         onScroll={onInternalScroll}
       >
-        {unref(displayData).map(({ key, onTypingComplete: onTypingCompleteBubble, ...bubble }) => (
-          <Bubble
-            {...bubble}
-            avatar={slots.avatar ? () => slots.avatar?.({ item: { key, ...bubble } }) : bubble.avatar}
-            header={slots.header?.({ item: { key, ...bubble } }) ?? bubble.header}
-            footer={slots.footer?.({ item: { key, ...bubble } }) ?? bubble.footer}
-            loadingRender={slots.loading ? () => slots.loading({ item: { key, ...bubble } }) : bubble.loadingRender}
-            content={slots.message?.({ item: { key, ...bubble } }) ?? bubble.content}
-            key={key}
-            // 用于更新滚动的ref
-            ref={(node) => {
-              if (node) {
-                bubbleRefs.value[key] = node;
-              } else {
-                delete bubbleRefs.value[key];
-              }
-            }}
-            typing={initialized.value ? bubble.typing : false}
-            onTypingComplete={() => {
-              onTypingCompleteBubble?.();
-              onTypingComplete(key);
-            }}
-          />
-        ))}
+        <Bubble
+          v-for={({ key, onTypingComplete: onTypingCompleteBubble, ...bubble }) in unref(displayData)}
+          {...bubble}
+          avatar={slots.avatar ? () => slots.avatar?.({ item: { key, ...bubble } }) : bubble.avatar}
+          header={slots.header?.({ item: { key, ...bubble } }) ?? bubble.header}
+          footer={slots.footer?.({ item: { key, ...bubble } }) ?? bubble.footer}
+          loadingRender={slots.loading ? () => slots.loading({ item: { key, ...bubble } }) : bubble.loadingRender}
+          content={slots.message?.({ item: { key, ...bubble } }) ?? bubble.content}
+          key={key}
+          v-memo={[key]}
+          // 用于更新滚动的ref
+          ref={(node) => {
+            if (node) {
+              bubbleRefs.value[key] = node;
+            } else {
+              delete bubbleRefs.value[key];
+            }
+          }}
+          typing={initialized.value ? bubble.typing : false}
+          onTypingComplete={() => {
+            onTypingCompleteBubble?.();
+            onTypingComplete(key);
+          }}
+        />
       </div>
     </BubbleContextProvider>,
   )
