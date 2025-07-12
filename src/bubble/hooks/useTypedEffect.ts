@@ -30,7 +30,7 @@ const useTypedEffect = (
     } else if (isString(content.value) && isString(prevContentValue) && content.value.indexOf(prevContentValue) !== 0) {
       setTypingIndex(1);
     }
-  });
+  }, { immediate: true });
 
   // Start typing
   watch([typingIndex, typingEnabled, content], () => {
