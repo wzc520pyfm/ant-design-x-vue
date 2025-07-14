@@ -14,8 +14,8 @@ export interface WelcomeProps {
   styles?: Partial<Record<SemanticType, CSSProperties>>;
 
   // Layout
-  icon?: VNode | string;
-  title?: VNode | string;
-  description?: VNode | string;
-  extra?: VNode;
+  icon?: VNode | string | (() => VNode | string);
+  title?: VNode | string | (() => VNode | string);
+  description?: VNode | string | (() => VNode | string);
+  extra?: VNode | string | (() => VNode | string);
 }

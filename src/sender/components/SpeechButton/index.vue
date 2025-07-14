@@ -4,29 +4,36 @@ import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons-vue';
 import type { AntdButtonProps } from '../../interface';
 import ActionButton from '../ActionButton/index.vue';
 import { useActionButtonContextInject } from '../ActionButton/context';
-
 import RecordingIcon from './RecordingIcon.vue';
 import { computed } from 'vue';
 
 defineOptions({ name: 'AXSenderSpeechButton' });
 
-const { type = 'text', disabled = undefined, ...restProps} = defineProps<AntdButtonProps>();
+const { type = 'text',
+  disabled = undefined,
+  audioIcon = (<AudioOutlined />),
+  audioDisabledIcon = (<AudioMutedOutlined />),
+  audioRecordingIcon = undefined,
+  ...restProps
+} = defineProps<AntdButtonProps>();
 
 const context = useActionButtonContextInject();
+
 const { token } = theme.useToken();
 
 const speechRecording = computed(() => context.value.speechRecording);
+
 const prefixCls = computed(() => context.value.prefixCls);
 
 const icon = computed(() => {
 
   let myIcon;
   if (speechRecording.value) {
-    myIcon = <RecordingIcon className={`${prefixCls.value}-recording-icon`} />;
+    myIcon = audioRecordingIcon ? (audioRecordingIcon) : (<RecordingIcon className={`${prefixCls.value}-recording-icon`} />)
   } else if (context.value.onSpeechDisabled) {
-    myIcon = <AudioMutedOutlined />;
+    myIcon = audioDisabledIcon
   } else {
-    myIcon = <AudioOutlined />;
+    myIcon = audioIcon
   }
   return myIcon
 })

@@ -1,6 +1,32 @@
 # Changelog
 
 
+## v1.2.8
+
+[compare changes](https://undefined/undefined/compare/v1.2.7...v1.2.8)
+
+### 🚀 Enhancements
+
+- **welcome:** Support vnode getter (#343)
+- **sender:** Add speech custom icon support (#374)
+- Support conf compatible style (#383)
+
+### 🩹 Fixes
+
+- **suggestion:** Fix the dropdown width not adapting when block (#358)
+
+### 📖 Documentation
+
+- **dev:** Add cdn online demo (#369)
+- Fix slot warning of setup demo (#372)
+- **xstream:** Fix documentation typos (#377)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Kieran Wang ([@kieranwv](http://github.com/kieranwv))
+- XiangYu Liu ([@PeikyLiu](http://github.com/PeikyLiu))
+
 ## v1.2.7
 
 [compare changes](https://undefined/undefined/compare/v1.2.6...v1.2.7)

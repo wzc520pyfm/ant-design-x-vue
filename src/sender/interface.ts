@@ -17,7 +17,7 @@ export type ClipboardEventHandler = (e: ClipboardEvent) => void;
 
 export type ChangeEvent = Event & {
   target: {
-      value?: string | undefined;
+    value?: string | undefined;
   };
 }
 
@@ -118,6 +118,9 @@ export interface SenderHeaderProps {
 
 export interface RecordingIconProps {
   className?: string;
+  audioIcon?: ButtonProps['icon'];
+  audioDisabledIcon?: ButtonProps['icon'];
+  audioRecordingIcon?: ButtonProps['icon'];
 }
 
 export interface ActionButtonContextProps {
@@ -152,6 +155,9 @@ export interface AntdButtonProps {
   title?: ButtonProps['title'];
   onClick?: ButtonProps['onClick'];
   onMousedown?: ButtonProps['onMousedown'];
+  audioIcon?: ButtonProps['icon'] | VNode;
+  audioDisabledIcon?: ButtonProps['icon'] | VNode
+  audioRecordingIcon?: ButtonProps['icon'] | VNode;
 }
 
 export interface ActionButtonProps extends AntdButtonProps {
