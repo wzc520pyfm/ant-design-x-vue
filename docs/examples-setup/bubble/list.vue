@@ -95,7 +95,7 @@ const handleChange = (checked: SwitchProps['checked']) => {
 
     <BubbleList
       ref="listRef"
-      :style="{ maxHeight: '300px' }"
+      :style="{ maxHeight: '300px', paddingInline: '16px' }"
       :roles="useRolesAsFunction ? rolesAsFunction : rolesAsObject"
       :items="
         Array.from({ length: count }).map((_, i) => {
