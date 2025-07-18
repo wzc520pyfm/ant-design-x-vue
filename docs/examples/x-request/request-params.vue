@@ -23,7 +23,7 @@ const lines = ref<Record<string, string>[]>([]);
 async function request() {
   status.value = 'pending';
 
-  await exampleRequest.create<RequestParams>(
+  await exampleRequest.value.create<RequestParams>(
     {
       query: 'Search for the latest technology news',
       agentId: 111,
@@ -59,7 +59,7 @@ defineRender(() => {
             icon: status.value === 'pending' ? <LoadingOutlined /> : <TagsOutlined />,
             description:
               status.value === 'error' &&
-              exampleRequest.baseURL === BASE_URL &&
+              exampleRequest.value.baseURL === BASE_URL &&
               'Please replace the BASE_URL, RequestParams with your own values.',
             content: (
               <Descriptions column={1}>

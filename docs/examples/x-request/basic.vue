@@ -28,7 +28,7 @@ const lines = ref<Record<string, string>[]>([]);
 async function request() {
   status.value = 'pending';
 
-  await exampleRequest.create(
+  await exampleRequest.value.create(
     {
       messages: [{ role: 'user', content: 'hello, who are u?' }],
       stream: true,
@@ -66,7 +66,7 @@ defineRender(() => {
             icon: status.value === 'pending' ? <LoadingOutlined /> : <TagsOutlined />,
             description:
               status.value === 'error' &&
-              exampleRequest.baseURL === BASE_URL + PATH &&
+              exampleRequest.value.baseURL === BASE_URL + PATH &&
               'Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.',
             content: (
               <Descriptions column={1}>
