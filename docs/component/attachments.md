@@ -61,6 +61,18 @@ attachments/files
 
 </ClientOnly>
 
+### 自定义文件卡片
+
+<ClientOnly>
+
+:::demo 自定义文件卡片的图标、图标颜色、文件范围。
+
+attachments/files-custom
+
+:::
+
+</ClientOnly>
+
 ## API
 
 <!-- 通用属性参考：[通用属性](/docs/react/common-props)。 -->
@@ -69,18 +81,18 @@ attachments/files
 
 继承 antdv [Upload](https://www.antdv.com/components/upload-cn) 属性。
 
-| 属性 | 说明 | 类型 | 默认值 | 版本 |
-| --- | --- | --- | --- | --- |
-| classNames | 自定义样式类名，[见下](#semantic-dom) | Record<string, string> | - | - |
-| disabled | 是否禁用 | boolean | false | - |
-| getDropContainer | 设置拖拽时，可以释放文件的区域 | () => HTMLElement | - | - |
-| items | 附件列表，同 Upload `fileList` | Attachment[] | - | - |
-| overflow | 文件列表超出时样式 | 'wrap' \| 'scrollX' \| 'scrollY' | - | - |
-| placeholder | 没有文件时的占位信息 | PlaceholderType \| ((type: 'inline' \| 'drop') => PlaceholderType) | - | - |
-| rootClassName | 根节点的样式类名 | string | - | - |
-| rootStyle | 根节点的样式对象 | CSSProperties | - | - |
-| styles | 自定义样式对象，[见下](#semantic-dom) | Record<string, CSSProperties> | - | - |
-| imageProps | 图片属性，同 antdv [Image](https://www.antdv.com/components/image-cn) 属性 | ImageProps | - | - |
+| 属性             | 说明                                                                       | 类型                                                               | 默认值 | 版本 |
+| ---------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------ | ------ | ---- |
+| classNames       | 自定义样式类名，[见下](#semantic-dom)                                      | Record<string, string>                                             | -      | -    |
+| disabled         | 是否禁用                                                                   | boolean                                                            | false  | -    |
+| getDropContainer | 设置拖拽时，可以释放文件的区域                                             | () => HTMLElement                                                  | -      | -    |
+| items            | 附件列表，同 Upload `fileList`                                             | Attachment[]                                                       | -      | -    |
+| overflow         | 文件列表超出时样式                                                         | 'wrap' \| 'scrollX' \| 'scrollY'                                   | -      | -    |
+| placeholder      | 没有文件时的占位信息                                                       | PlaceholderType \| ((type: 'inline' \| 'drop') => PlaceholderType) | -      | -    |
+| rootClassName    | 根节点的样式类名                                                           | string                                                             | -      | -    |
+| rootStyle        | 根节点的样式对象                                                           | CSSProperties                                                      | -      | -    |
+| styles           | 自定义样式对象，[见下](#semantic-dom)                                      | Record<string, CSSProperties>                                      | -      | -    |
+| imageProps       | 图片属性，同 antdv [Image](https://www.antdv.com/components/image-cn) 属性 | ImageProps                                                         | -      | -    |
 
 ```tsx | pure
 interface PlaceholderType {
@@ -92,8 +104,8 @@ interface PlaceholderType {
 
 ### Attachments Slots
 
-| 插槽名 | 说明 | 类型 |
-| --- | --- | --- |
+| 插槽名      | 说明                 | 类型                           |
+| ----------- | -------------------- | ------------------------------ |
 | placeholder | 没有文件时的占位信息 | \{ type: "inline" \| "drop" \} |
 
 ### Attachments Expose
@@ -105,10 +117,65 @@ interface PlaceholderType {
 
 ### Attachments.FileCard Props
 
-| 属性 | 说明 | 类型 | 默认值 | 版本 |
-| --- | --- | --- | --- | --- |
-| item | 附件，同 Upload `UploadFile` | Attachment | - | - |
-| onRemove | 点击移除文件时的回调，返回值为 false 时不移除。支持返回一个 Promise 对象，Promise 对象 resolve(false) 或 reject 时不移除 | (item: Attachment) => boolean \| Promise | - | - |
+| 属性      | 说明                                                                                                                     | 类型                                             | 默认值 | 版本 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | ------ | ---- |
+| item      | 附件，同 Upload `UploadFile`                                                                                             | Attachment                                       | -      | -    |
+| onRemove  | 点击移除文件时的回调，返回值为 false 时不移除。支持返回一个 Promise 对象，Promise 对象 resolve(false) 或 reject 时不移除 | (item: Attachment) => boolean \| Promise         | -      | -    |
+| fileIcons | 自定义文件卡片的图标、图标颜色、文件范围。                                                                               | { ext: string[]; color: string; icon: VNode; }[] | `PRESET_FILE_ICONS`      | -    |
+
+::: details 点我查看 `PRESET_FILE_ICONS`
+```ts
+import { FileExcelFilled, FileImageFilled, FileMarkdownFilled, FilePdfFilled, FilePptFilled, FileTextFilled, FileWordFilled, FileZipFilled } from '@ant-design/icons-vue';
+
+const PRESET_FILE_ICONS = [
+  {
+    icon: <FileExcelFilled />,
+    color: '#22b35e',
+    ext: ['xlsx', 'xls'],
+  },
+  {
+    icon: <FileImageFilled />,
+    color: DEFAULT_ICON_COLOR,
+    ext: IMG_EXTS,
+  },
+  {
+    icon: <FileMarkdownFilled />,
+    color: DEFAULT_ICON_COLOR,
+    ext: ['md', 'mdx'],
+  },
+  {
+    icon: <FilePdfFilled />,
+    color: '#ff4d4f',
+    ext: ['pdf'],
+  },
+  {
+    icon: <FilePptFilled />,
+    color: '#ff6e31',
+    ext: ['ppt', 'pptx'],
+  },
+  {
+    icon: <FileWordFilled />,
+    color: '#1677ff',
+    ext: ['doc', 'docx'],
+  },
+  {
+    icon: <FileZipFilled />,
+    color: '#fab714',
+    ext: ['zip', 'rar', '7z', 'tar', 'gz'],
+  },
+  {
+    icon: <VideoIcon />,
+    color: '#ff4d4f',
+    ext: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'],
+  },
+  {
+    icon: <AudioIcon />,
+    color: '#8c8c8c',
+    ext: ['mp3', 'wav', 'flac', 'ape', 'aac', 'ogg'],
+  },
+];
+```
+:::
 
 ## Semantic DOM
 
