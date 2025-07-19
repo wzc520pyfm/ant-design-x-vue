@@ -4,7 +4,7 @@ import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import useTypedEffect from './hooks/useTypedEffect';
 import useTypingConfig from './hooks/useTypingConfig';
-import type { BubbleContentType, BubbleProps } from './interface';
+import type { BubbleContentType, BubbleProps, SlotInfoType } from './interface';
 import Loading from './loading.vue';
 import useStyle from './style';
 import { useBubbleContextInject } from './context';
@@ -32,20 +32,23 @@ const {
   onTypingComplete,
   header,
   footer,
+  _key,
   ...otherHtmlProps
 } = defineProps<BubbleProps<T>>();
 
 const slots = defineSlots<{
   avatar?(): VNode;
   header?(props: {
-    content: BubbleContentType;
+    content: T;
+    info: SlotInfoType;
   }): VNode | string;
   footer?(props: {
-    content: BubbleContentType;
+    content: T;
+    info: SlotInfoType;
   }): VNode | string;
   loading?(): VNode;
   message?(props: {
-    content: BubbleContentType;
+    content: T;
   }): VNode | string;
 }>();
 
@@ -174,14 +177,14 @@ const fullContent = computed<VNode>(() => {
     </div>
   );
   const _header = slots.header
-    ? slots.header({ content: typedContent.value })
+    ? slots.header({ content: typedContent.value as T, info: { key: _key } })
     : typeof header === 'function'
-      ? header(typedContent.value)
+      ? header(typedContent.value as T, { key: _key })
       : header;
   const _footer = slots.footer
-    ? slots.footer({ content: typedContent.value })
+    ? slots.footer({ content: typedContent.value as T, info: { key: _key } })
     : typeof footer === 'function'
-      ? footer(typedContent.value)
+      ? footer(typedContent.value as T, { key: _key })
       : footer;
 
   if (_header || _footer) {
