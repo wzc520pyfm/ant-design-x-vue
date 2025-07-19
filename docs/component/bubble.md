@@ -53,7 +53,15 @@ bubble/typing
 
 :::
 
-### 自定义渲染
+### 自定义渲染内容
+
+:::demo 自定义渲染内容。
+
+bubble/custom-content
+
+:::
+
+### 渲染markdown内容
 
 :::demo 配合 `markdown-it` 实现自定义渲染内容。
 
@@ -140,9 +148,9 @@ bubble/gpt-vis
 | --- | --- | --- | --- | --- |
 | avatar | 展示头像 | VNode | - |  |
 | classNames | 语义化结构 class | [Record<SemanticDOM, string>](#semantic-dom) | - |  |
-| content | 聊天内容 | [BubbleContentType](https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/src/bubble/interface.ts#L23) | - |  |
-| footer | 底部内容 | VNode \| (content: [BubbleContentType](https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/src/bubble/interface.ts#L23)) => VNode | - |  |
-| header | 头部内容 | VNode \| (content: [BubbleContentType](https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/src/bubble/interface.ts#L23)) => VNode | - |  |
+| content | 聊天内容 | ContentType | - |  |
+| footer | 底部内容 | VNode \| (content: ContentType, info: { key?: string \| number }) => VNode | - |  |
+| header | 头部内容 | VNode \| (content: content: ContentType, info: { key?: string \| number }) => VNode | - |  |
 | loading | 聊天内容加载状态 | boolean | - |  |
 | placement | 信息位置 | `start` \| `end` | `start` |  |
 | shape | 气泡形状 | `round` \| `corner` | - |  |
@@ -150,7 +158,7 @@ bubble/gpt-vis
 | typing | 设置聊天内容打字动画 | boolean \| \{ step?: number, interval?: number \} | false |  |
 | variant | 气泡样式变体 | `filled` \| `borderless` \| `outlined` \| `shadow` | `filled` |  |
 | loadingRender | 自定义渲染加载态内容 | () => VNode | - |  |
-| messageRender | 自定义渲染内容 | <ContentType extends [BubbleContentType](https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/src/bubble/interface.ts#L23) = string>(content?: ContentType) => VNode | - |  |
+| messageRender | 自定义渲染内容 | (content?: ContentType) => VNode | - |  |
 | onTypingComplete | 打字效果完成时的回调，如果没有设置 typing 将在渲染时立刻触发 | () => void | - |  |
 
 ### Bubble Slots
@@ -158,10 +166,31 @@ bubble/gpt-vis
 | 插槽名 | 说明 | 类型 |
 | --- | --- | --- |
 | avatar | 头像 | - |
-| header | 头部面板 | \{ content: [BubbleContentType](https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/src/bubble/interface.ts#L23) \} |
-| footer | 底部内容 | \{ content: [BubbleContentType](https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/src/bubble/interface.ts#L23) \} |
+| header | 头部面板 | \{ content: ContentType, info: \{ key?: string \| number \} \} |
+| footer | 底部内容 | \{ content: ContentType, info: \{ key?: string \| number \} \} |
 | loading | loading占位 | - |
-| message | 消息内容 | \{ content: [BubbleContentType](https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/src/bubble/interface.ts#L23) \} |
+| message | 消息内容 | \{ content: ContentType \} |
+
+#### ContentType
+
+默认类型
+
+```typescript
+type ContentType = Vue.VNode | AnyObject | string | number;
+```
+
+自定义类型使用
+
+```tsx
+type CustomContentType {
+  ...
+}
+
+<Bubble<CustomContentType> {...props} />
+// or
+const MyBubble = Bubble<CustomContentType>;
+<MyBubble v-bind="props" />
+```
 
 ### Bubble.List
 
