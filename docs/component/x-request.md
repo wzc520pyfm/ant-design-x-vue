@@ -74,7 +74,7 @@ type XRequestFunction<Input = Record<PropertyKey, any>, Output = Record<string, 
 
 | 属性 | 描述 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| onSuccess | 成功时的回调。 | `(messages: Output[]) => void` | - | - |
+| onSuccess | 成功时的回调。 | `(chunks: Output[]) => void` | - | - |
 | onError | 错误处理的回调。 | `(error: Error) => void` | - | - |
-| onUpdate | 消息更新的回调。 | `(message: Output) => void` | - | - |
+| onUpdate | 消息更新的回调。 | `(chunk: Output) => void` | - | - |
 | transformStream | 可选的转换函数，用于处理流数据 | `XStreamOptions<Output>['transformStream']` | - | - |
