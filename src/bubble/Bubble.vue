@@ -37,14 +37,14 @@ const {
 
 const slots = defineSlots<{
   avatar?(): VNode;
-  header?(props?: {
+  header?(props: {
     content: BubbleContentType;
   }): VNode | string;
-  footer?(props?: {
+  footer?(props: {
     content: BubbleContentType;
   }): VNode | string;
   loading?(): VNode;
-  message?(props?: {
+  message?(props: {
     content: BubbleContentType;
   }): VNode | string;
 }>();
@@ -116,12 +116,18 @@ const mergedCls = computed(() => [
   },
 ]);
 
+const isVNodeArray = (val: any) => Array.isArray(val) && val.every(isVNode);
+
 // ============================ Avatar ============================
 const avatarNode = computed(() => {
   if (slots.avatar) {
     return slots.avatar();
   }
-  return isVNode(avatar) ? avatar : <Avatar {...avatar} />;
+  return typeof avatar === 'function'
+    ? avatar()
+    : (isVNode(avatar) || isVNodeArray(avatar))
+      ? avatar
+      : <Avatar {...avatar} />;
 });
 
 // =========================== Content ============================

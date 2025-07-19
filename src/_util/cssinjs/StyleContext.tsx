@@ -7,11 +7,13 @@ import {
   watch,
   shallowRef,
   getCurrentInstance,
+  h,
 } from 'vue';
 import CacheEntity from './Cache';
 import type { Linter } from './linters/interface';
 import type { Transformer } from './transformers/interface';
 import { arrayType, booleanType, objectType, someType, stringType, withInstall } from '../type';
+import { StyleProvider as AntdStyleProvider } from 'ant-design-vue';
 export const ATTR_TOKEN = 'data-token-hash';
 export const ATTR_MARK = 'data-css-hash';
 export const ATTR_CACHE_PATH = 'data-cache-path';
@@ -179,12 +181,17 @@ export const styleProviderProps = () => ({
 export type StyleProviderProps = Partial<ExtractPropTypes<ReturnType<typeof styleProviderProps>>>;
 export const StyleProvider = withInstall(
   defineComponent({
-    name: 'AStyleProvider',
+    name: 'AXStyleProvider',
     inheritAttrs: false,
     props: styleProviderProps(),
     setup(props, { slots }) {
       useStyleProvider(props);
-      return () => slots.default?.();
+      return () => h(
+        AntdStyleProvider,
+        // @ts-ignore
+        props,
+        () => slots.default?.()
+      );
     },
   }),
 );

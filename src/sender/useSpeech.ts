@@ -1,3 +1,4 @@
+import { ButtonProps } from 'ant-design-vue';
 import useMergedState from '../_util/hooks/useMergedState';
 import { computed, ref, watchEffect, type MaybeRefOrGetter, toValue, onWatcherCleanup, type ComputedRef, type Ref } from 'vue';
 
@@ -10,7 +11,10 @@ if (!SpeechRecognition && typeof window !== 'undefined') {
 
 export type ControlledSpeechConfig = {
   recording?: boolean;
-  onRecordingChange: (recording: boolean) => void;
+  onRecordingChange?: (recording: boolean) => void;
+  audioIcon?: ButtonProps['icon'];
+  audioDisabledIcon?: ButtonProps['icon']
+  audioRecordingIcon?: ButtonProps['icon'];
 };
 
 export type AllowSpeech = boolean | ControlledSpeechConfig;

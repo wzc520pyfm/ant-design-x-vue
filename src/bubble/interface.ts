@@ -15,7 +15,7 @@ export interface TypingOption {
   /**
    * @default null
    */
-  suffix?: VNode;
+  suffix?: VNode | string;
 }
 
 export type SemanticType = 'avatar' | 'content' | 'header' | 'footer';
@@ -32,7 +32,7 @@ export interface BubbleProps<ContentType extends BubbleContentType = string> ext
   rootClassName?: string;
   styles?: Partial<Record<SemanticType, CSSProperties>>;
   classNames?: Partial<Record<SemanticType, string>>;
-  avatar?: Partial<_AvatarProps> | VNode;
+  avatar?: Partial<_AvatarProps> | VNode | (() => VNode);
   placement?: 'start' | 'end';
   loading?: boolean;
   typing?: AvoidValidation<TypingOption | boolean>;

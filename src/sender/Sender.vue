@@ -73,7 +73,7 @@ const emit = defineEmits<{
 const slots = defineSlots<{
   header?(): VNode;
   prefix?(): VNode;
-  actions?(props?: {
+  actions?(props: {
     ori: VNode,
     info: {
       components: {
@@ -84,7 +84,7 @@ const slots = defineSlots<{
       };
     }
   }): VNode;
-  footer?(props?: {
+  footer?(props: {
     info: {
       components: {
         SendButton: typeof SendButton;
@@ -245,7 +245,17 @@ const onContentMouseDown: MouseEventHandler = (e) => {
 const actionNode = computed(() => {
   let _actionNode: VNode | false = (
     <Flex class={`${actionListCls.value}-presets`}>
-      {allowSpeech && <SpeechButton />}
+      {allowSpeech && (
+        <SpeechButton
+          {...(typeof allowSpeech === 'object' ? 
+            { 
+              audioIcon: allowSpeech.audioIcon, 
+              audioDisabledIcon: allowSpeech.audioDisabledIcon, 
+              audioRecordingIcon: allowSpeech.audioRecordingIcon 
+            } : {}
+          )}
+        />
+      )}
       {/* Loading or Send */}
       {loading ? <LoadingButton /> : <SendButton />}
     </Flex>

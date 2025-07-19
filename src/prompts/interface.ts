@@ -50,7 +50,7 @@ export interface PromptsProps
    * @desc 显示在提示列表顶部的标题。
    * @descEN Title displayed at the top of the prompt list.
    */
-  title?: VNode | string;
+  title?: VNode | string | (() => VNode | string);
 
   /**
    * @desc Item 提示项被点击时的回调函数。

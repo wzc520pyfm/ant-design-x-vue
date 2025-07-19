@@ -1,6 +1,6 @@
 {
   "name": "ant-design-x-vue",
-  "version": "1.2.6",
+  "version": "1.2.9",
   "description": "Craft AI-driven interfaces effortlessly",
   "keywords": [
     "AI",
@@ -13,9 +13,9 @@
     "vue"
   ],
   "scripts": {
-    "build": "run-p build:es build:umd build:resolver",
+    "build": "run-p build:es build:dist build:resolver",
     "build:es": "vite build && vue-tsc --project ./tsconfig.build.json",
-    "build:umd": "vite build --config ./vite.config.umd.mts && vue-tsc --project ./tsconfig.build.json",
+    "build:dist": "vite build --config ./vite.config.dist.mts && vue-tsc --project ./tsconfig.build.json",
     "build:resolver": "tsc resolver/index.ts --outDir resolver-dist --declaration",
     "build:watch": "vite build --watch",
     "docs:dev": "vitepress dev docs",
@@ -48,7 +48,8 @@
     "./dist/style.css": "./dist/style.css",
     "./resolver": {
       "types": "./resolver-dist/index.d.ts",
-      "import": "./resolver-dist/index.js"
+      "import": "./resolver-dist/index.js",
+      "require": "./resolver-dist/index.js"
     }
   },
   "main": "./lib/index.js",
@@ -96,6 +97,7 @@
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
     "@eslint/js": "^9.11.1",
+    "@rollup/plugin-terser": "^0.4.4",
     "@stackblitz/sdk": "^1.11.0",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.10.2",
@@ -107,7 +109,6 @@
     "@vitest/coverage-v8": "^2.1.1",
     "@vue/shared": "^3.5.13",
     "@vue/test-utils": "^2.4.6",
-    "@vueuse/core": "^12.2.0",
     "ant-design-vue": "^4.2.6",
     "changelogen": "^0.5.7",
     "eslint": "^8.57.1",
@@ -138,6 +139,7 @@
     "@ant-design/fast-color": "^2.0.6",
     "@emotion/hash": "^0.9.2",
     "@emotion/unitless": "^0.10.0",
+    "@vueuse/core": "^13.4.0",
     "classnames": "^2.5.1",
     "csstype": "^3.1.3",
     "stylis": "^4.3.4"

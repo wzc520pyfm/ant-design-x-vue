@@ -25,8 +25,8 @@ const rolesAsObject: BubbleListProps['roles'] = {
 
 const rolesAsFunction = (bubbleData: BubbleProps, index: number) => {
   const RenderIndex: BubbleProps['messageRender'] = (content) =>
-    h(Flex, null, [h('text', null, `#${index}: ${content}`)]);
-  switch (bubbleData.role) {
+    h(Flex, null, () => [h('text', null, `#${index}: ${content}`)]);
+    switch (bubbleData.role) {
     case 'ai':
       return {
         placement: 'start' as const,

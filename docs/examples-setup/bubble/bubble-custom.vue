@@ -18,8 +18,8 @@ const roles: BubbleListProps['roles'] = {
     avatar: { icon: h(UserOutlined), style: { background: '#fde3cf' } },
     typing: { step: 5, interval: 20 },
     style: {
-      maxWidth: 600,
-      marginInlineEnd: 44,
+      maxWidth: '600px',
+      marginInlineEnd: '44px',
     },
     styles: {
       footer: {
@@ -27,7 +27,7 @@ const roles: BubbleListProps['roles'] = {
       },
     },
     loadingRender: () =>
-      h(Space, null, [h(Spin, { size: 'small' }), 'Custom loading...']),
+      h(Space, null, () => [h(Spin, { size: 'small' }), 'Custom loading...']),
   },
   user: {
     placement: 'end',
@@ -42,14 +42,14 @@ const listRef = ref<InstanceType<typeof BubbleList>>(null);
 <template>
   <BubbleList
     ref="listRef"
-    :style="{ maxHeight: 300 }"
+    :style="{ maxHeight: '300px' }"
     :roles="roles"
     :items="[
       {
         key: 'welcome',
         role: 'ai',
         content: 'Mock welcome content. '.repeat(10),
-        footer: h(Flex, null, [
+        footer: h(Flex, null, () => [
           h(Button, {
             size: 'small',
             type: 'text',

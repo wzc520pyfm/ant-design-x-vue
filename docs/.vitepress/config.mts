@@ -116,6 +116,10 @@ export default defineConfig({
           text: 'Ant Design X of Vue',
           link: '/development/introduce'
         },
+        {
+          text: '样式兼容',
+          link: '/development/compatible-style'
+        },
       ],
       '/component/': [
         {
