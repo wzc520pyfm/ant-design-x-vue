@@ -150,7 +150,7 @@ bubble/gpt-vis
 | classNames | 语义化结构 class | [Record<SemanticDOM, string>](#semantic-dom) | - |  |
 | content | 聊天内容 | ContentType | - |  |
 | footer | 底部内容 | VNode \| (content: ContentType, info: { key?: string \| number }) => VNode | - |  |
-| header | 头部内容 | VNode \| (content: content: ContentType, info: { key?: string \| number }) => VNode | - |  |
+| header | 头部内容 | VNode \| (content: ContentType, info: { key?: string \| number }) => VNode | - |  |
 | loading | 聊天内容加载状态 | boolean | - |  |
 | placement | 信息位置 | `start` \| `end` | `start` |  |
 | shape | 气泡形状 | `round` \| `corner` | - |  |
@@ -182,7 +182,7 @@ type ContentType = Vue.VNode | AnyObject | string | number;
 自定义类型使用
 
 ```tsx
-type CustomContentType {
+type CustomContentType = {
   ...
 }
 
