@@ -13,8 +13,6 @@ const genFileCardStyle: GenerateStyle<AttachmentsToken> = (token) => {
     .add(token.paddingSM)
     .equal();
 
-  console.log(cardCls,'this is cardCls')
-  console.log(componentCls,'this is componentCls')
   return {
     [cardCls]: {
       borderRadius: token.borderRadius,
@@ -220,7 +218,7 @@ const genFileCardStyle: GenerateStyle<AttachmentsToken> = (token) => {
           opacity: 1,
           width: cardHeight,
         },
-        
+
         '100%': {
           opacity: 0,
           width: 0,
