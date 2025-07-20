@@ -41,6 +41,14 @@ use-x-agent/model
 
 :::
 
+### 变更配置
+
+:::demo 控制变更`XRequestOptions`，动态修改配置项，如 baseURL、model 和 API key。
+
+use-x-agent/request-options
+
+:::
+
 ## API
 
 ```tsx | pure

@@ -2,7 +2,7 @@ import XRequest from '../x-request';
 import { XStreamOptions } from '../x-stream';
 
 import type { AnyObject } from '../_util/type';
-import { computed, ref } from 'vue';
+import { computed, ref, type MaybeRefOrGetter, toValue } from 'vue';
 
 interface RequestFnInfo<Message> extends Partial<XAgentConfigPreset>, AnyObject {
   messages?: Message[];
@@ -82,7 +82,7 @@ export class XAgent<Message = string> {
         }
       },
     },
-    transformStream);
+      transformStream);
   };
 
   public isRequesting() {
@@ -90,11 +90,11 @@ export class XAgent<Message = string> {
   }
 }
 
-export default function useXAgent<Message = string>(config: XAgentConfig<Message>) {
-  const { request, ...restConfig } = config;
+export default function useXAgent<Message = string>(config: MaybeRefOrGetter<XAgentConfig<Message>>) {
   const agent = computed(
-    () =>
-      new XAgent<Message>({
+    () => {
+      const { request, ...restConfig } = toValue(config);
+      return new XAgent<Message>({
         // @ts-expect-error
         request:
           request! ||
@@ -104,7 +104,8 @@ export default function useXAgent<Message = string>(config: XAgentConfig<Message
             dangerouslyApiKey: restConfig.dangerouslyApiKey,
           }).create,
         ...restConfig,
-      }));
+      });
+    });
 
   return [
     agent
