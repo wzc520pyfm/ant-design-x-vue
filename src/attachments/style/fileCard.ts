@@ -13,6 +13,8 @@ const genFileCardStyle: GenerateStyle<AttachmentsToken> = (token) => {
     .add(token.paddingSM)
     .equal();
 
+  console.log(cardCls,'this is cardCls')
+  console.log(componentCls,'this is componentCls')
   return {
     [cardCls]: {
       borderRadius: token.borderRadius,
@@ -188,6 +190,40 @@ const genFileCardStyle: GenerateStyle<AttachmentsToken> = (token) => {
           paddingInline: 0,
           borderInlineWidth: 0,
           marginInlineEnd: calc(token.paddingSM).mul(-1).equal(),
+        },
+      },
+
+      [`&-enter-active`]: {
+         animation: `card-enter 0.3s ease-in`,
+      },
+
+      [`&-leave-active`]: {
+         animation: `card-leave 0.3s ease-out`,
+      },
+
+      ['@keyframes card-enter']: {
+
+        '0%': {
+          opacity: 0,
+          width: 0,
+        },
+
+        '100%': {
+          opacity: 1,
+          width: cardHeight, 
+        },
+      },
+    
+      [`@keyframes card-leave`]: {
+
+        '0%': {
+          opacity: 1,
+          width: cardHeight,
+        },
+        
+        '100%': {
+          opacity: 0,
+          width: 0,
         },
       },
     },
