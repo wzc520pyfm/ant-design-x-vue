@@ -2,7 +2,7 @@
 import { App, Flex } from 'ant-design-vue';
 import { Attachments } from 'ant-design-x-vue';
 import { VideoCameraFilled, AudioFilled, CopyFilled, FileImageFilled } from '@ant-design/icons-vue';
-import { VNode } from 'vue';
+import type { VNode } from 'vue';
 
 defineOptions({ name: 'AXAttachmentFiles' });
 
@@ -29,9 +29,7 @@ const Demo = () => {
       name: 'image-file.png',
       size: 333333,
       icon: <FileImageFilled />,
-      type: 'image',
-      thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      type: 'file',
     },
     {
       uid: '3',

@@ -1,7 +1,8 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
 import { CloseCircleFilled, FileExcelFilled, FileImageFilled, FileMarkdownFilled, FilePdfFilled, FilePptFilled, FileTextFilled, FileWordFilled, FileZipFilled } from '@ant-design/icons-vue';
-import { computed, onWatcherCleanup, useTemplateRef, VNode, watch } from 'vue';
+import { computed, onWatcherCleanup, useTemplateRef, watch } from 'vue';
+import type { VNode } from 'vue';
 import AudioIcon from './AudioIcon.vue';
 import VideoIcon from './VideoIcon.vue';
 import type { FileListCardProps, PresetIcons } from '../interface';
@@ -176,10 +177,10 @@ const iconState = computed(() => {
     }
   }
 
-  for (const { ext, icon, color } of PRESET_FILE_ICONS) {
+  for (const { ext, icon: presetIcon, color } of PRESET_FILE_ICONS) {
     if (matchExt(nameState.value.nameSuffix, ext)) {
       return {
-        icon,
+        icon: presetIcon,
         iconColor: color
       }
     }
@@ -212,9 +213,11 @@ watch(() => item.originFileObj, () => {
 
 // ============================= Render =============================
 const previewUrl = computed(() => item.thumbUrl || item.url || previewImg.value);
-const isImgPreview = computed(() => isImg.value && (item.originFileObj || previewUrl.value));
+const shouldShowImagePreview = computed(() => {
+  return type === 'image' || (type !== 'file' && isImg.value && (item.originFileObj || previewUrl.value));
+});
 const content = computed(() => {
-  if (isImgPreview.value) {
+  if (shouldShowImagePreview.value) {
     // Preview Image style
     return (
       <>
@@ -273,8 +276,8 @@ defineRender(() => {
         cardCls,
         {
           [`${cardCls}-status-${status.value}`]: status.value,
-          [`${cardCls}-type-preview`]: isImgPreview.value,
-          [`${cardCls}-type-overview`]: !isImgPreview.value,
+          [`${cardCls}-type-preview`]: shouldShowImagePreview.value,
+          [`${cardCls}-type-overview`]: !shouldShowImagePreview.value,
         },
         className,
         hashId.value,
