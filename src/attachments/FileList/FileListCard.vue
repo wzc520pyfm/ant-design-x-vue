@@ -1,10 +1,10 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
 import { CloseCircleFilled, FileExcelFilled, FileImageFilled, FileMarkdownFilled, FilePdfFilled, FilePptFilled, FileTextFilled, FileWordFilled, FileZipFilled } from '@ant-design/icons-vue';
-import { computed, onWatcherCleanup, useTemplateRef, watch } from 'vue';
+import { computed, onWatcherCleanup, useTemplateRef, VNode, watch } from 'vue';
 import AudioIcon from './AudioIcon.vue';
 import VideoIcon from './VideoIcon.vue';
-import type { AttachmentFilesIcons, FileListCardProps } from '../interface';
+import type { FileListCardProps, PresetIcons } from '../interface';
 import { useAttachmentContextInject } from '../context';
 import { useXProviderContext } from '../../x-provider';
 import { previewImage } from '../util';
@@ -20,53 +20,73 @@ const DEFAULT_ICON_COLOR = '#8c8c8c';
 
 const IMG_EXTS = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'];
 
-const PRESET_FILE_ICONS: AttachmentFilesIcons = [
-  {
-    icon: <FileExcelFilled />,
-    color: '#22b35e',
-    ext: ['xlsx', 'xls'],
-  },
-  {
-    icon: <FileImageFilled />,
-    color: DEFAULT_ICON_COLOR,
-    ext: IMG_EXTS,
-  },
-  {
-    icon: <FileMarkdownFilled />,
-    color: DEFAULT_ICON_COLOR,
-    ext: ['md', 'mdx'],
-  },
-  {
-    icon: <FilePdfFilled />,
-    color: '#ff4d4f',
-    ext: ['pdf'],
-  },
-  {
-    icon: <FilePptFilled />,
-    color: '#ff6e31',
-    ext: ['ppt', 'pptx'],
-  },
-  {
-    icon: <FileWordFilled />,
-    color: '#1677ff',
-    ext: ['doc', 'docx'],
-  },
-  {
-    icon: <FileZipFilled />,
-    color: '#fab714',
-    ext: ['zip', 'rar', '7z', 'tar', 'gz'],
-  },
-  {
-    icon: <VideoIcon />,
-    color: '#ff4d4f',
-    ext: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'],
-  },
-  {
-    icon: <AudioIcon />,
-    color: '#8c8c8c',
-    ext: ['mp3', 'wav', 'flac', 'ape', 'aac', 'ogg'],
-  },
-];
+const PRESET_FILE_ICONS: {
+  key: PresetIcons;
+  ext: string[];
+  color: string;
+  icon: VNode;
+}[] = [
+    {
+      key: 'default',
+      icon: <FileTextFilled />,
+      color: DEFAULT_ICON_COLOR,
+      ext: [],
+    },
+    {
+      key: 'excel',
+      icon: <FileExcelFilled />,
+      color: '#22b35e',
+      ext: ['xlsx', 'xls'],
+    },
+    {
+      key: 'image',
+      icon: <FileImageFilled />,
+      color: DEFAULT_ICON_COLOR,
+      ext: IMG_EXTS,
+    },
+    {
+      key: 'markdown',
+      icon: <FileMarkdownFilled />,
+      color: DEFAULT_ICON_COLOR,
+      ext: ['md', 'mdx'],
+    },
+    {
+      key: 'pdf',
+      icon: <FilePdfFilled />,
+      color: '#ff4d4f',
+      ext: ['pdf'],
+    },
+    {
+      key: 'ppt',
+      icon: <FilePptFilled />,
+      color: '#ff6e31',
+      ext: ['ppt', 'pptx'],
+    },
+    {
+      key: 'word',
+      icon: <FileWordFilled />,
+      color: '#1677ff',
+      ext: ['doc', 'docx'],
+    },
+    {
+      key: 'zip',
+      icon: <FileZipFilled />,
+      color: '#fab714',
+      ext: ['zip', 'rar', '7z', 'tar', 'gz'],
+    },
+    {
+      key: 'video',
+      icon: <VideoIcon />,
+      color: '#ff4d4f',
+      ext: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'],
+    },
+    {
+      key: 'audio',
+      icon: <AudioIcon />,
+      color: '#8c8c8c',
+      ext: ['mp3', 'wav', 'flac', 'ape', 'aac', 'ogg'],
+    },
+  ];
 
 function matchExt(suffix: string, ext: string[]) {
   return ext.some((e) => suffix.toLowerCase() === `.${e}`);
@@ -85,7 +105,7 @@ function getSize(size: number) {
   return `${retSize.toFixed(0)} ${units[unitIndex]}`;
 }
 
-const { prefixCls: customizePrefixCls, item, onRemove, className, style, imageProps, fileIcons } = defineProps<FileListCardProps>();
+const { prefixCls: customizePrefixCls, item, onRemove, className, style, imageProps, icon, type } = defineProps<FileListCardProps>();
 
 const context = useAttachmentContextInject();
 const disabled = computed(() => context.value.disabled);
@@ -139,8 +159,24 @@ const desc = computed(() => {
 
 // ============================== Icon ==============================
 const iconState = computed(() => {
-  const iconOptions = fileIcons || PRESET_FILE_ICONS;
-  for (const { ext, icon, color } of iconOptions) {
+  if (icon) {
+    if (typeof icon === 'string') {
+      const presetIcon = PRESET_FILE_ICONS.find((preset) => preset.key === icon);
+      if (presetIcon) {
+        return {
+          icon: presetIcon.icon,
+          color: presetIcon.color
+        };
+      }
+    } else {
+      return {
+        icon,
+        color: undefined
+      };
+    }
+  }
+
+  for (const { ext, icon, color } of PRESET_FILE_ICONS) {
     if (matchExt(nameState.value.nameSuffix, ext)) {
       return {
         icon,

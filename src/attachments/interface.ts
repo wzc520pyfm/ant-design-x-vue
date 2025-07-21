@@ -59,7 +59,8 @@ export interface FileListCardProps {
   className?: string;
   style?: CSSProperties;
   imageProps?: ImageProps;
-  fileIcons?: AttachmentFilesIcons;
+  icon?: VNode | PresetIcons;
+  type?: 'file' | 'image';
 }
 
 export interface ProgressProps {
@@ -154,10 +155,5 @@ export interface AttachmentsRef {
   upload: (file: File) => void;
 }
 
-export interface AttachmentFilesIcon {
-  ext: string[];
-  color: string;
-  icon: VNode;
-}
 
-export type AttachmentFilesIcons = AttachmentFilesIcon[]
+export type PresetIcons = 'default' | 'excel' | 'image' | 'markdown' | 'pdf' | 'ppt' | 'word' | 'zip' | 'video' | 'audio';

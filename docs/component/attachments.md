@@ -121,61 +121,12 @@ interface PlaceholderType {
 | --------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | ------ | ---- |
 | item      | 附件，同 Upload `UploadFile`                                                                                             | Attachment                                       | -      | -    |
 | onRemove  | 点击移除文件时的回调，返回值为 false 时不移除。支持返回一个 Promise 对象，Promise 对象 resolve(false) 或 reject 时不移除 | (item: Attachment) => boolean \| Promise         | -      | -    |
-| fileIcons | 自定义文件卡片的图标、图标颜色、文件范围。                                                                               | { ext: string[]; color: string; icon: VNode; }[] | `PRESET_FILE_ICONS`      | -    |
+| icon | 自定义图标 | VNode \| PresetIcons | - | - |
+| type | 是否图片类型 | 'file' \| 'image' | `file` | - |
 
-::: details 点我查看 `PRESET_FILE_ICONS`
 ```ts
-import { FileExcelFilled, FileImageFilled, FileMarkdownFilled, FilePdfFilled, FilePptFilled, FileTextFilled, FileWordFilled, FileZipFilled } from '@ant-design/icons-vue';
-
-const PRESET_FILE_ICONS = [
-  {
-    icon: <FileExcelFilled />,
-    color: '#22b35e',
-    ext: ['xlsx', 'xls'],
-  },
-  {
-    icon: <FileImageFilled />,
-    color: DEFAULT_ICON_COLOR,
-    ext: IMG_EXTS,
-  },
-  {
-    icon: <FileMarkdownFilled />,
-    color: DEFAULT_ICON_COLOR,
-    ext: ['md', 'mdx'],
-  },
-  {
-    icon: <FilePdfFilled />,
-    color: '#ff4d4f',
-    ext: ['pdf'],
-  },
-  {
-    icon: <FilePptFilled />,
-    color: '#ff6e31',
-    ext: ['ppt', 'pptx'],
-  },
-  {
-    icon: <FileWordFilled />,
-    color: '#1677ff',
-    ext: ['doc', 'docx'],
-  },
-  {
-    icon: <FileZipFilled />,
-    color: '#fab714',
-    ext: ['zip', 'rar', '7z', 'tar', 'gz'],
-  },
-  {
-    icon: <VideoIcon />,
-    color: '#ff4d4f',
-    ext: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'],
-  },
-  {
-    icon: <AudioIcon />,
-    color: '#8c8c8c',
-    ext: ['mp3', 'wav', 'flac', 'ape', 'aac', 'ogg'],
-  },
-];
+type PresetIcons = 'default' | 'excel' | 'image' | 'markdown' | 'pdf' | 'ppt' | 'word' | 'zip' | 'video' | 'audio';
 ```
-:::
 
 ## Semantic DOM
 
