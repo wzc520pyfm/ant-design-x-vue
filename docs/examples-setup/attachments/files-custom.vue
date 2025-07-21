@@ -34,7 +34,7 @@ const filesList: {
       uid: '3',
       name: 'pdf-file.pdf',
       size: 444444,
-      icon: h(VideoCameraFilled),
+      icon: h(CopyFilled),
       type: 'file',
     },
     {
@@ -48,15 +48,7 @@ const filesList: {
       uid: '5',
       name: 'audio-file.mp3',
       size: 777777,
-      icon: h(CopyFilled),
-      type: 'file',
-    },
-    {
-      uid: '6',
-      name: 'markdown-file.md',
-      size: 999999,
-      description: 'Custom description here',
-      icon: h(CopyFilled),
+      icon: h(VideoCameraFilled),
       type: 'file',
     },
   ];
