@@ -1,4 +1,5 @@
 import type { CSSProperties, VNode } from "vue";
+import type { AvoidValidation } from '../type-utility'
 
 export type SemanticType = 'title' | 'description' | 'icon' | 'extra';
 
@@ -14,8 +15,8 @@ export interface WelcomeProps {
   styles?: Partial<Record<SemanticType, CSSProperties>>;
 
   // Layout
-  icon?: VNode | string | (() => VNode | string);
-  title?: VNode | string | (() => VNode | string);
-  description?: VNode | string | (() => VNode | string);
-  extra?: VNode | string | (() => VNode | string);
+  icon?: AvoidValidation<VNode | string | (() => VNode | string)>;
+  title?: AvoidValidation<VNode | string | (() => VNode | string)>;
+  description?: AvoidValidation<VNode | string | (() => VNode | string)>;
+  extra?: AvoidValidation<VNode | string | (() => VNode | string)>;
 }

@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import VueMacros from 'unplugin-vue-macros/vite'
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
+import terser from '@rollup/plugin-terser';
 
 const externals = ['vue'];
 
@@ -44,6 +45,15 @@ export default defineConfig({
           inlineDynamicImports: true,
           exports: 'named',
           entryFileNames: '[name].esm.js',
+          globals: { vue: 'Vue' },
+        },
+        {
+          format: 'es',
+          dir: 'dist',
+          inlineDynamicImports: true,
+          exports: 'named',
+          plugins: [terser()],
+          entryFileNames: '[name].esm.min.js',
           globals: { vue: 'Vue' },
         },
       ],
