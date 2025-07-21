@@ -41,14 +41,14 @@ const filesList: {
       uid: '4',
       name: 'video-file.mp4',
       size: 666666,
-      icon: h(AudioFilled),
+      icon: h(VideoCameraFilled),
       type: 'file',
     },
     {
       uid: '5',
       name: 'audio-file.mp3',
       size: 777777,
-      icon: h(VideoCameraFilled),
+      icon: h(AudioFilled),
       type: 'file',
     },
   ];
