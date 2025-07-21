@@ -59,6 +59,8 @@ export interface FileListCardProps {
   className?: string;
   style?: CSSProperties;
   imageProps?: ImageProps;
+  icon?: VNode | PresetIcons;
+  type?: 'file' | 'image';
 }
 
 export interface ProgressProps {
@@ -152,3 +154,6 @@ export interface AttachmentsRef {
   nativeElement: HTMLDivElement | null;
   upload: (file: File) => void;
 }
+
+
+export type PresetIcons = 'default' | 'excel' | 'image' | 'markdown' | 'pdf' | 'ppt' | 'word' | 'zip' | 'video' | 'audio';
