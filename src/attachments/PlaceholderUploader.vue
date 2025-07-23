@@ -100,8 +100,8 @@ defineRender(() => {
       style={style}
     >
       <Upload.Dragger
-        showUploadList={false}
         {...upload}
+        showUploadList={false}
         ref="upload-dragger"
         style={{ padding: 0, border: 0, background: 'transparent' }}
       >

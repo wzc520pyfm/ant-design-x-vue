@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, nextTick, onWatcherCleanup, ref, useTemplateRef, watch, watchEffect } from 'vue';
+import { computed, nextTick, onWatcherCleanup, ref, useTemplateRef, watch, watchEffect, TransitionGroup } from 'vue';
 import { Button } from 'ant-design-vue';
 import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons-vue';
 import type { FileListProps } from '../interface';
@@ -27,7 +27,7 @@ const {
 } = defineProps<FileListProps>();
 
 const listCls = computed(() => `${prefixCls}-list`);
-
+const cardMotionCls = computed(() => `${prefixCls}-list-card`);
 const containerRef = useTemplateRef<HTMLDivElement>('file-list-container');
 // const containerRef = ref<HTMLDivElement>(null);
 
@@ -108,9 +108,9 @@ defineRender(() => {
       onScroll={checkPing}
       style={listStyle}
     >
-      { /** TODO: use rc-motion for items */}
-      {items.map((item) => {
-        return <FileListCard
+      <TransitionGroup name={cardMotionCls.value}>
+         {items.map((item) => {
+         return <FileListCard
           key={item.uid}
           prefixCls={prefixCls}
           item={item}
@@ -122,6 +122,7 @@ defineRender(() => {
           }}
         />
       })}
+      </TransitionGroup>
       {!attachmentContext.value.disabled && (
         <SilentUploader
           upload={upload}
