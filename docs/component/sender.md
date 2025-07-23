@@ -112,6 +112,14 @@ sender/footer
 
 :::
 
+### 自定义输入框
+
+:::demo 使用 `components.input` 自定义输入框。
+
+sender/custom-input
+
+:::
+
 ### 调整样式
 
 <ClientOnly>
