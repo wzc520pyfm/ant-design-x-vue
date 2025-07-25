@@ -9,7 +9,7 @@
 
 ### 基础
 
-:::demo 该示例说明如何使用 XRequest 对符合 OpenAI 标准的 LLM 发起 fetch 请求 ，请拷贝代码且在 DEV 环境用实际的值替换 BASE_URL, PATH, MODEL, API_KEY 来使用
+:::demo 该示例说明如何使用 XRequest 对符合 OpenAI 标准的 LLM 发起 fetch 请求 ，请拷贝代码且在 DEV 环境用实际的值替换 BASE_URL, PATH, MODEL, API_KEY 来使用。
 
 x-request/basic
 
@@ -25,9 +25,17 @@ x-request/request-params
 
 ### 自定义转换器
 
-:::demo 为 `XRequest` 配置自定义的 `transformStream`, 示例中使用 `application/x-ndjson` 数据演示
+:::demo 为 `XRequest` 配置自定义的 `transformStream`, 示例中使用 `application/x-ndjson` 数据演示。
 
 x-request/custom-transformer
+
+:::
+
+### 变更配置
+
+:::demo 控制变更`XRequestOptions`，动态修改配置项，如 baseURL、model 和 API key。
+
+x-request/request-options
 
 :::
 
