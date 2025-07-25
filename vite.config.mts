@@ -48,13 +48,16 @@ export default defineConfig({
           entryFileNames: '[name].mjs',
           manualChunks: (id) => {
             if (id.includes('node_modules')) {
-              return null;
+              // 库依赖
+              return 'chunks/module';
             }
             if (id.includes('src/')) {
               return id.split('src/')[1].split('.vue')[0]
             }
+            // 库生成的辅助文件
+            return 'chunks/helper'
           },
-          chunkFileNames: (chunkInfo) => `${chunkInfo.name}2.mjs`,
+          chunkFileNames: (chunkInfo) => `${chunkInfo.name}-chunk.mjs`,
           globals: { vue: 'Vue', 'ant-design-vue': 'antd' },
         },
         {
@@ -63,13 +66,16 @@ export default defineConfig({
           entryFileNames: '[name].js',
           manualChunks: (id) => {
             if (id.includes('node_modules')) {
-              return null;
+              // 库依赖
+              return 'chunks/module';
             }
             if (id.includes('src/')) {
               return id.split('src/')[1].split('.vue')[0]
             }
+            // 库生成的辅助文件
+            return 'chunks/helper'
           },
-          chunkFileNames: (chunkInfo) => `${chunkInfo.name}2.js`,
+          chunkFileNames: (chunkInfo) => `${chunkInfo.name}-chunk.js`,
           exports: 'named',
           globals: { vue: 'Vue', 'ant-design-vue': 'antd' },
         },
