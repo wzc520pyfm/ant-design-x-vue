@@ -3,7 +3,12 @@ import classnames from 'classnames';
 import { computed, useTemplateRef, type VNode, watch } from 'vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
-import type { Attachment, AttachmentsProps, AttachmentsRef, PlaceholderProps } from './interface';
+import type {
+  Attachment,
+  AttachmentsProps,
+  AttachmentsRef,
+  PlaceholderProps,
+} from './interface';
 import PlaceholderUploader from './PlaceholderUploader.vue';
 import type { UploadProps } from 'ant-design-vue';
 import DropArea from './DropArea.vue';
@@ -36,7 +41,7 @@ const {
 } = defineProps<AttachmentsProps>();
 
 const slots = defineSlots<{
-  placeholder?(props?: { type: "inline" | "drop" }): VNode | string;
+  placeholder?(props?: { type: 'inline' | 'drop' }): VNode | string;
 }>();
 
 // ============================ PrefixCls ============================
@@ -54,7 +59,9 @@ const contextStyles = computed(() => contextConfig.value.styles);
 const containerRef = useTemplateRef<HTMLDivElement>('attachments-container');
 // const containerRef = ref<HTMLDivElement>(null);
 
-const placeholderUploaderRef = useTemplateRef<InstanceType<typeof PlaceholderUploader>>('placeholder-uploader');
+const placeholderUploaderRef = useTemplateRef<
+  InstanceType<typeof PlaceholderUploader>
+>('placeholder-uploader');
 
 // ============================ Style ============================
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
@@ -63,9 +70,14 @@ const cssinjsCls = computed(() => classnames(hashId.value, cssVarCls));
 
 // ============================ Upload ============================
 const [fileList, setFileList] = useState(items);
-watch(() => items, () => {
-  setFileList(items);
-});
+console.log(items, 'items');
+watch(
+  () => items,
+  () => {
+    console.log('watch', items);
+    setFileList(items);
+  },
+);
 
 const triggerChange: AttachmentsProps['onChange'] = (info) => {
   setFileList(info.fileList);
@@ -79,13 +91,17 @@ const mergedUploadProps = computed<UploadProps>(() => ({
 }));
 
 const onItemRemove = (item: Attachment) =>
-  Promise.resolve(typeof onRemove === 'function' ? onRemove(item) : onRemove).then((ret) => {
+  Promise.resolve(
+    typeof onRemove === 'function' ? onRemove(item) : onRemove,
+  ).then((ret) => {
     // Prevent removing file
     if (ret === false) {
       return;
     }
 
-    const newFileList = fileList.value.filter((fileItem) => fileItem.uid !== item.uid);
+    const newFileList = fileList.value.filter(
+      (fileItem) => fileItem.uid !== item.uid,
+    );
     triggerChange({
       file: { ...item, status: 'removed' },
       fileList: newFileList,
@@ -96,19 +112,21 @@ const getPlaceholderNode = (
   type: 'inline' | 'drop',
   props?: Pick<PlaceholderProps, 'style'>,
 ) => {
-  const placeholderContent =
-    slots.placeholder
-      ? slots.placeholder({ type })
-      : typeof placeholder === 'function'
-        ? placeholder(type)
-        : placeholder;
+  const placeholderContent = slots.placeholder
+    ? slots.placeholder({ type })
+    : typeof placeholder === 'function'
+    ? placeholder(type)
+    : placeholder;
 
   return (
     <PlaceholderUploader
       placeholder={placeholderContent}
       upload={mergedUploadProps.value}
       prefixCls={prefixCls}
-      className={classnames(contextClassNames.value.placeholder, classNames.placeholder)}
+      className={classnames(
+        contextClassNames.value.placeholder,
+        classNames.placeholder,
+      )}
       style={{
         ...contextStyles.value.placeholder,
         ...styles.placeholder,
@@ -123,16 +141,22 @@ const hasFileList = computed(() => fileList.value.length > 0);
 
 defineExpose<AttachmentsRef>({
   nativeElement: containerRef.value,
-  upload: (file) => {
+  upload: (files) => {
     // get native element
-    const fileInput = placeholderUploaderRef.value?.nativeElement.querySelector?.('input[type="file"]') as HTMLInputElement;
-
-    // Trigger native change event
+    const fileInput =
+      placeholderUploaderRef.value?.nativeElement.querySelector?.(
+        'input[type="file"]',
+      ) as HTMLInputElement;
+    const dataTransfer = new DataTransfer();
     if (fileInput) {
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
+      // 确保有length属性 防止ts报错
+      if ('length' in files && files.length >= 1) {
+        const _files = Array.from(files);
+        for (const file of _files) {
+          dataTransfer.items.add(file);
+        }
+      }
       fileInput.files = dataTransfer.files;
-
       fileInput.dispatchEvent(new Event('change', { bubbles: true }));
     }
   },
@@ -186,20 +210,29 @@ defineRender(() => {
             onRemove={onItemRemove}
             overflow={overflow}
             upload={mergedUploadProps.value}
-            listClassName={classnames(contextClassNames.value.list, classNames.list)}
+            listClassName={classnames(
+              contextClassNames.value.list,
+              classNames.list,
+            )}
             listStyle={{
               ...contextStyles.value.list,
               ...styles.list,
               ...(!hasFileList.value && { display: 'none' }),
             }}
-            itemClassName={classnames(contextClassNames.value.item, classNames.item)}
+            itemClassName={classnames(
+              contextClassNames.value.item,
+              classNames.item,
+            )}
             itemStyle={{
               ...contextStyles.value.item,
               ...styles.item,
             }}
             imageProps={imageProps}
           />
-          {getPlaceholderNode('inline', hasFileList.value ? { style: { display: 'none' } } : {})}
+          {getPlaceholderNode(
+            'inline',
+            hasFileList.value ? { style: { display: 'none' } } : {},
+          )}
           <DropArea
             getDropContainer={getDropContainer || (() => containerRef.value)}
             prefixCls={prefixCls}
@@ -208,7 +241,7 @@ defineRender(() => {
           />
         </div>
       )}
-    </AttachmentContextProvider>
-  )
+    </AttachmentContextProvider>,
+  );
 });
 </script>
