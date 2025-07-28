@@ -70,11 +70,9 @@ const cssinjsCls = computed(() => classnames(hashId.value, cssVarCls));
 
 // ============================ Upload ============================
 const [fileList, setFileList] = useState(items);
-console.log(items, 'items');
 watch(
   () => items,
   () => {
-    console.log('watch', items);
     setFileList(items);
   },
 );
