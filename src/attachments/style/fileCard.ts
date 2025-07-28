@@ -1,6 +1,6 @@
 import type { AttachmentsToken } from '.';
+import { Keyframes } from '../../_util/cssinjs';
 import type { GenerateStyle } from '../../theme/cssinjs-utils';
-
 const genFileCardStyle: GenerateStyle<AttachmentsToken> = (token) => {
   const { componentCls, antCls, calc } = token;
 
@@ -12,6 +12,30 @@ const genFileCardStyle: GenerateStyle<AttachmentsToken> = (token) => {
     .add(token.paddingSM)
     .add(token.paddingSM)
     .equal();
+
+  const cardEnter = new Keyframes('cardEnter', {
+    '0%': {
+      opacity: 0,
+      width: 0,
+    },
+    '100%': {
+      opacity: 1,
+      width: cardHeight,
+    },
+  });
+
+  const cardLeave = new Keyframes('cardLeave', {
+    '0%': {
+      opacity: 1,
+      width: cardHeight,
+    },
+    '100%': {
+      opacity: 0,
+      width: 0,
+    },
+  });
+
+  console.log(cardEnter, cardLeave);
 
   return {
     [cardCls]: {
@@ -192,37 +216,15 @@ const genFileCardStyle: GenerateStyle<AttachmentsToken> = (token) => {
       },
 
       [`&-enter-active`]: {
-         animation: `card-enter 0.3s ease-in`,
+        animationName: cardEnter,
+        animationDuration: '0.3s',
+        animationTimingFunction: 'ease-in',
       },
 
       [`&-leave-active`]: {
-         animation: `card-leave 0.3s ease-out`,
-      },
-
-      ['@keyframes card-enter']: {
-
-        '0%': {
-          opacity: 0,
-          width: 0,
-        },
-
-        '100%': {
-          opacity: 1,
-          width: cardHeight, 
-        },
-      },
-    
-      [`@keyframes card-leave`]: {
-
-        '0%': {
-          opacity: 1,
-          width: cardHeight,
-        },
-
-        '100%': {
-          opacity: 0,
-          width: 0,
-        },
+        animationName: cardLeave,
+        animationDuration: '0.3s',
+        animationTimingFunction: 'ease-out',
       },
     },
   };
