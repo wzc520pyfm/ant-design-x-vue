@@ -156,5 +156,5 @@ export interface AttachmentsProps extends AntdUploadProps {
 
 export interface AttachmentsRef {
   nativeElement: HTMLDivElement | null;
-  upload: (file: FileList) => void;
+  upload: (file: File | File[] | FileList) => void;
 }

@@ -139,23 +139,29 @@ const hasFileList = computed(() => fileList.value.length > 0);
 
 defineExpose<AttachmentsRef>({
   nativeElement: containerRef.value,
-  upload: (files) => {
+  upload: (file) => {
     // get native element
     const fileInput =
       placeholderUploaderRef.value?.nativeElement.querySelector?.(
         'input[type="file"]',
       ) as HTMLInputElement;
+
+    if (!fileInput) return;
     const dataTransfer = new DataTransfer();
-    if (fileInput) {
-      // 确保有length属性 防止ts报错
-      if ('length' in files && files.length >= 1) {
-        const _files = Array.from(files);
-        for (const file of _files) {
-          dataTransfer.items.add(file);
+    try {
+      // 如果有length 说明是由file组成的数组或者FileList 一并处理
+      if ('length' in file && file.length >= 1) {
+        for (let i = 0; i < file.length; i++) {
+          dataTransfer.items.add(file[i]);
         }
+      } else {
+        // 单个File
+        dataTransfer.items.add(file as File);
       }
       fileInput.files = dataTransfer.files;
       fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+    } catch (err) {
+      console.error('上传失败', err);
     }
   },
 });
