@@ -1,10 +1,5 @@
-import type {
-  ImageProps,
-  UploadChangeParam,
-  UploadFile,
-  UploadProps,
-} from 'ant-design-vue';
-import type { CSSProperties, VNode } from 'vue';
+import type { ImageProps, UploadChangeParam, UploadFile, UploadProps } from "ant-design-vue";
+import type { CSSProperties, VNode } from "vue";
 
 export interface AttachmentContextProps {
   disabled?: boolean;
@@ -141,9 +136,7 @@ export interface AttachmentsProps extends AntdUploadProps {
   disabled?: boolean;
 
   // ============= placeholder =============
-  placeholder?:
-    | PlaceholderType
-    | ((type: 'inline' | 'drop') => PlaceholderType);
+  placeholder?: PlaceholderType | ((type: 'inline' | 'drop') => PlaceholderType);
   getDropContainer?: null | (() => HTMLElement | null | undefined);
 
   // ============== File List ==============

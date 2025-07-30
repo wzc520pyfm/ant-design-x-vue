@@ -11,7 +11,7 @@ const Demo = () => {
   const items = ref([]);
   const text = ref('');
 
-  const attachmentsRef = ref(null);
+  const attachmentsRef = ref<InstanceType<typeof Attachments>>(null);
   const senderRef = ref<InstanceType<typeof Sender>>(null);
 
   const senderHeader = computed(() => (
@@ -23,7 +23,7 @@ const Demo = () => {
         },
       }}
       open={open.value}
-      onOpenChange={(v) => (open.value = v)}
+      onOpenChange={v => open.value = v}
       forceRender
     >
       <Attachments
@@ -31,17 +31,17 @@ const Demo = () => {
         // Mock not real upload file
         beforeUpload={() => false}
         items={items.value}
-        onChange={({ fileList }) => (items.value = fileList)}
+        onChange={({ fileList }) => items.value = fileList}
         placeholder={(type) =>
           type === 'drop'
             ? {
-                title: 'Drop file here',
-              }
+              title: 'Drop file here',
+            }
             : {
-                icon: <CloudUploadOutlined />,
-                title: 'Upload files',
-                description: 'Click or drag files to this area to upload',
-              }
+              icon: <CloudUploadOutlined />,
+              title: 'Upload files',
+              description: 'Click or drag files to this area to upload',
+            }
         }
         getDropContainer={() => senderRef.value?.nativeElement}
       />
@@ -63,7 +63,7 @@ const Demo = () => {
           />
         }
         value={text.value}
-        onChange={(v) => (text.value = v)}
+        onChange={v => text.value = v}
         onPasteFile={(_, files) => {
           attachmentsRef.value?.upload(files);
           open.value = true;

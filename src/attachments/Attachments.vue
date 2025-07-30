@@ -3,12 +3,7 @@ import classnames from 'classnames';
 import { computed, useTemplateRef, type VNode, watch } from 'vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
-import type {
-  Attachment,
-  AttachmentsProps,
-  AttachmentsRef,
-  PlaceholderProps,
-} from './interface';
+import type { Attachment, AttachmentsProps, AttachmentsRef, PlaceholderProps } from './interface';
 import PlaceholderUploader from './PlaceholderUploader.vue';
 import type { UploadProps } from 'ant-design-vue';
 import DropArea from './DropArea.vue';
@@ -59,9 +54,7 @@ const contextStyles = computed(() => contextConfig.value.styles);
 const containerRef = useTemplateRef<HTMLDivElement>('attachments-container');
 // const containerRef = ref<HTMLDivElement>(null);
 
-const placeholderUploaderRef = useTemplateRef<
-  InstanceType<typeof PlaceholderUploader>
->('placeholder-uploader');
+const placeholderUploaderRef = useTemplateRef<InstanceType<typeof PlaceholderUploader>>('placeholder-uploader');
 
 // ============================ Style ============================
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
@@ -70,12 +63,9 @@ const cssinjsCls = computed(() => classnames(hashId.value, cssVarCls));
 
 // ============================ Upload ============================
 const [fileList, setFileList] = useState(items);
-watch(
-  () => items,
-  () => {
-    setFileList(items);
-  },
-);
+watch(() => items, () => {
+  setFileList(items);
+});
 
 const triggerChange: AttachmentsProps['onChange'] = (info) => {
   setFileList(info.fileList);
@@ -89,17 +79,13 @@ const mergedUploadProps = computed<UploadProps>(() => ({
 }));
 
 const onItemRemove = (item: Attachment) =>
-  Promise.resolve(
-    typeof onRemove === 'function' ? onRemove(item) : onRemove,
-  ).then((ret) => {
+  Promise.resolve(typeof onRemove === 'function' ? onRemove(item) : onRemove).then((ret) => {
     // Prevent removing file
     if (ret === false) {
       return;
     }
 
-    const newFileList = fileList.value.filter(
-      (fileItem) => fileItem.uid !== item.uid,
-    );
+    const newFileList = fileList.value.filter((fileItem) => fileItem.uid !== item.uid);
     triggerChange({
       file: { ...item, status: 'removed' },
       fileList: newFileList,
@@ -113,18 +99,15 @@ const getPlaceholderNode = (
   const placeholderContent = slots.placeholder
     ? slots.placeholder({ type })
     : typeof placeholder === 'function'
-    ? placeholder(type)
-    : placeholder;
+      ? placeholder(type)
+      : placeholder;
 
   return (
     <PlaceholderUploader
       placeholder={placeholderContent}
       upload={mergedUploadProps.value}
       prefixCls={prefixCls}
-      className={classnames(
-        contextClassNames.value.placeholder,
-        classNames.placeholder,
-      )}
+      className={classnames(contextClassNames.value.placeholder, classNames.placeholder)}
       style={{
         ...contextStyles.value.placeholder,
         ...styles.placeholder,
@@ -141,27 +124,25 @@ defineExpose<AttachmentsRef>({
   nativeElement: containerRef.value,
   upload: (file) => {
     // get native element
-    const fileInput =
-      placeholderUploaderRef.value?.nativeElement.querySelector?.(
-        'input[type="file"]',
-      ) as HTMLInputElement;
+    const fileInput = placeholderUploaderRef.value?.nativeElement.querySelector?.('input[type="file"]') as HTMLInputElement;
 
     if (!fileInput) return;
+
     const dataTransfer = new DataTransfer();
     try {
-      // 如果有length 说明是由file组成的数组或者FileList 一并处理
+      // If length exists, it's a File array or FileList — handle together.
       if ('length' in file && file.length >= 1) {
         for (let i = 0; i < file.length; i++) {
           dataTransfer.items.add(file[i]);
         }
       } else {
-        // 单个File
+        // Single File
         dataTransfer.items.add(file as File);
       }
       fileInput.files = dataTransfer.files;
       fileInput.dispatchEvent(new Event('change', { bubbles: true }));
     } catch (err) {
-      console.error('上传失败', err);
+      console.error('upload failed', err);
     }
   },
 });
@@ -214,29 +195,20 @@ defineRender(() => {
             onRemove={onItemRemove}
             overflow={overflow}
             upload={mergedUploadProps.value}
-            listClassName={classnames(
-              contextClassNames.value.list,
-              classNames.list,
-            )}
+            listClassName={classnames(contextClassNames.value.list, classNames.list)}
             listStyle={{
               ...contextStyles.value.list,
               ...styles.list,
               ...(!hasFileList.value && { display: 'none' }),
             }}
-            itemClassName={classnames(
-              contextClassNames.value.item,
-              classNames.item,
-            )}
+            itemClassName={classnames(contextClassNames.value.item, classNames.item)}
             itemStyle={{
               ...contextStyles.value.item,
               ...styles.item,
             }}
             imageProps={imageProps}
           />
-          {getPlaceholderNode(
-            'inline',
-            hasFileList.value ? { style: { display: 'none' } } : {},
-          )}
+          {getPlaceholderNode('inline', hasFileList.value ? { style: { display: 'none' } } : {})}
           <DropArea
             getDropContainer={getDropContainer || (() => containerRef.value)}
             prefixCls={prefixCls}
