@@ -9,7 +9,7 @@ import useDisplayData from './hooks/useDisplayData';
 import useListData from './hooks/useListData';
 import type { BubbleListProps } from './interface';
 import useStyle from './style';
-import { computed, type HTMLAttributes, mergeProps, onWatcherCleanup, ref, unref, useAttrs, watch, nextTick, type VNode } from 'vue';
+import { computed, type HTMLAttributes, mergeProps, onWatcherCleanup, ref, unref, useAttrs, watch, watchPostEffect, nextTick, type VNode } from 'vue';
 import useState from '../_util/hooks/use-state';
 import type { AvoidValidation } from '../type-utility';
 import BubbleContextProvider from './context';
