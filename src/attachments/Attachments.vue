@@ -36,7 +36,7 @@ const {
 } = defineProps<AttachmentsProps>();
 
 const slots = defineSlots<{
-  placeholder?(props?: { type: "inline" | "drop" }): VNode | string;
+  placeholder?(props?: { type: 'inline' | 'drop' }): VNode | string;
 }>();
 
 // ============================ PrefixCls ============================
@@ -96,12 +96,11 @@ const getPlaceholderNode = (
   type: 'inline' | 'drop',
   props?: Pick<PlaceholderProps, 'style'>,
 ) => {
-  const placeholderContent =
-    slots.placeholder
-      ? slots.placeholder({ type })
-      : typeof placeholder === 'function'
-        ? placeholder(type)
-        : placeholder;
+  const placeholderContent = slots.placeholder
+    ? slots.placeholder({ type })
+    : typeof placeholder === 'function'
+      ? placeholder(type)
+      : placeholder;
 
   return (
     <PlaceholderUploader
@@ -127,13 +126,23 @@ defineExpose<AttachmentsRef>({
     // get native element
     const fileInput = placeholderUploaderRef.value?.nativeElement.querySelector?.('input[type="file"]') as HTMLInputElement;
 
-    // Trigger native change event
-    if (fileInput) {
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
-      fileInput.files = dataTransfer.files;
+    if (!fileInput) return;
 
+    const dataTransfer = new DataTransfer();
+    try {
+      // If length exists, it's a File array or FileList — handle together.
+      if ('length' in file && file.length >= 1) {
+        for (let i = 0; i < file.length; i++) {
+          dataTransfer.items.add(file[i]);
+        }
+      } else {
+        // Single File
+        dataTransfer.items.add(file as File);
+      }
+      fileInput.files = dataTransfer.files;
       fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+    } catch (err) {
+      console.error('upload failed', err);
     }
   },
 });
@@ -208,7 +217,7 @@ defineRender(() => {
           />
         </div>
       )}
-    </AttachmentContextProvider>
-  )
+    </AttachmentContextProvider>,
+  );
 });
 </script>

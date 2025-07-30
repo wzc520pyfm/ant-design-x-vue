@@ -1,6 +1,29 @@
 # Changelog
 
 
+## v1.2.9
+
+[compare changes](https://undefined/undefined/compare/v1.2.8...v1.2.9)
+
+### 🚀 Enhancements
+
+- **bubble:** Support slots for bubble list (#373)
+
+### 🩹 Fixes
+
+- **bubble:** Fix attrs reactive of bubble list (#393)
+- **bubble:** Improve bubble list scrollbar style (#389)
+- **suggestion:** Cascader dropdown popup height not auto (#398)
+
+### 📦 Build
+
+- **project:** Support build esm min file for dist (#371)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- 雨溪 ([@yuxi-ovo](http://github.com/yuxi-ovo))
+
 ## v1.2.8
 
 [compare changes](https://undefined/undefined/compare/v1.2.7...v1.2.8)

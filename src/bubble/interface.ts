@@ -32,7 +32,7 @@ export interface BubbleProps<ContentType extends BubbleContentType = string> ext
   rootClassName?: string;
   styles?: Partial<Record<SemanticType, CSSProperties>>;
   classNames?: Partial<Record<SemanticType, string>>;
-  avatar?: Partial<_AvatarProps> | VNode;
+  avatar?: Partial<_AvatarProps> | VNode | (() => VNode);
   placement?: 'start' | 'end';
   loading?: boolean;
   typing?: AvoidValidation<TypingOption | boolean>;

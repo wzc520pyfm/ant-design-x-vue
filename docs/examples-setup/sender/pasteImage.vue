@@ -15,7 +15,7 @@ const open = ref(false);
 const items = ref([]);
 const text = ref('');
 
-const attachmentsRef = ref(null);
+const attachmentsRef = ref<InstanceType<typeof Attachments>>(null);
 const senderRef = ref<InstanceType<typeof Sender>>(null);
 
 const placeholder = (type: PlaceholderType) =>
@@ -33,9 +33,7 @@ const getDropContainer = () => senderRef.value?.nativeElement;
 
 const pastFile: PastFile = (_, files) => {
   console.log("past")
-  for (const file of files) {
-    attachmentsRef.value?.upload(file);
-  }
+  attachmentsRef.value?.upload(files);
   open.value = true;
 }
 

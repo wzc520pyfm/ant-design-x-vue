@@ -3,6 +3,9 @@ import { Button, Divider, Form, Input, Typography } from 'ant-design-vue';
 import { useXAgent } from 'ant-design-x-vue';
 import { reactive, ref, watch } from 'vue';
 
+type OutputType = string;
+type InputType = { message: string };
+
 defineOptions({ name: 'AXUseXAgentCustom' });
 
 const lines = ref<string[]>([]);
@@ -17,16 +20,19 @@ const log = (text: string) => {
   lines.value = [...lines.value, text];
 };
 
-const [ agent ] = useXAgent({
+const [ agent ] = useXAgent<string, InputType, OutputType>({
   request: ({ message }, { onUpdate, onSuccess }) => {
     let times = 0;
-
+    const chunks: OutputType[] = [];
     const id = setInterval(() => {
       times += 1;
-      onUpdate(`Thinking...(${times}/3)`);
+      const chunk = `Thinking...(${times}/3)`;
+      onUpdate(chunk);
+      chunks.push(chunk);
 
       if (times >= 3) {
-        onSuccess(`It's funny that you ask: ${message}`);
+        onUpdate(`It's funny that you ask: ${message}`);
+        onSuccess(chunks);
         clearInterval(id);
       }
     }, 500);
@@ -38,11 +44,11 @@ const onFinish = ({ question }: { question: string }) => {
   agent.value.request(
     { message: question },
     {
-      onUpdate: (message) => {
-        log(`[Agent] Update: ${message}`);
+      onUpdate: (chunk) => {
+        log(`[Agent] Update: ${chunk}`);
       },
-      onSuccess: (message) => {
-        log(`[Agent] Answer: ${message}`);
+      onSuccess: (chunks) => {
+        log(`[Agent] Answer: ${chunks.join(',')}`);
         modelRef.question = ''
       },
       // Current demo not use error

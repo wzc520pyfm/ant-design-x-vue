@@ -51,7 +51,6 @@ export interface FileListProps {
   itemStyle?: CSSProperties;
 }
 
-
 export interface FileListCardProps {
   prefixCls?: string;
   item: Attachment;
@@ -59,6 +58,8 @@ export interface FileListCardProps {
   className?: string;
   style?: CSSProperties;
   imageProps?: ImageProps;
+  icon?: VNode | PresetIcons;
+  type?: 'file' | 'image';
 }
 
 export interface ProgressProps {
@@ -150,5 +151,8 @@ export interface AttachmentsProps extends AntdUploadProps {
 
 export interface AttachmentsRef {
   nativeElement: HTMLDivElement | null;
-  upload: (file: File) => void;
+  upload: (file: File | File[] | FileList) => void;
 }
+
+
+export type PresetIcons = 'default' | 'excel' | 'image' | 'markdown' | 'pdf' | 'ppt' | 'word' | 'zip' | 'video' | 'audio';

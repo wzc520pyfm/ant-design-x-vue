@@ -16,7 +16,6 @@ const roles: BubbleListProps['roles'] = {
   text: {
     placement: 'start',
     avatar: { icon: UserOutlined, style: { background: '#fde3cf' } },
-    typing: true,
   },
   suggestion: {
     placement: 'start',
@@ -29,7 +28,7 @@ const roles: BubbleListProps['roles'] = {
         icon: h(SmileOutlined, { style: { color: '#FAAD14' } }),
         description: text,
       }))
-    }),    
+    }),
   },
 };
 
@@ -55,40 +54,36 @@ type AgentAIMessage = {
 
 type AgentMessage = AgentUserMessage | AgentAIMessage;
 
-type BubbleMessage = {
-  role: string;
-};
-
 const content = ref('');
 const senderLoading = ref(false);
 
 // Agent for request
-const [ agent ] = useXAgent<AgentMessage>({
+const [ agent ] = useXAgent<AgentMessage, { message: AgentMessage }, Record<string, any>>({
   request: async ({ message }, { onSuccess }) => {
     senderLoading.value = true;
     await sleep();
-
     const { content } = message || {};
-
     senderLoading.value = false;
-    onSuccess({
-      type: 'ai',
-      list: [
-        {
-          type: 'text',
-          content: `Do you want?`,
-        },
-        {
-          type: 'suggestion',
-          content: [`Look at: ${content}`, `Search: ${content}`, `Try: ${content}`],
-        },
-      ],
-    });
+    onSuccess([
+      {
+        type: 'ai',
+        list: [
+          {
+            type: 'text',
+            content: `Do you want?`,
+          },
+          {
+            type: 'suggestion',
+            content: [`Look at: ${content}`, `Search: ${content}`, `Try: ${content}`],
+          },
+        ],
+      }
+    ]);
   },
 });
 
 // Chat messages
-const { onRequest, parsedMessages } = useXChat<AgentMessage, BubbleMessage>({
+const { onRequest, parsedMessages } = useXChat({
   agent: agent.value,
 
   defaultMessages: [
@@ -110,7 +105,6 @@ const { onRequest, parsedMessages } = useXChat<AgentMessage, BubbleMessage>({
   // Convert AgentMessage to BubbleMessage
   parser: (agentMessages) => {
     const list = agentMessages.content ? [agentMessages] : (agentMessages as AgentAIMessage).list;
-
     return (list || []).map((msg) => ({
       role: msg.type,
       content: msg.content,

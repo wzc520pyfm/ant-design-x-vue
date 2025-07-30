@@ -125,7 +125,7 @@ defineRender(() => {
         }
       }}
       // optionRender={optionRender}
-      class={classnames(rootClassName, prefixCls.value, hashId, cssVarCls, {
+      popupClassName={classnames(rootClassName, prefixCls.value, hashId.value, cssVarCls, {
         [`${prefixCls.value}-block`]: block,
       })}
       onChange={onInternalChange as CascaderProps['onChange']}

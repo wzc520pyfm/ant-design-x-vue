@@ -1,6 +1,6 @@
 {
   "name": "ant-design-x-vue",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "Craft AI-driven interfaces effortlessly",
   "keywords": [
     "AI",
@@ -56,6 +56,7 @@
   "module": "./es/index.mjs",
   "unpkg": "./dist/index.umd.js",
   "types": "./typings/index.d.ts",
+  "sideEffects": false,
   "files": [
     "es",
     "lib",

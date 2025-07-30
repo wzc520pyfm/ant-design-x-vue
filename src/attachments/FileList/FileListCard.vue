@@ -1,10 +1,11 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
 import { CloseCircleFilled, FileExcelFilled, FileImageFilled, FileMarkdownFilled, FilePdfFilled, FilePptFilled, FileTextFilled, FileWordFilled, FileZipFilled } from '@ant-design/icons-vue';
-import { computed, onWatcherCleanup, useTemplateRef, watch, type VNode } from 'vue';
+import { computed, onWatcherCleanup, useTemplateRef, watch } from 'vue';
+import type { VNode } from 'vue';
 import AudioIcon from './AudioIcon.vue';
 import VideoIcon from './VideoIcon.vue';
-import type { FileListCardProps } from '../interface';
+import type { FileListCardProps, PresetIcons } from '../interface';
 import { useAttachmentContextInject } from '../context';
 import { useXProviderContext } from '../../x-provider';
 import { previewImage } from '../util';
@@ -21,51 +22,67 @@ const DEFAULT_ICON_COLOR = '#8c8c8c';
 const IMG_EXTS = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'];
 
 const PRESET_FILE_ICONS: {
+  key: PresetIcons;
   ext: string[];
   color: string;
   icon: VNode;
 }[] = [
     {
+      key: 'default',
+      icon: <FileTextFilled />,
+      color: DEFAULT_ICON_COLOR,
+      ext: [],
+    },
+    {
+      key: 'excel',
       icon: <FileExcelFilled />,
       color: '#22b35e',
       ext: ['xlsx', 'xls'],
     },
     {
+      key: 'image',
       icon: <FileImageFilled />,
       color: DEFAULT_ICON_COLOR,
       ext: IMG_EXTS,
     },
     {
+      key: 'markdown',
       icon: <FileMarkdownFilled />,
       color: DEFAULT_ICON_COLOR,
       ext: ['md', 'mdx'],
     },
     {
+      key: 'pdf',
       icon: <FilePdfFilled />,
       color: '#ff4d4f',
       ext: ['pdf'],
     },
     {
+      key: 'ppt',
       icon: <FilePptFilled />,
       color: '#ff6e31',
       ext: ['ppt', 'pptx'],
     },
     {
+      key: 'word',
       icon: <FileWordFilled />,
       color: '#1677ff',
       ext: ['doc', 'docx'],
     },
     {
+      key: 'zip',
       icon: <FileZipFilled />,
       color: '#fab714',
       ext: ['zip', 'rar', '7z', 'tar', 'gz'],
     },
     {
+      key: 'video',
       icon: <VideoIcon />,
       color: '#ff4d4f',
       ext: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'],
     },
     {
+      key: 'audio',
       icon: <AudioIcon />,
       color: '#8c8c8c',
       ext: ['mp3', 'wav', 'flac', 'ape', 'aac', 'ogg'],
@@ -89,7 +106,7 @@ function getSize(size: number) {
   return `${retSize.toFixed(0)} ${units[unitIndex]}`;
 }
 
-const { prefixCls: customizePrefixCls, item, onRemove, className, style, imageProps } = defineProps<FileListCardProps>();
+const { prefixCls: customizePrefixCls, item, onRemove, className, style, imageProps, icon, type } = defineProps<FileListCardProps>();
 
 const context = useAttachmentContextInject();
 const disabled = computed(() => context.value.disabled);
@@ -143,10 +160,27 @@ const desc = computed(() => {
 
 // ============================== Icon ==============================
 const iconState = computed(() => {
-  for (const { ext, icon, color } of PRESET_FILE_ICONS) {
-    if (matchExt(nameState.value.nameSuffix, ext)) {
+  if (icon) {
+    if (typeof icon === 'string') {
+      const presetIcon = PRESET_FILE_ICONS.find((preset) => preset.key === icon);
+      if (presetIcon) {
+        return {
+          icon: presetIcon.icon,
+          color: presetIcon.color
+        };
+      }
+    } else {
       return {
         icon,
+        color: undefined
+      };
+    }
+  }
+
+  for (const { ext, icon: presetIcon, color } of PRESET_FILE_ICONS) {
+    if (matchExt(nameState.value.nameSuffix, ext)) {
+      return {
+        icon: presetIcon,
         iconColor: color
       }
     }
@@ -179,9 +213,11 @@ watch(() => item.originFileObj, () => {
 
 // ============================= Render =============================
 const previewUrl = computed(() => item.thumbUrl || item.url || previewImg.value);
-const isImgPreview = computed(() => isImg.value && (item.originFileObj || previewUrl.value));
+const shouldShowImagePreview = computed(() => {
+  return type === 'image' || (type !== 'file' && isImg.value && (item.originFileObj || previewUrl.value));
+});
 const content = computed(() => {
-  if (isImgPreview.value) {
+  if (shouldShowImagePreview.value) {
     // Preview Image style
     return (
       <>
@@ -240,8 +276,8 @@ defineRender(() => {
         cardCls,
         {
           [`${cardCls}-status-${status.value}`]: status.value,
-          [`${cardCls}-type-preview`]: isImgPreview.value,
-          [`${cardCls}-type-overview`]: !isImgPreview.value,
+          [`${cardCls}-type-preview`]: shouldShowImagePreview.value,
+          [`${cardCls}-type-overview`]: !shouldShowImagePreview.value,
         },
         className,
         hashId.value,
