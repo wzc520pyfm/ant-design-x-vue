@@ -20,17 +20,29 @@ conversations/basic
 
 ### 会话操作
 
+<ClientOnly>
+
 :::demo 配合 `menu` 属性，配置操作菜单
 
 conversations/with-menu
 
 :::
 
+</ClientOnly>
+
 ### 自定义操作
 
 :::demo 自定义菜单入口
 
 conversations/menu-trigger
+
+:::
+
+### 可编辑
+
+:::demo 可编辑对话名
+
+conversations/editable
 
 :::
 

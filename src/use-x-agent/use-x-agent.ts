@@ -1,20 +1,23 @@
 import XRequest from '../x-request';
+import type { SSEOutput, XStreamOptions } from '../x-stream';
 
 import type { AnyObject } from '../_util/type';
-import { computed } from 'vue';
+import { computed, ref, type MaybeRefOrGetter, toValue } from 'vue';
 
-interface RequestFnInfo<Message> extends Partial<XAgentConfigPreset>, AnyObject {
+interface RequestFnInfo<Message> extends AnyObject {
   messages?: Message[];
   message?: Message;
 }
 
-export type RequestFn<Message> = (
-  info: RequestFnInfo<Message>,
+export type RequestFn<Message, Input, Output> = (
+  info: Input,
   callbacks: {
-    onUpdate: (message: Message) => void;
-    onSuccess: (message: Message) => void;
+    onUpdate: (chunk: Output) => void;
+    onSuccess: (chunk: Output[]) => void;
     onError: (error: Error) => void;
+    onStream?: (abortController: AbortController) => void;
   },
+  transformStream?: XStreamOptions<Message>['transformStream'],
 ) => void;
 
 export interface XAgentConfigPreset {
@@ -23,69 +26,80 @@ export interface XAgentConfigPreset {
   model: string;
   dangerouslyApiKey: string;
 }
-export interface XAgentConfigCustom<Message> {
-  request?: RequestFn<Message>;
+export interface XAgentConfigCustom<Message, Input, Output> {
+  request?: RequestFn<Message, Input, Output>;
 }
 
-export type XAgentConfig<Message> = Partial<XAgentConfigPreset> & XAgentConfigCustom<Message>;
+export type XAgentConfig<Message, Input, Output> = Partial<XAgentConfigPreset> &
+  XAgentConfigCustom<Message, Input, Output>;
 
 let uuid = 0;
 
 /** This is a wrap class to avoid developer can get too much on origin object */
-export class XAgent<Message = string> {
-  config: XAgentConfig<Message>;
+export class XAgent<Message = string, Input = RequestFnInfo<Message>, Output = SSEOutput> {
+  config: XAgentConfig<Message, Input, Output>;
 
-  private requestingMap: Record<number, boolean> = {};
+  private requestingMap = ref<Record<number, boolean>>({});
 
-  constructor(config: XAgentConfig<Message>) {
+  constructor(config: XAgentConfig<Message, Input, Output>) {
     this.config = config;
   }
 
   private finishRequest(id: number) {
-    delete this.requestingMap[id];
+    delete this.requestingMap.value[id];
   }
 
-  public request: RequestFn<Message> = (info, callbacks) => {
+  public request: RequestFn<Message, Input, Output> = (info, callbacks, transformStream?) => {
     const { request } = this.config;
-    const { onUpdate, onSuccess, onError } = callbacks;
+    const { onUpdate, onSuccess, onError, onStream } = callbacks;
 
     const id = uuid;
     uuid += 1;
-    this.requestingMap[id] = true;
+    this.requestingMap.value[id] = true;
 
     request?.(info, {
-      // Status should be unique.
-      // One get success or error should not get more message
-      onUpdate: (message) => {
-        if (this.requestingMap[id]) {
-          onUpdate(message);
+      onStream: (abortController) => {
+        if (this.requestingMap.value[id]) {
+          onStream?.(abortController);
         }
       },
-      onSuccess: (message) => {
-        if (this.requestingMap[id]) {
-          onSuccess(message);
+      // Status should be unique.
+      // One get success or error should not get more message
+      onUpdate: (chunk) => {
+        if (this.requestingMap.value[id]) {
+          onUpdate(chunk);
+        }
+      },
+      onSuccess: (chunk) => {
+        if (this.requestingMap.value[id]) {
+          onSuccess(chunk);
           this.finishRequest(id);
         }
       },
       onError: (error) => {
-        if (this.requestingMap[id]) {
+        if (this.requestingMap.value[id]) {
           onError(error);
           this.finishRequest(id);
         }
       },
-    });
+    },
+      transformStream);
   };
 
   public isRequesting() {
-    return Object.keys(this.requestingMap).length > 0;
+    return Object.keys(this.requestingMap.value).length > 0;
   }
 }
 
-export default function useXAgent<Message = string>(config: XAgentConfig<Message>) {
-  const { request, ...restConfig } = config;
+export default function useXAgent<
+  Message = string,
+  Input = RequestFnInfo<Message>,
+  Output = SSEOutput,
+>(config: MaybeRefOrGetter<XAgentConfig<Message, Input, Output>>) {
   const agent = computed(
-    () =>
-      new XAgent<Message>({
+    () => {
+      const { request, ...restConfig } = toValue(config);
+      return new XAgent<Message>({
         // @ts-expect-error
         request:
           request! ||
@@ -93,9 +107,10 @@ export default function useXAgent<Message = string>(config: XAgentConfig<Message
             baseURL: restConfig.baseURL!,
             model: restConfig.model,
             dangerouslyApiKey: restConfig.dangerouslyApiKey,
-          }).create,
+          }).value.create,
         ...restConfig,
-      }));
+      });
+    });
 
   return [
     agent

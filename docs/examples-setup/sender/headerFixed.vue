@@ -2,7 +2,7 @@
 import { EnterOutlined } from '@ant-design/icons-vue';
 import { App, Flex, Space, Switch, Typography, message } from 'ant-design-vue';
 import { Sender } from 'ant-design-x-vue';
-import { computed, ref, h } from 'vue';
+import { ref, h } from 'vue';
 
 defineOptions({ name: 'AXSenderHeaderFixedSetup' });
 
@@ -11,16 +11,16 @@ const hasRef = ref(true);
 const [messageApi, contextHolder] = message.useMessage();
 
 const toggleChecked = () => {
-  hasRef.value =!hasRef.value; 
+  hasRef.value =!hasRef.value;
 }
 
-const openChange = (v) => {
+const openChange = (v: boolean) => {
   hasRef.value = v;
 }
 
-const headerTitle = h(Space, {}, [
+const headerTitle = h(Space, {}, () => [
   h(EnterOutlined),
-  h(Typography.Text, { type: 'secondary' }, '"Tell more about Ant Design X"')
+  h(Typography.Text, { type: 'secondary' }, () => '"Tell more about Ant Design X"')
 ])
 </script>
 <template>

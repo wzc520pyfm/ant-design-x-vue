@@ -1,6 +1,7 @@
 import type { AvatarProps } from 'ant-design-vue';
 import type { AvoidValidation } from '../type-utility';
 import type { CSSProperties, HTMLAttributes, VNode } from 'vue';
+import { AnyObject } from '../_util/type';
 
 export interface TypingOption {
   /**
@@ -14,33 +15,40 @@ export interface TypingOption {
   /**
    * @default null
    */
-  suffix?: VNode;
+  suffix?: VNode | string;
 }
 
 export type SemanticType = 'avatar' | 'content' | 'header' | 'footer';
+
+export type BubbleContentType = VNode | string | AnyObject | number;
+
+export type SlotInfoType = {
+  key?: string | number;
+};
 
 export interface _AvatarProps extends AvatarProps {
   class: string;
   style: CSSProperties;
 }
 
-export interface BubbleProps extends /* @vue-ignore */ Omit<HTMLAttributes, 'content'> {
+export interface BubbleProps<ContentType extends BubbleContentType = string> extends /* @vue-ignore */ Omit<HTMLAttributes, 'content'> {
   prefixCls?: string;
   rootClassName?: string;
   styles?: Partial<Record<SemanticType, CSSProperties>>;
   classNames?: Partial<Record<SemanticType, string>>;
-  avatar?: Partial<_AvatarProps> | VNode;
+  avatar?: Partial<_AvatarProps> | VNode | (() => VNode);
   placement?: 'start' | 'end';
   loading?: boolean;
   typing?: AvoidValidation<TypingOption | boolean>;
-  content?: VNode | object | string;
-  messageRender?: (content: string) => VNode | string;
+  content?: ContentType;
+  messageRender?: (content: ContentType) => VNode | string;
   loadingRender?: () => VNode;
   variant?: 'filled' | 'borderless' | 'outlined' | 'shadow';
   shape?: 'round' | 'corner';
+  _key?: number | string;
   onTypingComplete?: VoidFunction;
-  header?: VNode | string;
-  footer?: VNode | string;
+  header?: AvoidValidation<VNode | string | ((content: ContentType, info: SlotInfoType) => VNode | string)>;
+  footer?: AvoidValidation<VNode | string | ((content: ContentType, info: SlotInfoType) => VNode | string)>;
 }
 
 export interface BubbleRef {
@@ -61,12 +69,12 @@ export interface BubbleListRef {
   }) => void;
 }
 
-export type BubbleDataType = BubbleProps & {
+export type BubbleDataType = BubbleProps<any> & {
   key?: string | number;
   role?: string;
 };
 
-export type RoleType = Partial<Omit<BubbleProps, 'content'>>;
+export type RoleType = Partial<Omit<BubbleProps<any>, 'content'>>;
 
 export type RolesType = Record<string, RoleType> | ((bubbleDataP: BubbleDataType, index: number) => RoleType);
 

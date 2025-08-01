@@ -1,10 +1,10 @@
-<script setup lang="tsx">
+<script setup lang="tsx" generic="T extends BubbleContentType = string">
 import { Avatar } from 'ant-design-vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import useTypedEffect from './hooks/useTypedEffect';
 import useTypingConfig from './hooks/useTypingConfig';
-import type { BubbleProps } from './interface';
+import type { BubbleContentType, BubbleProps, SlotInfoType } from './interface';
 import Loading from './loading.vue';
 import useStyle from './style';
 import { useBubbleContextInject } from './context';
@@ -32,16 +32,23 @@ const {
   onTypingComplete,
   header,
   footer,
+  _key,
   ...otherHtmlProps
-} = defineProps<BubbleProps>();
+} = defineProps<BubbleProps<T>>();
 
 const slots = defineSlots<{
   avatar?(): VNode;
-  header?(): VNode | string;
-  footer?(): VNode | string;
+  header?(props: {
+    content: T;
+    info: SlotInfoType;
+  }): VNode | string;
+  footer?(props: {
+    content: T;
+    info: SlotInfoType;
+  }): VNode | string;
   loading?(): VNode;
-  message?(props?: {
-    content: string;
+  message?(props: {
+    content: T;
   }): VNode | string;
 }>();
 
@@ -112,18 +119,24 @@ const mergedCls = computed(() => [
   },
 ]);
 
+const isVNodeArray = (val: any) => Array.isArray(val) && val.every(isVNode);
+
 // ============================ Avatar ============================
 const avatarNode = computed(() => {
   if (slots.avatar) {
     return slots.avatar();
   }
-  return isVNode(avatar) ? avatar : <Avatar {...avatar} />;
+  return typeof avatar === 'function'
+    ? avatar()
+    : (isVNode(avatar) || isVNodeArray(avatar))
+      ? avatar
+      : <Avatar {...avatar} />;
 });
 
 // =========================== Content ============================
 const mergedContent = computed(() => {
   if (slots.message) {
-    return slots.message({ content: typedContent.value as any});
+    return slots.message({ content: typedContent.value as any });
   }
   return messageRender ? messageRender(typedContent.value as any) : typedContent.value
 });
@@ -163,8 +176,16 @@ const fullContent = computed<VNode>(() => {
       {toValue(contentNode)}
     </div>
   );
-  const _header = slots.header ? slots.header() : header;
-  const _footer = slots.footer ? slots.footer() : footer;
+  const _header = slots.header
+    ? slots.header({ content: typedContent.value as T, info: { key: _key } })
+    : typeof header === 'function'
+      ? header(typedContent.value as T, { key: _key })
+      : header;
+  const _footer = slots.footer
+    ? slots.footer({ content: typedContent.value as T, info: { key: _key } })
+    : typeof footer === 'function'
+      ? footer(typedContent.value as T, { key: _key })
+      : footer;
 
   if (_header || _footer) {
     return (

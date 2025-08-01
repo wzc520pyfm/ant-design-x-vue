@@ -5,6 +5,7 @@ import type { SSEOutput, XStreamOptions } from '../x-stream';
 import type { XFetchOptions } from './x-fetch';
 
 import type { AnyObject } from '../_util/type';
+import { computed, MaybeRefOrGetter, toValue } from 'vue';
 
 export interface XRequestBaseOptions {
   /**
@@ -83,6 +84,11 @@ export interface XRequestCallbacks<Output> {
    * @description Callback when the request is updated
    */
   onUpdate: (chunk: Output) => void;
+
+  /**
+   * @description Callback monitoring and control the stream
+   */
+  onStream?: (abortController: AbortController) => void;
 }
 
 export type XRequestFunction<Input = AnyObject, Output = SSEOutput> = (
@@ -97,8 +103,6 @@ class XRequestClass {
 
   private defaultHeaders;
   private customOptions;
-
-  private static instanceBuffer: Map<string | typeof fetch, XRequestClass> = new Map();
 
   private constructor(options: XRequestOptions) {
     const { baseURL, model, dangerouslyApiKey, ...customOptions } = options;
@@ -118,13 +122,7 @@ class XRequestClass {
     if (!options.baseURL || typeof options.baseURL !== 'string')
       throw new Error('The baseURL is not valid!');
 
-    const id = options.fetch || options.baseURL;
-
-    if (!XRequestClass.instanceBuffer.has(id)) {
-      XRequestClass.instanceBuffer.set(id, new XRequestClass(options));
-    }
-
-    return XRequestClass.instanceBuffer.get(id) as XRequestClass;
+    return new XRequestClass(options);
   }
 
   public create = async <Input = AnyObject, Output = SSEOutput>(
@@ -132,6 +130,7 @@ class XRequestClass {
     callbacks?: XRequestCallbacks<Output>,
     transformStream?: XStreamOptions<Output>['transformStream'],
   ) => {
+    const abortController = new AbortController();
     const requestInit = {
       method: 'POST',
       body: JSON.stringify({
@@ -139,7 +138,10 @@ class XRequestClass {
         ...params,
       }),
       headers: this.defaultHeaders,
+      signal: abortController.signal,
     };
+
+    callbacks?.onStream?.(abortController);
 
     try {
       const response = await xFetch(this.baseURL, {
@@ -227,6 +229,10 @@ class XRequestClass {
   };
 }
 
-const XRequest = XRequestClass.init;
+const XRequest = (options: MaybeRefOrGetter<XRequestOptions>) => {
+  return computed(() => {
+    return XRequestClass.init(toValue(options));
+  });
+};
 
 export default XRequest;

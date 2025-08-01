@@ -1,14 +1,13 @@
 import { createTheme, useCacheToken } from '../_util/cssinjs';
 import { theme as antdTheme } from 'ant-design-vue';
 import { ignore, unitless } from './patch-antd';
-import formatToken from 'ant-design-vue/es/theme/util/alias';
+import formatToken from 'ant-design-vue/es/theme/util/alias.js';
 
 import version from '../version';
 
 import type { Theme } from '../_util/cssinjs';
 import type { DesignTokenProviderProps } from './patch-antd';
 import type { AliasToken, GlobalToken, SeedToken } from './cssinjs-utils';
-import { useDesignTokenInject } from 'ant-design-vue/es/theme/internal';
 import { computed, type Ref, unref } from 'vue';
 
 const defaultTheme: Theme<SeedToken, AliasToken> = createTheme(antdTheme.defaultAlgorithm);
@@ -84,7 +83,14 @@ export function useInternalToken(): [
   realToken: Ref<GlobalToken>,
   cssVar?: DesignTokenProviderProps['cssVar'],
 ] {
-  const designToken = useDesignTokenInject();
+  const { token: myToken, hashId: myHashId, theme: myTheme } = antdTheme.useToken();
+  const designToken = computed(() => {
+    return {
+      token: myToken.value,
+      hashed: myHashId.value,
+      theme: myTheme.value
+    }
+  });
   const {
     // @ts-expect-error
     override,
@@ -94,10 +100,10 @@ export function useInternalToken(): [
 
   const rootDesignToken = computed(() => designToken.value.token);
   const hashed = computed(() => designToken.value.hashed);
-  // @ts-expect-error
   const theme = computed(() => designToken.value.theme ?? defaultTheme);
 
   const catchToken = useCacheToken<GlobalToken, SeedToken>(
+    // @ts-expect-error
     computed(() => theme.value),
     computed(() => [antdTheme.defaultSeed, rootDesignToken.value]),
     computed(() => ({

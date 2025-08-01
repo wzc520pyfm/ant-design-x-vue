@@ -21,7 +21,7 @@ const content = ref('');
 const senderLoading = ref(false);
 
 // Agent for request
-const [ agent ] = useXAgent({
+const [ agent ] = useXAgent<string, { message: string }, string>({
   request: async ({ message }, { onSuccess, onUpdate }) => {
     senderLoading.value = true;
     const fullContent = `Streaming output instead of Bubble typing effect. You typed: ${message}`;
@@ -30,11 +30,10 @@ const [ agent ] = useXAgent({
     const id = setInterval(() => {
       currentContent = fullContent.slice(0, currentContent.length + 2);
       onUpdate(currentContent);
-
       if (currentContent === fullContent) {
         senderLoading.value = false;
         clearInterval(id);
-        onSuccess(fullContent);
+        onSuccess([fullContent]);
       }
     }, 100);
   },

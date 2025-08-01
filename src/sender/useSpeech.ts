@@ -1,5 +1,6 @@
+import { ButtonProps } from 'ant-design-vue';
 import useMergedState from '../_util/hooks/useMergedState';
-import { computed, ref, watchEffect, type MaybeRefOrGetter, toValue, onWatcherCleanup } from 'vue';
+import { computed, ref, watchEffect, type MaybeRefOrGetter, toValue, onWatcherCleanup, type ComputedRef, type Ref } from 'vue';
 
 // Ensure that the SpeechRecognition API is available in the browser
 let SpeechRecognition: any;
@@ -10,15 +11,24 @@ if (!SpeechRecognition && typeof window !== 'undefined') {
 
 export type ControlledSpeechConfig = {
   recording?: boolean;
-  onRecordingChange: (recording: boolean) => void;
+  onRecordingChange?: (recording: boolean) => void;
+  audioIcon?: ButtonProps['icon'];
+  audioDisabledIcon?: ButtonProps['icon']
+  audioRecordingIcon?: ButtonProps['icon'];
 };
 
 export type AllowSpeech = boolean | ControlledSpeechConfig;
 
+export type UseSpeechReturn = {
+  speechPermission: ComputedRef<boolean>;
+  triggerSpeech: (forceBreak: boolean) => void;
+  recording: Ref<boolean>;
+}
+
 export default function useSpeech(
   onSpeech: (transcript: string) => void,
   allowSpeech?: MaybeRefOrGetter<AllowSpeech>,
-) {
+): UseSpeechReturn {
   const onEventSpeech = onSpeech;
 
   // ========================== Speech Config ==========================
@@ -39,7 +49,6 @@ export default function useSpeech(
         speechInControlled: false,
       }
     });
-
 
   const controlledRecording = computed(() => allowSpeechItem.value.controlledRecording)
   const onControlledRecordingChange = allowSpeechItem.value.onControlledRecordingChange

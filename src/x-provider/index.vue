@@ -5,7 +5,7 @@ import type { XProviderProps } from './context';
 import useXProviderContext from './hooks/use-x-provider-context';
 import { ConfigProvider as AntdConfigProvider } from 'ant-design-vue';
 
-defineOptions({ name: 'AXConfigProvider', inheritAttrs: false });
+defineOptions({ name: 'AXProvider', inheritAttrs: false });
 
 const {
   attachments,

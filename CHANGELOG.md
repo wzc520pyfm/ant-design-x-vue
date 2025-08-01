@@ -1,6 +1,313 @@
 # Changelog
 
 
+## v1.3.0
+
+[compare changes](https://undefined/undefined/compare/v1.2.9...v1.3.0)
+
+### 🚀 Enhancements
+
+- Update useXChat & XRequest & fix useXAgent's RequestFn onSuccess type (#394)
+- **attachments:** Add custom icon options for FileCard (#381)
+- **attachments:** Support multiple files upload (#410)
+- **bubble:** Header and footer support get key and fix type define (#405)
+- **use-x-agent:** Support dynamic option configuration (#395)
+- **x-request:** Support dynamic option configuration (#396)
+
+### 🔥 Performance
+
+- **bubble:** Memoize bubble items to optimize list rendering (#392)
+
+### 🩹 Fixes
+
+- **prompts:** Fix scroll style (#399)
+- **welcome:** Fix warning of runtime prop checked (#404)
+- **bubble:** Disable typing for initial data (#391)
+
+### 📖 Documentation
+
+- **sender:** Update components prop description (#402)
+- **bubble:** Fix list demo scroll style (#400)
+
+### 📦 Build
+
+- **project:** Improve tree sharking (#386)
+
+### 🏡 Chore
+
+- Fix changelog (af5c881)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- PeikyLiu ([@PeikyLiu](http://github.com/PeikyLiu))
+- Kieran Wang ([@kieranwv](http://github.com/kieranwv))
+- Wujunyi0907 ([@wujunyi0907](http://github.com/wujunyi0907))
+
+## v1.2.9
+
+[compare changes](https://undefined/undefined/compare/v1.2.8...v1.2.9)
+
+### 🚀 Enhancements
+
+- **bubble:** Support slots for bubble list (#373)
+
+### 🩹 Fixes
+
+- **bubble:** Fix attrs reactive of bubble list (#393)
+- **bubble:** Improve bubble list scrollbar style (#389)
+- **suggestion:** Cascader dropdown popup height not auto (#398)
+
+### 📦 Build
+
+- **project:** Support build esm min file for dist (#371)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- 雨溪 ([@yuxi-ovo](http://github.com/yuxi-ovo))
+
+## v1.2.8
+
+[compare changes](https://undefined/undefined/compare/v1.2.7...v1.2.8)
+
+### 🚀 Enhancements
+
+- **welcome:** Support vnode getter (#343)
+- **sender:** Add speech custom icon support (#374)
+- Support conf compatible style (#383)
+
+### 🩹 Fixes
+
+- **suggestion:** Fix the dropdown width not adapting when block (#358)
+
+### 📖 Documentation
+
+- **dev:** Add cdn online demo (#369)
+- Fix slot warning of setup demo (#372)
+- **xstream:** Fix documentation typos (#377)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Kieran Wang ([@kieranwv](http://github.com/kieranwv))
+- XiangYu Liu ([@PeikyLiu](http://github.com/PeikyLiu))
+
+## v1.2.7
+
+[compare changes](https://undefined/undefined/compare/v1.2.6...v1.2.7)
+
+### 🚀 Enhancements
+
+- **prompts:** Title prop support vnode getter (#344)
+- Add install func for components (#329)
+
+### 🩹 Fixes
+
+- **sender:** Fix actions slot type (#357)
+- **bubble:** Fix slots type (#363)
+- **project:** Add require conf of resolver to support commonjs (#365)
+- **sender:** Fix sender define type err (#271)
+
+### 📦 Build
+
+- **project:** Remove antdv from external of umd conf (#367)
+- **project:** Add esm output of dist (#368)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- 雨溪 ([@yuxi-ovo](http://github.com/yuxi-ovo))
+
+## v1.2.6
+
+[compare changes](https://undefined/undefined/compare/v1.2.5...v1.2.6)
+
+### 🩹 Fixes
+
+- **bubble:** Fix header and footer warning of runtime prop checked (#353)
+- **bubble:** Fix display count reactive (#354)
+
+### 📖 Documentation
+
+- **playground:** Add playground copilot demo (#346)
+- Update basic demo stackblitz link (#355)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Bao ([@Bao0630](http://github.com/Bao0630))
+
+## v1.2.5
+
+[compare changes](https://undefined/undefined/compare/v1.2.4...v1.2.5)
+
+### 🚀 Enhancements
+
+- **bubble:** Header support function (#341)
+- **sender:** Header and prefix support getter (#324)
+
+### 🩹 Fixes
+
+- Passing Conversations menu.getPopupContainer to Dropdown (#303)
+- **thought-chain:** Fixed ellipsis not taking effect. (#254)
+
+### 📖 Documentation
+
+- Remove api key and add description for api key (#335)
+- **thought-chain:** Add controlled setup demo (#321)
+- **conversations:** Add editable demo (#91)
+- **bubble:** Add think demo (#138)
+- **bubble:** Add think setup demo (#299)
+
+### ❤️ Contributors
+
+- Superlollipop ([@quanbisen](http://github.com/quanbisen))
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- InCBle ([@inCBle](http://github.com/inCBle))
+- Linhf123 ([@linhf123](http://github.com/linhf123))
+
+## v1.2.4
+
+[compare changes](https://undefined/undefined/compare/v1.2.3...v1.2.4)
+
+### 🔥 Performance
+
+- Build script (#328)
+
+### 🩹 Fixes
+
+- **Sender:** Fix pasted file is invalid in setup demo (#332)
+- Specify the file suffix for antdv (#334)
+
+### 📖 Documentation
+
+- Fix warning for independent setup demo (#333)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- 专注的小眼神 ([@Jarvis2018](http://github.com/Jarvis2018))
+- 菠萝吹雪 ([@yuguaa](http://github.com/yuguaa))
+
+## v1.2.3
+
+[compare changes](https://undefined/undefined/compare/v1.2.2...v1.2.3)
+
+### 🩹 Fixes
+
+- **attachments:** Fix maximum updates by ref transfer (#319)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+
+## v1.2.2
+
+[compare changes](https://undefined/undefined/compare/v1.2.1...v1.2.2)
+
+### 🩹 Fixes
+
+- **bubble:** Fix message slot type (73a9bc8)
+- **bubble:** Fix content param for footer func (#309)
+- **attachment:** Fix template ref value (#310)
+
+### 📖 Documentation
+
+- **bubble:** Update types about content (bd5ace2)
+- Update a new contributions charts (#304)
+
+### 📦 Build
+
+- External import starting with ant-design-vue (#316)
+
+### 🏡 Chore
+
+- Add unpkg badge (#289)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Shinji-Li <1349021570@qq.com>
+
+## v1.2.1
+
+[compare changes](https://undefined/undefined/compare/v1.2.0...v1.2.1)
+
+### 🚀 Enhancements
+
+- Support XRequest & useXChat & useXAgent to model access (#297)
+
+### 🩹 Fixes
+
+- **thought-chain:** Fix controlled mode not working (#241)
+- **sender:** Fix loading icon err (#298)
+- **use-x-agent:** Fix is-requesting reactive (#301)
+
+### 📖 Documentation
+
+- Update a new contributions charts (#292)
+
+### 🏡 Chore
+
+- Add deepwiki badge and href (#288)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- InCBle ([@inCBle](http://github.com/inCBle))
+- Shinji-Li <1349021570@qq.com>
+
+## v1.2.0
+
+[compare changes](https://undefined/undefined/compare/v1.1.2...v1.2.0)
+
+### 🚀 Enhancements
+
+- **bubble:** Footer support function (#285)
+
+### 🩹 Fixes
+
+- **sender:** Fix loading btn icon prop (#286)
+- **theme:** Fix theme system (#270)
+
+### 💅 Refactors
+
+- **bubble:** Type messageRender (#284)
+
+### 📦 Build
+
+- Improve build conf and dist (#272)
+
+### 🏡 Chore
+
+- Update lockfile (#283)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+
+## v1.1.2
+
+[compare changes](https://undefined/undefined/compare/v1.1.1...v1.1.2)
+
+### 🩹 Fixes
+
+- **conversations:** Fix groupable type of conversations. (#257)
+- **x-provider & sender:** Fix type define resolver err (#262)
+- **attachments:** Fix img style (#268)
+
+### 📖 Documentation
+
+- Add favicon (#265)
+- Fix demo app warpper hydration (#260)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Hihanley ([@hihanley](http://github.com/hihanley))
+- Clddup ([@clddup](http://github.com/clddup))
+
 ## v1.1.1
 
 [compare changes](https://undefined/undefined/compare/v1.1.0...v1.1.1)

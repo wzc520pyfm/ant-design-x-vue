@@ -116,6 +116,10 @@ export default defineConfig({
           text: 'Ant Design X of Vue',
           link: '/development/introduce'
         },
+        {
+          text: '样式兼容',
+          link: '/development/compatible-style'
+        },
       ],
       '/component/': [
         {
@@ -165,7 +169,8 @@ export default defineConfig({
         {
           text: '样板间',
           items: [
-            { text: '独立式', link: '/playground/independent' }
+            { text: '独立式', link: '/playground/independent' },
+            { text: '助手式', link: '/playground/copilot' }
           ]
         },
       ]

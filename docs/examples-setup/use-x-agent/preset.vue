@@ -42,18 +42,17 @@ async function request() {
       stream: true,
     },
     {
-      onSuccess: (messages) => {
+      onSuccess: (chunks) => {
         status.value = 'success';
-        console.log('onSuccess', messages);
+        console.log('onSuccess', chunks);
       },
       onError: (error) => {
         status.value = 'error';
         console.error('onError', error);
       },
-      onUpdate: (msg) => {
-        // @ts-expect-error
-        lines.value = [...lines.value, msg];
-        console.log('onUpdate', msg);
+      onUpdate: (chunk) => {
+        lines.value = [...lines.value, chunk];
+        console.log('onUpdate', chunk);
       },
     },
   );
@@ -87,7 +86,7 @@ async function request() {
               status === 'error' &&
               agent.config.baseURL === BASE_URL + PATH &&
               'Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.',
-            content: h(Descriptions, { column: 1 }, [
+            content: h(Descriptions, { column: 1 }, () => [
               h(
                 Descriptions.Item,
                 {

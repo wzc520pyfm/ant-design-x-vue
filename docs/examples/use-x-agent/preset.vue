@@ -38,18 +38,17 @@ async function request() {
       stream: true,
     },
     {
-      onSuccess: (messages) => {
+      onSuccess: (chunks) => {
         status.value = 'success';
-        console.log('onSuccess', messages);
+        console.log('onSuccess', chunks);
       },
       onError: (error) => {
         status.value = 'error';
         console.error('onError', error);
       },
-      onUpdate: (msg) => {
-        // @ts-expect-error
-        lines.value = [...lines.value, msg];
-        console.log('onUpdate', msg);
+      onUpdate: (chunk) => {
+        lines.value = [...lines.value, chunk];
+        console.log('onUpdate', chunk);
       },
     },
   );

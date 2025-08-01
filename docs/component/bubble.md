@@ -1,3 +1,7 @@
+<script>
+import { useStorage } from '@vueuse/core';
+const preferLocal = useStorage('antdx-docs-preference', 'tsx');
+</script>
 
 # Bubble 对话气泡
 
@@ -49,7 +53,15 @@ bubble/typing
 
 :::
 
-### 自定义渲染
+### 自定义渲染内容
+
+:::demo 自定义渲染内容。
+
+bubble/custom-content
+
+:::
+
+### 渲染markdown内容
 
 :::demo 配合 `markdown-it` 实现自定义渲染内容。
 
@@ -89,11 +101,29 @@ bubble/bubble-custom
 
 :::
 
+<span v-if="preferLocal === 'setup'">
+
+:::demo 还可以使用插槽：
+
+bubble/bubble-custom-slot
+
+:::
+
+</span>
+
 ### 自定义列表内容
 
 :::demo 自定义气泡列表内容，这对于个性化定制场景非常有用。
 
 bubble/list-custom
+
+:::
+
+### 深度思考
+
+:::demo 带深度思考。
+
+bubble/with-think
 
 :::
 
@@ -118,9 +148,9 @@ bubble/gpt-vis
 | --- | --- | --- | --- | --- |
 | avatar | 展示头像 | VNode | - |  |
 | classNames | 语义化结构 class | [Record<SemanticDOM, string>](#semantic-dom) | - |  |
-| content | 聊天内容 | string | - |  |
-| footer | 底部内容 | VNode | - |  |
-| header | 头部内容 | VNode | - |  |
+| content | 聊天内容 | ContentType | - |  |
+| footer | 底部内容 | VNode \| (content: ContentType, info: { key?: string \| number }) => VNode | - |  |
+| header | 头部内容 | VNode \| (content: ContentType, info: { key?: string \| number }) => VNode | - |  |
 | loading | 聊天内容加载状态 | boolean | - |  |
 | placement | 信息位置 | `start` \| `end` | `start` |  |
 | shape | 气泡形状 | `round` \| `corner` | - |  |
@@ -128,7 +158,7 @@ bubble/gpt-vis
 | typing | 设置聊天内容打字动画 | boolean \| \{ step?: number, interval?: number \} | false |  |
 | variant | 气泡样式变体 | `filled` \| `borderless` \| `outlined` \| `shadow` | `filled` |  |
 | loadingRender | 自定义渲染加载态内容 | () => VNode | - |  |
-| messageRender | 自定义渲染内容 | (content?: string) => VNode | - |  |
+| messageRender | 自定义渲染内容 | <ContentType extends [BubbleContentType](https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/src/bubble/interface.ts#L23) = string>(content?: ContentType) => VNode | - |  |
 | onTypingComplete | 打字效果完成时的回调，如果没有设置 typing 将在渲染时立刻触发 | () => void | - |  |
 
 ### Bubble Slots
@@ -136,10 +166,31 @@ bubble/gpt-vis
 | 插槽名 | 说明 | 类型 |
 | --- | --- | --- |
 | avatar | 头像 | - |
-| header | 头部面板 | - |
-| footer | 底部内容 | - |
+| header | 头部面板 | \{ content: ContentType, info: \{ key?: string \| number \} \} |
+| footer | 底部内容 | \{ content: ContentType, info: \{ key?: string \| number \} \} |
 | loading | loading占位 | - |
-| message | 消息内容 | \{ content: string \} |
+| message | 消息内容 | \{ content: ContentType \} |
+
+#### ContentType
+
+默认类型
+
+```typescript
+type ContentType = Vue.VNode | AnyObject | string | number;
+```
+
+自定义类型使用
+
+```tsx
+type CustomContentType = {
+  ...
+}
+
+<Bubble<CustomContentType> {...props} />
+// or
+const MyBubble = Bubble<CustomContentType>;
+<MyBubble v-bind="props" />
+```
 
 ### Bubble.List
 
@@ -147,7 +198,17 @@ bubble/gpt-vis
 | --- | --- | --- | --- | --- |
 | autoScroll | 当内容更新时，自动滚动到最新位置。如果用户滚动，则会暂停自动滚动。 | boolean | true |  |
 | items | 气泡数据列表 | (BubbleProps & { key?: string \| number, role?: string })[] | - |  |
-| roles | 设置气泡默认属性，`items` 中的 `role` 会进行自动对应 | Record<string, BubbleProps> \| (bubble) => BubbleProps | - |  |
+| roles | 设置气泡默认属性，`items` 中的 `role` 会进行自动对应 | Record<string, BubbleProps> \| (bubble, index) => BubbleProps | - |  |
+
+### Bubble.List Slots
+
+| 插槽名 | 说明 | 类型 |
+| --- | --- | --- |
+| avatar | 头像 | \{ item: BubbleProps & \{ key?: string \| number, role?: string \} \} |
+| header | 头部面板 | \{ item: BubbleProps & \{ key?: string \| number, role?: string \} \} |
+| footer | 底部内容 | \{ item: BubbleProps & \{ key?: string \| number, role?: string \} \} |
+| loading | loading占位 | \{ item: BubbleProps & \{ key?: string \| number, role?: string \} \} |
+| message | 消息内容 | \{ item: BubbleProps & \{ key?: string \| number, role?: string \} \} |
 
 ## Semantic DOM
 

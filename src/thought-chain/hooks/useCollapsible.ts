@@ -1,5 +1,5 @@
 import useState from "../../_util/hooks/use-state";
-import { computed, toRef, toValue } from "vue";
+import { computed, toValue, watch } from "vue";
 import type { MaybeRefOrGetter, Ref } from "vue";
 
 export type CollapsibleOptions = {
@@ -69,9 +69,25 @@ const useCollapsible: UseCollapsible = (collapsible, prefixCls, rootPrefixCls) =
     const keys = mergedExpandedKeys.value.includes(curKey)
       ? mergedExpandedKeys.value.filter((key) => key !== curKey)
       : [...mergedExpandedKeys.value, curKey];
+
     collapsibleState.value.customizeOnExpand?.(keys);
-    setMergedExpandedKeys(keys);
+
+    // 受控模式下，由监听函数设置节点展开/关闭状态
+    if (typeof toValue(collapsible) !== 'object') {
+      setMergedExpandedKeys(keys);
+    }
   };
+
+  // 监听 collapsibleState 的变化，更新节点展开状态
+  watch(
+    collapsibleState,
+    (newValue) => {
+      setMergedExpandedKeys(newValue.customizeExpandedKeys);
+    },
+    {
+      deep: 1,
+    },
+  );
 
   // ============================ Motion ============================
   // const collapseMotion: CSSMotionProps = React.useMemo(() => {

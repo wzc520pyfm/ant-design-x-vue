@@ -9,6 +9,9 @@
 [![License][license-src]][license-href]
 
 [![jsDelivr][jsdelivr-src]][jsdelivr-href]
+[![unpkg][unpkg-src]][unpkg-href]
+
+[![deepwiki][deepwiki-src]][deepwiki-href]
 
 Ant Design X For Vue. 🔥 [English](./README.en.md)
 
@@ -89,6 +92,10 @@ $ pnpm lint
 
 ## 👥 贡献者
 
+<a href="https://openomy.app/github/wzc520pyfm/ant-design-x-vue" target="_blank" style="display: block; width: 100%;" align="center">
+  <img src="https://openomy.app/svg?repo=wzc520pyfm/ant-design-x-vue&chart=bubble&latestMonth=3" target="_blank" alt="Contribution Leaderboard" style="display: block; width: 100%;" />
+ </a>
+
 <a href="https://github.com/wzc520pyfm/ant-design-x-vue/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=wzc520pyfm/ant-design-x-vue" />
 </a>
@@ -119,3 +126,7 @@ $ pnpm lint
 [license-href]: https://github.com/wzc520pyfm/ant-design-x-vue/blob/main/LICENSE
 [jsdelivr-src]: https://data.jsdelivr.com/v1/package/npm/ant-design-x-vue/badge
 [jsdelivr-href]: https://www.jsdelivr.com/package/npm/ant-design-x-vue
+[unpkg-src]: https://img.shields.io/badge/unpkg-white?style=flat-square
+[unpkg-href]: https://unpkg.com/ant-design-x-vue
+[deepwiki-src]: https://img.shields.io/badge/deepwiki-f8f7f6?style=flat
+[deepwiki-href]: https://deepwiki.com/wzc520pyfm/ant-design-x-vue

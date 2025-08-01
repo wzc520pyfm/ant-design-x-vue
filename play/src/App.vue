@@ -7,5 +7,4 @@ import {Bubble} from "ant-design-x-vue";
 </template>
 
 <style scoped>
-
 </style>

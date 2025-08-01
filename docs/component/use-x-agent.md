@@ -11,9 +11,17 @@
 
 ### 预设请求
 
-:::demo 我们将 XRequest 作为预设请求，仅需配置 `baseURL`、`model` 即可
+:::demo 我们将 XRequest 作为预设请求，仅需配置 `baseURL`、`model` 即可。
 
 use-x-agent/preset
+
+:::
+
+### 自定义入参
+
+:::demo 自定义 `RequestParams`，可以向智能体等发送消息。
+
+use-x-agent/request-params
 
 :::
 
@@ -22,6 +30,22 @@ use-x-agent/preset
 :::demo 通过定制能力，返回多个推荐内容。
 
 use-x-agent/custom
+
+:::
+
+### 模型接入
+
+:::demo 接入云服务平台，可发送消息、转换流数据、终止消息。
+
+use-x-agent/model
+
+:::
+
+### 变更配置
+
+:::demo 控制变更`XRequestOptions`，动态修改配置项，如 baseURL、model 和 API key。
+
+use-x-agent/request-options
 
 :::
 
@@ -55,19 +79,23 @@ type useXAgent<AgentMessage> = (
 
 #### RequestFn
 
+更多请查看 [XStreamOptions](/component/x-stream#xstreamoptions)。
+
 ```tsx | pure
-interface RequestFnInfo<Message> extends Partial<XAgentConfigPreset>, AnyObject {
+interface RequestFnInfo<Message> extends AnyObject {
   messages?: Message[];
   message?: Message;
-}
+};
 
-export type RequestFn<Message> = (
-  info: RequestFnInfo<Message>,
+export type RequestFn<Message, Input, Output> = (
+  info: RequestFnInfo<Message, Input>,
   callbacks: {
-    onUpdate: (message: Message) => void;
-    onSuccess: (message: Message) => void;
+    onUpdate: (chunk: Output) => void;
+    onSuccess: (chunks: Output[]) => void;
     onError: (error: Error) => void;
+    onStream?: (abortController: AbortController) => void;
   },
+  transformStream?: XStreamOptions<Message>['transformStream'],
 ) => void;
 ```
 
@@ -75,5 +103,5 @@ export type RequestFn<Message> = (
 
 | 属性         | 说明                        | 类型          | 版本 |
 | ------------ | --------------------------- | ------------- | ---- |
-| request      | 调用 `useXAgent` 配置的请求 | RequestFn     |      |
+| request      | 调用 `useXAgent` 配置的请求，[详情](https://antd-design-x-vue.netlify.app/component/x-request) | RequestFn     |      |
 | isRequesting | 是否正在请求                | () => boolean |      |

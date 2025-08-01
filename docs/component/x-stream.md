@@ -13,7 +13,7 @@
 常见的 `ReadableStream` 实例，如 `await fetch(...).body` 使用示例:
 
 ```js
-import { XStream } from '@ant-design/x';
+import { XStream } from 'ant-design-x-vue';
 
 async function request() {
   const response = await fetch();

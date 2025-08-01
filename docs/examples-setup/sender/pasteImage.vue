@@ -1,19 +1,24 @@
 <script setup lang="ts">
 import { CloudUploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
 import { App, Button, Flex } from 'ant-design-vue';
-import { Attachments, Sender } from 'ant-design-x-vue';
-import { computed, ref, h } from 'vue';
+import { Attachments, AttachmentsProps, Sender, SenderProps } from 'ant-design-x-vue';
+import { ref, h } from 'vue';
 
 defineOptions({ name: 'AXSenderPasteImageSetup' });
+
+type GetFunction<T> = T extends (...args: any[]) => any ? T : never;
+type PlaceholderType = Parameters<GetFunction<AttachmentsProps['placeholder']>>[0];
+type PastFile = SenderProps['onPasteFile'];
+type FileChange = AttachmentsProps['onChange'];
 
 const open = ref(false);
 const items = ref([]);
 const text = ref('');
 
-const attachmentsRef = ref(null);
+const attachmentsRef = ref<InstanceType<typeof Attachments>>(null);
 const senderRef = ref<InstanceType<typeof Sender>>(null);
 
-const placeholder = (type) =>
+const placeholder = (type: PlaceholderType) =>
   type === 'drop'
     ? {
       title: 'Drop file here',
@@ -26,20 +31,18 @@ const placeholder = (type) =>
 
 const getDropContainer = () => senderRef.value?.nativeElement;
 
-const pastFile = (_, files) => {
+const pastFile: PastFile = (_, files) => {
   console.log("past")
-  for (const file of files) {
-    attachmentsRef.value?.current?.upload(file);
-  }
+  attachmentsRef.value?.upload(files);
   open.value = true;
 }
 
 const submit = () => {
   items.value = [];
-  text.value = ''; 
+  text.value = '';
 }
 
-const fileChange = ({ fileList }) => items.value = fileList
+const fileChange: FileChange = ({ fileList }) => items.value = fileList
 </script>
 <template>
   <App>

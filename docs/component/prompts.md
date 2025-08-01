@@ -11,11 +11,15 @@ Prompts 组件用于显示一组与当前上下文相关的预定义的问题或
 
 ### 基本
 
+<ClientOnly>
+
 :::demo 基础用法。
 
 prompts/basic
 
 :::
+
+</ClientOnly>
 
 ### 不可用状态
 
@@ -51,11 +55,15 @@ prompts/flex-wrap-fixed
 
 ### 嵌套组合
 
+<ClientOnly>
+
 :::demo 嵌套组合。
 
 prompts/nest
 
 :::
+
+</ClientOnly>
 
 ## API
 
@@ -70,7 +78,7 @@ prompts/nest
 | prefixCls | 样式类名的前缀 | string | - | - |
 | rootClassName | 根节点的样式类名 | string | - | - |
 | styles | 自定义样式，用于各个提示项的不同部分 | Record<SemanticType, CSSProperties> | - | - |
-| title | 显示在提示列表顶部的标题 | VNode \| string | - | - |
+| title | 显示在提示列表顶部的标题 | VNode \| string \| (() => VNode \| string) | - | - |
 | vertical | 设置为 `true` 时, 提示列表将垂直排列 | boolean | `false` | - |
 | wrap | 设置为 `true` 时, 提示列表将自动换行 | boolean | `false` | - |
 | onItemClick | 提示项被点击时的回调函数 | (info: { data: PromptProps }) => void | - | - |

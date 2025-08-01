@@ -28,10 +28,11 @@ const lines = ref<Record<string, string>[]>([]);
 async function request() {
   status.value = 'pending';
 
-  await exampleRequest.create(
+  await exampleRequest.value.create(
     {
       messages: [{ role: 'user', content: 'hello, who are u?' }],
       stream: true,
+      agentId: 111,
     },
     {
       onSuccess: (messages) => {
@@ -73,7 +74,7 @@ async function request() {
             status === 'error' &&
             exampleRequest.baseURL === BASE_URL + PATH &&
             'Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.',
-          content: h(Descriptions, { column: 1 }, [
+          content: h(Descriptions, { column: 1 }, () => [
             h(Descriptions.Item, { label: 'Status' }, status || '-'),
             h(Descriptions.Item, { label: 'Update Times' }, lines.length.toString())
           ]),
