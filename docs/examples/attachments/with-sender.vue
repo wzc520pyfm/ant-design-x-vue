@@ -2,19 +2,28 @@
 import { CloudUploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
 import { App, Button, Flex, Badge, type UploadProps } from 'ant-design-vue';
 import { Attachments, Sender } from 'ant-design-x-vue';
-import { computed, ref } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 
 defineOptions({ name: 'AXAttachmentWithSender' });
 
 type FileType = Parameters<UploadProps['beforeUpload']>[0];
 
+const open = ref(true);
+const items = ref([]);
+const text = ref('');
+
+const senderRef = ref<InstanceType<typeof Sender>>(null);
+
+onUnmounted(() => {
+  // Clear all created object URLs when the component is unmounted
+  items.value.forEach(item => {
+    if (item.url?.startsWith('blob:')) {
+      URL.revokeObjectURL(item.url);
+    }
+  });
+});
+
 const Demo = () => {
-  const open = ref(true);
-  const items = ref([]);
-  const text = ref('');
-
-  const senderRef = ref<InstanceType<typeof Sender>>(null);
-
   const senderHeader = computed(() => (
     <Sender.Header
       title="Attachments"
@@ -37,14 +46,21 @@ const Demo = () => {
             return;
           }
           file.url = window.URL.createObjectURL(file as FileType)
-          // file.thumbUrl = 缩略图url
-          items.value = fileList.toSpliced(
-            fileList.findIndex(
-              (item) => item.uid === file.uid
-            ),
-            1,
-            file
-          );
+          // file.thumbUrl = URL of the thumbnail image
+          items.value = fileList.map((item) => {
+            if (item.uid === file.uid && file.status !== 'removed' && item.originFileObj) {
+              // clear URL
+              if (item.url?.startsWith('blob:')) {
+                URL.revokeObjectURL(item.url);
+              }
+              // create new preview URL
+              return {
+                ...item,
+                url: URL.createObjectURL(item.originFileObj),
+              };
+            }
+            return item;
+          });
         }}
         placeholder={(type) =>
           type === 'drop'
