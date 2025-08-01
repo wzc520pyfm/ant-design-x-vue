@@ -11,24 +11,23 @@ import { previewImage } from '../util';
 import useStyle from '../style';
 import useState from '../../_util/hooks/use-state';
 import { Progress, Image } from 'ant-design-vue';
-
+import { IMG_EXTS, AUDIO_EXTS, VIDEO_EXTS, ZIP_EXTS, MARKDOWN_EXTS, EXCEL_EXTS, PPT_EXTS, WORD_EXTS, PDF_EXTS } from '../constants';
+import { matchExt } from '../util';
 defineOptions({ name: 'AXAttachmentsFileListCard' });
 
 const EMPTY = '\u00A0';
 
 const DEFAULT_ICON_COLOR = '#8c8c8c';
 
-const IMG_EXTS = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'];
-
 const PRESET_FILE_ICONS: {
-  ext: string[];
+  ext: Set<string>;
   color: string;
   icon: VNode;
 }[] = [
     {
       icon: <FileExcelFilled />,
       color: '#22b35e',
-      ext: ['xlsx', 'xls'],
+      ext: EXCEL_EXTS,
     },
     {
       icon: <FileImageFilled />,
@@ -38,43 +37,39 @@ const PRESET_FILE_ICONS: {
     {
       icon: <FileMarkdownFilled />,
       color: DEFAULT_ICON_COLOR,
-      ext: ['md', 'mdx'],
+      ext: MARKDOWN_EXTS,
     },
     {
       icon: <FilePdfFilled />,
       color: '#ff4d4f',
-      ext: ['pdf'],
+      ext: PDF_EXTS,
     },
     {
       icon: <FilePptFilled />,
       color: '#ff6e31',
-      ext: ['ppt', 'pptx'],
+      ext: PPT_EXTS,
     },
     {
       icon: <FileWordFilled />,
       color: '#1677ff',
-      ext: ['doc', 'docx'],
+      ext: WORD_EXTS,
     },
     {
       icon: <FileZipFilled />,
       color: '#fab714',
-      ext: ['zip', 'rar', '7z', 'tar', 'gz'],
+      ext: ZIP_EXTS,
     },
     {
       icon: <VideoIcon />,
       color: '#ff4d4f',
-      ext: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'],
+      ext: VIDEO_EXTS,
     },
     {
       icon: <AudioIcon />,
       color: '#8c8c8c',
-      ext: ['mp3', 'wav', 'flac', 'ape', 'aac', 'ogg'],
+      ext: AUDIO_EXTS,
     },
   ];
-
-function matchExt(suffix: string, ext: string[]) {
-  return ext.some((e) => suffix.toLowerCase() === `.${e}`);
-}
 
 function getSize(size: number) {
   let retSize = size;
@@ -235,36 +230,36 @@ defineExpose({
 
 defineRender(() => {
   return wrapCSSVar(
-    <div
-      class={classnames(
-        cardCls,
-        {
-          [`${cardCls}-status-${status.value}`]: status.value,
-          [`${cardCls}-type-preview`]: isImgPreview.value,
-          [`${cardCls}-type-overview`]: !isImgPreview.value,
-        },
-        className,
-        hashId.value,
-        cssVarCls,
-      )}
-      style={style}
-      ref="file-list-card-container"
-    >
-      {content.value}
+      <div
+        class={classnames(
+          cardCls,
+          {
+            [`${cardCls}-status-${status.value}`]: status.value,
+            [`${cardCls}-type-preview`]: isImgPreview.value,
+            [`${cardCls}-type-overview`]: !isImgPreview.value,
+          },
+          className,
+          hashId.value,
+          cssVarCls,
+        )}
+        style={style}
+        ref="file-list-card-container"
+      >
+        {content.value}
 
-      {/* Remove Icon */}
-      {!disabled.value && onRemove && (
-        <button
-          type="button"
-          class={`${cardCls}-remove`}
-          onClick={() => {
-            onRemove(item);
-          }}
-        >
-          <CloseCircleFilled />
-        </button>
-      )}
-    </div>
+        {/* Remove Icon */}
+        {!disabled.value && onRemove && (
+          <button
+            type="button"
+            class={`${cardCls}-remove`}
+            onClick={() => {
+              onRemove(item);
+            }}
+          >
+            <CloseCircleFilled />
+          </button>
+        )}
+      </div>
   )
 });
 </script>
