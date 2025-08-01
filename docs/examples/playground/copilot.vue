@@ -531,7 +531,7 @@ const styles = computed(() => {
 const workareaStyles = computed(() => {
   return {
     copilotWrapper: {
-      'min-width': '1000px',
+      'min-width': '970px',
       height: '100vh',
       display: 'flex',
     },
