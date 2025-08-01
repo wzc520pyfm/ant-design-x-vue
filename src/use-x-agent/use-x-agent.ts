@@ -99,7 +99,7 @@ export default function useXAgent<
   const agent = computed(
     () => {
       const { request, ...restConfig } = toValue(config);
-      return new XAgent<Message>({
+      return new XAgent<Message, Input, Output>({
         // @ts-expect-error
         request:
           request! ||
