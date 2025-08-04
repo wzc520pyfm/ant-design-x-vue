@@ -74,18 +74,20 @@ const request = () => {
     new TransformStream<string, any>({
       transform(chunk, controller) {
         const DEFAULT_KV_SEPARATOR = 'data: ';
-        const separatorIndex = chunk.indexOf(DEFAULT_KV_SEPARATOR);
-        const value = chunk.slice(separatorIndex + DEFAULT_KV_SEPARATOR.length);
-        try {
-          const modalMessage = JSON.parse(value);
-          const content =
-            modalMessage?.choices?.[0].delta?.reasoning_content === null
-              ? ''
-              : modalMessage?.choices?.[0].delta?.reasoning_content;
-          controller.enqueue(content);
-        } catch (error) {
-          controller.enqueue('');
-        }
+        const DEFAULT_STREAM_SEPARATOR = '\n\n';
+        const parts = chunk.split(DEFAULT_STREAM_SEPARATOR);
+
+        parts.forEach((part) => {
+          const separatorIndex = part.indexOf(DEFAULT_KV_SEPARATOR);
+          const value = part.slice(separatorIndex + DEFAULT_KV_SEPARATOR.length);
+          try {
+            const modalMessage = JSON.parse(value || '{}');
+            const content = modalMessage?.choices?.[0]?.delta?.content || '';
+            controller.enqueue(content);
+          } catch (error) {
+            controller.enqueue('');
+          }
+        });
       },
     }),
   );
