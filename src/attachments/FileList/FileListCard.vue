@@ -12,18 +12,17 @@ import { previewImage } from '../util';
 import useStyle from '../style';
 import useState from '../../_util/hooks/use-state';
 import { Progress, Image } from 'ant-design-vue';
-
+import { IMG_EXTS, AUDIO_EXTS, VIDEO_EXTS, ZIP_EXTS, MARKDOWN_EXTS, EXCEL_EXTS, PPT_EXTS, WORD_EXTS, PDF_EXTS } from '../constants';
+import { matchExt } from '../util';
 defineOptions({ name: 'AXAttachmentsFileListCard' });
 
 const EMPTY = '\u00A0';
 
 const DEFAULT_ICON_COLOR = '#8c8c8c';
 
-const IMG_EXTS = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'];
-
 const PRESET_FILE_ICONS: {
   key: PresetIcons;
-  ext: string[];
+  ext: Set<string>;
   color: string;
   icon: VNode;
 }[] = [
@@ -31,13 +30,13 @@ const PRESET_FILE_ICONS: {
       key: 'default',
       icon: <FileTextFilled />,
       color: DEFAULT_ICON_COLOR,
-      ext: [],
+      ext: new Set([]),
     },
     {
       key: 'excel',
       icon: <FileExcelFilled />,
       color: '#22b35e',
-      ext: ['xlsx', 'xls'],
+      ext: EXCEL_EXTS,
     },
     {
       key: 'image',
@@ -49,49 +48,45 @@ const PRESET_FILE_ICONS: {
       key: 'markdown',
       icon: <FileMarkdownFilled />,
       color: DEFAULT_ICON_COLOR,
-      ext: ['md', 'mdx'],
+      ext: MARKDOWN_EXTS,
     },
     {
       key: 'pdf',
       icon: <FilePdfFilled />,
       color: '#ff4d4f',
-      ext: ['pdf'],
+      ext: PDF_EXTS,
     },
     {
       key: 'ppt',
       icon: <FilePptFilled />,
       color: '#ff6e31',
-      ext: ['ppt', 'pptx'],
+      ext: PPT_EXTS,
     },
     {
       key: 'word',
       icon: <FileWordFilled />,
       color: '#1677ff',
-      ext: ['doc', 'docx'],
+      ext: WORD_EXTS,
     },
     {
       key: 'zip',
       icon: <FileZipFilled />,
       color: '#fab714',
-      ext: ['zip', 'rar', '7z', 'tar', 'gz'],
+      ext: ZIP_EXTS,
     },
     {
       key: 'video',
       icon: <VideoIcon />,
       color: '#ff4d4f',
-      ext: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'],
+      ext: VIDEO_EXTS,
     },
     {
       key: 'audio',
       icon: <AudioIcon />,
       color: '#8c8c8c',
-      ext: ['mp3', 'wav', 'flac', 'ape', 'aac', 'ogg'],
+      ext: AUDIO_EXTS,
     },
   ];
-
-function matchExt(suffix: string, ext: string[]) {
-  return ext.some((e) => suffix.toLowerCase() === `.${e}`);
-}
 
 function getSize(size: number) {
   let retSize = size;

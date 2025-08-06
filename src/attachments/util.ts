@@ -54,3 +54,7 @@ export function previewImage(file: File | Blob): Promise<string> {
     }
   });
 }
+
+export function matchExt(suffix: string, ext: Set<string>): boolean {
+  return ext.has(suffix.substring(1).toLowerCase());
+}

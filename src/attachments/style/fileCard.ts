@@ -1,9 +1,8 @@
 import type { AttachmentsToken } from '.';
+import { Keyframes } from '../../_util/cssinjs';
 import type { GenerateStyle } from '../../theme/cssinjs-utils';
-
 const genFileCardStyle: GenerateStyle<AttachmentsToken> = (token) => {
   const { componentCls, antCls, calc } = token;
-
   const cardCls = `${componentCls}-list-card`;
 
   const cardHeight = calc(token.fontSize)
