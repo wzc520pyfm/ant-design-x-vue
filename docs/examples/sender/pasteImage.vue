@@ -11,7 +11,7 @@ const Demo = () => {
   const items = ref([]);
   const text = ref('');
 
-  const attachmentsRef = ref(null);
+  const attachmentsRef = ref<InstanceType<typeof Attachments>>(null);
   const senderRef = ref<InstanceType<typeof Sender>>(null);
 
   const senderHeader = computed(() => (
@@ -65,14 +65,12 @@ const Demo = () => {
         value={text.value}
         onChange={v => text.value = v}
         onPasteFile={(_, files) => {
-          for (const file of files) {
-            attachmentsRef.value?.upload(file);
-          }
+          attachmentsRef.value?.upload(files);
           open.value = true;
         }}
         onSubmit={() => {
-          items.value = []
-          text.value = ''
+          items.value = [];
+          text.value = '';
         }}
       />
     </Flex>
@@ -84,7 +82,6 @@ defineRender(() => {
     <App>
       <Demo />
     </App>
-  )
+  );
 });
-
 </script>

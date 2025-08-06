@@ -1,6 +1,68 @@
 # Changelog
 
 
+## v1.3.1
+
+[compare changes](https://undefined/undefined/compare/v1.3.0...v1.3.1)
+
+### 🩹 Fixes
+
+- **bubble:** Remove memo to fix bubble update (#415)
+
+### 📖 Documentation
+
+- **style:** 修改演示demo 宽度 #411 (#413, #411)
+- **attachments:** Add high-quality preview example for image file (#370)
+- **sender:** Add custom input demo (#384)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- Clddup ([@clddup](http://github.com/clddup))
+
+## v1.3.0
+
+[compare changes](https://undefined/undefined/compare/v1.2.9...v1.3.0)
+
+### 🚀 Enhancements
+
+- Update useXChat & XRequest & fix useXAgent's RequestFn onSuccess type (#394)
+- **attachments:** Add custom icon options for FileCard (#381)
+- **attachments:** Support multiple files upload (#410)
+- **bubble:** Header and footer support get key and fix type define (#405)
+- **use-x-agent:** Support dynamic option configuration (#395)
+- **x-request:** Support dynamic option configuration (#396)
+
+### 🔥 Performance
+
+- **bubble:** Memoize bubble items to optimize list rendering (#392)
+
+### 🩹 Fixes
+
+- **prompts:** Fix scroll style (#399)
+- **welcome:** Fix warning of runtime prop checked (#404)
+- **bubble:** Disable typing for initial data (#391)
+
+### 📖 Documentation
+
+- **sender:** Update components prop description (#402)
+- **bubble:** Fix list demo scroll style (#400)
+
+### 📦 Build
+
+- **project:** Improve tree sharking (#386)
+
+### 🏡 Chore
+
+- Fix changelog (af5c881)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+- PeikyLiu ([@PeikyLiu](http://github.com/PeikyLiu))
+- Kieran Wang ([@kieranwv](http://github.com/kieranwv))
+- Wujunyi0907 ([@wujunyi0907](http://github.com/wujunyi0907))
+
 ## v1.2.9
 
 [compare changes](https://undefined/undefined/compare/v1.2.8...v1.2.9)

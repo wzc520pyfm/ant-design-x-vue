@@ -33,5 +33,5 @@ export default function useListData(
       };
     }));
 
-  return listData as Ref<any>;
+  return listData as Ref<any[]>;
 }

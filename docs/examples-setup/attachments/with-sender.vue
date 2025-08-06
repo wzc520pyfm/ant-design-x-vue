@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { CloudUploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
-import { App, Button, Flex, Badge } from 'ant-design-vue';
+import { Button, Flex, Badge, type UploadProps } from 'ant-design-vue';
 import { Attachments, Sender } from 'ant-design-x-vue';
-import { computed, ref, h } from 'vue';
+import { computed, ref, h, onUnmounted } from 'vue';
+
+type FileType = Parameters<UploadProps['beforeUpload']>[0];
 
 defineOptions({ name: 'AXAttachmentWithSender' });
 
@@ -11,6 +13,15 @@ const items = ref([]);
 const text = ref('');
 
 const senderRef = ref<InstanceType<typeof Sender>>(null);
+
+onUnmounted(() => {
+  // Clear all created object URLs when the component is unmounted
+  items.value.forEach(item => {
+    if (item.url?.startsWith('blob:')) {
+      URL.revokeObjectURL(item.url);
+    }
+  });
+});
 
 const senderHeader = computed(() =>
   h(Sender.Header, {
@@ -27,7 +38,28 @@ const senderHeader = computed(() =>
     default: () => h(Attachments, {
       beforeUpload: () => false,
       items: items.value,
-      onChange: ({ fileList }: { fileList: any[] }) => items.value = fileList,
+      onChange: ({ file, fileList }) => {
+        if (file.status === 'removed') {
+          items.value = fileList;
+          return;
+        }
+        file.url = window.URL.createObjectURL(file as FileType)
+        // file.thumbUrl = URL of the thumbnail image
+        items.value = fileList.map((item) => {
+          if (item.uid === file.uid && file.status !== 'removed' && item.originFileObj) {
+            // clear URL
+            if (item.url?.startsWith('blob:')) {
+              URL.revokeObjectURL(item.url);
+            }
+            // create new preview URL
+            return {
+              ...item,
+              url: URL.createObjectURL(item.originFileObj),
+            };
+          }
+          return item;
+        });
+      },
       placeholder: (type: string) => type === 'drop'
         ? { title: 'Drop file here' }
         : {

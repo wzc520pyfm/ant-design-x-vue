@@ -41,7 +41,7 @@ const abortController = ref<AbortController>(null);
 const request = async () => {
   status.value = 'pending';
   lines.value = [];
-  await exampleRequest.create(
+  await exampleRequest.value.create(
     {
       messages: [{ role: 'user', content: questionText.value }],
       stream: true,

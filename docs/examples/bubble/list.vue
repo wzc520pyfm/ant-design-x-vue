@@ -89,7 +89,7 @@ defineRender(() => {
 
       <BubbleList
         ref={listRef}
-        style={{ maxHeight: '300px' }}
+        style={{ maxHeight: '300px', paddingInline: '16px' }}
         roles={useRolesAsFunction.value ? rolesAsFunction : rolesAsObject}
         items={Array.from({ length: count.value }).map((_, i) => {
           const isAI = !!(i % 2);

@@ -9,7 +9,7 @@ import useDisplayData from './hooks/useDisplayData';
 import useListData from './hooks/useListData';
 import type { BubbleListProps } from './interface';
 import useStyle from './style';
-import { computed, type HTMLAttributes, mergeProps, onWatcherCleanup, ref, unref, useAttrs, watch, watchEffect, nextTick, type VNode } from 'vue';
+import { computed, type HTMLAttributes, mergeProps, onWatcherCleanup, ref, unref, useAttrs, watch, watchPostEffect, nextTick, type VNode } from 'vue';
 import useState from '../_util/hooks/use-state';
 import type { AvoidValidation } from '../type-utility';
 import BubbleContextProvider from './context';
@@ -80,7 +80,7 @@ const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 // ============================ Typing ============================
 const [initialized, setInitialized] = useState(false);
 
-watchEffect(() => {
+watchPostEffect(() => {
   setInitialized(true);
   onWatcherCleanup(() => {
     setInitialized(false);
@@ -162,30 +162,29 @@ defineRender(() => {
         ref={listRef}
         onScroll={onInternalScroll}
       >
-        {unref(displayData).map(({ key, onTypingComplete: onTypingCompleteBubble, ...bubble }) => (
-          <Bubble
-            {...bubble}
-            avatar={slots.avatar ? () => slots.avatar?.({ item: { key, ...bubble } }) : bubble.avatar}
-            header={slots.header?.({ item: { key, ...bubble } }) ?? bubble.header}
-            footer={slots.footer?.({ item: { key, ...bubble } }) ?? bubble.footer}
-            loadingRender={slots.loading ? () => slots.loading({ item: { key, ...bubble } }) : bubble.loadingRender}
-            content={slots.message?.({ item: { key, ...bubble } }) ?? bubble.content}
-            key={key}
-            // 用于更新滚动的ref
-            ref={(node) => {
-              if (node) {
-                bubbleRefs.value[key] = node;
-              } else {
-                delete bubbleRefs.value[key];
-              }
-            }}
-            typing={initialized.value ? bubble.typing : false}
-            onTypingComplete={() => {
-              onTypingCompleteBubble?.();
-              onTypingComplete(key);
-            }}
-          />
-        ))}
+        <Bubble
+          v-for={({ key, onTypingComplete: onTypingCompleteBubble, ...bubble }) in unref(displayData)}
+          {...bubble}
+          avatar={slots.avatar ? () => slots.avatar?.({ item: { key, ...bubble } }) : bubble.avatar}
+          header={slots.header?.({ item: { key, ...bubble } }) ?? bubble.header}
+          footer={slots.footer?.({ item: { key, ...bubble } }) ?? bubble.footer}
+          loadingRender={slots.loading ? () => slots.loading({ item: { key, ...bubble } }) : bubble.loadingRender}
+          content={slots.message?.({ item: { key, ...bubble } }) ?? bubble.content}
+          key={key}
+          // 用于更新滚动的ref
+          ref={(node) => {
+            if (node) {
+              bubbleRefs.value[key] = node;
+            } else {
+              delete bubbleRefs.value[key];
+            }
+          }}
+          typing={initialized.value ? bubble.typing : false}
+          onTypingComplete={() => {
+            onTypingCompleteBubble?.();
+            onTypingComplete(key);
+          }}
+        />
       </div>
     </BubbleContextProvider>,
   )

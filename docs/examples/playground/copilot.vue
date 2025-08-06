@@ -111,12 +111,15 @@ const inputValue = ref('');
  * 🔔 Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.
  */
 const [agent] = useXAgent<BubbleDataType>({
-  baseURL: 'https://api.x.ant.design/api/model-url-path',
-  model: 'model-name',
+  baseURL: 'https://api.x.ant.design/api/llm_siliconflow_deepseekr1',
+  model: 'deepseek-ai/DeepSeek-R1',
   dangerouslyApiKey: 'Bearer sk-xxxxxxxxxxxxxxxxxxxx',
 });
 
-const loading = agent.value.isRequesting();
+const loading = ref(false);
+watch(() => agent.value.isRequesting(), () => {
+  loading.value = agent.value.isRequesting();
+});
 
 const { messages, onRequest, setMessages } = useXChat({
   agent: agent.value,
@@ -133,12 +136,12 @@ const { messages, onRequest, setMessages } = useXChat({
     };
   },
   transformMessage: (info) => {
-    const { originMessage, currentMessage } = info || {};
+    const { originMessage, chunk } = info || {};
     let currentContent = '';
     let currentThink = '';
     try {
-      if (currentMessage?.data && !currentMessage?.data.includes('DONE')) {
-        const message = JSON.parse(currentMessage?.data);
+      if (chunk?.data && !chunk?.data.includes('DONE')) {
+        const message = JSON.parse(chunk?.data);
         currentThink = message?.choices?.[0]?.delta?.reasoning_content || '';
         currentContent = message?.choices?.[0]?.delta?.content || '';
       }
@@ -173,7 +176,7 @@ watch(curSession, () => {
   if (curSession.value !== undefined) {
     setMessages(messageHistory.value?.[curSession.value] || [])
   } else {
-    setMessages([]) 
+    setMessages([])
   }
 }, { immediate: true })
 
@@ -266,7 +269,7 @@ const Copilot = (props: CopilotProps) => {
                 try {
                   abortController.value?.abort();
                 } catch (error) {
-                  console.error(error); 
+                  console.error(error);
                 }
                 // The abort execution will trigger an asynchronous requestFallback, which may lead to timing issues.
                 // In future versions, the sessionId capability will be added to resolve this problem.
@@ -397,7 +400,7 @@ const Copilot = (props: CopilotProps) => {
       <Suggestion items={MOCK_SUGGESTIONS} onSelect={(itemVal) => inputValue.value = `[${itemVal}]:`}
         children={({ onTrigger, onKeyDown }) => (
           <Sender
-            loading={loading}
+            loading={loading.value}
             value={inputValue.value}
             onChange={(v) => {
               onTrigger(v === '/');
@@ -411,7 +414,7 @@ const Copilot = (props: CopilotProps) => {
               try {
                 abortController.value?.abort();
               } catch (error) {
-                console.error(error); 
+                console.error(error);
               }
             }}
             allowSpeech
@@ -431,7 +434,7 @@ const Copilot = (props: CopilotProps) => {
               return (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                   <SpeechButton style={styles.value.speechButton} />
-                  {loading ? <LoadingButton type="default" /> : <SendButton type="primary" />}
+                  {loading.value ? <LoadingButton type="default" /> : <SendButton type="primary" />}
                 </div>
               );
             }}
@@ -531,7 +534,7 @@ const styles = computed(() => {
 const workareaStyles = computed(() => {
   return {
     copilotWrapper: {
-      'min-width': '1000px',
+      'min-width': '970px',
       height: '100vh',
       display: 'flex',
     },

@@ -32,7 +32,7 @@ const styles = computed(() => {
   return {
     'layout': {
       'width': '100%',
-      'min-width': '1000px',
+      'min-width': '970px',
       'height': '722px',
       'border-radius': `${token.value.borderRadius}px`,
       'display': 'flex',
@@ -199,12 +199,12 @@ const attachedFiles = ref<AttachmentsProps['items']>([])
 const agentRequestLoading = ref(false)
 
 // ==================== Runtime ====================
-const [agent] = useXAgent({
+const [agent] = useXAgent<string, { message: string }, string>({
   request: async ({ message }, { onSuccess }) => {
     agentRequestLoading.value = true
     await sleep()
     agentRequestLoading.value = false
-    onSuccess(`Mock success return. You said: ${message}`)
+    onSuccess([`Mock success return. You said: ${message}`])
   },
 })
 

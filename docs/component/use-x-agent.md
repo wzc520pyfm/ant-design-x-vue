@@ -11,7 +11,7 @@
 
 ### 预设请求
 
-:::demo 我们将 XRequest 作为预设请求，仅需配置 `baseURL`、`model` 即可
+:::demo 我们将 XRequest 作为预设请求，仅需配置 `baseURL`、`model` 即可。
 
 use-x-agent/preset
 
@@ -38,6 +38,14 @@ use-x-agent/custom
 :::demo 接入云服务平台，可发送消息、转换流数据、终止消息。
 
 use-x-agent/model
+
+:::
+
+### 变更配置
+
+:::demo 控制变更`XRequestOptions`，动态修改配置项，如 baseURL、model 和 API key。
+
+use-x-agent/request-options
 
 :::
 
@@ -71,17 +79,19 @@ type useXAgent<AgentMessage> = (
 
 #### RequestFn
 
+更多请查看 [XStreamOptions](/component/x-stream#xstreamoptions)。
+
 ```tsx | pure
-interface RequestFnInfo<Message> extends Partial<XAgentConfigPreset>, AnyObject {
+interface RequestFnInfo<Message> extends AnyObject {
   messages?: Message[];
   message?: Message;
-}
+};
 
-export type RequestFn<Message> = (
-  info: RequestFnInfo<Message>,
+export type RequestFn<Message, Input, Output> = (
+  info: RequestFnInfo<Message, Input>,
   callbacks: {
-    onUpdate: (message: Message) => void;
-    onSuccess: (message: Message) => void;
+    onUpdate: (chunk: Output) => void;
+    onSuccess: (chunks: Output[]) => void;
     onError: (error: Error) => void;
     onStream?: (abortController: AbortController) => void;
   },
