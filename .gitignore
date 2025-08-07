@@ -5,6 +5,11 @@ node_modules
 /lib
 /typings
 /resolver-dist
+packages/ant-design-x-vue/dist
+packages/ant-design-x-vue/es
+packages/ant-design-x-vue/lib
+packages/ant-design-x-vue/typings
+packages/ant-design-x-vue/resolver-dist
 .dumi/tmp
 .dumi/tmp-test
 .dumi/tmp-production

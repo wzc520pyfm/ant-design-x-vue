@@ -25,8 +25,10 @@ function getStyleValue(node: HTMLElement, type: string, value: string) {
     }
   }
   if (!(type in removePixel)) {
+    // @ts-ignore
     removePixel[type] = PIXEL_PATTERN.test(type);
   }
+  // @ts-ignore
   return removePixel[type] ? parseFloat(value) || 0 : value;
 }
 
@@ -34,18 +36,22 @@ export function get(node: HTMLElement, name: any) {
   const length = arguments.length;
   const style = getComputedStyle(node);
 
+  // @ts-ignore
   name = floatMap[name] ? ('cssFloat' in node.style ? 'cssFloat' : 'styleFloat') : name;
 
+  // @ts-ignore
   return length === 1 ? style : getStyleValue(node, name, style[name] || node.style[name]);
 }
 
 export function set(node: HTMLElement, name: any, value: string | number) {
   const length = arguments.length;
+  // @ts-ignore
   name = floatMap[name] ? ('cssFloat' in node.style ? 'cssFloat' : 'styleFloat') : name;
   if (length === 3) {
     if (typeof value === 'number' && PIXEL_PATTERN.test(name)) {
       value = `${value}px`;
     }
+    // @ts-ignore
     node.style[name as string] = value; // Number
     return value;
   }

@@ -23,23 +23,34 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/typings/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.umd.js"
+      "types": "./typings/index.d.ts",
+      "import": "./es/index.mjs",
+      "require": "./lib/index.js"
     },
-    "./dist/style.css": "./dist/style.css"
+    "./dist/style.css": "./dist/style.css",
+    "./resolver": {
+      "types": "./resolver-dist/index.d.ts",
+      "import": "./resolver-dist/index.js",
+      "require": "./resolver-dist/index.js"
+    }
   },
-  "main": "./dist/index.umd.js",
-  "unpkg": "dist/index.umd.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/typings/index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./es/index.mjs",
+  "unpkg": "./dist/index.umd.js",
+  "types": "./typings/index.d.ts",
+  "sideEffects": false,
   "files": [
-    "dist"
+    "es",
+    "lib",
+    "dist",
+    "typings",
+    "resolver-dist"
   ],
   "scripts": {
     "build": "run-p build:es build:dist build:resolver",
     "build:es": "vite build && vue-tsc --project ../../tsconfig.build.json",
-    "build:dist": "vite build --config ./vite.config.dist.mts && vue-tsc --project ../../tsconfig.build.json",
+    "build:dist": "vite build --config ../../vite.config.dist.mts && vue-tsc --project ../../tsconfig.build.json",
+    "build:resolver": "tsc ../../resolver/index.ts --outDir resolver-dist --declaration",
     "build:watch": "vite build --watch",
     "changelog": "changelogen --release",
     "release": "run-s test changelog build publish",
@@ -120,7 +131,7 @@
   },
   "peerDependencies": {
     "ant-design-vue": ">=4.0.0",
-    "vue": ">=3.3.0"
+    "vue": ">=3.5.0"
   },
   "packageManager": "pnpm@9.6.0",
   "publishConfig": {
