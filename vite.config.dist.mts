@@ -22,7 +22,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: resolve(__dirname, 'packages/ant-design-x-vue/src/index.ts'),
       name: 'antdx',
       formats: ['es', 'umd'],
       fileName: (format) => `index.${format}.js`,
