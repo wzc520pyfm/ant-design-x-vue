@@ -8,7 +8,7 @@
     "test": "vitest",
     "test:cov": "vitest --coverage",
     "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint \"{src,test}/**/*.{js,jsx,ts,tsx,vue}\""
+    "lint": "eslint \"**/*.{js,jsx,ts,tsx,vue}\""
   },
   "peerDependencies": {
     "ant-design-vue": ">=4.0.0",
