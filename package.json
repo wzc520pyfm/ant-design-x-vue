@@ -28,6 +28,7 @@
     "test": "vitest",
     "test:cov": "vitest --coverage",
     "typecheck": "vue-tsc --noEmit",
+    "update-contributors": "node scripts/update-contributors.js",
     "play": "vite ./play"
   },
   "author": {

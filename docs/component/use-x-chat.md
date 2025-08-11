@@ -81,3 +81,6 @@ type useXChat<
 | 属性    | 说明           | 类型         | 默认值 | 版本 |
 | ------- | -------------- | ------------ | ------ | ---- |
 | message | 当前消息的内容 | AgentMessage | -      | -    |
+## 贡献者
+
+<doc-contributors component-name="use-x-chat" :max-count="6" :show-view-all="true" />
