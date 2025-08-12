@@ -78,4 +78,4 @@ Suggestion 接受泛型以自定义传递给 `items` renderProps 的参数类型
 <!-- <ComponentTokenTable component="Suggestion"></ComponentTokenTable> -->
 ## 贡献者
 
-<doc-contributors component-name="suggestion" :max-count="6" :show-view-all="true" />
+<doc-contributors component-name="suggestion" :max-count="50" :show-view-all="true" />

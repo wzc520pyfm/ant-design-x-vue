@@ -73,7 +73,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   componentName: '',
-  maxCount: 6
+  maxCount: 50
 })
 
 // 加载实际的贡献者数据

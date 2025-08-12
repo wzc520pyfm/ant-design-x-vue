@@ -83,4 +83,4 @@ type useXChat<
 | message | 当前消息的内容 | AgentMessage | -      | -    |
 ## 贡献者
 
-<doc-contributors component-name="use-x-chat" :max-count="6" :show-view-all="true" />
+<doc-contributors component-name="use-x-chat" :max-count="50" :show-view-all="true" />

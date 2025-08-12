@@ -117,4 +117,4 @@ conversations/group-sort
 ## 主题变量（Design Token）
 ## 贡献者
 
-<doc-contributors component-name="conversations" :max-count="6" :show-view-all="true" />
+<doc-contributors component-name="conversations" :max-count="50" :show-view-all="true" />

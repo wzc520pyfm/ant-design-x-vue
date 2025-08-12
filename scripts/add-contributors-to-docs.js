@@ -24,7 +24,7 @@ const components = [
 const contributorsTemplate = (componentName) => `
 ## 贡献者
 
-<doc-contributors component-name="${componentName}" :max-count="6" :show-view-all="true" />`
+<doc-contributors component-name="${componentName}" :max-count="50" :show-view-all="true" />`
 
 // 处理单个文件
 function processFile(filename, componentName) {

@@ -59,4 +59,4 @@ x-stream/custom-protocol
 | transformStream | 自定义的 transformStream 用于转换流的处理 | TransformStream<string, T> | sseTransformStream | - |
 ## 贡献者
 
-<doc-contributors component-name="x-stream" :max-count="6" :show-view-all="true" />
+<doc-contributors component-name="x-stream" :max-count="50" :show-view-all="true" />

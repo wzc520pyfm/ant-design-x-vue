@@ -220,4 +220,4 @@ const MyBubble = Bubble<CustomContentType>;
 
 ## 贡献者
 
-<doc-contributors component-name="bubble" :max-count="6" :show-view-all="true" />
+<doc-contributors component-name="bubble" :max-count="50" :show-view-all="true" />

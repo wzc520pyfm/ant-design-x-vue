@@ -137,4 +137,4 @@ type PresetIcons = 'default' | 'excel' | 'image' | 'markdown' | 'pdf' | 'ppt' | 
 <!-- <ComponentTokenTable component="Prompts"></ComponentTokenTable> -->
 ## 贡献者
 
-<doc-contributors component-name="attachments" :max-count="6" :show-view-all="true" />
+<doc-contributors component-name="attachments" :max-count="50" :show-view-all="true" />

@@ -115,4 +115,4 @@ type SemanticType = 'list' | 'item' | 'content' | 'title' | 'subList' | 'subItem
 <!-- <ComponentTokenTable component="Prompts"></ComponentTokenTable> -->
 ## 贡献者
 
-<doc-contributors component-name="prompts" :max-count="6" :show-view-all="true" />
+<doc-contributors component-name="prompts" :max-count="50" :show-view-all="true" />

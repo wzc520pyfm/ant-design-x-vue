@@ -88,4 +88,4 @@ type XRequestFunction<Input = Record<PropertyKey, any>, Output = Record<string, 
 | transformStream | 可选的转换函数，用于处理流数据 | `XStreamOptions<Output>['transformStream']` | - | - |
 ## 贡献者
 
-<doc-contributors component-name="x-request" :max-count="6" :show-view-all="true" />
+<doc-contributors component-name="x-request" :max-count="50" :show-view-all="true" />

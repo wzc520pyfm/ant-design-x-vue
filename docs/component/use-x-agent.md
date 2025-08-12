@@ -107,4 +107,4 @@ export type RequestFn<Message, Input, Output> = (
 | isRequesting | 是否正在请求                | () => boolean |      |
 ## 贡献者
 
-<doc-contributors component-name="use-x-agent" :max-count="6" :show-view-all="true" />
+<doc-contributors component-name="use-x-agent" :max-count="50" :show-view-all="true" />

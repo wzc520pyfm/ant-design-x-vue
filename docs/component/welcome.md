@@ -68,4 +68,4 @@ welcome/background
 
 ## 贡献者
 
-<doc-contributors component-name="welcome" :max-count="6" :show-view-all="true" />
+<doc-contributors component-name="welcome" :max-count="50" :show-view-all="true" />

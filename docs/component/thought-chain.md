@@ -127,4 +127,4 @@ thought-chain/tooltip
 <!-- <ComponentTokenTable component="ThoughtChain"></ComponentTokenTable> -->
 ## 贡献者
 
-<doc-contributors component-name="thought-chain" :max-count="6" :show-view-all="true" />
+<doc-contributors component-name="thought-chain" :max-count="50" :show-view-all="true" />
