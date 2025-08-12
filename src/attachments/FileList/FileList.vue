@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, nextTick, onWatcherCleanup, ref, useTemplateRef, watch, watchEffect } from 'vue';
+import { computed, nextTick, onWatcherCleanup, ref, useTemplateRef, watch, watchEffect, TransitionGroup } from 'vue';
 import { Button } from 'ant-design-vue';
 import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons-vue';
 import type { FileListProps } from '../interface';
@@ -25,11 +25,8 @@ const {
   itemStyle,
   imageProps,
 } = defineProps<FileListProps>();
-
 const listCls = computed(() => `${prefixCls}-list`);
-
 const containerRef = useTemplateRef<HTMLDivElement>('file-list-container');
-// const containerRef = ref<HTMLDivElement>(null);
 
 const [firstMount, setFirstMount] = useState(false);
 
@@ -92,6 +89,43 @@ const onScrollRight = () => {
   onScrollOffset(1);
 };
 
+const onEnter = (el: Element, done: () => void) => {
+  const isImg = el.classList.contains('ant-attachment-list-card-type-preview')
+  const keyframes = isImg 
+    ? [
+        { width: '0px' },
+        { width: '64px' }
+      ]
+    : [
+        { width: '0px' },
+        { width: '236px' }
+      ];
+  const animation = el.animate(keyframes, {
+    duration: 300, 
+    easing: 'ease',
+    fill: 'forwards'
+  });
+   animation.onfinish = () => done();
+};
+
+const onLeave = (el: Element, done: () => void) => {
+  const isImg = el.classList.contains('ant-attachment-list-card-type-preview')
+  const keyframes = isImg 
+    ? [
+        { opacity: 1, width: '64px', marginRight: '0px' },
+        { opacity: 0, width: '0px', marginRight: '-10px' }
+      ]
+    : [
+        { opacity: 1, width: '236px', marginRight: '0px' },
+        { opacity: 0, width: '0px', marginRight: '-10px',paddingRight: '0px',paddingLeft: '0px' }
+      ];
+  const animation = el.animate(keyframes, {
+    duration: 300,
+    easing: 'ease',
+    fill: 'forwards'
+  });
+  animation.onfinish = () => done();
+};
 defineRender(() => {
   return (
     <div
@@ -108,9 +142,9 @@ defineRender(() => {
       onScroll={checkPing}
       style={listStyle}
     >
-      { /** TODO: use rc-motion for items */}
-      {items.map((item) => {
-        return <FileListCard
+      <TransitionGroup onEnter={onEnter} onLeave={onLeave} css={false}>
+         {items.map((item) => {
+         return <FileListCard
           key={item.uid}
           prefixCls={prefixCls}
           item={item}
@@ -122,6 +156,7 @@ defineRender(() => {
           }}
         />
       })}
+      </TransitionGroup>
       {!attachmentContext.value.disabled && (
         <SilentUploader
           upload={upload}
