@@ -1,6 +1,24 @@
 # Changelog
 
 
+## v1.3.2
+
+[compare changes](https://undefined/undefined/compare/v1.3.1...v1.3.2)
+
+### 🩹 Fixes
+
+- **use-x-agent:** Fix return type (#416)
+- **suggestion:** Fix open prop reactive (#425)
+
+### 📖 Documentation
+
+- Update demo about x-agent (#418)
+- Update independent tsx demo (#419)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](http://github.com/wzc520pyfm))
+
 ## v1.3.1
 
 [compare changes](https://undefined/undefined/compare/v1.3.0...v1.3.1)
