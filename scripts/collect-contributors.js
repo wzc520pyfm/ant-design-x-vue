@@ -25,21 +25,46 @@ class ComponentContributorsCollector {
 
   // 定义主要的组件目录
   getComponentDirectories() {
-    const componentDirs = [
-      { name: 'bubble', path: 'src/bubble' },
-      { name: 'sender', path: 'src/sender' },
-      { name: 'welcome', path: 'src/welcome' },
-      { name: 'attachments', path: 'src/attachments' },
-      { name: 'conversations', path: 'src/conversations' },
-      { name: 'prompts', path: 'src/prompts' },
-      { name: 'suggestion', path: 'src/suggestion' },
-      { name: 'thought-chain', path: 'src/thought-chain' },
-      { name: 'x-provider', path: 'src/x-provider' },
-      { name: 'x-request', path: 'src/x-request' },
-      { name: 'x-stream', path: 'src/x-stream' },
-      { name: 'use-x-agent', path: 'src/use-x-agent' },
-      { name: 'use-x-chat', path: 'src/use-x-chat' }
+    const componentNames = [
+      'bubble', 'sender', 'welcome', 'attachments', 'conversations', 
+      'prompts', 'suggestion', 'thought-chain', 'x-provider', 
+      'x-request', 'x-stream', 'use-x-agent', 'use-x-chat', 'playground'
     ]
+
+    const componentDirs = []
+
+    // 添加 src 目录下的组件
+    componentNames.forEach(name => {
+      if (name !== 'playground') { // playground 只在 docs 目录中存在
+        componentDirs.push({ name: `${name}`, path: `src/${name}` })
+      }
+    })
+
+    // 添加 docs/component 目录下的文档
+    componentNames.forEach(name => {
+      if (name !== 'playground') { // playground 在 component 目录中没有对应的 md 文件
+        const mdPath = `docs/component/${name}.md`
+        if (fs.existsSync(mdPath)) {
+          componentDirs.push({ name: `${name}-docs`, path: mdPath })
+        }
+      }
+    })
+
+    // 添加 docs/examples 目录下的示例
+    componentNames.forEach(name => {
+      const examplePath = `docs/examples/${name}`
+      if (fs.existsSync(examplePath)) {
+        componentDirs.push({ name: `${name}-examples`, path: examplePath })
+      }
+    })
+
+    // 添加 docs/examples-setup 目录下的示例
+    componentNames.forEach(name => {
+      const setupPath = `docs/examples-setup/${name}`
+      if (fs.existsSync(setupPath)) {
+        componentDirs.push({ name: `${name}-examples-setup`, path: setupPath })
+      }
+    })
 
     // 过滤出实际存在的目录
     return componentDirs.filter(comp => fs.existsSync(comp.path))
@@ -256,7 +281,20 @@ class ComponentContributorsCollector {
     
     componentContributors.forEach(comp => {
       // 为每个组件创建一个主文件条目
-      const mainFile = `${comp.path}/${this.getMainFileName(comp.component)}`
+      const mainFileName = this.getMainFileName(comp.component)
+      let mainFile
+      
+      if (comp.component.endsWith('-docs')) {
+        // 对于文档文件，路径已经包含文件名
+        mainFile = comp.path
+      } else if (mainFileName) {
+        // 对于其他文件，拼接路径和文件名
+        mainFile = `${comp.path}/${mainFileName}`
+      } else {
+        // 如果没有主文件名，使用目录路径
+        mainFile = comp.path
+      }
+      
       fileContributors.push({
         file: mainFile,
         contributors: comp.contributors
@@ -268,6 +306,17 @@ class ComponentContributorsCollector {
 
   // 获取组件的主文件名
   getMainFileName(componentName) {
+    // 处理文档路径
+    if (componentName.endsWith('-docs')) {
+      return '' // 对于 .md 文件，路径已经包含了文件名
+    }
+    
+    // 处理示例路径
+    if (componentName.endsWith('-examples') || componentName.endsWith('-examples-setup')) {
+      return 'basic.vue' // 大多数示例目录都有 basic.vue 文件
+    }
+    
+    // 处理源码组件
     const fileNameMap = {
       'bubble': 'Bubble.vue',
       'sender': 'Sender.vue',
@@ -281,7 +330,8 @@ class ComponentContributorsCollector {
       'x-request': 'x-request.ts',
       'x-stream': 'x-stream.ts',
       'use-x-agent': 'use-x-agent.ts',
-      'use-x-chat': 'use-x-chat.ts'
+      'use-x-chat': 'use-x-chat.ts',
+      'playground': 'index.vue'
     }
     
     return fileNameMap[componentName] || 'index.vue'
