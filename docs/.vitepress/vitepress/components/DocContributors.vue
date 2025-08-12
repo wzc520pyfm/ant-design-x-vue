@@ -134,12 +134,36 @@ const contributorsList = computed(() => {
 
   // 优先使用新的 componentContributors 结构
   if (allContributorsData.value.componentContributors) {
-    const componentData = allContributorsData.value.componentContributors.find((comp: any) => 
-      comp.component === props.componentName
-    )
+    // 查找所有包含当前组件名的组件（包括完全匹配和包含关系）
+    const matchingComponents = allContributorsData.value.componentContributors.filter((comp: any) => {
+      const compName = comp.component.toLowerCase()
+      const targetName = props.componentName.toLowerCase()
+      
+      // 完全匹配或者组件名包含目标名称（如 prompts-docs 包含 prompts）
+      return compName === targetName || compName.includes(targetName)
+    })
     
-    if (componentData) {
-      return componentData.contributors.slice(0, props.maxCount)
+    if (matchingComponents.length > 0) {
+      // 按贡献者 login 去重并合并贡献数
+      const contributorsMap = new Map()
+      
+      matchingComponents.forEach((componentData: any) => {
+        componentData.contributors.forEach((contributor: Contributor) => {
+          const existing = contributorsMap.get(contributor.login)
+          if (existing) {
+            // 累加贡献数
+            existing.contributions += contributor.contributions
+          } else {
+            // 新增贡献者
+            contributorsMap.set(contributor.login, { ...contributor })
+          }
+        })
+      })
+      
+      // 按贡献度排序并返回
+      return Array.from(contributorsMap.values())
+        .sort((a, b) => b.contributions - a.contributions)
+        .slice(0, props.maxCount)
     }
   }
 
