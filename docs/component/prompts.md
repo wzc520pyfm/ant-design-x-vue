@@ -113,3 +113,6 @@ type SemanticType = 'list' | 'item' | 'content' | 'title' | 'subList' | 'subItem
 ## 主题变量（Design Token）
 
 <!-- <ComponentTokenTable component="Prompts"></ComponentTokenTable> -->
+## 贡献者
+
+<doc-contributors component-name="prompts" :max-count="50" :show-view-all="true" />

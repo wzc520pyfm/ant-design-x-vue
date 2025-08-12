@@ -241,3 +241,7 @@ type ActionsComponents = {
 ## 主题变量（Design Token）
 
 <!-- <ComponentTokenTable component="Sender"></ComponentTokenTable> -->
+
+## 贡献者
+
+<doc-contributors component-name="sender" :max-count="50" :show-view-all="true" />

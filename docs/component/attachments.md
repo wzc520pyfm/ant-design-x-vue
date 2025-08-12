@@ -135,3 +135,6 @@ type PresetIcons = 'default' | 'excel' | 'image' | 'markdown' | 'pdf' | 'ppt' | 
 ## 主题变量（Design Token）
 
 <!-- <ComponentTokenTable component="Prompts"></ComponentTokenTable> -->
+## 贡献者
+
+<doc-contributors component-name="attachments" :max-count="50" :show-view-all="true" />

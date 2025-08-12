@@ -125,3 +125,6 @@ thought-chain/tooltip
 ## 主题变量（Design Token）
 
 <!-- <ComponentTokenTable component="ThoughtChain"></ComponentTokenTable> -->
+## 贡献者
+
+<doc-contributors component-name="thought-chain" :max-count="50" :show-view-all="true" />

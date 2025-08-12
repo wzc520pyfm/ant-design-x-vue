@@ -115,3 +115,6 @@ conversations/group-sort
 | `trigger` | 自定义menu触发器 | VNode \| ((conversation: Conversation, info: \{ originNode: VNode \}) => VNode) | - | - |
 
 ## 主题变量（Design Token）
+## 贡献者
+
+<doc-contributors component-name="conversations" :max-count="50" :show-view-all="true" />

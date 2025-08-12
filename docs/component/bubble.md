@@ -217,3 +217,7 @@ const MyBubble = Bubble<CustomContentType>;
 ## 主题变量（Design Token）
 
 <!-- <ComponentTokenTable component="Bubble"></ComponentTokenTable> -->
+
+## 贡献者
+
+<doc-contributors component-name="bubble" :max-count="50" :show-view-all="true" />

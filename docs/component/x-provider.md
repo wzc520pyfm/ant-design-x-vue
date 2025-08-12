@@ -45,3 +45,6 @@ x-provider/use
 | sender | 输入框组件的全局配置 | 'classNames' \| 'styles' \| 'className' \| 'style' | - |  |
 | suggestion | 建议组件的全局配置 | 'className' \| 'style' | - |  |
 | thoughtChain | 思维链组件的全局配置 | 'classNames' \| 'styles' \| 'className' \| 'style' | - |  |
+## 贡献者
+
+<doc-contributors component-name="x-provider" :max-count="50" :show-view-all="true" />

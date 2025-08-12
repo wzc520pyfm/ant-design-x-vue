@@ -65,3 +65,7 @@ welcome/background
 <vp-semantic component="Welcome"></vp-semantic>
 
 ## 主题变量（Design Token）
+
+## 贡献者
+
+<doc-contributors component-name="welcome" :max-count="50" :show-view-all="true" />

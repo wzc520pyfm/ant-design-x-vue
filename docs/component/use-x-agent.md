@@ -105,3 +105,6 @@ export type RequestFn<Message, Input, Output> = (
 | ------------ | --------------------------- | ------------- | ---- |
 | request      | 调用 `useXAgent` 配置的请求，[详情](https://antd-design-x-vue.netlify.app/component/x-request) | RequestFn     |      |
 | isRequesting | 是否正在请求                | () => boolean |      |
+## 贡献者
+
+<doc-contributors component-name="use-x-agent" :max-count="50" :show-view-all="true" />

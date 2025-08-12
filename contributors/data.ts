@@ -1,0 +1,3824 @@
+// This file is auto-generated. Do not edit manually.
+// Last updated: 2025-08-12T13:24:35.741Z
+
+export interface Contributor {
+  login: string
+  id: number
+  node_id?: string
+  avatar_url: string
+  gravatar_id?: string
+  url?: string
+  html_url: string
+  followers_url?: string
+  following_url?: string
+  gists_url?: string
+  starred_url?: string
+  subscriptions_url?: string
+  organizations_url?: string
+  repos_url?: string
+  events_url?: string
+  received_events_url?: string
+  type: string
+  site_admin?: boolean
+  contributions: number
+  email?: string
+}
+
+export interface ComponentContributor {
+  component: string
+  path: string
+  contributors: Contributor[]
+  totalContributions: number
+}
+
+export interface FileContributor {
+  file: string
+  contributors: Contributor[]
+}
+
+export interface ContributorsData {
+  total: number
+  repository: {
+    owner: string
+    repo: string
+    url: string
+  }
+  lastUpdated: string
+  contributors: Contributor[]
+  componentContributors: ComponentContributor[]
+  fileContributors: FileContributor[]
+}
+
+export const contributorsData: ContributorsData = {
+  "total": 26,
+  "repository": {
+    "owner": "wzc520pyfm",
+    "repo": "ant-design-x-vue",
+    "url": "https://github.com/wzc520pyfm/ant-design-x-vue"
+  },
+  "lastUpdated": "2025-08-12T13:24:35.741Z",
+  "contributors": [
+    {
+      "login": "wzc520pyfm",
+      "id": 69044080,
+      "node_id": "MDQ6VXNlcjY5MDQ0MDgw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/69044080?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/wzc520pyfm",
+      "html_url": "https://github.com/wzc520pyfm",
+      "followers_url": "https://api.github.com/users/wzc520pyfm/followers",
+      "following_url": "https://api.github.com/users/wzc520pyfm/following{/other_user}",
+      "gists_url": "https://api.github.com/users/wzc520pyfm/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/wzc520pyfm/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/wzc520pyfm/subscriptions",
+      "organizations_url": "https://api.github.com/users/wzc520pyfm/orgs",
+      "repos_url": "https://api.github.com/users/wzc520pyfm/repos",
+      "events_url": "https://api.github.com/users/wzc520pyfm/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/wzc520pyfm/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 360
+    },
+    {
+      "login": "Bao0630",
+      "id": 52953943,
+      "node_id": "MDQ6VXNlcjUyOTUzOTQz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52953943?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/Bao0630",
+      "html_url": "https://github.com/Bao0630",
+      "followers_url": "https://api.github.com/users/Bao0630/followers",
+      "following_url": "https://api.github.com/users/Bao0630/following{/other_user}",
+      "gists_url": "https://api.github.com/users/Bao0630/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/Bao0630/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/Bao0630/subscriptions",
+      "organizations_url": "https://api.github.com/users/Bao0630/orgs",
+      "repos_url": "https://api.github.com/users/Bao0630/repos",
+      "events_url": "https://api.github.com/users/Bao0630/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/Bao0630/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 13
+    },
+    {
+      "login": "linhf123",
+      "id": 32009993,
+      "node_id": "MDQ6VXNlcjMyMDA5OTkz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/32009993?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/linhf123",
+      "html_url": "https://github.com/linhf123",
+      "followers_url": "https://api.github.com/users/linhf123/followers",
+      "following_url": "https://api.github.com/users/linhf123/following{/other_user}",
+      "gists_url": "https://api.github.com/users/linhf123/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/linhf123/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/linhf123/subscriptions",
+      "organizations_url": "https://api.github.com/users/linhf123/orgs",
+      "repos_url": "https://api.github.com/users/linhf123/repos",
+      "events_url": "https://api.github.com/users/linhf123/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/linhf123/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 11
+    },
+    {
+      "login": "renovate[bot]",
+      "id": 29139614,
+      "node_id": "MDM6Qm90MjkxMzk2MTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/2740?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/renovate%5Bbot%5D",
+      "html_url": "https://github.com/apps/renovate",
+      "followers_url": "https://api.github.com/users/renovate%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/renovate%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/renovate%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/renovate%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/renovate%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/renovate%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/renovate%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/renovate%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/renovate%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 5
+    },
+    {
+      "login": "yuxi-ovo",
+      "id": 84778445,
+      "node_id": "MDQ6VXNlcjg0Nzc4NDQ1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/84778445?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/yuxi-ovo",
+      "html_url": "https://github.com/yuxi-ovo",
+      "followers_url": "https://api.github.com/users/yuxi-ovo/followers",
+      "following_url": "https://api.github.com/users/yuxi-ovo/following{/other_user}",
+      "gists_url": "https://api.github.com/users/yuxi-ovo/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/yuxi-ovo/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/yuxi-ovo/subscriptions",
+      "organizations_url": "https://api.github.com/users/yuxi-ovo/orgs",
+      "repos_url": "https://api.github.com/users/yuxi-ovo/repos",
+      "events_url": "https://api.github.com/users/yuxi-ovo/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/yuxi-ovo/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 5
+    },
+    {
+      "login": "StudyDayByDay",
+      "id": 45332012,
+      "node_id": "MDQ6VXNlcjQ1MzMyMDEy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/45332012?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/StudyDayByDay",
+      "html_url": "https://github.com/StudyDayByDay",
+      "followers_url": "https://api.github.com/users/StudyDayByDay/followers",
+      "following_url": "https://api.github.com/users/StudyDayByDay/following{/other_user}",
+      "gists_url": "https://api.github.com/users/StudyDayByDay/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/StudyDayByDay/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/StudyDayByDay/subscriptions",
+      "organizations_url": "https://api.github.com/users/StudyDayByDay/orgs",
+      "repos_url": "https://api.github.com/users/StudyDayByDay/repos",
+      "events_url": "https://api.github.com/users/StudyDayByDay/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/StudyDayByDay/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 3
+    },
+    {
+      "login": "hihanley",
+      "id": 43161625,
+      "node_id": "MDQ6VXNlcjQzMTYxNjI1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/43161625?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/hihanley",
+      "html_url": "https://github.com/hihanley",
+      "followers_url": "https://api.github.com/users/hihanley/followers",
+      "following_url": "https://api.github.com/users/hihanley/following{/other_user}",
+      "gists_url": "https://api.github.com/users/hihanley/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/hihanley/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/hihanley/subscriptions",
+      "organizations_url": "https://api.github.com/users/hihanley/orgs",
+      "repos_url": "https://api.github.com/users/hihanley/repos",
+      "events_url": "https://api.github.com/users/hihanley/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/hihanley/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 3
+    },
+    {
+      "login": "inCBle",
+      "id": 84701254,
+      "node_id": "MDQ6VXNlcjg0NzAxMjU0",
+      "avatar_url": "https://avatars.githubusercontent.com/u/84701254?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/inCBle",
+      "html_url": "https://github.com/inCBle",
+      "followers_url": "https://api.github.com/users/inCBle/followers",
+      "following_url": "https://api.github.com/users/inCBle/following{/other_user}",
+      "gists_url": "https://api.github.com/users/inCBle/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/inCBle/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/inCBle/subscriptions",
+      "organizations_url": "https://api.github.com/users/inCBle/orgs",
+      "repos_url": "https://api.github.com/users/inCBle/repos",
+      "events_url": "https://api.github.com/users/inCBle/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/inCBle/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 3
+    },
+    {
+      "login": "vhxubo",
+      "id": 17352372,
+      "node_id": "MDQ6VXNlcjE3MzUyMzcy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17352372?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/vhxubo",
+      "html_url": "https://github.com/vhxubo",
+      "followers_url": "https://api.github.com/users/vhxubo/followers",
+      "following_url": "https://api.github.com/users/vhxubo/following{/other_user}",
+      "gists_url": "https://api.github.com/users/vhxubo/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/vhxubo/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/vhxubo/subscriptions",
+      "organizations_url": "https://api.github.com/users/vhxubo/orgs",
+      "repos_url": "https://api.github.com/users/vhxubo/repos",
+      "events_url": "https://api.github.com/users/vhxubo/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/vhxubo/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 3
+    },
+    {
+      "login": "PeikyLiu",
+      "id": 46105662,
+      "node_id": "MDQ6VXNlcjQ2MTA1NjYy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/46105662?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/PeikyLiu",
+      "html_url": "https://github.com/PeikyLiu",
+      "followers_url": "https://api.github.com/users/PeikyLiu/followers",
+      "following_url": "https://api.github.com/users/PeikyLiu/following{/other_user}",
+      "gists_url": "https://api.github.com/users/PeikyLiu/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/PeikyLiu/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/PeikyLiu/subscriptions",
+      "organizations_url": "https://api.github.com/users/PeikyLiu/orgs",
+      "repos_url": "https://api.github.com/users/PeikyLiu/repos",
+      "events_url": "https://api.github.com/users/PeikyLiu/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/PeikyLiu/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 3
+    },
+    {
+      "login": "wangyonghui0394",
+      "id": 58975095,
+      "node_id": "MDQ6VXNlcjU4OTc1MDk1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58975095?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/wangyonghui0394",
+      "html_url": "https://github.com/wangyonghui0394",
+      "followers_url": "https://api.github.com/users/wangyonghui0394/followers",
+      "following_url": "https://api.github.com/users/wangyonghui0394/following{/other_user}",
+      "gists_url": "https://api.github.com/users/wangyonghui0394/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/wangyonghui0394/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/wangyonghui0394/subscriptions",
+      "organizations_url": "https://api.github.com/users/wangyonghui0394/orgs",
+      "repos_url": "https://api.github.com/users/wangyonghui0394/repos",
+      "events_url": "https://api.github.com/users/wangyonghui0394/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/wangyonghui0394/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 2
+    },
+    {
+      "login": "w2xi",
+      "id": 57785259,
+      "node_id": "MDQ6VXNlcjU3Nzg1MjU5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/57785259?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/w2xi",
+      "html_url": "https://github.com/w2xi",
+      "followers_url": "https://api.github.com/users/w2xi/followers",
+      "following_url": "https://api.github.com/users/w2xi/following{/other_user}",
+      "gists_url": "https://api.github.com/users/w2xi/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/w2xi/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/w2xi/subscriptions",
+      "organizations_url": "https://api.github.com/users/w2xi/orgs",
+      "repos_url": "https://api.github.com/users/w2xi/repos",
+      "events_url": "https://api.github.com/users/w2xi/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/w2xi/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 2
+    },
+    {
+      "login": "clddup",
+      "id": 105873086,
+      "node_id": "U_kgDOBk9-vg",
+      "avatar_url": "https://avatars.githubusercontent.com/u/105873086?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/clddup",
+      "html_url": "https://github.com/clddup",
+      "followers_url": "https://api.github.com/users/clddup/followers",
+      "following_url": "https://api.github.com/users/clddup/following{/other_user}",
+      "gists_url": "https://api.github.com/users/clddup/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/clddup/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/clddup/subscriptions",
+      "organizations_url": "https://api.github.com/users/clddup/orgs",
+      "repos_url": "https://api.github.com/users/clddup/repos",
+      "events_url": "https://api.github.com/users/clddup/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/clddup/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 2
+    },
+    {
+      "login": "zoeyzhao19",
+      "id": 70888488,
+      "node_id": "MDQ6VXNlcjcwODg4NDg4",
+      "avatar_url": "https://avatars.githubusercontent.com/u/70888488?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/zoeyzhao19",
+      "html_url": "https://github.com/zoeyzhao19",
+      "followers_url": "https://api.github.com/users/zoeyzhao19/followers",
+      "following_url": "https://api.github.com/users/zoeyzhao19/following{/other_user}",
+      "gists_url": "https://api.github.com/users/zoeyzhao19/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/zoeyzhao19/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/zoeyzhao19/subscriptions",
+      "organizations_url": "https://api.github.com/users/zoeyzhao19/orgs",
+      "repos_url": "https://api.github.com/users/zoeyzhao19/repos",
+      "events_url": "https://api.github.com/users/zoeyzhao19/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/zoeyzhao19/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 2
+    },
+    {
+      "login": "ONLY-yours",
+      "id": 52664827,
+      "node_id": "MDQ6VXNlcjUyNjY0ODI3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52664827?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ONLY-yours",
+      "html_url": "https://github.com/ONLY-yours",
+      "followers_url": "https://api.github.com/users/ONLY-yours/followers",
+      "following_url": "https://api.github.com/users/ONLY-yours/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ONLY-yours/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ONLY-yours/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ONLY-yours/subscriptions",
+      "organizations_url": "https://api.github.com/users/ONLY-yours/orgs",
+      "repos_url": "https://api.github.com/users/ONLY-yours/repos",
+      "events_url": "https://api.github.com/users/ONLY-yours/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ONLY-yours/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 2
+    },
+    {
+      "login": "kieranwv",
+      "id": 47177021,
+      "node_id": "MDQ6VXNlcjQ3MTc3MDIx",
+      "avatar_url": "https://avatars.githubusercontent.com/u/47177021?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/kieranwv",
+      "html_url": "https://github.com/kieranwv",
+      "followers_url": "https://api.github.com/users/kieranwv/followers",
+      "following_url": "https://api.github.com/users/kieranwv/following{/other_user}",
+      "gists_url": "https://api.github.com/users/kieranwv/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/kieranwv/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/kieranwv/subscriptions",
+      "organizations_url": "https://api.github.com/users/kieranwv/orgs",
+      "repos_url": "https://api.github.com/users/kieranwv/repos",
+      "events_url": "https://api.github.com/users/kieranwv/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/kieranwv/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 2
+    },
+    {
+      "login": "EralChen",
+      "id": 82485978,
+      "node_id": "MDQ6VXNlcjgyNDg1OTc4",
+      "avatar_url": "https://avatars.githubusercontent.com/u/82485978?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/EralChen",
+      "html_url": "https://github.com/EralChen",
+      "followers_url": "https://api.github.com/users/EralChen/followers",
+      "following_url": "https://api.github.com/users/EralChen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/EralChen/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/EralChen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/EralChen/subscriptions",
+      "organizations_url": "https://api.github.com/users/EralChen/orgs",
+      "repos_url": "https://api.github.com/users/EralChen/repos",
+      "events_url": "https://api.github.com/users/EralChen/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/EralChen/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 2
+    },
+    {
+      "login": "chaosll",
+      "id": 100918163,
+      "node_id": "U_kgDOBgPjkw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/100918163?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/chaosll",
+      "html_url": "https://github.com/chaosll",
+      "followers_url": "https://api.github.com/users/chaosll/followers",
+      "following_url": "https://api.github.com/users/chaosll/following{/other_user}",
+      "gists_url": "https://api.github.com/users/chaosll/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/chaosll/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/chaosll/subscriptions",
+      "organizations_url": "https://api.github.com/users/chaosll/orgs",
+      "repos_url": "https://api.github.com/users/chaosll/repos",
+      "events_url": "https://api.github.com/users/chaosll/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/chaosll/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 1
+    },
+    {
+      "login": "wh-Cc",
+      "id": 30167102,
+      "node_id": "MDQ6VXNlcjMwMTY3MTAy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30167102?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/wh-Cc",
+      "html_url": "https://github.com/wh-Cc",
+      "followers_url": "https://api.github.com/users/wh-Cc/followers",
+      "following_url": "https://api.github.com/users/wh-Cc/following{/other_user}",
+      "gists_url": "https://api.github.com/users/wh-Cc/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/wh-Cc/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/wh-Cc/subscriptions",
+      "organizations_url": "https://api.github.com/users/wh-Cc/orgs",
+      "repos_url": "https://api.github.com/users/wh-Cc/repos",
+      "events_url": "https://api.github.com/users/wh-Cc/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/wh-Cc/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 1
+    },
+    {
+      "login": "erupts",
+      "id": 20358088,
+      "node_id": "MDQ6VXNlcjIwMzU4MDg4",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20358088?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/erupts",
+      "html_url": "https://github.com/erupts",
+      "followers_url": "https://api.github.com/users/erupts/followers",
+      "following_url": "https://api.github.com/users/erupts/following{/other_user}",
+      "gists_url": "https://api.github.com/users/erupts/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/erupts/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/erupts/subscriptions",
+      "organizations_url": "https://api.github.com/users/erupts/orgs",
+      "repos_url": "https://api.github.com/users/erupts/repos",
+      "events_url": "https://api.github.com/users/erupts/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/erupts/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 1
+    },
+    {
+      "login": "quanbisen",
+      "id": 28393899,
+      "node_id": "MDQ6VXNlcjI4MzkzODk5",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28393899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/quanbisen",
+      "html_url": "https://github.com/quanbisen",
+      "followers_url": "https://api.github.com/users/quanbisen/followers",
+      "following_url": "https://api.github.com/users/quanbisen/following{/other_user}",
+      "gists_url": "https://api.github.com/users/quanbisen/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/quanbisen/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/quanbisen/subscriptions",
+      "organizations_url": "https://api.github.com/users/quanbisen/orgs",
+      "repos_url": "https://api.github.com/users/quanbisen/repos",
+      "events_url": "https://api.github.com/users/quanbisen/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/quanbisen/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 1
+    },
+    {
+      "login": "wujunyi0907",
+      "id": 170733327,
+      "node_id": "U_kgDOCi0vDw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/170733327?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/wujunyi0907",
+      "html_url": "https://github.com/wujunyi0907",
+      "followers_url": "https://api.github.com/users/wujunyi0907/followers",
+      "following_url": "https://api.github.com/users/wujunyi0907/following{/other_user}",
+      "gists_url": "https://api.github.com/users/wujunyi0907/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/wujunyi0907/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/wujunyi0907/subscriptions",
+      "organizations_url": "https://api.github.com/users/wujunyi0907/orgs",
+      "repos_url": "https://api.github.com/users/wujunyi0907/repos",
+      "events_url": "https://api.github.com/users/wujunyi0907/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/wujunyi0907/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 1
+    },
+    {
+      "login": "JACK-ZHANG-coming",
+      "id": 44993003,
+      "node_id": "MDQ6VXNlcjQ0OTkzMDAz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/44993003?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/JACK-ZHANG-coming",
+      "html_url": "https://github.com/JACK-ZHANG-coming",
+      "followers_url": "https://api.github.com/users/JACK-ZHANG-coming/followers",
+      "following_url": "https://api.github.com/users/JACK-ZHANG-coming/following{/other_user}",
+      "gists_url": "https://api.github.com/users/JACK-ZHANG-coming/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/JACK-ZHANG-coming/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/JACK-ZHANG-coming/subscriptions",
+      "organizations_url": "https://api.github.com/users/JACK-ZHANG-coming/orgs",
+      "repos_url": "https://api.github.com/users/JACK-ZHANG-coming/repos",
+      "events_url": "https://api.github.com/users/JACK-ZHANG-coming/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/JACK-ZHANG-coming/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 1
+    },
+    {
+      "login": "Jarvis2018",
+      "id": 36788851,
+      "node_id": "MDQ6VXNlcjM2Nzg4ODUx",
+      "avatar_url": "https://avatars.githubusercontent.com/u/36788851?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/Jarvis2018",
+      "html_url": "https://github.com/Jarvis2018",
+      "followers_url": "https://api.github.com/users/Jarvis2018/followers",
+      "following_url": "https://api.github.com/users/Jarvis2018/following{/other_user}",
+      "gists_url": "https://api.github.com/users/Jarvis2018/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/Jarvis2018/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/Jarvis2018/subscriptions",
+      "organizations_url": "https://api.github.com/users/Jarvis2018/orgs",
+      "repos_url": "https://api.github.com/users/Jarvis2018/repos",
+      "events_url": "https://api.github.com/users/Jarvis2018/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/Jarvis2018/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 1
+    },
+    {
+      "login": "enootttt",
+      "id": 103349961,
+      "node_id": "U_kgDOBij-yQ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/103349961?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/enootttt",
+      "html_url": "https://github.com/enootttt",
+      "followers_url": "https://api.github.com/users/enootttt/followers",
+      "following_url": "https://api.github.com/users/enootttt/following{/other_user}",
+      "gists_url": "https://api.github.com/users/enootttt/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/enootttt/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/enootttt/subscriptions",
+      "organizations_url": "https://api.github.com/users/enootttt/orgs",
+      "repos_url": "https://api.github.com/users/enootttt/repos",
+      "events_url": "https://api.github.com/users/enootttt/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/enootttt/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 1
+    },
+    {
+      "login": "yuguaa",
+      "id": 58333667,
+      "node_id": "MDQ6VXNlcjU4MzMzNjY3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58333667?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/yuguaa",
+      "html_url": "https://github.com/yuguaa",
+      "followers_url": "https://api.github.com/users/yuguaa/followers",
+      "following_url": "https://api.github.com/users/yuguaa/following{/other_user}",
+      "gists_url": "https://api.github.com/users/yuguaa/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/yuguaa/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/yuguaa/subscriptions",
+      "organizations_url": "https://api.github.com/users/yuguaa/orgs",
+      "repos_url": "https://api.github.com/users/yuguaa/repos",
+      "events_url": "https://api.github.com/users/yuguaa/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/yuguaa/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false,
+      "contributions": 1
+    }
+  ],
+  "componentContributors": [
+    {
+      "component": "bubble",
+      "path": "src/bubble",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 57,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "李慧峰",
+          "id": 152101725,
+          "avatar_url": "https://github.com/李慧峰.png",
+          "html_url": "https://github.com/李慧峰",
+          "contributions": 1,
+          "type": "User",
+          "email": "103349961+enootttt@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 59
+    },
+    {
+      "component": "sender",
+      "path": "src/sender",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 35,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf",
+          "id": 1191901315,
+          "avatar_url": "https://github.com/linhf.png",
+          "html_url": "https://github.com/linhf",
+          "contributions": 11,
+          "type": "User",
+          "email": "linhf123"
+        },
+        {
+          "login": "EralChen",
+          "id": 1692035469,
+          "avatar_url": "https://github.com/EralChen.png",
+          "html_url": "https://github.com/EralChen",
+          "contributions": 2,
+          "type": "User",
+          "email": "82485978+EralChen@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "Wang Hao",
+          "id": 835951396,
+          "avatar_url": "https://github.com/Wang Hao.png",
+          "html_url": "https://github.com/Wang Hao",
+          "contributions": 1,
+          "type": "User",
+          "email": "710876099@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ],
+      "totalContributions": 52
+    },
+    {
+      "component": "welcome",
+      "path": "src/welcome",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "wujunyi0907",
+          "id": 657132794,
+          "avatar_url": "https://github.com/wujunyi0907.png",
+          "html_url": "https://github.com/wujunyi0907",
+          "contributions": 1,
+          "type": "User",
+          "email": "wujunyi0907@163.com"
+        }
+      ],
+      "totalContributions": 7
+    },
+    {
+      "component": "attachments",
+      "path": "src/attachments",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 20,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 2,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "PeikyLiu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/PeikyLiu.png",
+          "html_url": "https://github.com/PeikyLiu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 25
+    },
+    {
+      "component": "conversations",
+      "path": "src/conversations",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 10,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        },
+        {
+          "login": "YuePeng",
+          "id": 1210345585,
+          "avatar_url": "https://github.com/YuePeng.png",
+          "html_url": "https://github.com/YuePeng",
+          "contributions": 1,
+          "type": "User",
+          "email": "erupts@126.com"
+        }
+      ],
+      "totalContributions": 14
+    },
+    {
+      "component": "prompts",
+      "path": "src/prompts",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 6
+    },
+    {
+      "component": "suggestion",
+      "path": "src/suggestion",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 5,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "雨溪",
+          "id": 479162055,
+          "avatar_url": "https://github.com/雨溪.png",
+          "html_url": "https://github.com/雨溪",
+          "contributions": 1,
+          "type": "User",
+          "email": "84778445+yuxi-ovo@users.noreply.github.com"
+        },
+        {
+          "login": "XiangYu Liu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/XiangYu Liu.png",
+          "html_url": "https://github.com/XiangYu Liu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 7
+    },
+    {
+      "component": "thought-chain",
+      "path": "src/thought-chain",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 8,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "inCBle",
+          "id": 1187357362,
+          "avatar_url": "https://github.com/inCBle.png",
+          "html_url": "https://github.com/inCBle",
+          "contributions": 2,
+          "type": "User",
+          "email": "84701254+inCBle@users.noreply.github.com"
+        },
+        {
+          "login": "EralChen",
+          "id": 1692035469,
+          "avatar_url": "https://github.com/EralChen.png",
+          "html_url": "https://github.com/EralChen",
+          "contributions": 1,
+          "type": "User",
+          "email": "82485978+EralChen@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 11
+    },
+    {
+      "component": "x-provider",
+      "path": "src/x-provider",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 18,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf",
+          "id": 1191901315,
+          "avatar_url": "https://github.com/linhf.png",
+          "html_url": "https://github.com/linhf",
+          "contributions": 1,
+          "type": "User",
+          "email": "linhf123"
+        }
+      ],
+      "totalContributions": 19
+    },
+    {
+      "component": "x-request",
+      "path": "src/x-request",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 3
+    },
+    {
+      "component": "x-stream",
+      "path": "src/x-stream",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 1
+    },
+    {
+      "component": "use-x-agent",
+      "path": "src/use-x-agent",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 9,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 9
+    },
+    {
+      "component": "use-x-chat",
+      "path": "src/use-x-chat",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 3
+    },
+    {
+      "component": "bubble-docs",
+      "path": "docs/component/bubble.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 22,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "Zoey Zhao",
+          "id": 1477523806,
+          "avatar_url": "https://github.com/Zoey Zhao.png",
+          "html_url": "https://github.com/Zoey Zhao",
+          "contributions": 1,
+          "type": "User",
+          "email": "70888488+zoeyzhao19@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 24
+    },
+    {
+      "component": "sender-docs",
+      "path": "docs/component/sender.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 12,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf",
+          "id": 1191901315,
+          "avatar_url": "https://github.com/linhf.png",
+          "html_url": "https://github.com/linhf",
+          "contributions": 2,
+          "type": "User",
+          "email": "linhf123"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        },
+        {
+          "login": "Zoey Zhao",
+          "id": 1477523806,
+          "avatar_url": "https://github.com/Zoey Zhao.png",
+          "html_url": "https://github.com/Zoey Zhao",
+          "contributions": 1,
+          "type": "User",
+          "email": "70888488+zoeyzhao19@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 18
+    },
+    {
+      "component": "welcome-docs",
+      "path": "docs/component/welcome.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "Zoey Zhao",
+          "id": 1477523806,
+          "avatar_url": "https://github.com/Zoey Zhao.png",
+          "html_url": "https://github.com/Zoey Zhao",
+          "contributions": 1,
+          "type": "User",
+          "email": "70888488+zoeyzhao19@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 8
+    },
+    {
+      "component": "attachments-docs",
+      "path": "docs/component/attachments.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 10,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "PeikyLiu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/PeikyLiu.png",
+          "html_url": "https://github.com/PeikyLiu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "Zoey Zhao",
+          "id": 1477523806,
+          "avatar_url": "https://github.com/Zoey Zhao.png",
+          "html_url": "https://github.com/Zoey Zhao",
+          "contributions": 1,
+          "type": "User",
+          "email": "70888488+zoeyzhao19@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 16
+    },
+    {
+      "component": "conversations-docs",
+      "path": "docs/component/conversations.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 8,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 10
+    },
+    {
+      "component": "prompts-docs",
+      "path": "docs/component/prompts.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 10,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        },
+        {
+          "login": "Zoey Zhao",
+          "id": 1477523806,
+          "avatar_url": "https://github.com/Zoey Zhao.png",
+          "html_url": "https://github.com/Zoey Zhao",
+          "contributions": 1,
+          "type": "User",
+          "email": "70888488+zoeyzhao19@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 13
+    },
+    {
+      "component": "suggestion-docs",
+      "path": "docs/component/suggestion.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 5,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ],
+      "totalContributions": 6
+    },
+    {
+      "component": "thought-chain-docs",
+      "path": "docs/component/thought-chain.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 7,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "inCBle",
+          "id": 1187357362,
+          "avatar_url": "https://github.com/inCBle.png",
+          "html_url": "https://github.com/inCBle",
+          "contributions": 2,
+          "type": "User",
+          "email": "84701254+inCBle@users.noreply.github.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ],
+      "totalContributions": 10
+    },
+    {
+      "component": "x-provider-docs",
+      "path": "docs/component/x-provider.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 2,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ],
+      "totalContributions": 3
+    },
+    {
+      "component": "x-request-docs",
+      "path": "docs/component/x-request.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ],
+      "totalContributions": 7
+    },
+    {
+      "component": "x-stream-docs",
+      "path": "docs/component/x-stream.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "XiangYu Liu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/XiangYu Liu.png",
+          "html_url": "https://github.com/XiangYu Liu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 5
+    },
+    {
+      "component": "use-x-agent-docs",
+      "path": "docs/component/use-x-agent.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 7,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ],
+      "totalContributions": 8
+    },
+    {
+      "component": "use-x-chat-docs",
+      "path": "docs/component/use-x-chat.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 7,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ],
+      "totalContributions": 8
+    },
+    {
+      "component": "bubble-examples",
+      "path": "docs/examples/bubble",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 11,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 12
+    },
+    {
+      "component": "sender-examples",
+      "path": "docs/examples/sender",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 20,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf",
+          "id": 1191901315,
+          "avatar_url": "https://github.com/linhf.png",
+          "html_url": "https://github.com/linhf",
+          "contributions": 12,
+          "type": "User",
+          "email": "linhf123"
+        },
+        {
+          "login": "PeikyLiu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/PeikyLiu.png",
+          "html_url": "https://github.com/PeikyLiu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "Wang Hao",
+          "id": 835951396,
+          "avatar_url": "https://github.com/Wang Hao.png",
+          "html_url": "https://github.com/Wang Hao",
+          "contributions": 1,
+          "type": "User",
+          "email": "710876099@qq.com"
+        }
+      ],
+      "totalContributions": 35
+    },
+    {
+      "component": "welcome-examples",
+      "path": "docs/examples/welcome",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 3
+    },
+    {
+      "component": "attachments-examples",
+      "path": "docs/examples/attachments",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 2,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 2,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        }
+      ],
+      "totalContributions": 5
+    },
+    {
+      "component": "conversations-examples",
+      "path": "docs/examples/conversations",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 12,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 13
+    },
+    {
+      "component": "prompts-examples",
+      "path": "docs/examples/prompts",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 6
+    },
+    {
+      "component": "suggestion-examples",
+      "path": "docs/examples/suggestion",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ],
+      "totalContributions": 4
+    },
+    {
+      "component": "thought-chain-examples",
+      "path": "docs/examples/thought-chain",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 8,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "inCBle",
+          "id": 1187357362,
+          "avatar_url": "https://github.com/inCBle.png",
+          "html_url": "https://github.com/inCBle",
+          "contributions": 2,
+          "type": "User",
+          "email": "84701254+inCBle@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 10
+    },
+    {
+      "component": "x-provider-examples",
+      "path": "docs/examples/x-provider",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 2,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 3
+    },
+    {
+      "component": "x-request-examples",
+      "path": "docs/examples/x-request",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 5,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 5
+    },
+    {
+      "component": "x-stream-examples",
+      "path": "docs/examples/x-stream",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 2,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 2
+    },
+    {
+      "component": "use-x-agent-examples",
+      "path": "docs/examples/use-x-agent",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 9,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 9
+    },
+    {
+      "component": "use-x-chat-examples",
+      "path": "docs/examples/use-x-chat",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 12,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 12
+    },
+    {
+      "component": "playground-examples",
+      "path": "docs/examples/playground",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 5,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "clddup",
+          "id": 286078754,
+          "avatar_url": "https://github.com/clddup.png",
+          "html_url": "https://github.com/clddup",
+          "contributions": 1,
+          "type": "User",
+          "email": "105873086+clddup@users.noreply.github.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 7
+    },
+    {
+      "component": "bubble-examples-setup",
+      "path": "docs/examples-setup/bubble",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 8,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "LIKUN",
+          "id": 1993555782,
+          "avatar_url": "https://github.com/LIKUN.png",
+          "html_url": "https://github.com/LIKUN",
+          "contributions": 3,
+          "type": "User",
+          "email": "45332012+StudyDayByDay@users.noreply.github.com"
+        },
+        {
+          "login": "superlollipop",
+          "id": 404479352,
+          "avatar_url": "https://github.com/superlollipop.png",
+          "html_url": "https://github.com/superlollipop",
+          "contributions": 1,
+          "type": "User",
+          "email": "1769128867@qq.com"
+        }
+      ],
+      "totalContributions": 12
+    },
+    {
+      "component": "sender-examples-setup",
+      "path": "docs/examples-setup/sender",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 8,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 2,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "PeikyLiu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/PeikyLiu.png",
+          "html_url": "https://github.com/PeikyLiu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "专注的小眼神",
+          "id": 367769364,
+          "avatar_url": "https://github.com/专注的小眼神.png",
+          "html_url": "https://github.com/专注的小眼神",
+          "contributions": 1,
+          "type": "User",
+          "email": "36788851+Jarvis2018@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 13
+    },
+    {
+      "component": "welcome-examples-setup",
+      "path": "docs/examples-setup/welcome",
+      "contributors": [
+        {
+          "login": "归谜",
+          "id": 458446194,
+          "avatar_url": "https://github.com/归谜.png",
+          "html_url": "https://github.com/归谜",
+          "contributions": 1,
+          "type": "User",
+          "email": "925122985@qq.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 2
+    },
+    {
+      "component": "attachments-examples-setup",
+      "path": "docs/examples-setup/attachments",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 5,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 2,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        }
+      ],
+      "totalContributions": 8
+    },
+    {
+      "component": "conversations-examples-setup",
+      "path": "docs/examples-setup/conversations",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 2,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 5
+    },
+    {
+      "component": "prompts-examples-setup",
+      "path": "docs/examples-setup/prompts",
+      "contributors": [
+        {
+          "login": "K.Os",
+          "id": 1728422765,
+          "avatar_url": "https://github.com/K.Os.png",
+          "html_url": "https://github.com/K.Os",
+          "contributions": 1,
+          "type": "User",
+          "email": "100918163+chaosll@users.noreply.github.com"
+        },
+        {
+          "login": "zhangqiang",
+          "id": 1610780964,
+          "avatar_url": "https://github.com/zhangqiang.png",
+          "html_url": "https://github.com/zhangqiang",
+          "contributions": 1,
+          "type": "User",
+          "email": "44993003+JACK-ZHANG-coming@users.noreply.github.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 3
+    },
+    {
+      "component": "suggestion-examples-setup",
+      "path": "docs/examples-setup/suggestion",
+      "contributors": [
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 2
+    },
+    {
+      "component": "thought-chain-examples-setup",
+      "path": "docs/examples-setup/thought-chain",
+      "contributors": [
+        {
+          "login": "inCBle",
+          "id": 1187357362,
+          "avatar_url": "https://github.com/inCBle.png",
+          "html_url": "https://github.com/inCBle",
+          "contributions": 3,
+          "type": "User",
+          "email": "84701254+inCBle@users.noreply.github.com"
+        },
+        {
+          "login": "归谜",
+          "id": 1768331091,
+          "avatar_url": "https://github.com/归谜.png",
+          "html_url": "https://github.com/归谜",
+          "contributions": 1,
+          "type": "User",
+          "email": "vhxubo@gmail.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 5
+    },
+    {
+      "component": "x-provider-examples-setup",
+      "path": "docs/examples-setup/x-provider",
+      "contributors": [
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 2
+    },
+    {
+      "component": "x-request-examples-setup",
+      "path": "docs/examples-setup/x-request",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 4,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 5
+    },
+    {
+      "component": "x-stream-examples-setup",
+      "path": "docs/examples-setup/x-stream",
+      "contributors": [
+        {
+          "login": "归谜",
+          "id": 458446194,
+          "avatar_url": "https://github.com/归谜.png",
+          "html_url": "https://github.com/归谜",
+          "contributions": 1,
+          "type": "User",
+          "email": "925122985@qq.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ],
+      "totalContributions": 2
+    },
+    {
+      "component": "use-x-agent-examples-setup",
+      "path": "docs/examples-setup/use-x-agent",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "归谜",
+          "id": 1768331091,
+          "avatar_url": "https://github.com/归谜.png",
+          "html_url": "https://github.com/归谜",
+          "contributions": 1,
+          "type": "User",
+          "email": "vhxubo@gmail.com"
+        }
+      ],
+      "totalContributions": 7
+    },
+    {
+      "component": "use-x-chat-examples-setup",
+      "path": "docs/examples-setup/use-x-chat",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 4
+    },
+    {
+      "component": "playground-examples-setup",
+      "path": "docs/examples-setup/playground",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "clddup",
+          "id": 286078754,
+          "avatar_url": "https://github.com/clddup.png",
+          "html_url": "https://github.com/clddup",
+          "contributions": 1,
+          "type": "User",
+          "email": "105873086+clddup@users.noreply.github.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        }
+      ],
+      "totalContributions": 6
+    }
+  ],
+  "fileContributors": [
+    {
+      "file": "src/bubble/Bubble.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 57,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "李慧峰",
+          "id": 152101725,
+          "avatar_url": "https://github.com/李慧峰.png",
+          "html_url": "https://github.com/李慧峰",
+          "contributions": 1,
+          "type": "User",
+          "email": "103349961+enootttt@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "src/sender/Sender.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 35,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf",
+          "id": 1191901315,
+          "avatar_url": "https://github.com/linhf.png",
+          "html_url": "https://github.com/linhf",
+          "contributions": 11,
+          "type": "User",
+          "email": "linhf123"
+        },
+        {
+          "login": "EralChen",
+          "id": 1692035469,
+          "avatar_url": "https://github.com/EralChen.png",
+          "html_url": "https://github.com/EralChen",
+          "contributions": 2,
+          "type": "User",
+          "email": "82485978+EralChen@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "Wang Hao",
+          "id": 835951396,
+          "avatar_url": "https://github.com/Wang Hao.png",
+          "html_url": "https://github.com/Wang Hao",
+          "contributions": 1,
+          "type": "User",
+          "email": "710876099@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "src/welcome/Welcome.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "wujunyi0907",
+          "id": 657132794,
+          "avatar_url": "https://github.com/wujunyi0907.png",
+          "html_url": "https://github.com/wujunyi0907",
+          "contributions": 1,
+          "type": "User",
+          "email": "wujunyi0907@163.com"
+        }
+      ]
+    },
+    {
+      "file": "src/attachments/Attachments.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 20,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 2,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "PeikyLiu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/PeikyLiu.png",
+          "html_url": "https://github.com/PeikyLiu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "src/conversations/Conversations.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 10,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        },
+        {
+          "login": "YuePeng",
+          "id": 1210345585,
+          "avatar_url": "https://github.com/YuePeng.png",
+          "html_url": "https://github.com/YuePeng",
+          "contributions": 1,
+          "type": "User",
+          "email": "erupts@126.com"
+        }
+      ]
+    },
+    {
+      "file": "src/prompts/Prompts.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "src/suggestion/Suggestion.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 5,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "雨溪",
+          "id": 479162055,
+          "avatar_url": "https://github.com/雨溪.png",
+          "html_url": "https://github.com/雨溪",
+          "contributions": 1,
+          "type": "User",
+          "email": "84778445+yuxi-ovo@users.noreply.github.com"
+        },
+        {
+          "login": "XiangYu Liu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/XiangYu Liu.png",
+          "html_url": "https://github.com/XiangYu Liu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "src/thought-chain/ThoughtChain.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 8,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "inCBle",
+          "id": 1187357362,
+          "avatar_url": "https://github.com/inCBle.png",
+          "html_url": "https://github.com/inCBle",
+          "contributions": 2,
+          "type": "User",
+          "email": "84701254+inCBle@users.noreply.github.com"
+        },
+        {
+          "login": "EralChen",
+          "id": 1692035469,
+          "avatar_url": "https://github.com/EralChen.png",
+          "html_url": "https://github.com/EralChen",
+          "contributions": 1,
+          "type": "User",
+          "email": "82485978+EralChen@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "src/x-provider/index.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 18,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf",
+          "id": 1191901315,
+          "avatar_url": "https://github.com/linhf.png",
+          "html_url": "https://github.com/linhf",
+          "contributions": 1,
+          "type": "User",
+          "email": "linhf123"
+        }
+      ]
+    },
+    {
+      "file": "src/x-request/x-request.ts",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "src/x-stream/x-stream.ts",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "src/use-x-agent/use-x-agent.ts",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 9,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "src/use-x-chat/use-x-chat.ts",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/bubble.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 22,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "Zoey Zhao",
+          "id": 1477523806,
+          "avatar_url": "https://github.com/Zoey Zhao.png",
+          "html_url": "https://github.com/Zoey Zhao",
+          "contributions": 1,
+          "type": "User",
+          "email": "70888488+zoeyzhao19@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/sender.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 12,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf",
+          "id": 1191901315,
+          "avatar_url": "https://github.com/linhf.png",
+          "html_url": "https://github.com/linhf",
+          "contributions": 2,
+          "type": "User",
+          "email": "linhf123"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        },
+        {
+          "login": "Zoey Zhao",
+          "id": 1477523806,
+          "avatar_url": "https://github.com/Zoey Zhao.png",
+          "html_url": "https://github.com/Zoey Zhao",
+          "contributions": 1,
+          "type": "User",
+          "email": "70888488+zoeyzhao19@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/welcome.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "Zoey Zhao",
+          "id": 1477523806,
+          "avatar_url": "https://github.com/Zoey Zhao.png",
+          "html_url": "https://github.com/Zoey Zhao",
+          "contributions": 1,
+          "type": "User",
+          "email": "70888488+zoeyzhao19@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/attachments.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 10,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "PeikyLiu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/PeikyLiu.png",
+          "html_url": "https://github.com/PeikyLiu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "Zoey Zhao",
+          "id": 1477523806,
+          "avatar_url": "https://github.com/Zoey Zhao.png",
+          "html_url": "https://github.com/Zoey Zhao",
+          "contributions": 1,
+          "type": "User",
+          "email": "70888488+zoeyzhao19@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/conversations.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 8,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/prompts.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 10,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        },
+        {
+          "login": "Zoey Zhao",
+          "id": 1477523806,
+          "avatar_url": "https://github.com/Zoey Zhao.png",
+          "html_url": "https://github.com/Zoey Zhao",
+          "contributions": 1,
+          "type": "User",
+          "email": "70888488+zoeyzhao19@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/suggestion.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 5,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/thought-chain.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 7,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "inCBle",
+          "id": 1187357362,
+          "avatar_url": "https://github.com/inCBle.png",
+          "html_url": "https://github.com/inCBle",
+          "contributions": 2,
+          "type": "User",
+          "email": "84701254+inCBle@users.noreply.github.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/x-provider.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 2,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/x-request.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/x-stream.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        },
+        {
+          "login": "XiangYu Liu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/XiangYu Liu.png",
+          "html_url": "https://github.com/XiangYu Liu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/use-x-agent.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 7,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/component/use-x-chat.md",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 7,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/bubble/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 11,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/sender/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 20,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf",
+          "id": 1191901315,
+          "avatar_url": "https://github.com/linhf.png",
+          "html_url": "https://github.com/linhf",
+          "contributions": 12,
+          "type": "User",
+          "email": "linhf123"
+        },
+        {
+          "login": "PeikyLiu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/PeikyLiu.png",
+          "html_url": "https://github.com/PeikyLiu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "Wang Hao",
+          "id": 835951396,
+          "avatar_url": "https://github.com/Wang Hao.png",
+          "html_url": "https://github.com/Wang Hao",
+          "contributions": 1,
+          "type": "User",
+          "email": "710876099@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/welcome/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/attachments/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 2,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 2,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/conversations/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 12,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/prompts/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/suggestion/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 1310087455,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 1,
+          "type": "User",
+          "email": "1959099976@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/thought-chain/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 8,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "inCBle",
+          "id": 1187357362,
+          "avatar_url": "https://github.com/inCBle.png",
+          "html_url": "https://github.com/inCBle",
+          "contributions": 2,
+          "type": "User",
+          "email": "84701254+inCBle@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/x-provider/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 2,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/x-request/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 5,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/x-stream/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 2,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/use-x-agent/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 9,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/use-x-chat/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 12,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples/playground/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 5,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "clddup",
+          "id": 286078754,
+          "avatar_url": "https://github.com/clddup.png",
+          "html_url": "https://github.com/clddup",
+          "contributions": 1,
+          "type": "User",
+          "email": "105873086+clddup@users.noreply.github.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/bubble/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 8,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "LIKUN",
+          "id": 1993555782,
+          "avatar_url": "https://github.com/LIKUN.png",
+          "html_url": "https://github.com/LIKUN",
+          "contributions": 3,
+          "type": "User",
+          "email": "45332012+StudyDayByDay@users.noreply.github.com"
+        },
+        {
+          "login": "superlollipop",
+          "id": 404479352,
+          "avatar_url": "https://github.com/superlollipop.png",
+          "html_url": "https://github.com/superlollipop",
+          "contributions": 1,
+          "type": "User",
+          "email": "1769128867@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/sender/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 8,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 2,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "PeikyLiu",
+          "id": 1322818178,
+          "avatar_url": "https://github.com/PeikyLiu.png",
+          "html_url": "https://github.com/PeikyLiu",
+          "contributions": 1,
+          "type": "User",
+          "email": "46105662+PeikyLiu@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        },
+        {
+          "login": "专注的小眼神",
+          "id": 367769364,
+          "avatar_url": "https://github.com/专注的小眼神.png",
+          "html_url": "https://github.com/专注的小眼神",
+          "contributions": 1,
+          "type": "User",
+          "email": "36788851+Jarvis2018@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/welcome/basic.vue",
+      "contributors": [
+        {
+          "login": "归谜",
+          "id": 458446194,
+          "avatar_url": "https://github.com/归谜.png",
+          "html_url": "https://github.com/归谜",
+          "contributions": 1,
+          "type": "User",
+          "email": "925122985@qq.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/attachments/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 5,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "linhf123",
+          "id": 665374900,
+          "avatar_url": "https://github.com/linhf123.png",
+          "html_url": "https://github.com/linhf123",
+          "contributions": 2,
+          "type": "User",
+          "email": "32009993+linhf123@users.noreply.github.com"
+        },
+        {
+          "login": "Kieran Wang",
+          "id": 1837988216,
+          "avatar_url": "https://github.com/Kieran Wang.png",
+          "html_url": "https://github.com/Kieran Wang",
+          "contributions": 1,
+          "type": "User",
+          "email": "kieranwme@gmail.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/conversations/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 2,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/prompts/basic.vue",
+      "contributors": [
+        {
+          "login": "K.Os",
+          "id": 1728422765,
+          "avatar_url": "https://github.com/K.Os.png",
+          "html_url": "https://github.com/K.Os",
+          "contributions": 1,
+          "type": "User",
+          "email": "100918163+chaosll@users.noreply.github.com"
+        },
+        {
+          "login": "zhangqiang",
+          "id": 1610780964,
+          "avatar_url": "https://github.com/zhangqiang.png",
+          "html_url": "https://github.com/zhangqiang",
+          "contributions": 1,
+          "type": "User",
+          "email": "44993003+JACK-ZHANG-coming@users.noreply.github.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/suggestion/basic.vue",
+      "contributors": [
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/thought-chain/basic.vue",
+      "contributors": [
+        {
+          "login": "inCBle",
+          "id": 1187357362,
+          "avatar_url": "https://github.com/inCBle.png",
+          "html_url": "https://github.com/inCBle",
+          "contributions": 3,
+          "type": "User",
+          "email": "84701254+inCBle@users.noreply.github.com"
+        },
+        {
+          "login": "归谜",
+          "id": 1768331091,
+          "avatar_url": "https://github.com/归谜.png",
+          "html_url": "https://github.com/归谜",
+          "contributions": 1,
+          "type": "User",
+          "email": "vhxubo@gmail.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/x-provider/basic.vue",
+      "contributors": [
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/x-request/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 4,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/x-stream/basic.vue",
+      "contributors": [
+        {
+          "login": "归谜",
+          "id": 458446194,
+          "avatar_url": "https://github.com/归谜.png",
+          "html_url": "https://github.com/归谜",
+          "contributions": 1,
+          "type": "User",
+          "email": "925122985@qq.com"
+        },
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 1,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/use-x-agent/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 6,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "归谜",
+          "id": 1768331091,
+          "avatar_url": "https://github.com/归谜.png",
+          "html_url": "https://github.com/归谜",
+          "contributions": 1,
+          "type": "User",
+          "email": "vhxubo@gmail.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/use-x-chat/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        }
+      ]
+    },
+    {
+      "file": "docs/examples-setup/playground/basic.vue",
+      "contributors": [
+        {
+          "login": "wzc520pyfm",
+          "id": 958506417,
+          "avatar_url": "https://github.com/wzc520pyfm.png",
+          "html_url": "https://github.com/wzc520pyfm",
+          "contributions": 3,
+          "type": "User",
+          "email": "1528857653@qq.com"
+        },
+        {
+          "login": "clddup",
+          "id": 286078754,
+          "avatar_url": "https://github.com/clddup.png",
+          "html_url": "https://github.com/clddup",
+          "contributions": 1,
+          "type": "User",
+          "email": "105873086+clddup@users.noreply.github.com"
+        },
+        {
+          "login": "Bao",
+          "id": 1849804005,
+          "avatar_url": "https://github.com/Bao.png",
+          "html_url": "https://github.com/Bao",
+          "contributions": 1,
+          "type": "User",
+          "email": "52953943+Bao0630@users.noreply.github.com"
+        },
+        {
+          "login": "hihanley",
+          "id": 295532086,
+          "avatar_url": "https://github.com/hihanley.png",
+          "html_url": "https://github.com/hihanley",
+          "contributions": 1,
+          "type": "User",
+          "email": "43161625+hihanley@users.noreply.github.com"
+        }
+      ]
+    }
+  ]
+}
