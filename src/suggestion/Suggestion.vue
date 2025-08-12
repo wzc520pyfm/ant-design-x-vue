@@ -4,7 +4,7 @@ import type { RenderChildrenProps, SuggestionItem, SuggestionProps } from './int
 import { useXProviderContext } from '../x-provider';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import useStyle from './style';
-import { computed, type VNode, ref } from 'vue';
+import { computed, type VNode, ref, watch } from 'vue';
 import useState from '../_util/hooks/use-state';
 import { Cascader, type CascaderProps } from 'ant-design-vue';
 import useActive from './useActive';
@@ -56,6 +56,9 @@ const dropdownStyle = computed(() => {
 // =========================== Trigger ============================
 const [mergedOpen, setOpen] = useState(open);
 
+watch(() => open, (nextOpen) => {
+  setOpen(nextOpen);
+});
 
 const [info, setInfo] = useState<T | undefined>();
 
