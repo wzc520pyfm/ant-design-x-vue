@@ -24,16 +24,7 @@ import {
   CloudOutlined,
   RobotOutlined,
   SearchOutlined,
-  LinkOutlined,
 } from '@ant-design/icons-vue';
-import {
-  Bubble,
-  Welcome,
-  Prompts,
-  Suggestion,
-  ThoughtChain,
-  Sender,
-} from 'ant-design-x-vue';
 import { ref, computed } from 'vue';
 
 defineOptions({ name: 'AXOverviewDemo' });
@@ -42,48 +33,6 @@ const { Title, Paragraph } = Typography;
 
 // 搜索功能
 const searchValue = ref('');
-
-// 示例数据
-const promptItems = [
-  {
-    key: '1',
-    icon: <BulbOutlined style={{ color: '#FFD700' }} />,
-    label: '创意启发',
-    description: '获得新项目的灵感',
-  },
-  {
-    key: '2',
-    icon: <StarOutlined style={{ color: '#1890FF' }} />,
-    label: '效率提升',
-    description: '如何更快更好地工作？',
-  },
-];
-
-const suggestionItems = [
-  { label: '写一个报告', value: 'report' },
-  { label: '画个图', value: 'draw' },
-  { label: '查询知识', value: 'knowledge' },
-];
-
-const suggestionValue = ref('');
-
-const thoughtChainItems = [
-  {
-    title: '分析需求',
-    description: '理解用户的具体需求和场景',
-    status: 'success' as const,
-  },
-  {
-    title: '设计方案',
-    description: '根据需求设计合适的技术方案',
-    status: 'success' as const,
-  },
-  {
-    title: '实现功能',
-    description: '编写代码实现设计的功能',
-    status: 'pending' as const,
-  },
-];
 
 // 组件数据
 const allComponents = [
@@ -258,6 +207,25 @@ const componentRoutes: Record<string, string> = {
   'x-provider': '/component/x-provider',
 };
 
+// 静态预览图映射
+const componentImages: Record<string, string> = {
+  bubble: '/images/Bubble.svg',
+  conversations: '/images/Conversations.svg',
+  welcome: '/images/Welcome.svg',
+  prompts: '/images/Prompts.svg',
+  attachments: '/images/Attachments.svg',
+  sender: '/images/Sender.svg',
+  suggestion: '/images/Suggestion.svg',
+  'thought-chain': '/images/ThoughtChain.svg',
+  'use-x-agent': '/images/useXAgent.svg',
+  'use-x-chat': '/images/useXChat.svg',
+  'x-stream': '/images/XStream.svg',
+  'x-request': '/images/XRequest.svg',
+  'x-provider': '/images/XProvider.svg',
+};
+
+const getComponentImageSrc = (component: any) => componentImages[component.id];
+
 // 处理组件点击
 const handleComponentClick = (component: any) => {
   const route = componentRoutes[component.id];
@@ -307,179 +275,46 @@ const Demo = () => {
             <Tag style={{ marginLeft: '8px' }}>{components.length}</Tag>
           </div>
 
-          <Row gutter={[24, 24]} style={{ marginBottom: '48px' }}>
+          <Row gutter={[16, 24]} style={{ marginBottom: '48px' }}>
             {components.map((component) => (
               <Col key={component.id} xs={24} lg={12}>
-                <div
-                  style={{
-                    height: '100%',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s',
-                  }}
-                  onClick={() => handleComponentClick(component)}
-                  onMouseenter={(e: any) => e.currentTarget.style.transform = 'translateY(-2px)'}
-                  onMouseleave={(e: any) => e.currentTarget.style.transform = 'translateY(0)'}
-                >
-                  <Card
-                    style={{
-                      height: '100%',
-                      border: '1px solid #f0f0f0',
-                    }}
-                    bodyStyle={{ padding: '20px' }}
-                    hoverable
-                  >
-                  {/* 卡片头部 */}
-                  <div style={{ marginBottom: '16px' }}>
+                  {/* 组件演示区域 */}
+                  <Card size="small" title={component.title} bodyStyle={{ padding: '16px' }} hoverable={true} class="overview-card">
                     <div
                       style={{
+                      
+                        minHeight: '200px',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginBottom: '8px',
+                        justifyContent: 'center',
                       }}
+                      onClick={() => handleComponentClick(component)}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        {component.icon}
-                        <div
-                          style={{
-                            fontSize: '16px',
-                            fontWeight: '500',
-                            marginLeft: '8px',
-                          }}
-                        >
-                          {component.title}
-                        </div>
-                      </div>
-                      <LinkOutlined
-                        style={{
-                          color: '#1890ff',
-                          fontSize: '14px',
-                          opacity: 0.6,
-                        }}
-                      />
-                    </div>
-                    <div style={{ margin: '0', color: '#666', lineHeight: '1.6' }}>
-                      {component.description}
-                    </div>
-                  </div>
-
-                  {/* 组件演示区域 */}
-                  <div
-                    style={{
-                      padding: '20px',
-                      background: '#fafafa',
-                      borderRadius: '8px',
-                      minHeight: '200px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {/* Bubble 组件演示 */}
-                    {component.id === 'bubble' && (
-                      <Space direction="vertical" style={{ width: '100%' }}>
-                        <Bubble
-                          content="你好！我是 AI 助手"
-                          placement="start"
-                        />
-                        <div style={{ textAlign: 'right' }}>
-                          <Bubble content="很高兴认识你！" placement="end" />
-                        </div>
-                      </Space>
-                    )}
-
-                    {/* Welcome 组件演示 */}
-                    {component.id === 'welcome' && (
-                      <Welcome
-                        icon="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp"
-                        title="你好，我是 Ant Design X Vue"
-                        description="基于 Ant Design，专为 Vue 生态打造的 AI 产品界面解决方案"
-                      />
-                    )}
-
-                    {/* Prompts 组件演示 */}
-                    {component.id === 'prompts' && (
-                      <Prompts
-                        title="💡 快速开始"
-                        items={promptItems}
-                        style={{ width: '100%' }}
-                      />
-                    )}
-
-                    {/* Sender 组件演示 */}
-                    {component.id === 'sender' && (
-                      <div style={{ width: '100%' }}>
-                        <Sender
-                          placeholder="请输入您的消息..."
-                          style={{ width: '100%' }}
-                        />
-                      </div>
-                    )}
-
-                    {/* Suggestion 组件演示 */}
-                    {component.id === 'suggestion' && (
-                      <div style={{ width: '100%' }}>
-                        <Suggestion
-                          items={suggestionItems}
-                          onSelect={(itemVal: string) =>
-                            (suggestionValue.value = `[${itemVal}]: `)
-                          }
-                          v-slots={{
-                            default: ({ onTrigger, onKeyDown }: any) => (
-                              <Sender
-                                value={suggestionValue.value}
-                                onChange={(nextVal: string) => {
-                                  if (nextVal === '/') {
-                                    onTrigger();
-                                  } else if (!nextVal) {
-                                    onTrigger(false);
-                                  }
-                                  suggestionValue.value = nextVal;
-                                }}
-                                onKeyDown={onKeyDown}
-                                placeholder="输入 / 获取建议"
-                                style={{ width: '100%' }}
-                              />
-                            ),
-                          }}
-                        />
-                      </div>
-                    )}
-
-                    {/* ThoughtChain 组件演示 */}
-                    {component.id === 'thought-chain' && (
-                      <ThoughtChain
-                        items={thoughtChainItems}
-                        style={{ width: '100%' }}
-                      />
-                    )}
-
-                    {/* 其他组件显示图标和说明 */}
-                    {![
-                      'bubble',
-                      'welcome',
-                      'prompts',
-                      'sender',
-                      'suggestion',
-                      'thought-chain',
-                    ].includes(component.id) && (
-                      <div style={{ textAlign: 'center', color: '#666' }}>
-                        <div style={{ fontSize: '48px'}}>
-                          {component.icon}
-                        </div>
-                        <div style={{ fontWeight: '500'}}>
-                          {getComponentDisplayText(component)}
-                        </div>
-                        {getComponentSubText(component) && (
-                          <div style={{ fontSize: '12px', marginTop: '4px' }}>
-                            {getComponentSubText(component)}
+                      <div style={{ textAlign: 'center', width: '100%' }}>
+                        {getComponentImageSrc(component) ? (
+                          <img
+                            src={getComponentImageSrc(component)}
+                            alt={component.title}
+                            style={{ maxWidth: '100%', height: '160px', objectFit: 'contain' }}
+                          />
+                        ) : (
+                          <div style={{ color: '#666' }}>
+                            <div style={{ fontSize: '48px' }}>
+                              {component.icon}
+                            </div>
+                            <div style={{ fontWeight: '500' }}>
+                              {getComponentDisplayText(component)}
+                            </div>
+                            {getComponentSubText(component) && (
+                              <div style={{ fontSize: '12px', marginTop: '4px' }}>
+                                {getComponentSubText(component)}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
-                    )}
-                  </div>
+                    </div>
                   </Card>
-                </div>
               </Col>
             ))}
           </Row>
