@@ -25,7 +25,7 @@ import {
   RobotOutlined,
   SearchOutlined,
 } from '@ant-design/icons-vue';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 
 defineOptions({ name: 'AXOverviewDemo' });
 
@@ -33,6 +33,22 @@ const { Title, Paragraph } = Typography;
 
 // 搜索功能
 const searchValue = ref('');
+
+// 检测暗黑模式
+const isDark = ref(false);
+let __axDarkObserver: MutationObserver | null = null;
+onMounted(() => {
+  const updateDark = () => {
+    isDark.value = document.documentElement.classList.contains('dark');
+  };
+  updateDark();
+  __axDarkObserver = new MutationObserver(updateDark);
+  __axDarkObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+});
+onBeforeUnmount(() => {
+  __axDarkObserver?.disconnect();
+  __axDarkObserver = null;
+});
 
 // 组件数据
 const allComponents = [
@@ -224,7 +240,11 @@ const componentImages: Record<string, string> = {
   'x-provider': '/images/XProvider.svg',
 };
 
-const getComponentImageSrc = (component: any) => componentImages[component.id];
+const getComponentImageSrc = (component: any) => {
+  const base = componentImages[component.id];
+  if (!base) return '';
+  return isDark.value ? base.replace(/\.svg$/, '-dark.svg') : base;
+};
 
 // 处理组件点击
 const handleComponentClick = (component: any) => {

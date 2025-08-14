@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="150px" height="93px" viewBox="0 0 150 93" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ConfigProvider</title>
+    <g id="组件骨架图更新" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="🎉-5.0-新版---黑" transform="translate(-543.000000, -5147.000000)" fill-rule="nonzero">
+            <g id="ConfigProvider" transform="translate(543.000000, 5147.000000)">
+                <rect id="矩形复制-81" fill="#1677FF" x="0" y="0" width="25" height="6"></rect>
+                <rect id="矩形复制-163" fill="#1677FF" x="100" y="0" width="25" height="6"></rect>
+                <rect id="矩形复制-167" fill="#1677FF" x="0" y="70" width="61" height="6"></rect>
+                <rect id="矩形复制-165" fill="#1677FF" x="108" y="14" width="29" height="6"></rect>
+                <rect id="矩形复制-164" fill="#52C216" x="133" y="0" width="17" height="6"></rect>
+                <rect id="矩形复制-169" fill="#52C216" x="69" y="70" width="17" height="6"></rect>
+                <rect id="矩形复制-170" fill="#52C216" x="21" y="84" width="17" height="6"></rect>
+                <rect id="矩形复制-162" fill-opacity="0.15" fill="#FFFFFF" opacity="0.999255952" x="33" y="0" width="59" height="6"></rect>
+                <rect id="矩形复制-82" fill-opacity="0.15" fill="#FFFFFF" opacity="0.999255952" x="0" y="14" width="100" height="6"></rect>
+                <rect id="矩形复制-83" fill-opacity="0.15" fill="#FFFFFF" opacity="0.999255952" x="0" y="28" width="43" height="6"></rect>
+                <rect id="矩形复制-168" fill-opacity="0.15" fill="#FFFFFF" opacity="0.999255952" x="94" y="70" width="52" height="6"></rect>
+                <rect id="矩形复制-171" fill-opacity="0.15" fill="#FFFFFF" opacity="0.999255952" x="46" y="84" width="52" height="6"></rect>
+                <rect id="矩形复制-166" fill-opacity="0.15" fill="#FFFFFF" opacity="0.999255952" x="51" y="28" width="74" height="6"></rect>
+                <g id="&lt;" transform="translate(10.000000, 79.000000)" fill="#FFFFFF" fill-opacity="0.65" font-family="PingFangSC-Regular, PingFang SC" font-size="10" font-weight="normal">
+                    <text>
+                        <tspan x="0" y="11">&lt;</tspan>
+                    </text>
+                </g>
+                <g id="&lt;复制" transform="translate(105.500000, 86.000000) scale(-1, 1) translate(-105.500000, -86.000000) translate(102.000000, 79.000000)" fill="#FFFFFF" fill-opacity="0.65" font-family="PingFangSC-Regular, PingFang SC" font-size="10" font-weight="normal">
+                    <text id="&lt;">
+                        <tspan x="0" y="11">&lt;</tspan>
+                    </text>
+                </g>
+                <g id="//…" transform="translate(0.000000, 44.000000)" fill="#FFFFFF" fill-opacity="0.65" font-family="PingFangSC-Regular, PingFang SC" font-size="10" font-weight="normal">
+                    <text>
+                        <tspan x="0" y="11">//…</tspan>
+                    </text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300px" height="140px" viewBox="0 0 300 140" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>数据流转换-深色</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Ant-Design-X---黑" transform="translate(-832, -2040)">
+            <g id="数据流转换-深色" transform="translate(832, 2040)">
+                <rect id="矩形" opacity="0" x="0" y="0" width="300" height="140"></rect>
+                <g id="编组-18" transform="translate(152, 49)">
+                    <path d="M0,0 L113,0 C117.418278,-8.11624501e-16 121,3.581722 121,8 L121,37 C121,41.418278 117.418278,45 113,45 L8,45 C3.581722,45 2.705415e-16,41.418278 0,37 L0,0 L0,0 Z" id="矩形" fill="#222222" fill-rule="nonzero"></path>
+                    <rect id="矩形备份-13" fill="#333333" fill-rule="nonzero" x="8" y="8" width="105" height="10" rx="2"></rect>
+                    <rect id="矩形备份-13备份-5" fill="#1677FF" fill-rule="nonzero" x="8" y="26" width="70" height="10" rx="2"></rect>
+                    <rect id="矩形" fill="#E4E4E4" x="80" y="25" width="3" height="12"></rect>
+                </g>
+                <polygon id="三角形" fill="#444343" transform="translate(137.5, 71) rotate(-270) translate(-137.5, -71)" points="137.5 66 145 76 130 76"></polygon>
+                <g id="编组-19" transform="translate(29, 23)">
+                    <rect id="矩形备份-6" fill="#222222" fill-rule="nonzero" x="0" y="0" width="92" height="94" rx="8"></rect>
+                    <g id="编组-17" transform="translate(8, 7)">
+                        <text id="{" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#444343">
+                            <tspan x="0" y="13">{</tspan>
+                        </text>
+                        <text id="}" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#444343">
+                            <tspan x="72" y="13">}</tspan>
+                        </text>
+                        <rect id="矩形备份-13" fill="#444343" fill-rule="nonzero" x="4" y="5" width="21" height="8" rx="2"></rect>
+                        <rect id="矩形备份-13备份-15" fill="#1677FF" fill-rule="nonzero" x="27" y="5" width="21" height="8" rx="2"></rect>
+                        <rect id="矩形备份-13备份-16" fill="#444343" fill-rule="nonzero" x="50" y="5" width="21" height="8" rx="2"></rect>
+                    </g>
+                    <g id="编组-17备份-2" transform="translate(8, 49)">
+                        <text id="{" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#444343">
+                            <tspan x="0" y="13">{</tspan>
+                        </text>
+                        <text id="}" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#444343">
+                            <tspan x="72" y="13">}</tspan>
+                        </text>
+                        <rect id="矩形备份-13" fill="#1677FF" fill-rule="nonzero" x="4" y="5" width="21" height="8" rx="2"></rect>
+                        <rect id="矩形备份-13备份-15" fill="#444343" fill-rule="nonzero" x="27" y="5" width="21" height="8" rx="2"></rect>
+                        <rect id="矩形备份-13备份-16" fill="#444343" fill-rule="nonzero" x="50" y="5" width="21" height="8" rx="2"></rect>
+                    </g>
+                    <g id="编组-17备份-3" transform="translate(8, 70)">
+                        <text id="{" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#444343">
+                            <tspan x="0" y="13">{</tspan>
+                        </text>
+                        <text id="}" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#444343">
+                            <tspan x="72" y="13">}</tspan>
+                        </text>
+                        <rect id="矩形备份-13" fill="#444343" fill-rule="nonzero" x="4" y="5" width="21" height="8" rx="2"></rect>
+                        <rect id="矩形备份-13备份-15" fill="#52C216" fill-rule="nonzero" x="27" y="5" width="21" height="8" rx="2"></rect>
+                        <rect id="矩形备份-13备份-16" fill="#444343" fill-rule="nonzero" x="50" y="5" width="21" height="8" rx="2"></rect>
+                    </g>
+                    <g id="编组-17备份" transform="translate(8, 28)">
+                        <text id="{" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#444343">
+                            <tspan x="0" y="13">{</tspan>
+                        </text>
+                        <text id="}" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" fill="#444343">
+                            <tspan x="72" y="13">}</tspan>
+                        </text>
+                        <rect id="矩形备份-13" fill="#444343" fill-rule="nonzero" x="4" y="5" width="21" height="8" rx="2"></rect>
+                        <rect id="矩形备份-13备份-15" fill="#444343" fill-rule="nonzero" x="27" y="5" width="21" height="8" rx="2"></rect>
+                        <rect id="矩形备份-13备份-16" fill="#52C216" fill-rule="nonzero" x="50" y="5" width="21" height="8" rx="2"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
