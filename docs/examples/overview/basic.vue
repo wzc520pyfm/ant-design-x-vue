@@ -25,7 +25,8 @@ import {
   RobotOutlined,
   SearchOutlined,
 } from '@ant-design/icons-vue';
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed } from 'vue';
+import { useData } from 'vitepress';
 
 defineOptions({ name: 'AXOverviewDemo' });
 
@@ -34,21 +35,8 @@ const { Title, Paragraph } = Typography;
 // 搜索功能
 const searchValue = ref('');
 
-// 检测暗黑模式
-const isDark = ref(false);
-let __axDarkObserver: MutationObserver | null = null;
-onMounted(() => {
-  const updateDark = () => {
-    isDark.value = document.documentElement.classList.contains('dark');
-  };
-  updateDark();
-  __axDarkObserver = new MutationObserver(updateDark);
-  __axDarkObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-});
-onBeforeUnmount(() => {
-  __axDarkObserver?.disconnect();
-  __axDarkObserver = null;
-});
+// 暗黑模式
+const { isDark } = useData();
 
 // 组件数据
 const allComponents = [
