@@ -107,7 +107,7 @@ const onInternalScroll = (e: Event) => {
   );
 };
 
-watch(updateCount, () => {
+watch([updateCount, listRef, scrollReachEnd], () => {
   if (autoScroll && unref(listRef) && unref(scrollReachEnd)) {
     nextTick(() => {
       unref(listRef).scrollTo({
