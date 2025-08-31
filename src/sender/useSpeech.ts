@@ -32,7 +32,8 @@ export default function useSpeech(
   const onEventSpeech = onSpeech;
 
   // ========================== Speech Config ==========================
-  const allowSpeechItem =
+  //All promoted to be reactive
+  const {controlledRecording,onControlledRecordingChange,speechInControlled} =
     computed(() => {
       const allowSpeechRaw = toValue(allowSpeech);
       if (typeof allowSpeechRaw === 'object') {
@@ -48,8 +49,7 @@ export default function useSpeech(
         onControlledRecordingChange: undefined,
         speechInControlled: false,
       }
-    });
-
+    }).value;
   const controlledRecording = computed(() => allowSpeechItem.value.controlledRecording)
   const onControlledRecordingChange = allowSpeechItem.value.onControlledRecordingChange
   const speechInControlled = allowSpeechItem.value.speechInControlled
