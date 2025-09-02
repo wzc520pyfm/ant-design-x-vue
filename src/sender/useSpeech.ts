@@ -87,7 +87,8 @@ export default function useSpeech(
   // ========================== Speech Events ==========================
   const recognitionRef = ref<any | null>(null);
   const [recording, setRecording] = useMergedState(false, {
-    value: controlledRecording,
+  //value type compatibility
+    value: ref(controlledRecording),
   });
 
   const forceBreakRef = ref(false);
