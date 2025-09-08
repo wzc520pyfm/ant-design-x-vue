@@ -29,6 +29,11 @@
 }
 
 html {
-  scrollbar-width: thin;
+ scrollbar-width: thin;
+  -ms-overflow-style: auto;
+  scrollbar-color: transparent transparent;
+}
+
+html:hover {
   scrollbar-color: #eaeaea transparent;
 }
