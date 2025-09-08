@@ -2,6 +2,7 @@ import { globals } from '../vitepress'
 import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
 import './style.css'
+import './custom.css'
 import { computed, h } from 'vue'
 import { theme, XProvider } from 'ant-design-x-vue'
 import PreferenceSwitch from './components/PreferenceSwitch.vue'
@@ -12,10 +13,10 @@ const define = <T>(value: T): T => value
 export default define<Theme>({
   extends: DefaultTheme,
   Layout() {
-    const { isDark } = useData()
+    const { isDark,frontmatter } = useData()
     const algorithm = computed(() => isDark.value ? theme.darkAlgorithm : theme.defaultAlgorithm)
 
-    return h(XProvider, { theme: { algorithm: algorithm.value, } }, () => h(DefaultTheme.Layout, null, {
+    return h(XProvider, { theme: { algorithm: algorithm.value, } }, () => h(DefaultTheme.Layout, {class: frontmatter.value.customClass}, {
       'sidebar-nav-before': () => h(PreferenceSwitch),
     }));
   },
