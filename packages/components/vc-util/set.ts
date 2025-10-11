@@ -23,8 +23,10 @@ function internalSet<Entity = any, Output = Entity, Value = any>(
 
   // Delete prop if `removeIfUndefined` and value is undefined
   if (removeIfUndefined && value === undefined && restPath.length === 1) {
+    // @ts-ignore
     delete clone[path][restPath[0]];
   } else {
+    // @ts-ignore
     clone[path] = internalSet(clone[path], restPath, value, removeIfUndefined);
   }
 

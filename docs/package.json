@@ -1,0 +1,22 @@
+{
+  "name": "@ant-design-x-vue/docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@ant-design-x-vue/build-utils": "workspace:*",
+    "vitepress": "^1.5.0"
+  },
+  "dependencies": {
+    "@vueuse/core": "^13.6.0",
+    "ant-design-x-vue": "workspace:*"
+  }
+}
