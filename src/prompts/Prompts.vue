@@ -7,6 +7,7 @@ import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { computed, type VNode } from 'vue';
 import { Typography } from 'ant-design-vue';
 import Prompts from '.';
+import type { AvoidValidation } from '../type-utility';
 
 defineOptions({ name: 'AXPrompts' });
 
@@ -26,7 +27,7 @@ const {
 } = defineProps<PromptsProps>();
 
 const slots = defineSlots<{
-  title?(): VNode | string;
+  title?(): AvoidValidation<VNode | string>;
 }>();
 
 // ============================ PrefixCls ============================
@@ -40,25 +41,29 @@ const contextConfig = useXComponentConfig('prompts');
 // ============================ Style ============================
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 
-const mergedCls = computed(() => classnames(
-  prefixCls,
-  contextConfig.value.className,
-  className,
-  rootClassName,
-  hashId.value,
-  cssVarCls,
-  {
-    [`${prefixCls}-rtl`]: direction.value === 'rtl',
-  },
-));
+const mergedCls = computed(() =>
+  classnames(
+    prefixCls,
+    contextConfig.value.className,
+    className,
+    rootClassName,
+    hashId.value,
+    cssVarCls,
+    {
+      [`${prefixCls}-rtl`]: direction.value === 'rtl',
+    },
+  ),
+);
 
-const mergedListCls = computed(() => classnames(
-  `${prefixCls}-list`,
-  contextConfig.value.classNames.list,
-  classNames.list,
-  { [`${prefixCls}-list-wrap`]: wrap },
-  { [`${prefixCls}-list-vertical`]: vertical },
-));
+const mergedListCls = computed(() =>
+  classnames(
+    `${prefixCls}-list`,
+    contextConfig.value.classNames.list,
+    classNames.list,
+    { [`${prefixCls}-list-wrap`]: wrap },
+    { [`${prefixCls}-list-vertical`]: vertical },
+  ),
+);
 
 // ============================ Nodes ============================
 const titleNode = computed(() => {
@@ -76,7 +81,9 @@ defineRender(() => {
       // @ts-expect-error
       style={{
         ...(typeof style === 'object' ? style : {}),
-        ...(typeof contextConfig.value.style === 'object' ? contextConfig.value.style : {}),
+        ...(typeof contextConfig.value.style === 'object'
+          ? contextConfig.value.style
+          : {}),
       }}
     >
       {/* Title */}
@@ -95,7 +102,10 @@ defineRender(() => {
         </Typography.Title>
       )}
       {/* Prompt List */}
-      <div class={mergedListCls.value} style={{ ...contextConfig.value.styles.list, ...styles.list }}>
+      <div
+        class={mergedListCls.value}
+        style={{ ...contextConfig.value.styles.list, ...styles.list }}
+      >
         {items?.map((info, index) => {
           const isNest = info.children && info.children.length > 0;
 
@@ -127,13 +137,20 @@ defineRender(() => {
                   contextConfig.value.classNames.itemContent,
                   classNames.itemContent,
                 )}
-                style={{ ...contextConfig.value.styles.itemContent, ...styles.itemContent }}
+                style={{
+                  ...contextConfig.value.styles.itemContent,
+                  ...styles.itemContent,
+                }}
               >
                 {/* Label */}
-                {info.label && <h6 class={`${prefixCls}-label`}>{info.label}</h6>}
+                {info.label && (
+                  <h6 class={`${prefixCls}-label`}>{info.label}</h6>
+                )}
 
                 {/* Description */}
-                {info.description && <p class={`${prefixCls}-desc`}>{info.description}</p>}
+                {info.description && (
+                  <p class={`${prefixCls}-desc`}>{info.description}</p>
+                )}
 
                 {/* Children */}
                 {isNest && (
@@ -157,7 +174,7 @@ defineRender(() => {
           );
         })}
       </div>
-    </div>
-  )
+    </div>,
+  );
 });
 </script>
