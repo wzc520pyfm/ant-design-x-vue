@@ -7,7 +7,6 @@ import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { computed, type VNode } from 'vue';
 import { Typography } from 'ant-design-vue';
 import Prompts from '.';
-import type { AvoidValidation } from '../type-utility';
 
 defineOptions({ name: 'AXPrompts' });
 
@@ -27,7 +26,7 @@ const {
 } = defineProps<PromptsProps>();
 
 const slots = defineSlots<{
-  title?(): AvoidValidation<VNode | string>;
+  title?(): VNode | string;
 }>();
 
 // ============================ PrefixCls ============================

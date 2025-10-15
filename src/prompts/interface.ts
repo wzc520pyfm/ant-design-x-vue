@@ -1,4 +1,5 @@
 import type { CSSProperties, HTMLAttributes, VNode } from "vue";
+import type { AvoidValidation } from '../type-utility';
 
 export interface BasePromptItem {
   /**
@@ -38,8 +39,7 @@ export interface PromptProps extends BasePromptItem {
 
 export type SemanticType = 'list' | 'item' | 'itemContent' | 'title' | 'subList' | 'subItem';
 
-export interface PromptsProps
-  extends Omit<HTMLAttributes, 'onClick' | 'title'> {
+export interface PromptsProps extends Omit<HTMLAttributes, 'onClick' | 'title'> {
   /**
    * @desc 包含多个提示项的列表。
    * @descEN List containing multiple prompt items.
@@ -50,7 +50,7 @@ export interface PromptsProps
    * @desc 显示在提示列表顶部的标题。
    * @descEN Title displayed at the top of the prompt list.
    */
-  title?: VNode | string | (() => VNode | string);
+  title?: AvoidValidation<VNode | string | (() => VNode | string)>;
 
   /**
    * @desc Item 提示项被点击时的回调函数。
