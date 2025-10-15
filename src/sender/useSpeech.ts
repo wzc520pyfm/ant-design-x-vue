@@ -128,7 +128,7 @@ const speechInControlled=computed(()=>allowSpeechItem.speechInControlled);
 
     forceBreakRef.value = forceBreak;
 
-    if (speechInControlled) {
+    if (speechInControlled.value) {
       // If in controlled mode, do nothing
       onControlledRecordingChange.value?.(!recording.value);
     } else {
