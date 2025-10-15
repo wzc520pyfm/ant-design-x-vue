@@ -33,7 +33,7 @@ export default function useSpeech(
 
   // ========================== Speech Config ==========================
   //All promoted to be reactive
-  const {controlledRecording,onControlledRecordingChange,speechInControlled} =
+  const allowSpeechItem  =
     computed(() => {
       const allowSpeechRaw = toValue(allowSpeech);
       if (typeof allowSpeechRaw === 'object') {
@@ -50,7 +50,9 @@ export default function useSpeech(
         speechInControlled: false,
       }
     }).value;
-
+const controlledRecording=computed(()=>allowSpeechItem.controlledRecording);
+const onControlledRecordingChange=computed(()=>allowSpeechItem.onControlledRecordingChange);
+const speechInControlled=computed(()=>allowSpeechItem.speechInControlled);
 
   // ======================== Speech Permission ========================
   const permissionState = ref<PermissionState | null>(null);
@@ -88,7 +90,7 @@ export default function useSpeech(
   const recognitionRef = ref<any | null>(null);
   const [recording, setRecording] = useMergedState(false, {
   //value type compatibility
-    value: ref(controlledRecording),
+    value: controlledRecording,
   });
 
   const forceBreakRef = ref(false);
@@ -128,17 +130,17 @@ export default function useSpeech(
 
     if (speechInControlled) {
       // If in controlled mode, do nothing
-      onControlledRecordingChange?.(!recording.value);
+      onControlledRecordingChange.value?.(!recording.value);
     } else {
       ensureRecognition();
 
       if (recognitionRef.value) {
         if (recording.value) {
           recognitionRef.value.stop();
-          onControlledRecordingChange?.(false);
+          onControlledRecordingChange.value?.(false);
         } else {
           recognitionRef.value.start();
-          onControlledRecordingChange?.(true);
+          onControlledRecordingChange.value?.(true);
         }
       }
     }
