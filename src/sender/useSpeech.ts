@@ -49,7 +49,7 @@ export default function useSpeech(
         onControlledRecordingChange: undefined,
         speechInControlled: false,
       }
-    }).value;
+    });
 const controlledRecording = computed(() => allowSpeechItem.value.controlledRecording);
 const onControlledRecordingChange = computed(() => allowSpeechItem.value.onControlledRecordingChange);
 const speechInControlled = computed(() => allowSpeechItem.value.speechInControlled);
@@ -89,7 +89,6 @@ const speechInControlled = computed(() => allowSpeechItem.value.speechInControll
   // ========================== Speech Events ==========================
   const recognitionRef = ref<any | null>(null);
   const [recording, setRecording] = useMergedState(false, {
-  //value type compatibility
     value: controlledRecording,
   });
 
