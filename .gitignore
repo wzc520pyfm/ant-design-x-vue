@@ -13,3 +13,5 @@ docs/.vitepress/cache
 docs/.vitepress/dist
 docs/.vitepress/.temp
 .vitepress/cache
+.cursor
+.history

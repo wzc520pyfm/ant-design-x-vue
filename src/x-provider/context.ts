@@ -1,4 +1,5 @@
 import { objectType, type AnyObject } from '../_util/type';
+import type { ActionsProps } from 'ant-design-x-vue/actions';
 import { AttachmentsProps } from 'ant-design-x-vue/attachments';
 import type { BubbleProps } from 'ant-design-x-vue/bubble';
 import { computed, ComputedRef, CSSProperties, defineComponent, inject, InjectionKey, provide, shallowRef, triggerRef, unref, watch } from 'vue';
@@ -52,6 +53,7 @@ export type ComponentStyleConfig<
 > = Pick<CompProps, PickType | DefaultPickType>;
 
 export interface XComponentsConfig {
+  actions?: ComponentStyleConfig<ActionsProps>;
   bubble?: ComponentStyleConfig<BubbleProps>;
   conversations?: ComponentStyleConfig<ConversationsProps>;
   prompts?: ComponentStyleConfig<PromptsProps>;
