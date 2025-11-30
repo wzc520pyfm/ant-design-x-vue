@@ -335,7 +335,6 @@ defineRender(() => {
       <ActionButtonContextProvider value={actionsButtonContextProps.value}>
 
         <div
-          class={`${prefixCls.value}-content`}
           class={classnames(
             `${prefixCls.value}-content`,
             contextConfig.value.classNames.content,
