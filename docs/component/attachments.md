@@ -61,7 +61,7 @@ attachments/files
 
 </ClientOnly>
 
-### 自定义文件卡片
+### 自定义卡片图标
 
 <ClientOnly>
 
@@ -122,7 +122,7 @@ interface PlaceholderType {
 | item      | 附件，同 Upload `UploadFile`                                                                                             | Attachment                                       | -      | -    |
 | onRemove  | 点击移除文件时的回调，返回值为 false 时不移除。支持返回一个 Promise 对象，Promise 对象 resolve(false) 或 reject 时不移除 | (item: Attachment) => boolean \| Promise         | -      | -    |
 | icon | 自定义图标 | VNode \| PresetIcons | - | - |
-| type | 是否图片类型 | 'file' \| 'image' | `file` | - |
+| type | 定义文件类型，当类型为`image`时，会展示为图片预览模式 | 'file' \| 'image' | `file` | - |
 
 ```ts
 type PresetIcons = 'default' | 'excel' | 'image' | 'markdown' | 'pdf' | 'ppt' | 'word' | 'zip' | 'video' | 'audio';
