@@ -247,11 +247,11 @@ const actionNode = computed(() => {
     <Flex class={`${actionListCls.value}-presets`}>
       {allowSpeech && (
         <SpeechButton
-          {...(typeof allowSpeech === 'object' ? 
-            { 
-              audioIcon: allowSpeech.audioIcon, 
-              audioDisabledIcon: allowSpeech.audioDisabledIcon, 
-              audioRecordingIcon: allowSpeech.audioRecordingIcon 
+          {...(typeof allowSpeech === 'object' ?
+            {
+              audioIcon: allowSpeech.audioIcon,
+              audioDisabledIcon: allowSpeech.audioDisabledIcon,
+              audioRecordingIcon: allowSpeech.audioRecordingIcon
             } : {}
           )}
         />
@@ -334,7 +334,16 @@ defineRender(() => {
       )}
       <ActionButtonContextProvider value={actionsButtonContextProps.value}>
 
-        <div class={`${prefixCls.value}-content`} onMousedown={onContentMouseDown}>
+        <div
+          class={`${prefixCls.value}-content`}
+          class={classnames(
+            `${prefixCls.value}-content`,
+            contextConfig.value.classNames.content,
+            classNames.content,
+          )}
+          style={{ ...contextConfig.value.styles.content, ...styles.content }}
+          onMousedown={onContentMouseDown}
+        >
           {/* Prefix */}
           {prefixComp.value && (
             <div
