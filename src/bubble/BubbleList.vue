@@ -26,6 +26,7 @@ const {
   items: itemsProp,
   autoScroll = true,
   roles: rolesProp,
+  onScroll,
   ...restProps
 } = defineProps<BubbleListProps>();
 
@@ -105,6 +106,8 @@ const onInternalScroll = (e: Event) => {
   setScrollReachEnd(
     target.scrollHeight - Math.abs(target.scrollTop) - target.clientHeight <= TOLERANCE,
   );
+
+  onScroll?.(e);
 };
 
 watch([updateCount, listRef, scrollReachEnd], () => {
