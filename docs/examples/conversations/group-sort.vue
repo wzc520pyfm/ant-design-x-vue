@@ -12,7 +12,7 @@ const items: ConversationsProps['items'] = Array.from({ length: 6 }).map((_, ind
 
   return {
     key: `item${index + 1}`,
-    label: `Conversation ${timestamp + index * 60 * 60}`,
+    label: `Conversation item ${timestamp + index * 60 * 60}`,
     timestamp: timestamp + index * 60 * 60,
     group: index <= 3 ? 'Today' : 'Yesterday',
   };
