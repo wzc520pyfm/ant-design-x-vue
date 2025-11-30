@@ -34,7 +34,7 @@ export interface PlaceholderProps {
   style?: CSSProperties;
 }
 
-export type SemanticType = 'list' | 'item' | 'placeholder';
+export type SemanticType = 'list' | 'item' | 'placeholder' | 'upload';
 
 export interface FileListProps {
   prefixCls: string;
@@ -49,6 +49,8 @@ export interface FileListProps {
   listStyle?: CSSProperties;
   itemClassName?: string;
   itemStyle?: CSSProperties;
+  uploadClassName?: string;
+  uploadStyle?: CSSProperties;
 }
 
 export interface FileListCardProps {

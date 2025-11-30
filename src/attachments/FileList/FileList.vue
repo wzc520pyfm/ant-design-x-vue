@@ -22,6 +22,8 @@ const {
   listClassName,
   listStyle,
   itemClassName,
+  uploadClassName,
+  uploadStyle,
   itemStyle,
   imageProps,
 } = defineProps<FileListProps>();
@@ -91,7 +93,7 @@ const onScrollRight = () => {
 
 const onEnter = (el: Element, done: () => void) => {
   const isImg = el.classList.contains('ant-attachment-list-card-type-preview')
-  const keyframes = isImg 
+  const keyframes = isImg
     ? [
         { width: '0px' },
         { width: '64px' }
@@ -101,7 +103,7 @@ const onEnter = (el: Element, done: () => void) => {
         { width: '236px' }
       ];
   const animation = el.animate(keyframes, {
-    duration: 300, 
+    duration: 300,
     easing: 'ease',
     fill: 'forwards'
   });
@@ -110,7 +112,7 @@ const onEnter = (el: Element, done: () => void) => {
 
 const onLeave = (el: Element, done: () => void) => {
   const isImg = el.classList.contains('ant-attachment-list-card-type-preview')
-  const keyframes = isImg 
+  const keyframes = isImg
     ? [
         { opacity: 1, width: '64px', marginRight: '0px' },
         { opacity: 0, width: '0px', marginRight: '-10px' }
@@ -162,7 +164,11 @@ defineRender(() => {
           upload={upload}
           // TODO: need support slot also
           children={
-            <Button class={`${listCls.value}-upload-btn`} type="dashed">
+            <Button
+              class={classnames(uploadClassName, `${listCls.value}-upload-btn`)}
+              style={uploadStyle}
+              type="dashed"
+            >
               <PlusOutlined class={`${listCls.value}-upload-btn-icon`} />
             </Button>
           }
