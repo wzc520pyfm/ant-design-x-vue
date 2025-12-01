@@ -70,6 +70,7 @@ export interface SenderProps {
     input?: CSSProperties;
     actions?: CSSProperties;
     footer?: CSSProperties;
+    content?: CSSProperties;
   };
   rootClassName?: string;
   classNames?: {
@@ -77,6 +78,7 @@ export interface SenderProps {
     input?: string;
     actions?: string;
     footer?: string;
+    content?: string;
   };
   style?: CSSProperties;
   className?: string;
