@@ -1,6 +1,37 @@
 # Changelog
 
 
+## v1.4.0
+
+[compare changes](https://undefined/undefined/compare/v1.3.2...v1.4.0)
+
+### 🚀 Enhancements
+
+- **attachments:** Add enter/leave animations (#380)
+- Add contributors section to documentation and scripts for automatic updates (#424)
+- **actions:** Add actions component (#449)
+
+### 🩹 Fixes
+
+- **bubble:** Fix list auto scroll no work on init (#427)
+- **prompts:** Fix the warning of runtime type checking for the title (#439)
+- Bubble.List footer has no key (#448)
+
+### 📖 Documentation
+
+- Add overview demo and setup examples for AI components (#423)
+
+### 🎨 Styles
+
+- Docs layout style in 1600 screen width and scrollbar (#433)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](https://github.com/wzc520pyfm))
+- Wujunyi0907 ([@wujunyi0907](https://github.com/wujunyi0907))
+- PeikyLiu ([@PeikyLiu](https://github.com/PeikyLiu))
+- Linhf123 ([@linhf123](https://github.com/linhf123))
+
 ## v1.3.2
 
 [compare changes](https://undefined/undefined/compare/v1.3.1...v1.3.2)
