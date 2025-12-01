@@ -123,6 +123,12 @@ export default defineConfig({
           ]
         },
         {
+          text: '反馈',
+          items: [
+            { text: 'Actions 操作列表', link: '/component/actions' }
+          ]
+        },
+        {
           text: '工具',
           items: [
             { text: 'useXAgent 模型调度', link: '/component/use-x-agent' },

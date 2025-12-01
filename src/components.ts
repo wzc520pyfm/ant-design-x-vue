@@ -7,3 +7,4 @@ export * from './suggestion';
 export * from './sender';
 export * from './attachments';
 export * from './thought-chain';
+export * from './actions';
