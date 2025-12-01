@@ -107,7 +107,6 @@ const renderSingleItem = (item: SubItemType) => {
 };
 
 const domProps = computed(() => pickAttrs(props, {
-  attr: true,
   aria: true,
   data: true,
 }));
