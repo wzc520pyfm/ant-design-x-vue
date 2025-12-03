@@ -121,7 +121,8 @@ export default function useActive(
   });
 
   watch(() => toValue(open), () => {
-    if (toValue(open)) {
+    // 确保 items 是一个数组且至少有一个元素
+    if (toValue(open) && Array.isArray(toValue(items)) && toValue(items).length > 0) {
       setActivePaths([toValue(items)[0].value]);
     }
   }, { immediate: true });
