@@ -48,6 +48,7 @@ const {
   readOnly,
   submitType = 'enter',
   onSubmit,
+  SendDisabled,
   loading,
   components,
   onCancel,
@@ -280,7 +281,7 @@ const actionNode = computed(() => {
 const actionsButtonContextProps = computed(() => ({
   prefixCls: actionBtnCls.value,
   onSend: triggerSend,
-  onSendDisabled: !innerValue.value,
+  onSendDisabled: SendDisabled ? !SendDisabled() : !innerValue.value,
   onClear: triggerClear,
   onClearDisabled: !innerValue.value,
   onCancel,
