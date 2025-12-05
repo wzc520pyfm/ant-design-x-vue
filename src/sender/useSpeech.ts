@@ -147,3 +147,4 @@ const speechInControlled = computed(() => allowSpeechItem.value.speechInControll
 
   return { speechPermission: mergedAllowSpeech, triggerSpeech, recording }
 }
+
