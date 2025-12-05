@@ -1,3 +1,4 @@
+import type { ComponentToken as ActionsComponentToken } from '../actions/style';
 import type { ComponentToken as AttachmentsToken } from '../attachments/style';
 import type { ComponentToken as BubbleComponentToken } from '../bubble/style';
 import type { ComponentToken as ConversationsComponentToken } from '../conversations/style';
@@ -9,6 +10,7 @@ import type { ComponentToken as TransitionCollapseComponentToken } from '../tran
 import type { ComponentToken as WelcomeComponentToken } from '../welcome/style';
 
 export interface ComponentTokenMap {
+  Actions?: ActionsComponentToken;
   TransitionCollapse?: TransitionCollapseComponentToken;
   Attachments?: AttachmentsToken;
   Bubble?: BubbleComponentToken;
