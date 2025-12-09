@@ -84,4 +84,5 @@ export interface BubbleListProps extends /* @vue-ignore */ HTMLAttributes {
   items?: BubbleDataType[];
   autoScroll?: boolean;
   roles?: AvoidValidation<RolesType>;
+  onScroll?: (e: Event) => void;
 }
