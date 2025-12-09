@@ -26,6 +26,6 @@ const style = computed(() => ({
     :items="items"
     default-active-key="item1"
     :style="style"
-    groupable
+    :groupable="true"
   />
 </template>
