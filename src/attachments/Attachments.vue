@@ -201,6 +201,8 @@ defineRender(() => {
               ...styles.list,
               ...(!hasFileList.value && { display: 'none' }),
             }}
+            uploadClassName={classnames(contextClassNames.value.upload, classNames.upload)}
+            uploadStyle={{ ...contextStyles.value.upload, ...styles.upload }}
             itemClassName={classnames(contextClassNames.value.item, classNames.item)}
             itemStyle={{
               ...contextStyles.value.item,

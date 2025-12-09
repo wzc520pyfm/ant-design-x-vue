@@ -90,6 +90,8 @@ const genFileCardStyle: GenerateStyle<AttachmentsToken> = (token) => {
           width: '100%',
           height: '100%',
           borderRadius: 'inherit',
+          position: 'relative',
+          overflow: 'hidden',
 
           img: {
             height: '100%',
@@ -111,6 +113,8 @@ const genFileCardStyle: GenerateStyle<AttachmentsToken> = (token) => {
 
         // Error
         [`&${cardCls}-status-error`]: {
+          borderRadius: 'inherit',
+          
           [`img, ${cardCls}-img-mask`]: {
             borderRadius: calc(token.borderRadius).sub(token.lineWidth).equal(),
           },
