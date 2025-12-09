@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v1.5.0
+
+[compare changes](https://undefined/undefined/compare/v1.4.0...v1.5.0)
+
+### 🚀 Enhancements
+
+- **bubble:** Support to listen scroll callback for list (#452)
+
+### 🩹 Fixes
+
+- **group-sort:** Update conversation label for ellipsis (#450)
+- **attachments:** Semantic of file list (#451)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](https://github.com/wzc520pyfm))
+
 ## v1.4.0
 
 [compare changes](https://undefined/undefined/compare/v1.3.2...v1.4.0)
