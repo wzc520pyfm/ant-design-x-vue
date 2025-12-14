@@ -54,7 +54,7 @@ export interface SenderProps {
   readOnly?: boolean;
   submitType?: SubmitType;
   disabled?: boolean;
-  SendDisabled?: () => boolean;
+  sendDisabled?: boolean;
   onSubmit?: (message: string) => void;
   onChange?: (
     value: string,
