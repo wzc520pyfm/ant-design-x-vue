@@ -172,7 +172,10 @@ const inputProps = computed(() => {
 
 // ============================ Events ============================
 const triggerSend = () => {
- const isSend:boolean =(sendDisabled!==undefined?!sendDisabled:innerValue.value  && !loading)&& onSubmit
+  const shouldSend = sendDisabled !== undefined 
+    ? !sendDisabled 
+    : !!(innerValue.value && !loading);
+  const isSend = shouldSend && !!onSubmit;
   if (isSend) {
     onSubmit(innerValue.value);
   }
@@ -282,7 +285,7 @@ const actionNode = computed(() => {
 const actionsButtonContextProps = computed(() => ({
   prefixCls: actionBtnCls.value,
   onSend: triggerSend,
-  onSendDisabled: sendDisabled!==undefined?!sendDisabled : !innerValue.value,
+  onSendDisabled: sendDisabled!==undefined? sendDisabled : !innerValue.value,
   onClear: triggerClear,
   onClearDisabled: !innerValue.value,
   onCancel,
