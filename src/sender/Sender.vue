@@ -48,6 +48,7 @@ const {
   readOnly,
   submitType = 'enter',
   onSubmit,
+  sendDisabled,
   loading,
   components,
   onCancel,
@@ -171,7 +172,11 @@ const inputProps = computed(() => {
 
 // ============================ Events ============================
 const triggerSend = () => {
-  if (innerValue.value && onSubmit && !loading) {
+  const shouldSend = sendDisabled !== undefined 
+    ? !sendDisabled 
+    : !!(innerValue.value && !loading);
+  const isSend = shouldSend && !!onSubmit;
+  if (isSend) {
     onSubmit(innerValue.value);
   }
 };
@@ -280,7 +285,7 @@ const actionNode = computed(() => {
 const actionsButtonContextProps = computed(() => ({
   prefixCls: actionBtnCls.value,
   onSend: triggerSend,
-  onSendDisabled: !innerValue.value,
+  onSendDisabled: sendDisabled!==undefined? sendDisabled : !innerValue.value,
   onClear: triggerClear,
   onClearDisabled: !innerValue.value,
   onCancel,
