@@ -11,6 +11,7 @@ defineRender(() => {
             { name: 'prefix', desc: '前缀' },
             { name: 'input', desc: '输入框' },
             { name: 'actions', desc: '操作列表' },
+            { name: 'content', desc: '内容' },
           ]}
         >
         {({ classNames }) => {
