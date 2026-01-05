@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v1.6.0
+
+[compare changes](https://github.com/wzc520pyfm/ant-design-x-vue/compare/v1.5.0...v1.6.0)
+
+### 🚀 Enhancements
+
+- **sender:** Add sendDisabled prop ([#458](https://github.com/wzc520pyfm/ant-design-x-vue/pull/458))
+
+### 🩹 Fixes
+
+- **changelog:** Add repository URL to package.json ([#463](https://github.com/wzc520pyfm/ant-design-x-vue/pull/463))
+
+### 📖 Documentation
+
+- **attachments:** Improve file card demo ([#453](https://github.com/wzc520pyfm/ant-design-x-vue/pull/453))
+- **conversations:** Fix group setup demo ([#459](https://github.com/wzc520pyfm/ant-design-x-vue/pull/459))
+- **sender:** Add custom Input sender component example ([#462](https://github.com/wzc520pyfm/ant-design-x-vue/pull/462))
+
+### ❤️ Contributors
+
+- Pengpeng ([@webvs2](https://github.com/webvs2))
+- Jason Ren ([@jasonren0403](https://github.com/jasonren0403))
+- 雨溪 ([@yuxi-ovo](https://github.com/yuxi-ovo))
+- Wzc520pyfm ([@wzc520pyfm](https://github.com/wzc520pyfm))
+
 ## v1.5.0
 
 [compare changes](https://undefined/undefined/compare/v1.4.0...v1.5.0)
