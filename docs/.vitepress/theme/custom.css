@@ -1,0 +1,39 @@
+@media (min-width: 1600px) {
+  :root {
+    --vp-layout-max-width: 1600px;
+  }
+}
+
+.hidden_aside {
+  .aside {
+    display: none !important;
+  }
+}
+.content .content-container {
+  max-width: none !important;
+}
+.VPSidebar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.VPSidebar:hover {
+  scrollbar-width: thin;
+  -ms-overflow-style: auto;
+}
+
+.VPNavBar .divider {
+  position: relative;
+  z-index: 2;
+  transform: translateY(-1px);
+}
+
+html {
+ scrollbar-width: thin;
+  -ms-overflow-style: auto;
+  scrollbar-color: transparent transparent;
+}
+
+html:hover {
+  scrollbar-color: #eaeaea transparent;
+}

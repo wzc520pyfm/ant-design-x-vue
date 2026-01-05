@@ -1,6 +1,79 @@
 # Changelog
 
 
+## v1.6.0
+
+[compare changes](https://github.com/wzc520pyfm/ant-design-x-vue/compare/v1.5.0...v1.6.0)
+
+### 🚀 Enhancements
+
+- **sender:** Add sendDisabled prop ([#458](https://github.com/wzc520pyfm/ant-design-x-vue/pull/458))
+
+### 🩹 Fixes
+
+- **changelog:** Add repository URL to package.json ([#463](https://github.com/wzc520pyfm/ant-design-x-vue/pull/463))
+
+### 📖 Documentation
+
+- **attachments:** Improve file card demo ([#453](https://github.com/wzc520pyfm/ant-design-x-vue/pull/453))
+- **conversations:** Fix group setup demo ([#459](https://github.com/wzc520pyfm/ant-design-x-vue/pull/459))
+- **sender:** Add custom Input sender component example ([#462](https://github.com/wzc520pyfm/ant-design-x-vue/pull/462))
+
+### ❤️ Contributors
+
+- Pengpeng ([@webvs2](https://github.com/webvs2))
+- Jason Ren ([@jasonren0403](https://github.com/jasonren0403))
+- 雨溪 ([@yuxi-ovo](https://github.com/yuxi-ovo))
+- Wzc520pyfm ([@wzc520pyfm](https://github.com/wzc520pyfm))
+
+## v1.5.0
+
+[compare changes](https://undefined/undefined/compare/v1.4.0...v1.5.0)
+
+### 🚀 Enhancements
+
+- **bubble:** Support to listen scroll callback for list (#452)
+
+### 🩹 Fixes
+
+- **group-sort:** Update conversation label for ellipsis (#450)
+- **attachments:** Semantic of file list (#451)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](https://github.com/wzc520pyfm))
+
+## v1.4.0
+
+[compare changes](https://undefined/undefined/compare/v1.3.2...v1.4.0)
+
+### 🚀 Enhancements
+
+- **attachments:** Add enter/leave animations (#380)
+- Add contributors section to documentation and scripts for automatic updates (#424)
+- **actions:** Add actions component (#449)
+
+### 🩹 Fixes
+
+- **bubble:** Fix list auto scroll no work on init (#427)
+- **prompts:** Fix the warning of runtime type checking for the title (#439)
+- Bubble.List footer has no key (#448)
+
+### 📖 Documentation
+
+- Add overview demo and setup examples for AI components (#423)
+
+### 🎨 Styles
+
+- Docs layout style in 1600 screen width and scrollbar (#433)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](https://github.com/wzc520pyfm))
+- Wujunyi0907 ([@wujunyi0907](https://github.com/wujunyi0907))
+- PeikyLiu ([@PeikyLiu](https://github.com/PeikyLiu))
+- Linhf123 ([@linhf123](https://github.com/linhf123))
+
 ## v1.3.2
 
 [compare changes](https://undefined/undefined/compare/v1.3.1...v1.3.2)

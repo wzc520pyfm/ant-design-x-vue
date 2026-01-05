@@ -26,6 +26,7 @@ const {
   items: itemsProp,
   autoScroll = true,
   roles: rolesProp,
+  onScroll,
   ...restProps
 } = defineProps<BubbleListProps>();
 
@@ -105,6 +106,8 @@ const onInternalScroll = (e: Event) => {
   setScrollReachEnd(
     target.scrollHeight - Math.abs(target.scrollTop) - target.clientHeight <= TOLERANCE,
   );
+
+  onScroll?.(e);
 };
 
 watch([updateCount, listRef, scrollReachEnd], () => {
@@ -171,6 +174,7 @@ defineRender(() => {
           loadingRender={slots.loading ? () => slots.loading({ item: { key, ...bubble } }) : bubble.loadingRender}
           content={slots.message?.({ item: { key, ...bubble } }) ?? bubble.content}
           key={key}
+          _key={key}
           // 用于更新滚动的ref
           ref={(node) => {
             if (node) {

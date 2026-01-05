@@ -1,7 +1,7 @@
 {
   "name": "ant-design-x-vue-monorepo",
   "private": true,
-  "version": "1.3.2",
+  "version": "1.6.0",
   "description": "Craft AI-driven interfaces effortlessly",
   "keywords": [
     "AI",
@@ -34,7 +34,8 @@
     "url": "https://github.com/wzc520pyfm"
   },
   "repository": {
-    "type": "git"
+    "type": "git",
+    "url": "https://github.com/wzc520pyfm/ant-design-x-vue"
   },
   "license": "MIT",
   "exports": {

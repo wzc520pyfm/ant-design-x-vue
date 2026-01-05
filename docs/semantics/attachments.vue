@@ -28,20 +28,21 @@ defineRender(() => {
                 title: 'Upload File',
                 description: 'Drag or click to upload file.',
               }}
-            />   
-            ) 
+            />
+            )
           }
         }
       </SemanticPreview>
       <SemanticPreview semantics={[
             { name: 'list', desc: '列表容器' },
             { name: 'item', desc: '列表项' },
+            { name: 'upload', desc: '上传按钮' },
           ]}
         >
         {({ classNames }) => {
           return (
-            <Attachments classNames={classNames} items={items} />     
-          ) 
+            <Attachments classNames={classNames} items={items} />
+          )
           }
         }
       </SemanticPreview>
