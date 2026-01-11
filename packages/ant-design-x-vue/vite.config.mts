@@ -8,6 +8,9 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 
 const externals = ['vue', 'ant-design-vue'];
 
+// 组件包目录
+const componentsDir = resolve(__dirname, '../components');
+
 export default defineConfig({
   plugins: [
     VueMacros({
@@ -23,7 +26,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: resolve(componentsDir, 'index.ts'),
       name: 'antdx',
       formats: ['es', 'cjs', 'umd'],
       fileName: (format) => `index.${format}.js`,
@@ -31,15 +34,17 @@ export default defineConfig({
     rollupOptions: {
       external: [...externals, /^ant-design-vue/],
       input: Object.fromEntries(
-        globSync('src/**/*.*').filter(file => !file.includes('test')).map(file => [
-          // 删除 `src/` 以及每个文件的扩展名: src/nested/foo.js => nested/foo
-          relative(
-            'src',
-            file.slice(0, file.length - extname(file).length)
-          ),
-          // 将相对路径扩展为绝对路径: src/nested/foo => /project/src/nested/foo.js
-          fileURLToPath(new URL(file, import.meta.url))
-        ])
+        globSync(`${componentsDir}/**/*.{ts,tsx,vue,js}`, {
+          absolute: false,
+          cwd: componentsDir,
+          ignore: ['**/node_modules/**', '**/__tests__/**', '**/*.test.*', '**/*.spec.*']
+        })
+          .map(file => [
+            // 删除扩展名: nested/foo.js => nested/foo
+            file.slice(0, file.length - extname(file).length),
+            // 将相对路径扩展为绝对路径
+            resolve(componentsDir, file)
+          ])
       ),
       output: [
         {
@@ -51,8 +56,9 @@ export default defineConfig({
               // 库依赖
               return 'chunks/module';
             }
-            if (id.includes('src/')) {
-              return id.split('src/')[1].split('.vue')[0]
+            if (id.includes('components/')) {
+              const parts = id.split('components/');
+              return parts[1].split('.vue')[0];
             }
             // 库生成的辅助文件
             return 'chunks/helper'
@@ -69,8 +75,9 @@ export default defineConfig({
               // 库依赖
               return 'chunks/module';
             }
-            if (id.includes('src/')) {
-              return id.split('src/')[1].split('.vue')[0]
+            if (id.includes('components/')) {
+              const parts = id.split('components/');
+              return parts[1].split('.vue')[0];
             }
             // 库生成的辅助文件
             return 'chunks/helper'
@@ -84,6 +91,9 @@ export default defineConfig({
     outDir: 'dist',
   },
   resolve: {
+    alias: {
+      '@ant-design-x-vue/components': componentsDir,
+    },
     dedupe: ['vue', 'ant-design-vue'],
   },
   optimizeDeps: {

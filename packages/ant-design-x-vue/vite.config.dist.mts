@@ -7,6 +7,9 @@ import terser from '@rollup/plugin-terser';
 
 const externals = ['vue'];
 
+// 组件包目录
+const componentsDir = resolve(__dirname, '../components');
+
 export default defineConfig({
   plugins: [
     VueMacros({
@@ -22,7 +25,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'packages/ant-design-x-vue/src/index.ts'),
+      entry: resolve(componentsDir, 'index.ts'),
       name: 'antdx',
       formats: ['es', 'umd'],
       fileName: (format) => `index.${format}.js`,
@@ -61,6 +64,9 @@ export default defineConfig({
     outDir: 'dist',
   },
   resolve: {
+    alias: {
+      '@ant-design-x-vue/components': componentsDir,
+    },
     dedupe: ['vue'],
   },
   optimizeDeps: {

@@ -11,12 +11,15 @@
     "baseUrl": "./",
     "types": ["unplugin-vue-macros/macros-global", "node"],
     "paths": {
-      "ant-design-x-vue": ["packages/ant-design-x-vue"],
-      "@ant-design-x-vue/*": ["packages/*"],
+      "ant-design-x-vue": ["packages/components"],
+      "ant-design-x-vue/*": ["packages/components/*"],
+      "@ant-design-x-vue/components": ["packages/components"],
+      "@ant-design-x-vue/components/*": ["packages/components/*"],
+      "@ant-design-x-vue/*": ["packages/*"]
     }
   },
   "vueCompilerOptions": {
     "plugins": ["unplugin-vue-macros/volar"]
   },
-  "include": ["packages/components/**/*", "docs/**/*", "internal/**/*"],
+  "include": ["packages/components/**/*", "docs/**/*", "internal/**/*"]
 }

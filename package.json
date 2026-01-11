@@ -2,7 +2,7 @@
   "name": "ant-design-x-vue-monorepo",
   "private": true,
   "version": "1.6.0",
-  "description": "Craft AI-driven interfaces effortlessly",
+  "description": "Craft AI-driven interfaces effortlessly - Monorepo",
   "keywords": [
     "AI",
     "Copilot",
@@ -13,56 +13,36 @@
     "chat-ui",
     "vue"
   ],
-  "scripts": {
-    "build": "pnpm --filter ant-design-x-vue build",
-    "build:watch": "pnpm --filter ant-design-x-vue build:watch",
-    "build:resolver": "tsc resolver/index.ts --outDir resolver-dist --declaration",
-    "docs:build": "pnpm run -C docs build",
-    "docs:dev": "pnpm run -C docs dev",
-    "docs:preview": "pnpm run -C docs preview",
-    "postinstall": "pnpm stub",
-    "lint": "pnpm --filter @ant-design-x-vue/components lint",
-    "play": "pnpm run -C play dev",
-    "prepublishOnly": "npm run test && npm run build",
-    "release": "pnpm --filter ant-design-x-vue release",
-    "update-contributors": "node scripts/update-contributors.js",
-    "stub": "pnpm run -r --parallel stub"
-  },
-  "author": {
-    "name": "wzc520pyfm",
-    "email": "wzc520pyf@163.com",
-    "url": "https://github.com/wzc520pyfm"
+  "homepage": "https://x-vue.ant.design",
+  "bugs": {
+    "url": "https://github.com/wzc520pyfm/ant-design-x-vue/issues"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/wzc520pyfm/ant-design-x-vue"
   },
   "license": "MIT",
-  "exports": {
-    ".": {
-      "types": "./typings/index.d.ts",
-      "import": "./es/index.mjs",
-      "require": "./lib/index.js"
-    },
-    "./dist/style.css": "./dist/style.css",
-    "./resolver": {
-      "types": "./resolver-dist/index.d.ts",
-      "import": "./resolver-dist/index.js",
-      "require": "./resolver-dist/index.js"
-    }
+  "author": {
+    "name": "wzc520pyfm",
+    "email": "wzc520pyf@163.com",
+    "url": "https://github.com/wzc520pyfm"
   },
-  "main": "./lib/index.js",
-  "module": "./es/index.mjs",
-  "unpkg": "./dist/index.umd.js",
-  "types": "./typings/index.d.ts",
-  "sideEffects": false,
-  "files": [
-    "es",
-    "lib",
-    "dist",
-    "typings",
-    "resolver-dist"
-  ],
+  "scripts": {
+    "build": "pnpm --filter ant-design-x-vue build",
+    "build:watch": "pnpm --filter ant-design-x-vue build:watch",
+    "docs:build": "pnpm run -C docs build",
+    "docs:dev": "pnpm run -C docs dev",
+    "docs:preview": "pnpm run -C docs preview",
+    "postinstall": "pnpm stub",
+    "lint": "pnpm --filter @ant-design-x-vue/components lint",
+    "play": "pnpm run -C play dev",
+    "release": "pnpm --filter ant-design-x-vue release",
+    "test": "pnpm --filter @ant-design-x-vue/components test",
+    "test:cov": "pnpm --filter @ant-design-x-vue/components test:cov",
+    "update-contributors": "node scripts/update-contributors.js",
+    "stub": "pnpm run -r --parallel stub",
+    "prepare": "husky install"
+  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -84,13 +64,6 @@
       "eslint --fix",
       "prettier --parser=typescript --write"
     ]
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "peerDependencies": {
-    "ant-design-vue": ">=4.0.0",
-    "vue": ">=3.5.0"
   },
   "devDependencies": {
     "@ant-design/icons-vue": "^7.0.1",
