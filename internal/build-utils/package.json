@@ -1,0 +1,27 @@
+{
+  "name": "@ant-design-x-vue/build-utils",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Build utils for Ant Design X Vue",
+  "keywords": [
+    "ant-design-x-vue"
+  ],
+  "license": "MIT",
+  "author": "yuguaa",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "stub": "unbuild --stub"
+  },
+  "devDependencies": {
+    "unbuild": "^2.0.0"
+  }
+}

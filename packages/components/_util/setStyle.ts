@@ -17,10 +17,12 @@ function setStyle(style: CSSProperties, options: SetStyleOptions = {}): CSSPrope
 
   // IE browser compatible
   styleKeys.forEach(key => {
+    // @ts-ignore
     oldStyle[key] = element.style[key];
   });
 
   styleKeys.forEach(key => {
+    // @ts-ignore
     element.style[key] = style[key];
   });
 

@@ -20,7 +20,15 @@ export default defineConfig({
       alias: [
         {
           find: /^ant-design-x-vue$/,
-          replacement: path.resolve(__dirname, '../../src')
+          replacement: path.resolve(__dirname, '../../packages/components')
+        },
+        {
+          find: /^ant-design-x-vue\/(.*)/,
+          replacement: path.resolve(__dirname, '../../packages/components/$1')
+        },
+        {
+          find: /^@ant-design-x-vue\/components$/,
+          replacement: path.resolve(__dirname, '../../packages/components')
         },
         {
           find: /^.*\/VPHero\.vue$/,

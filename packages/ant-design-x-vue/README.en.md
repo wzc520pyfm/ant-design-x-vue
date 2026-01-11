@@ -101,7 +101,7 @@ Please reference the [Roadmap](https://github.com/wzc520pyfm/ant-design-x-vue/is
 
 | Wechat Public Account                                         | QQ Group                                                               |
 | ------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| <img src="./docs/public/images//wechat_public_account.jpg" /> | <img src="./docs/public/images/QQ_group_1.jpg" style="width: 260px" /> |
+| <img src="../../docs/public/images/wechat_public_account.jpg" /> | <img src="../../docs/public/images/QQ_group_1.jpg" style="width: 260px" /> |
 
 ## 📄 LICENSE
 

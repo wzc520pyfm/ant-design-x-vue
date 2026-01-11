@@ -1,2 +1,5 @@
 packages:
-  - "play"
+  - play
+  - docs
+  - internal/*
+  - packages/*

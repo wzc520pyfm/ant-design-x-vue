@@ -104,7 +104,7 @@ $ pnpm lint
 
 | 微信公众号                                                      | QQ 交流群                                                               |
 | ------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| <img src="./docs/public/images//wechat_public_account.jpg" /> | <img src="./docs/public/images/QQ_group_1.jpg" style="width: 260px" /> |
+| <img src="../../docs/public/images/wechat_public_account.jpg" /> | <img src="../../docs/public/images/QQ_group_1.jpg" style="width: 260px" /> |
 
 ## 📄 LICENSE
 

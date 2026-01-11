@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "jsxImportSource": "vue",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "lib": ["WebWorker", "DOM"],
+    "types": ["unplugin-vue-macros/macros-global", "node"],
+    "paths": {
+      "ant-design-x-vue": ["../packages/components"],
+      "ant-design-x-vue/*": ["../packages/components/*"],
+      "@ant-design-x-vue/components": ["../packages/components"],
+      "@ant-design-x-vue/components/*": ["../packages/components/*"],
+      "~/*": ["./.vitepress/vitepress/*"]
+    },
+    "jsx": "preserve"
+  },
+  "vueCompilerOptions": {
+    "plugins": ["unplugin-vue-macros/volar"]
+  },
+  "include": ["*/*", "**/*", ".vitepress/**/*"],
+  "exclude": ["node_modules"]
+}

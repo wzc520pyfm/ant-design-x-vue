@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs'
-import { docRoot } from '../../../internal/build-utils/src'
+import { docRoot } from '@ant-design-x-vue/build-utils'
 import type { MarkdownRenderer } from 'vitepress'
 
 interface ContainerOpts {

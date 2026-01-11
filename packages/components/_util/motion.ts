@@ -12,6 +12,7 @@ const skipOpacityTransition: MotionEndEventHandler = (_, event: MotionEvent) =>
   event?.deadline === true || (event as TransitionEvent).propertyName === 'height';
 
 const initCollapseMotion = (rootCls = defaultPrefixCls): CSSMotionProps => ({
+  // @ts-ignore
   motionName: `${rootCls}-motion-collapse`,
   onAppearStart: getCollapsedHeight,
   onEnterStart: getCollapsedHeight,
