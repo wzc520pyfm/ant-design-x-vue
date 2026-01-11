@@ -1,0 +1,52 @@
+/* Light theme for XMarkdown */
+.x-markdown {
+  color: #333;
+  background-color: #fff;
+}
+
+.x-markdown pre {
+  background-color: #f5f5f5;
+  border: 1px solid #e8e8e8;
+}
+
+.x-markdown code {
+  background-color: #f5f5f5;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.x-markdown pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.x-markdown blockquote {
+  border-left: 4px solid #ddd;
+  padding-left: 16px;
+  color: #666;
+  margin: 16px 0;
+}
+
+.x-markdown a {
+  color: #1890ff;
+  text-decoration: none;
+}
+
+.x-markdown a:hover {
+  text-decoration: underline;
+}
+
+.x-markdown table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.x-markdown th,
+.x-markdown td {
+  border: 1px solid #e8e8e8;
+  padding: 8px 16px;
+}
+
+.x-markdown th {
+  background-color: #fafafa;
+}

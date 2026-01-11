@@ -73,6 +73,8 @@
   },
   "devDependencies": {
     "@ant-design-x-vue/components": "workspace:*",
+    "@ant-design-x-vue/x-sdk": "workspace:*",
+    "@ant-design-x-vue/x-markdown": "workspace:*",
     "@types/node": "^22.10.2",
     "@types/stylis": "^4.2.7",
     "changelogen": "^0.5.7",
