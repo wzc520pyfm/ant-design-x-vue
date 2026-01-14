@@ -234,12 +234,23 @@ const onInternalPaste: ClipboardEventHandler = (e) => {
 };
 
 // ============================ Focus =============================
-const onContentMouseDown: MouseEventHandler = (e) => {
+const onContentMouseDown: MouseEventHandler = (e: MouseEvent) => {
+  const node = e.target as Node;
   // If input focused but click on the container,
   // input will lose focus.
   // We call `preventDefault` to prevent this behavior
-  if (e.target !== containerRef.value?.querySelector(`.${inputCls.value}`)) {
+  if (node !== containerRef.value?.querySelector(`.${inputCls.value}`)) {
     e.preventDefault();
+  }
+
+  // When clicking the operation option on the right, prevent the event from penetrating
+  if (
+    containerRef.value?.querySelector(`.${actionListCls.value}`).contains(node)
+  ) {
+    e.stopPropagation();
+    // @ts-expect-error
+    inputRef.value?.blur();
+    return;
   }
 
   // @ts-expect-error
@@ -252,11 +263,11 @@ const actionNode = computed(() => {
     <Flex class={`${actionListCls.value}-presets`}>
       {allowSpeech && (
         <SpeechButton
-          {...(typeof allowSpeech === 'object' ? 
-            { 
-              audioIcon: allowSpeech.audioIcon, 
-              audioDisabledIcon: allowSpeech.audioDisabledIcon, 
-              audioRecordingIcon: allowSpeech.audioRecordingIcon 
+          {...(typeof allowSpeech === 'object' ?
+            {
+              audioIcon: allowSpeech.audioIcon,
+              audioDisabledIcon: allowSpeech.audioDisabledIcon,
+              audioRecordingIcon: allowSpeech.audioRecordingIcon
             } : {}
           )}
         />
