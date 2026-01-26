@@ -99,20 +99,41 @@ const transformComponentMarkdown = (
 }
 
 const getExampleImports = (componentId: string) => {
-  const examplePath = path.resolve(docRoot, 'examples', componentId)
-  if (!fs.existsSync(examplePath)) return []
-  const files = fs.readdirSync(examplePath)
   const imports: string[] = []
 
-  for (const item of files) {
-    if (!/\.vue$/.test(item)) continue
-    const file = item.replace(/\.vue$/, '')
-    const name = camelize(`Ax-${componentId}-${file}`)
+  // 处理 v2 版本的 componentId（如 bubble-v2 -> bubble）
+  const baseComponentId = componentId.replace(/-v2$/, '')
 
-    imports.push(
-      `import ${name} from '../examples/${componentId}/${file}.vue'`,
-      `import ${name}Setup from '../examples-setup/${componentId}/${file}.vue'`
-    )
+  // v1 版本的 demo
+  const examplePath = path.resolve(docRoot, 'examples', baseComponentId)
+  if (fs.existsSync(examplePath)) {
+    const files = fs.readdirSync(examplePath)
+    for (const item of files) {
+      if (!/\.vue$/.test(item)) continue
+      const file = item.replace(/\.vue$/, '')
+      const name = camelize(`Ax-${baseComponentId}-${file}`)
+
+      imports.push(
+        `import ${name} from '../examples/${baseComponentId}/${file}.vue'`,
+        `import ${name}Setup from '../examples-setup/${baseComponentId}/${file}.vue'`
+      )
+    }
+  }
+
+  // v2 版本的 demo
+  const exampleV2Path = path.resolve(docRoot, 'examples-v2', baseComponentId)
+  if (fs.existsSync(exampleV2Path)) {
+    const files = fs.readdirSync(exampleV2Path)
+    for (const item of files) {
+      if (!/\.vue$/.test(item)) continue
+      const file = item.replace(/\.vue$/, '')
+      const name = camelize(`Ax-V2-${baseComponentId}-${file}`)
+
+      imports.push(
+        `import ${name} from '../examples-v2/${baseComponentId}/${file}.vue'`,
+        `import ${name}Setup from '../examples-v2-setup/${baseComponentId}/${file}.vue'`
+      )
+    }
   }
 
   return imports
