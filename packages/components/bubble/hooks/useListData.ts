@@ -1,26 +1,44 @@
 import { computed, type Ref } from 'vue';
-import type { BubbleDataType, BubbleListProps } from '../interface';
-import type { BubbleProps } from '../interface';
+import type {
+  BubbleItemType,
+  BubbleListProps,
+  FuncRoleProps,
+  RoleProps,
+  RoleType,
+} from '../interface';
 
 export type UnRef<T extends Ref<any>> = T extends Ref<infer R> ? R : never;
 
 export type ListItemType = UnRef<ReturnType<typeof useListData>>[number];
 
+function roleCfgIsFunction(roleCfg: RoleProps | FuncRoleProps): roleCfg is FuncRoleProps {
+  return typeof roleCfg === 'function' && roleCfg instanceof Function;
+}
+
 export default function useListData(
   items: Ref<BubbleListProps['items']>,
-  roles?: Ref<BubbleListProps['roles']>,
+  roles?: Ref<RoleType | undefined>,
 ) {
-  const getRoleBubbleProps = (bubble: BubbleDataType, index: number): Partial<BubbleProps> => {
-    if (typeof roles.value === 'function') {
-      return roles.value(bubble, index);
+  const getRoleBubbleProps = (
+    bubble: BubbleItemType,
+    _index: number,
+  ): Partial<RoleProps> => {
+    if (!roles?.value) {
+      return {};
     }
 
-    if (roles) {
-      return roles.value?.[bubble.role!] || {};
+    const role = bubble.role;
+    if (!role) {
+      return {};
     }
 
-    return {};
-  }
+    const cfg = (roles.value as any)[role];
+    if (!cfg) {
+      return {};
+    }
+
+    return roleCfgIsFunction(cfg) ? cfg(bubble) : cfg;
+  };
 
   const listData = computed(() =>
     (items.value || []).map((bubbleData, i) => {
@@ -31,7 +49,8 @@ export default function useListData(
         ...bubbleData,
         key: mergedKey,
       };
-    }));
+    }),
+  );
 
-  return listData as Ref<any[]>;
+  return listData as Ref<BubbleItemType[]>;
 }

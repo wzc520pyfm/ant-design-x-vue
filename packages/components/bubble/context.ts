@@ -1,9 +1,19 @@
-import { computed, ComputedRef, defineComponent, inject, InjectionKey, provide, shallowRef, triggerRef, unref, watch } from "vue";
-import { objectType } from "../_util/type";
-import { BubbleContextProps } from "./interface";
+import {
+  computed,
+  ComputedRef,
+  defineComponent,
+  inject,
+  InjectionKey,
+  provide,
+  shallowRef,
+  triggerRef,
+  unref,
+  watch,
+} from 'vue';
+import { objectType } from '../_util/type';
+import type { BubbleContextProps } from './interface';
 
-const BubbleContextKey: InjectionKey<ComputedRef<BubbleContextProps>> =
-  Symbol('BubbleContext');
+const BubbleContextKey: InjectionKey<ComputedRef<BubbleContextProps>> = Symbol('BubbleContext');
 
 export const globalBubbleContextApi = shallowRef<BubbleContextProps>();
 
@@ -25,7 +35,9 @@ export const useBubbleContextInject = () => {
     computed(() => globalBubbleContextApi.value || {}),
   );
 };
+
 export const BubbleContextProvider = defineComponent({
+  name: 'BubbleContextProvider',
   props: {
     value: objectType<BubbleContextProps>(),
   },

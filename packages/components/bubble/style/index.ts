@@ -3,7 +3,10 @@ import { mergeToken } from '../../_util/cssinjs-utils';
 import type { FullToken, GenerateStyle, GetDefaultToken } from '../../theme/cssinjs-utils';
 import { genStyleHooks } from '../../theme/genStyleUtils';
 import { genShapeStyle, genVariantStyle } from './content';
+import { genDividerBubbleStyle } from './divider';
 import genBubbleListStyle from './list';
+import { genSlotStyle } from './slot';
+import { genSystemBubbleStyle } from './system';
 
 const loadingMove = new Keyframes('loadingMove', {
   '0%': {
@@ -35,92 +38,117 @@ const cursorBlink = new Keyframes('cursorBlink', {
   },
 });
 
-// biome-ignore lint/suspicious/noEmptyInterface: ComponentToken need to be empty by default
-export interface ComponentToken {}
+const fadeIn = new Keyframes('fadeIn', {
+  '0%': {
+    opacity: 0,
+  },
+  '100%': {
+    opacity: 1,
+  },
+});
+
+export interface ComponentToken {
+  /**
+   * @desc 打字动画内容
+   * @descEN Typing animation content
+   */
+  typingContent: string;
+  /**
+   * @desc 打字动画持续时间
+   * @descEN Typing animation duration
+   */
+  typingAnimationDuration: string;
+  /**
+   * @desc 打字动画名称
+   * @descEN Typing animation name
+   */
+  typingAnimationName: string;
+}
 
 export interface BubbleToken extends FullToken<'Bubble'> {}
 
 const genBubbleStyle: GenerateStyle<BubbleToken> = (token) => {
-  const { componentCls, fontSize, lineHeight, paddingSM, colorText, calc } = token;
-  return {
-    [componentCls]: {
-      display: 'flex',
-      columnGap: paddingSM,
-      [`&${componentCls}-end`]: {
-        justifyContent: 'end',
-        flexDirection: 'row-reverse',
+  const {
+    componentCls,
+    fontSize,
+    lineHeight,
+    paddingSM,
+    colorText,
+    calc,
+  } = token;
 
-        [`& ${componentCls}-content-wrapper`]: {
-          alignItems: 'flex-end',
-        },
-      },
-      [`&${componentCls}-rtl`]: {
-        direction: 'rtl',
-      },
-      [`&${componentCls}-typing ${componentCls}-content:last-child::after`]: {
-        content: '"|"',
-        fontWeight: 900,
-        userSelect: 'none',
-        opacity: 1,
-        marginInlineStart: '0.1em',
-        animationName: cursorBlink,
-        animationDuration: '0.8s',
-        animationIterationCount: 'infinite',
-        animationTimingFunction: 'linear',
-      },
-
-      // ============================ Avatar =============================
-      [`& ${componentCls}-avatar`]: {
-        display: 'inline-flex',
-        justifyContent: 'center',
-        alignSelf: 'flex-start',
-      },
-
-      // ======================== Header & Footer ========================
-      [`& ${componentCls}-header, & ${componentCls}-footer`]: {
-        fontSize: fontSize,
-        lineHeight: lineHeight,
-        color: token.colorText,
-      },
-
-      [`& ${componentCls}-header`]: {
-        marginBottom: token.paddingXXS,
-      },
-
-      [`& ${componentCls}-footer`]: {
-        marginTop: paddingSM,
-      },
-
-      // =========================== Content =============================
-      [`& ${componentCls}-content-wrapper`]: {
-        flex: 'auto',
+  return [
+    {
+      [componentCls]: {
         display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        minWidth: 0,
-        maxWidth: '100%',
-      },
+        columnGap: paddingSM,
 
-      [`& ${componentCls}-content`]: {
-        position: 'relative',
-        boxSizing: 'border-box',
-        minWidth: 0,
-        maxWidth: '100%',
+        [`&${componentCls}-rtl`]: {
+          direction: 'rtl',
+        },
+        [`&${componentCls}-loading`]: {
+          alignItems: 'center',
+        },
 
-        color: colorText,
-        fontSize: token.fontSize,
-        lineHeight: token.lineHeight,
-        minHeight: calc(paddingSM).mul(2).add(calc(lineHeight).mul(fontSize)).equal(),
+        [`& ${componentCls}-body`]: {
+          display: 'flex',
+          flexDirection: 'column',
+        },
 
-        wordBreak: 'break-word',
+        // ============================ Avatar =============================
+        [`& ${componentCls}-avatar`]: {
+          display: 'inline-flex',
+          justifyContent: 'center',
+          alignSelf: 'flex-start',
+        },
+
+        // =========================== Content =============================
+        [`& ${componentCls}-content`]: {
+          position: 'relative',
+          boxSizing: 'border-box',
+          minWidth: 0,
+          maxWidth: '100%',
+          minHeight: calc(paddingSM).mul(2).add(calc(lineHeight).mul(fontSize)).equal(),
+          paddingInline: `${unit(token.padding)}`,
+          paddingBlock: `${unit(paddingSM)}`,
+          color: colorText,
+          fontSize: token.fontSize,
+          lineHeight: token.lineHeight,
+          wordBreak: 'break-word',
+          '&-string': {
+            whiteSpace: 'pre-wrap',
+          },
+        },
+
+        // Typing animation
+        '&-typing:last-child::after': {
+          content: '"|"',
+          fontWeight: 900,
+          userSelect: 'none',
+          opacity: 1,
+          marginInlineStart: '0.1em',
+          animationName: cursorBlink,
+          animationDuration: '0.8s',
+          animationIterationCount: 'infinite',
+          animationTimingFunction: 'linear',
+        },
+
+        // Fade-in animation
+        '&-fade-in .fade-in': {
+          display: 'inline',
+          animationName: fadeIn,
+          animationDuration: '1s',
+          animationTimingFunction: 'linear',
+        },
 
         [`& ${componentCls}-dot`]: {
           position: 'relative',
-          height: '100%',
+          height: token.controlHeight,
           display: 'flex',
           alignItems: 'center',
           columnGap: token.marginXS,
           padding: `0 ${unit(token.paddingXXS)}`,
+          alignSelf: 'center',
           '&-item': {
             backgroundColor: token.colorPrimary,
             borderRadius: '100%',
@@ -141,22 +169,53 @@ const genBubbleStyle: GenerateStyle<BubbleToken> = (token) => {
             },
           },
         },
+
+        // ======================== placement ============================
+        '&-start': {
+          flexDirection: 'row',
+
+          [`& ${componentCls}-header`]: {
+            flexDirection: 'row',
+          },
+        },
+
+        '&-end': {
+          flexDirection: 'row-reverse',
+          justifySelf: 'flex-end',
+
+          [`& ${componentCls}-header`]: {
+            flexDirection: 'row-reverse',
+          },
+
+          [`& ${componentCls}-editing-opts`]: {
+            flexDirection: 'row-reverse',
+          },
+        },
       },
     },
-  };
+    cursorBlink,
+  ];
 };
 
-export const prepareComponentToken: GetDefaultToken<'Bubble'> = () => ({});
+export const prepareComponentToken: GetDefaultToken<'Bubble'> = () => ({
+  typingContent: '|',
+  typingAnimationName: 'cursorBlink',
+  typingAnimationDuration: '0.8s',
+});
 
 export default genStyleHooks<'Bubble'>(
   'Bubble',
   (token: BubbleToken) => {
     const bubbleToken = mergeToken<BubbleToken>(token, {});
     return [
+      // 位置越靠后，样式优先级越高
       genBubbleStyle(bubbleToken),
-      genBubbleListStyle(bubbleToken),
       genVariantStyle(bubbleToken),
       genShapeStyle(bubbleToken),
+      genSlotStyle(bubbleToken),
+      genBubbleListStyle(bubbleToken),
+      genSystemBubbleStyle(bubbleToken),
+      genDividerBubbleStyle(bubbleToken),
     ];
   },
   prepareComponentToken,

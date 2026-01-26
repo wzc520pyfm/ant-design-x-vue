@@ -63,7 +63,7 @@ export interface ItemType extends DataAttributes {
 
 export type ActionItem = SubItemType | ItemType;
 
-export interface ActionsProps extends Omit<HTMLAttributes, 'onClick'> {
+export interface ActionsProps {
   /**
    * @desc 包含多个操作项的列表
    * @descEN A list containing multiple action items.

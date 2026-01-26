@@ -1,18 +1,11 @@
-import { unit } from '../../_util/cssinjs';
-import type { BubbleToken } from '.';
 import type { GenerateStyle } from '../../theme/cssinjs-utils';
+import type { BubbleToken } from '.';
 
 export const genVariantStyle: GenerateStyle<BubbleToken> = (token) => {
-  const { componentCls, paddingSM, padding } = token;
+  const { componentCls } = token;
   return {
     [componentCls]: {
       [`${componentCls}-content`]: {
-        // Shared: filled, outlined, shadow
-        '&-filled,&-outlined,&-shadow': {
-          padding: `${unit(paddingSM)} ${unit(padding)}`,
-          borderRadius: token.borderRadiusLG,
-        },
-
         // Filled:
         '&-filled': {
           backgroundColor: token.colorFillContent,
@@ -27,36 +20,75 @@ export const genVariantStyle: GenerateStyle<BubbleToken> = (token) => {
         '&-shadow': {
           boxShadow: token.boxShadowTertiary,
         },
+
+        // Borderless:
+        '&-borderless': {
+          backgroundColor: 'transparent',
+          padding: 0,
+          minHeight: 0,
+        },
       },
     },
   };
 };
 
 export const genShapeStyle: GenerateStyle<BubbleToken> = (token) => {
-  const { componentCls, fontSize, lineHeight, paddingSM, padding, calc } = token;
+  const { componentCls, fontSize, lineHeight, paddingSM, borderRadius, calc } = token;
 
   const halfRadius = calc(fontSize).mul(lineHeight).div(2).add(paddingSM).equal();
+  // 12px
+  const defaultRadius = calc(borderRadius).mul(2).equal();
 
   const contentCls = `${componentCls}-content`;
 
   return {
     [componentCls]: {
       [contentCls]: {
-        // round:
+        '&-default': {
+          borderRadius: {
+            _skip_check_: true,
+            value: defaultRadius,
+          },
+        },
+
         '&-round': {
           borderRadius: {
             _skip_check_: true,
             value: halfRadius,
           },
-          paddingInline: calc(padding).mul(1.25).equal(),
+        },
+
+        '&-corner': {
+          borderRadius: {
+            _skip_check_: true,
+            value: defaultRadius,
+          },
+        },
+
+        '&-editing': {
+          'div:first-child': {
+            outline: 'none',
+          },
+
+          [`${componentCls}-editing-opts`]: {
+            marginBlockStart: token.marginSM,
+
+            'button:last-child': {
+              backgroundColor: token.colorBgContainer,
+
+              '&:hover': {
+                backgroundColor: token.colorBgLayout,
+              },
+            },
+          },
         },
       },
 
-      // corner:
-      [`&-start ${contentCls}-corner`]: {
+      [`&-start ${componentCls}-content-corner`]: {
         borderStartStartRadius: token.borderRadiusXS,
       },
-      [`&-end ${contentCls}-corner`]: {
+
+      [`&-end ${componentCls}-content-corner`]: {
         borderStartEndRadius: token.borderRadiusXS,
       },
     },
