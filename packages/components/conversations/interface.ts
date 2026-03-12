@@ -83,7 +83,7 @@ type SemanticType = 'root' | 'creation' | 'group' | 'item';
  * @desc 会话列表组件参数
  * @descEN Props for the conversation list component
  */
-export interface ConversationsProps extends HTMLAttributes {
+export interface ConversationsProps {
   /**
    * @desc 会话列表数据源
    * @descEN Data source for the conversation list
@@ -151,7 +151,7 @@ export interface ConversationsProps extends HTMLAttributes {
   creation?: CreationProps;
 }
 
-export interface ConversationsItemProps extends Omit<HTMLAttributes, 'onClick'> {
+export interface ConversationsItemProps {
   info: ConversationItemType;
   prefixCls?: string;
   direction?: DirectionType;
