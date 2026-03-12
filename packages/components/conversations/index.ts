@@ -1,16 +1,30 @@
 import type { App } from 'vue';
-import Conversations from './Conversations.vue';
+import ConversationsComponent from './Conversations.vue';
+import CreationComponent from './Creation.vue';
 
-export type { ConversationsProps, Conversation } from './interface';
+export type {
+  ConversationsProps,
+  Conversation,
+  ConversationItemType,
+  DividerItemType,
+  ItemType,
+  CreationProps,
+  GroupableProps,
+} from './interface';
 
-// @ts-ignore
-Conversations.install = function(app: App) {
-  app.component(Conversations.name, Conversations);
+type CompoundedComponent = typeof ConversationsComponent & {
+  Creation: typeof CreationComponent;
+};
+
+const Conversations = ConversationsComponent as CompoundedComponent;
+Conversations.Creation = CreationComponent;
+
+Conversations.install = function (app: App) {
+  app.component(Conversations.name!, Conversations);
+  app.component(CreationComponent.name!, CreationComponent);
   return app;
-}
+};
 
 export default Conversations;
 
-export {
-  Conversations,
-}
+export { Conversations };

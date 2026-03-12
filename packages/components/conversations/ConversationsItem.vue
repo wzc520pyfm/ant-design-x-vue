@@ -1,12 +1,11 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
 import type { EventHandler, MouseEventHandler } from 'ant-design-vue/es/_util/EventInterface';
-import type { Conversation, ConversationsItemProps } from './interface';
+import type { ConversationItemType, ConversationsItemProps } from './interface';
 import pickAttrs from '../_util/pick-attrs';
 import { computed } from 'vue';
-import { Dropdown, Menu, Tooltip, Typography } from 'ant-design-vue';
+import { Dropdown, Menu, Typography } from 'ant-design-vue';
 import { EllipsisOutlined } from '@ant-design/icons-vue';
-import useState from '../_util/hooks/use-state';
 
 defineOptions({ name: 'AXConversationsItem' });
 
@@ -34,12 +33,6 @@ const stopPropagation: EventHandler = (e) => {
 // ============================= MISC =============================
 const disabled = computed(() => info.disabled);
 
-// =========================== Ellipsis ===========================
-const [inEllipsis, onEllipsis] = useState(false);
-
-// =========================== Tooltip ============================
-const [opened, setOpened] = useState(false);
-
 // ============================ Style =============================
 const mergedCls = computed(() => classnames(
   className,
@@ -51,26 +44,20 @@ const mergedCls = computed(() => classnames(
 // ============================ Events ============================
 const onInternalClick: MouseEventHandler = () => {
   if (!disabled.value && onClick) {
-    onClick(info);
-  }
-};
-
-const onOpenChange = (open: boolean) => {
-  if (open) {
-    setOpened(!open);
+    onClick(info.key);
   }
 };
 
 // ============================ Menu ============================
 const trigger = computed(() => menu?.trigger);
 const dropdownMenu = computed(() => {
-  const { trigger, ...dropdownMenu } = menu || {};
-  return dropdownMenu;
+  const { trigger, ...rest } = menu || {};
+  return rest;
 });
 
 const getPopupContainer = computed(() => dropdownMenu.value?.getPopupContainer);
 
-const renderMenuTrigger = (conversation: Conversation) => {
+const renderMenuTrigger = (conversation: ConversationItemType) => {
   const originTriggerNode = (
     <EllipsisOutlined onClick={stopPropagation} class={`${prefixCls}-menu-icon`} />
   );
@@ -84,36 +71,32 @@ const renderMenuTrigger = (conversation: Conversation) => {
 
 defineRender(() => {
   return (
-    <Tooltip
-      title={info.label}
-      open={inEllipsis.value && opened.value}
-      onOpenChange={setOpened}
-      placement={direction === 'rtl' ? 'left' : 'right'}
+    <li
+      title={typeof info.label === 'object' ? undefined : `${info.label}`}
+      {...domProps.value}
+      class={mergedCls.value}
+      onClick={onInternalClick}
     >
-      <li {...domProps.value} class={mergedCls.value} onClick={onInternalClick}>
-        {info.icon && <div class={`${prefixCls}-icon`}>{info.icon}</div>}
-        <Typography.Text
-          // @ts-expect-error
-          class={`${prefixCls}-label`}
-          ellipsis={{
-            onEllipsis,
-          }}
-        >{info.label}</Typography.Text>
-        {!disabled.value && menu && (
+      {info.icon && <div class={`${prefixCls}-icon`}>{info.icon}</div>}
+      <Typography.Text
+        // @ts-expect-error
+        class={`${prefixCls}-label`}
+      >{info.label}</Typography.Text>
+      {!disabled.value && menu && (
+        <div onClick={stopPropagation}>
           <Dropdown
             placement={direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
             trigger={['click']}
             disabled={disabled.value}
-            onOpenChange={onOpenChange}
             getPopupContainer={getPopupContainer.value}
           >{{
             default: () => renderMenuTrigger(info),
             overlay: () => <Menu {...dropdownMenu.value} />
           }}
           </Dropdown>
-        )}
-      </li>
-    </Tooltip>
-  )
+        </div>
+      )}
+    </li>
+  );
 });
 </script>

@@ -1,91 +1,125 @@
-import { computed, MaybeRefOrGetter, toValue } from 'vue';
-import type { Conversation, Groupable, ConversationsProps } from '../interface';
+import { computed, type MaybeRefOrGetter, toValue } from 'vue';
+import type { CollapsibleOptions } from '../../_util/hooks/use-collapsible';
+import type {
+  Collapsible,
+  ConversationItemType,
+  ConversationsProps,
+  GroupableProps,
+  GroupLabel,
+  ItemType,
+} from '../interface';
 
-/**
- * 🔥 Only for handling ungrouped data. Do not use it for any other purpose! 🔥
- */
-const __UNGROUPED = '__ungrouped';
+interface GroupConfig {
+  label: GroupableProps['label'];
+  collapsibleHandle: Collapsible;
+  collapsibleOptions: CollapsibleOptions;
+}
 
-type GroupList = {
-  data: Conversation[];
-  name?: string;
-  title?: Groupable['title'];
-}[];
+export interface GroupInfoType {
+  data: ItemType[];
+  name: string;
+  label: GroupLabel;
+  enableGroup: boolean;
+  collapsible: boolean;
+}
 
-type GroupMap = Record<string, Conversation[]>;
+type GroupList = GroupInfoType[];
+type KeyList = { key: string; disabled?: boolean }[];
 
 const useGroupable = (
   groupable?: MaybeRefOrGetter<ConversationsProps['groupable']>,
-  items: MaybeRefOrGetter<Conversation[]> = [],
+  items: MaybeRefOrGetter<ItemType[]> = [],
 ) => {
-  const state = computed(() => {
-    if (!toValue(groupable)) {
-      return {
-        enableGroup: false,
-        sort: undefined,
-        title: undefined,
-      }
-    }
-    let baseConfig: Groupable = {
-      sort: undefined,
-      title: undefined,
+  const groupConfig = computed<
+    [GroupConfig['label'], GroupConfig['collapsibleHandle'], CollapsibleOptions]
+  >(() => {
+    const _groupable = toValue(groupable);
+    const baseConfig: GroupConfig = {
+      label: '',
+      collapsibleHandle: false,
+      collapsibleOptions: {},
     };
 
-    if (typeof toValue(groupable) === 'object') {
-      baseConfig = { ...baseConfig, ...toValue(groupable as object) };
+    if (!_groupable) {
+      return ['', baseConfig.collapsibleHandle, baseConfig.collapsibleOptions];
     }
-    return {
-      enableGroup: true,
-      sort: baseConfig.sort,
-      title: baseConfig.title,
-    }
-  });
 
-  return computed(() => {
-    // 未开启分组模式直接返回
-    if (!state.value.enableGroup) {
-      const groupList: GroupList = [
-        {
-          name: __UNGROUPED,
-          data: toValue(items),
-          title: undefined as Groupable['title'],
+    if (typeof _groupable === 'object') {
+      const { collapsible, defaultExpandedKeys, expandedKeys, onExpand, ...other } =
+        _groupable as GroupableProps;
+      Object.assign(baseConfig, {
+        ...other,
+        collapsibleHandle: collapsible!,
+        collapsibleOptions: {
+          defaultExpandedKeys,
+          expandedKeys,
+          onExpand,
         },
-      ];
-
-      return {
-        groupList,
-        enableGroup: state.value.enableGroup
-      }
+      });
     }
 
-    // 1. 将 data 做数据分组，填充 groupMap
-    const groupMap = toValue(items).reduce<GroupMap>((acc, item) => {
-      const group = item.group || __UNGROUPED;
-
-      if (!acc[group]) {
-        acc[group] = [];
-      }
-
-      acc[group].push(item);
-
-      return acc;
-    }, {});
-
-    // 2. 存在 sort 时对 groupKeys 排序
-    const groupKeys = state.value.sort ? Object.keys(groupMap).sort(state.value.sort) : Object.keys(groupMap);
-
-    // 3. groupMap 转 groupList
-    const groupList = groupKeys.map((group) => ({
-      name: group === __UNGROUPED ? undefined : group,
-      title: state.value.title,
-      data: groupMap[group],
-    }));
-
-    return {
-      groupList,
-      enableGroup: state.value.enableGroup
-    }
+    return [baseConfig.label, baseConfig.collapsibleHandle, baseConfig.collapsibleOptions];
   });
+
+  const result = computed<[GroupList, CollapsibleOptions, KeyList]>(() => {
+    const _groupable = toValue(groupable);
+    const _items = toValue(items) || [];
+    const [label, collapsibleHandle, collapsibleOptions] = groupConfig.value;
+
+    const groupList = _items.reduce<GroupList>((currentGroupList, item) => {
+      if (item?.type === 'divider' || !(item as ConversationItemType).group || !_groupable) {
+        currentGroupList.push({
+          data: [item],
+          name: '',
+          label: '',
+          enableGroup: false,
+          collapsible: false,
+        });
+        return currentGroupList;
+      }
+
+      const baseItem = item as Required<ConversationItemType>;
+      const isSome = currentGroupList.some((group, index) => {
+        if (group.name === baseItem?.group) {
+          currentGroupList[index].data.push(baseItem);
+          return true;
+        }
+        return false;
+      });
+
+      const collapsible =
+        typeof collapsibleHandle === 'function'
+          ? collapsibleHandle(baseItem?.group)
+          : collapsibleHandle;
+
+      if (!isSome) {
+        currentGroupList.push({
+          data: [baseItem],
+          enableGroup: true,
+          name: baseItem?.group,
+          label,
+          collapsible: !!collapsible,
+        });
+      }
+      return currentGroupList;
+    }, []);
+
+    const keyList = groupList.reduce<KeyList>((currentKeyList, group) => {
+      group.data.forEach((item) => {
+        if (item.type !== 'divider') {
+          currentKeyList.push({
+            key: (item as ConversationItemType).key,
+            disabled: (item as ConversationItemType).disabled,
+          });
+        }
+      });
+      return currentKeyList;
+    }, []);
+
+    return [groupList, collapsibleOptions, keyList];
+  });
+
+  return result;
 };
 
 export default useGroupable;

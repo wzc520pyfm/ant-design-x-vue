@@ -107,7 +107,8 @@ export default defineConfig({
           items: [
             { text: 'Bubble 对话气泡框', link: '/component/bubble' },
             { text: 'Bubble 对话气泡框 (v2)', link: '/component/bubble-v2' },
-            { text: 'Conversations 管理对话', link: '/component/conversations' }
+            { text: 'Conversations 管理对话', link: '/component/conversations' },
+            { text: 'Conversations 管理对话 (v2)', link: '/component/conversations-v2' }
           ]
         },
         {

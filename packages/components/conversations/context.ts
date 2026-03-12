@@ -1,6 +1,6 @@
 import { shallowRef, provide, watch, unref, triggerRef, inject, computed, defineComponent } from 'vue';
-import type { ComputedRef, InjectionKey } from "vue";
-import type { GroupTitleContextProps } from './interface'
+import type { ComputedRef, InjectionKey } from 'vue';
+import type { GroupTitleContextProps } from './interface';
 import { objectType } from '../_util/type';
 
 const GroupTitleContextKey: InjectionKey<ComputedRef<GroupTitleContextProps>> =
@@ -8,8 +8,6 @@ const GroupTitleContextKey: InjectionKey<ComputedRef<GroupTitleContextProps>> =
 
 export const globalGroupTitleContextApi = shallowRef<GroupTitleContextProps>();
 
-// User should not care about internal state.
-// Which should pass by context instead.
 export const useGroupTitleContextProvider = (value: ComputedRef<GroupTitleContextProps>) => {
   provide(GroupTitleContextKey, value);
   watch(
@@ -42,4 +40,3 @@ export const GroupTitleContextProvider = defineComponent({
 });
 
 export default GroupTitleContextProvider;
-

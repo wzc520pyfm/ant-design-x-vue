@@ -1,9 +1,11 @@
 import type { CSSProperties, HTMLAttributes, VNode } from 'vue';
 import type { AnyObject } from '../_util/type';
-import GroupTitle from './GroupTitle.vue';
+import type GroupTitle from './GroupTitle.vue';
 import type { ConfigProviderProps, DirectionType } from 'ant-design-vue/es/config-provider';
 import type { MenuProps } from 'ant-design-vue';
 import type { AvoidValidation } from '../type-utility';
+import type { CollapsibleOptions } from '../_util/hooks/use-collapsible';
+import type { GroupInfoType } from './hooks/useGroupable';
 
 type GroupType = string;
 
@@ -25,12 +27,6 @@ export interface Conversation extends AnyObject {
   label?: VNode | string;
 
   /**
-   * @desc 会话时间戳
-   * @descEN Conversation timestamp
-   */
-  timestamp?: number;
-
-  /**
    * @desc 会话分组类型，与 {@link ConversationsProps.groupable} 联动
    * @descEN Conversation type
    */
@@ -49,6 +45,40 @@ export interface Conversation extends AnyObject {
   disabled?: boolean;
 }
 
+export type ConversationItemType = Conversation;
+
+export interface DividerItemType {
+  type: 'divider';
+  key?: string;
+  dashed?: boolean;
+}
+
+export type ItemType = ConversationItemType | DividerItemType;
+
+export type GroupLabel =
+  | VNode
+  | string
+  | ((
+      group: string,
+      info: {
+        groupInfo: GroupInfoType;
+      },
+    ) => VNode)
+  | undefined;
+
+export type Collapsible = boolean | ((group: string) => boolean);
+
+export interface GroupableProps extends CollapsibleOptions {
+  /**
+   * @desc 自定义分组标签渲染
+   * @descEN Semantic custom rendering
+   */
+  label?: GroupLabel;
+  collapsible?: Collapsible;
+}
+
+type SemanticType = 'root' | 'creation' | 'group' | 'item';
+
 /**
  * @desc 会话列表组件参数
  * @descEN Props for the conversation list component
@@ -58,19 +88,19 @@ export interface ConversationsProps extends HTMLAttributes {
    * @desc 会话列表数据源
    * @descEN Data source for the conversation list
    */
-  items?: Conversation[];
+  items?: ItemType[];
 
   /**
    * @desc 当前选中的值
    * @descEN Currently selected value
    */
-  activeKey?: Conversation['key'];
+  activeKey?: ConversationItemType['key'];
 
   /**
    * @desc 默认选中值
    * @descEN Default selected value
    */
-  defaultActiveKey?: Conversation['key'];
+  defaultActiveKey?: ConversationItemType['key'];
 
   /**
    * @desc 选中变更回调
@@ -82,25 +112,25 @@ export interface ConversationsProps extends HTMLAttributes {
    * @desc 会话操作菜单
    * @descEN Operation menu for conversations
    */
-  menu?: ConversationsItemProps['menu'] | ((value: Conversation) => ConversationsItemProps['menu']);
+  menu?: ConversationsItemProps['menu'] | ((value: ConversationItemType) => ConversationsItemProps['menu']);
 
   /**
    * @desc 是否支持分组, 开启后默认按 {@link Conversation.group} 字段分组
    * @descEN If grouping is supported, it defaults to the {@link Conversation.group} field
    */
-  groupable?: AvoidValidation<boolean | Groupable>;
+  groupable?: AvoidValidation<boolean | GroupableProps>;
 
   /**
    * @desc 语义化结构 style
    * @descEN Semantic structure styles
    */
-  styles?: Partial<Record<'item', CSSProperties>>;
+  styles?: Partial<Record<SemanticType, CSSProperties>>;
 
   /**
    * @desc 语义化结构 className
    * @descEN Semantic structure class names
    */
-  classNames?: Partial<Record<'item', string>>;
+  classNames?: Partial<Record<SemanticType, string>>;
 
   /**
    * @desc 自定义前缀
@@ -113,47 +143,47 @@ export interface ConversationsProps extends HTMLAttributes {
    * @descEN Custom class name
    */
   rootClassName?: string;
+
+  /**
+   * @desc 新建对话按钮的配置
+   * @descEN Config of the new chat button
+   */
+  creation?: CreationProps;
 }
 
 export interface ConversationsItemProps extends Omit<HTMLAttributes, 'onClick'> {
-  info: Conversation;
+  info: ConversationItemType;
   prefixCls?: string;
   direction?: DirectionType;
   menu?: MenuProps & {
     trigger?:
       | VNode
-      | ((conversation: Conversation, info: { originNode: VNode }) => VNode);
-      getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
+      | ((conversation: ConversationItemType, info: { originNode: VNode }) => VNode);
+    getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
   };
   active?: boolean;
-  onClick?: (info: Conversation) => void;
+  onClick?: ConversationsProps['onActiveChange'];
 }
 
-export type GroupSorter = Parameters<GroupType[]['sort']>[0];
+export interface CreationProps {
+  label?: VNode | string | ((info: CreationLabelInfo) => VNode);
+  align?: 'start' | 'center' | 'end';
+  prefixCls?: string;
+  className?: string;
+  style?: CSSProperties;
+  disabled?: boolean;
+  icon?: VNode | (() => VNode);
+  onClick?: (event?: MouseEvent) => void;
+}
 
-export type GroupTitleRenderComponents = {
-  components: {
-    GroupTitle: typeof GroupTitle;
-  };
-};
-
-export type GroupTitleRender =
-  | ((group: GroupType, info: GroupTitleRenderComponents) => VNode)
-  | undefined;
-
-export interface Groupable {
-  /**
-   * @desc 分组排序函数
-   * @descEN Group sorter
-   */
-  sort?: GroupSorter;
-  /**
-   * @desc 自定义分组标签渲染
-   * @descEN Semantic custom rendering
-   */
-  title?: GroupTitleRender;
+export interface CreationLabelInfo {
+  components: { CreationLabel: any };
 }
 
 export interface GroupTitleContextProps {
   prefixCls?: ConfigProviderProps['prefixCls'];
+  groupInfo?: Omit<GroupInfoType, 'collapsible'> & { collapsible: boolean };
+  enableCollapse?: boolean;
+  expandedKeys?: string[];
+  onItemExpand?: (curKey: string) => void;
 }
