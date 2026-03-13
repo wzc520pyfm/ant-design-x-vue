@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXFileCardAudioV2' });
+
 import { FileCard } from 'ant-design-x-vue';
 import { Flex } from 'ant-design-vue';
 

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXNotificationHooksV2Setup' });
+
 import type { XNotificationOpenArgs } from 'ant-design-x-vue';
 import { notification } from 'ant-design-x-vue';
 

@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXBubbleStreamV2' });
+
 import { ref, watch, onUnmounted, computed } from 'vue';
 import { UserOutlined } from '@ant-design/icons-vue';
 import { Bubble, type BubbleProps } from 'ant-design-x-vue';
@@ -96,6 +98,7 @@ defineRender(() => (
         typing={typing.value ? typingConfig : false}
         header={<h5>ADX</h5>}
         avatar={<Avatar icon={<UserOutlined />} />}
+        onTyping={() => console.log('typing')}
         onTypingComplete={() => {
           count.value++;
           console.log('typing complete');

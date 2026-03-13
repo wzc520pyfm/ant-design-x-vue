@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXPromptsFadeInV2' });
+
 import {
   BulbOutlined,
   InfoCircleOutlined,

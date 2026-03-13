@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXBubbleFooterV2Setup' });
+
 import { CopyOutlined, RedoOutlined, UserOutlined } from '@ant-design/icons-vue';
 import { Bubble, Actions } from 'ant-design-x-vue';
 

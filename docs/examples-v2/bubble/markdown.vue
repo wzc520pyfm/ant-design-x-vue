@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXBubbleMarkdownV2' });
+
 import { ref, watchEffect } from 'vue';
 import { Bubble, type BubbleProps } from 'ant-design-x-vue';
 import { Button, Flex, Typography } from 'ant-design-vue';

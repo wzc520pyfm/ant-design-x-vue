@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXBubbleAnimationV2Setup' });
+
 import { ref } from 'vue';
 import { CopyOutlined, RedoOutlined, UserOutlined } from '@ant-design/icons-vue';
 import { Bubble, Actions } from 'ant-design-x-vue';

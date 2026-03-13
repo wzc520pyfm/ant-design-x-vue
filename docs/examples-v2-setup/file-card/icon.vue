@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXFileCardIconV2Setup' });
+
 import { FileCard } from 'ant-design-x-vue';
 import { Flex } from 'ant-design-vue';
 import { AndroidOutlined } from '@ant-design/icons-vue';

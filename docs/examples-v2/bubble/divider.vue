@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXBubbleDividerV2' });
+
 import { Bubble } from 'ant-design-x-vue';
 import { Flex } from 'ant-design-vue';
 

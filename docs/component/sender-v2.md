@@ -8,6 +8,18 @@
 
 ## 代码演示
 
+### 智能体输入
+
+<ClientOnly>
+
+:::demo-v2 多功能智能体输入框，支持附件上传、深度思考开关、智能体切换和文件插入。
+
+sender/agent
+
+:::
+
+</ClientOnly>
+
 ### 基本用法
 
 <ClientOnly>
@@ -15,6 +27,78 @@
 :::demo-v2 基础用法，受控进行状态管理。
 
 sender/basic
+
+:::
+
+</ClientOnly>
+
+### 开关组件
+
+<ClientOnly>
+
+:::demo-v2 `Sender.Switch` 是一个切换组件，常用于控制 AI 功能的开关。
+
+sender/switch
+
+:::
+
+</ClientOnly>
+
+### 词槽填空
+
+<ClientOnly>
+
+:::demo-v2 通过 `slotConfig` 实现词槽填空模式，支持文本、输入框、下拉选择、标签和自定义组件。
+
+sender/slot-filling
+
+:::
+
+</ClientOnly>
+
+### 实例方法
+
+<ClientOnly>
+
+:::demo-v2 通过 ref 调用实例方法，支持插入文本、获取焦点、取消焦点等操作。
+
+sender/ref-action
+
+:::
+
+</ClientOnly>
+
+### 提交方式
+
+<ClientOnly>
+
+:::demo-v2 通过 `submitType` 设置提交方式为 Shift + Enter。
+
+sender/submitType
+
+:::
+
+</ClientOnly>
+
+### 语音输入
+
+<ClientOnly>
+
+:::demo-v2 通过 `allowSpeech` 开启语音输入功能。
+
+sender/speech
+
+:::
+
+</ClientOnly>
+
+### 自定义语音输入
+
+<ClientOnly>
+
+:::demo-v2 自定义语音输入的录制状态和回调。
+
+sender/speech-custom
 
 :::
 
@@ -44,6 +128,30 @@ sender/header
 
 </ClientOnly>
 
+### 快捷指令
+
+<ClientOnly>
+
+:::demo-v2 配合 `Suggestion` 组件实现 @-mention 快捷指令功能。
+
+sender/slot-with-suggestion
+
+:::
+
+</ClientOnly>
+
+### 引用
+
+<ClientOnly>
+
+:::demo-v2 使用 `Sender.Header` 实现固定引用面板，配合 Switch 控制显示。
+
+sender/header-fixed
+
+:::
+
+</ClientOnly>
+
 ### 自定义底部内容
 
 <ClientOnly>
@@ -68,25 +176,13 @@ sender/send-style
 
 </ClientOnly>
 
-### 开关组件
+### 黏贴文件
 
 <ClientOnly>
 
-:::demo-v2 `Sender.Switch` 是一个切换组件，常用于控制 AI 功能的开关。
+:::demo-v2 通过 `onPasteFile` 处理黏贴文件，配合 `Attachments` 组件实现文件上传。
 
-sender/switch
-
-:::
-
-</ClientOnly>
-
-### 词槽填空
-
-<ClientOnly>
-
-:::demo-v2 通过 `slotConfig` 实现词槽填空模式，支持文本、输入框、下拉选择、标签和自定义组件。
-
-sender/slot-filling
+sender/paste-image
 
 :::
 

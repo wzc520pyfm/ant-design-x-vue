@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXFileCardSizeV2Setup' });
+
 import { FileCard } from 'ant-design-x-vue';
 import { Flex } from 'ant-design-vue';
 </script>

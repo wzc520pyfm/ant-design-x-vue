@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXSenderSuffixV2' });
+
 import { Sender } from 'ant-design-x-vue';
 import { Space, Spin, Typography, message } from 'ant-design-vue';
 import { RobotOutlined } from '@ant-design/icons-vue';

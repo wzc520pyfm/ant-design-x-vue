@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXNotificationCloseTagV2Setup' });
+
 import { notification } from 'ant-design-x-vue';
 
 const describeInfo: Record<NotificationPermission, string> = {

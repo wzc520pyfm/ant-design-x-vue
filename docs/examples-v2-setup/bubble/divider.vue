@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXBubbleDividerV2Setup' });
+
 import { Bubble } from 'ant-design-x-vue';
 </script>
 

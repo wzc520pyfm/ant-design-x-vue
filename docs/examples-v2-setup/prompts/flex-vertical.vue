@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXPromptsFlexVerticalV2Setup' });
+
 import { CoffeeOutlined, FireOutlined, SmileOutlined } from '@ant-design/icons-vue';
 import { Prompts, type PromptsProps } from 'ant-design-x-vue';
 import { h } from 'vue';

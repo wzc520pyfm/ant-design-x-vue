@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXBubbleListScrollV2Setup' });
+
 import { ref, computed, onMounted } from 'vue';
 import { AntDesignOutlined, CopyOutlined, RedoOutlined, UserOutlined } from '@ant-design/icons-vue';
 import { Bubble, Actions, type BubbleItemType, type RoleType, type BubbleListRef } from 'ant-design-x-vue';

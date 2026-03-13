@@ -86,6 +86,17 @@ conversations/custom-new-chat
 
 :::
 
+### 滚动加载
+
+<ClientOnly>
+
+:::demo-v2 通过滚动事件实现无限滚动加载更多会话。
+
+conversations/infinite-load
+
+:::
+
+</ClientOnly>
 
 ## API
 

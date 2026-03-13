@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXBubbleGptVisV2' });
+
 import { ref, watchEffect, onUnmounted } from 'vue';
 import { Bubble } from 'ant-design-x-vue';
 import { Button, Flex, Typography } from 'ant-design-vue';

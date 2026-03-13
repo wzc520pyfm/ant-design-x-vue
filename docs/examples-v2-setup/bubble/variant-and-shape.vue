@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXBubbleVariantAndShapeV2Setup' });
+
 import { Bubble } from 'ant-design-x-vue';
 </script>
 

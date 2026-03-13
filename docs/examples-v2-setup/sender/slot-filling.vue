@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXSenderSlotFillingV2Setup' });
+
 import { Sender } from 'ant-design-x-vue';
 import type { SenderProps } from 'ant-design-x-vue';
 import { Button, Flex, Slider } from 'ant-design-vue';
@@ -87,8 +89,49 @@ const onInsertSlot = () => {
     props: { placeholder: 'Enter a name' },
   }]);
 };
+const onInsertSlotStart = () => {
+  senderRef.value?.insert?.(
+    [{
+      type: 'input',
+      key: `partner_2_${Date.now()}`,
+      props: { placeholder: 'Enter a name' },
+    }],
+    'start',
+  );
+};
+const onInsertSlotEnd = () => {
+  senderRef.value?.insert?.(
+    [{
+      type: 'input',
+      key: `partner_3_${Date.now()}`,
+      props: { placeholder: 'Enter a name' },
+    }],
+    'end',
+  );
+};
 const onChangeConfig = () => {
   slotConfigKey.value = slotConfigKey.value === 'otherSlotConfig' ? 'altSlotConfig' : 'otherSlotConfig';
+};
+const onFocusFirst = () => {
+  senderRef.value!.focus({ cursor: 'start' });
+};
+const onFocusLast = () => {
+  senderRef.value!.focus({ cursor: 'end' });
+};
+const onFocusSlot = () => {
+  senderRef.value!.focus({ cursor: 'slot' });
+};
+const onFocusSlotWithKey = () => {
+  senderRef.value!.focus({ cursor: 'slot', key: 'numberOfPeople' });
+};
+const onFocusSelectAll = () => {
+  senderRef.value!.focus({ cursor: 'all' });
+};
+const onFocusPreventScroll = () => {
+  senderRef.value!.focus({ preventScroll: true });
+};
+const onBlur = () => {
+  senderRef.value!.blur();
 };
 const onSubmit = (value: string) => {
   displayValue.value = value;
@@ -104,7 +147,16 @@ const onSubmit = (value: string) => {
       <Button @click="onGetSlot">Get Slot</Button>
       <Button @click="onInsertText">Insert Text</Button>
       <Button @click="onInsertSlot">Insert Slot</Button>
+      <Button @click="onInsertSlotStart">Insert Slot Start</Button>
+      <Button @click="onInsertSlotEnd">Insert Slot End</Button>
       <Button @click="onChangeConfig">Change SlotConfig</Button>
+      <Button @click="onFocusFirst">Focus at first</Button>
+      <Button @click="onFocusLast">Focus at last</Button>
+      <Button @click="onFocusSlot">Focus at slot</Button>
+      <Button @click="onFocusSlotWithKey">Focus at slot with key</Button>
+      <Button @click="onFocusSelectAll">Focus to select all</Button>
+      <Button @click="onFocusPreventScroll">Focus prevent scroll</Button>
+      <Button @click="onBlur">Blur</Button>
     </Flex>
     <Sender
       ref="senderRef"

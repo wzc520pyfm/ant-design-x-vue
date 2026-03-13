@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXPromptsBasicV2' });
+
 import { BulbOutlined, InfoCircleOutlined, RocketOutlined, SmileOutlined, WarningOutlined } from '@ant-design/icons-vue';
 import { App } from 'ant-design-vue';
 import { Prompts, type PromptsProps } from 'ant-design-x-vue';

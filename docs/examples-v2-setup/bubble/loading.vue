@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXBubbleLoadingV2Setup' });
+
 import { ref } from 'vue';
 import { Bubble } from 'ant-design-x-vue';
 

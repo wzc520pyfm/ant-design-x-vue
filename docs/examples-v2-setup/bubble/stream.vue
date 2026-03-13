@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXBubbleStreamV2Setup' });
+
 import { ref, onUnmounted } from 'vue';
 import { UserOutlined } from '@ant-design/icons-vue';
 import { Bubble, type BubbleProps } from 'ant-design-x-vue';
@@ -95,6 +97,7 @@ const handleTypingComplete = () => {
         :content="streamContent"
         :streaming="disableStreaming ? false : !isDone"
         :typing="typing ? typingConfig : false"
+        @typing="() => console.log('typing')"
         @typing-complete="handleTypingComplete"
       >
         <template #avatar>

@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXBubbleListExtraV2' });
+
 import { ref, computed } from 'vue';
 import { Bubble, Actions, type BubbleItemType, type RoleType } from 'ant-design-x-vue';
 import { Flex, Spin } from 'ant-design-vue';

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXSenderSwitchV2Setup' });
+
 import { Sender, SenderSwitch } from 'ant-design-x-vue';
 import { Flex } from 'ant-design-vue';
 import { ref } from 'vue';

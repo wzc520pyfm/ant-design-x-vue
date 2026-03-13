@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXFileCardBasicV2' });
+
 import { FileCard } from 'ant-design-x-vue';
 import { Flex } from 'ant-design-vue';
 

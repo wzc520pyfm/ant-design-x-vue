@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXFileCardImageLoadingV2' });
+
 import { FileCard } from 'ant-design-x-vue';
 import { Button, Flex, Space } from 'ant-design-vue';
 import { ref } from 'vue';

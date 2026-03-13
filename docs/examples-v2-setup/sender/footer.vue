@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXSenderFooterV2Setup' });
+
 import { Sender } from 'ant-design-x-vue';
 import { Button, Divider, Flex, Switch, theme } from 'ant-design-vue';
 import { ApiOutlined, LinkOutlined, SearchOutlined } from '@ant-design/icons-vue';

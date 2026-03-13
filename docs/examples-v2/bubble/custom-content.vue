@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXBubbleCustomContentV2' });
+
 import { ref } from 'vue';
 import { Bubble } from 'ant-design-x-vue';
 import { Button, Flex, Image } from 'ant-design-vue';

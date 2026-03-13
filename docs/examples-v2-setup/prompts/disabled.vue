@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXPromptsDisabledV2Setup' });
+
 import { CheckCircleOutlined, CoffeeOutlined } from '@ant-design/icons-vue';
 import { Prompts, type PromptsProps } from 'ant-design-x-vue';
 import { h } from 'vue';

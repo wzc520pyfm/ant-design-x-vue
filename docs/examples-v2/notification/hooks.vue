@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXNotificationHooksV2' });
+
 import type { XNotificationOpenArgs } from 'ant-design-x-vue';
 import { notification } from 'ant-design-x-vue';
 import { Button, Flex } from 'ant-design-vue';

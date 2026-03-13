@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXPromptsNestV2Setup' });
+
 import {
   CommentOutlined,
   FireOutlined,

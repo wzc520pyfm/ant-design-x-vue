@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXBubbleLoadingV2' });
+
 import { ref } from 'vue';
 import { Bubble } from 'ant-design-x-vue';
 import { Flex, Switch } from 'ant-design-vue';

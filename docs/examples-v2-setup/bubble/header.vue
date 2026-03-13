@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXBubbleHeaderV2Setup' });
+
 import { UserOutlined } from '@ant-design/icons-vue';
 import { Bubble } from 'ant-design-x-vue';
 </script>

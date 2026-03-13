@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXBubbleEditableV2Setup' });
+
 import { ref } from 'vue';
 import { EditOutlined, UserOutlined } from '@ant-design/icons-vue';
 import { Bubble, Actions } from 'ant-design-x-vue';

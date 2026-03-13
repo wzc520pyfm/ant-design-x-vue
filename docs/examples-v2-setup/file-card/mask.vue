@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXFileCardMaskV2Setup' });
+
 import { FileCard } from 'ant-design-x-vue';
 import { VerticalAlignBottomOutlined } from '@ant-design/icons-vue';
 import { h } from 'vue';

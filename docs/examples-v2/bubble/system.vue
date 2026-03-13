@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXBubbleSystemV2' });
+
 import { Bubble } from 'ant-design-x-vue';
 import { Flex, Space, Typography } from 'ant-design-vue';
 

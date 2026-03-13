@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXBubbleSystemV2Setup' });
+
 import { Bubble } from 'ant-design-x-vue';
 
 const text = `Hello, this is a system message`;

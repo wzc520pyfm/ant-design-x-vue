@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXPromptsFlexWrapFixedV2' });
+
 import {
   BulbOutlined,
   InfoCircleOutlined,

@@ -153,6 +153,14 @@ bubble/list-extra
 
 :::
 
+### 语义化自定义
+
+:::demo-v2 自定义 role 配置，包括自定义 loadingRender。
+
+bubble/semantic-list-custom
+
+:::
+
 ### 列表滚动控制
 
 :::demo-v2 使用 `scrollTo` 方法控制列表滚动。

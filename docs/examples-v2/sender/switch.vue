@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXSenderSwitchV2' });
+
 import { Sender } from 'ant-design-x-vue';
 import { Flex } from 'ant-design-vue';
 import { SearchOutlined } from '@ant-design/icons-vue';

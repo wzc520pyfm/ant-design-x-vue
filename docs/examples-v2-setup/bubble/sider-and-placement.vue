@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXBubbleSiderAndPlacementV2Setup' });
+
 import { CopyOutlined, UserOutlined } from '@ant-design/icons-vue';
 import { Bubble } from 'ant-design-x-vue';
 </script>

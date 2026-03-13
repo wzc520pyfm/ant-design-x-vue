@@ -1,12 +1,23 @@
 <script setup lang="tsx">
-import { AntDesignOutlined, RedoOutlined } from '@ant-design/icons-vue';
+defineOptions({ name: 'AXBubbleBasicV2' });
+
+import { AntDesignOutlined, CopyOutlined, CheckOutlined, RedoOutlined } from '@ant-design/icons-vue';
 import { Bubble, Actions } from 'ant-design-x-vue';
 import { Avatar } from 'ant-design-vue';
+import { ref, h } from 'vue';
+
+const copiedKey = ref('');
 
 const actionItems = (content: string) => [
   {
     key: 'copy',
-    label: 'copy',
+    icon: copiedKey.value === content ? <CheckOutlined /> : <CopyOutlined />,
+    label: 'Copy',
+    onItemClick: () => {
+      navigator.clipboard.writeText(content);
+      copiedKey.value = content;
+      setTimeout(() => { copiedKey.value = ''; }, 2000);
+    },
   },
   {
     key: 'retry',

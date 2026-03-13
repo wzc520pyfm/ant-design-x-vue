@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXNotificationStaticMethodV2' });
+
 import { notification } from 'ant-design-x-vue';
 import { Button, Flex } from 'ant-design-vue';
 import { ref, onMounted } from 'vue';

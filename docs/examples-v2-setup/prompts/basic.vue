@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXPromptsBasicV2Setup' });
+
 import {
   BulbOutlined,
   InfoCircleOutlined,

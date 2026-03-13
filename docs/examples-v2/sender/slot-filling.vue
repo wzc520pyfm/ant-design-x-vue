@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXSenderSlotFillingV2' });
+
 import { Sender } from 'ant-design-x-vue';
 import type { SenderProps } from 'ant-design-x-vue';
 import { Button, Flex, Slider } from 'ant-design-vue';
@@ -112,9 +114,68 @@ defineRender(() => (
         Insert Slot
       </Button>
       <Button onClick={() => {
+        senderRef.value?.insert?.(
+          [{
+            type: 'input',
+            key: `partner_2_${Date.now()}`,
+            props: { placeholder: 'Enter a name' },
+          }],
+          'start',
+        );
+      }}>
+        Insert Slot Start
+      </Button>
+      <Button onClick={() => {
+        senderRef.value?.insert?.(
+          [{
+            type: 'input',
+            key: `partner_3_${Date.now()}`,
+            props: { placeholder: 'Enter a name' },
+          }],
+          'end',
+        );
+      }}>
+        Insert Slot End
+      </Button>
+      <Button onClick={() => {
         slotConfigKey.value = slotConfigKey.value === 'otherSlotConfig' ? 'altSlotConfig' : 'otherSlotConfig';
       }}>
         Change SlotConfig
+      </Button>
+      <Button onClick={() => {
+        senderRef.value!.focus({ cursor: 'start' });
+      }}>
+        Focus at first
+      </Button>
+      <Button onClick={() => {
+        senderRef.value!.focus({ cursor: 'end' });
+      }}>
+        Focus at last
+      </Button>
+      <Button onClick={() => {
+        senderRef.value!.focus({ cursor: 'slot' });
+      }}>
+        Focus at slot
+      </Button>
+      <Button onClick={() => {
+        senderRef.value!.focus({ cursor: 'slot', key: 'numberOfPeople' });
+      }}>
+        Focus at slot with key
+      </Button>
+      <Button onClick={() => {
+        senderRef.value!.focus({ cursor: 'all' });
+      }}>
+        Focus to select all
+      </Button>
+      <Button onClick={() => {
+        senderRef.value!.focus({ preventScroll: true });
+      }}>
+        Focus prevent scroll
+      </Button>
+      <Button onClick={() => {
+        senderRef.value!.blur();
+      }}>
+        Blur
       </Button>
     </Flex>
     <Sender

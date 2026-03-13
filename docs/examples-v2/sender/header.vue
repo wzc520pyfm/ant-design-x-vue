@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'AXSenderHeaderV2' });
+
 import { Sender } from 'ant-design-x-vue';
 import { Button, Flex, Typography, message, theme } from 'ant-design-vue';
 import { CloudUploadOutlined, PaperClipOutlined } from '@ant-design/icons-vue';

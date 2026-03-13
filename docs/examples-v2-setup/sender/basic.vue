@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXSenderBasicV2Setup' });
+
 import { Sender } from 'ant-design-x-vue';
 import { Flex, message } from 'ant-design-vue';
 import { ref, watch } from 'vue';

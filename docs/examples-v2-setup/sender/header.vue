@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXSenderHeaderV2Setup' });
+
 import { Sender, SenderHeader } from 'ant-design-x-vue';
 import { Button, Flex, Typography, message, theme } from 'ant-design-vue';
 import { ref } from 'vue';

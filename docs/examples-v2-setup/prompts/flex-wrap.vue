@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXPromptsFlexWrapV2Setup' });
+
 import {
   BulbOutlined,
   CheckCircleOutlined,

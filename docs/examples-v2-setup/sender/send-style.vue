@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXSenderSendStyleV2Setup' });
+
 import { Sender } from 'ant-design-x-vue';
 import { Flex, Tooltip, message } from 'ant-design-vue';
 import { SendOutlined } from '@ant-design/icons-vue';

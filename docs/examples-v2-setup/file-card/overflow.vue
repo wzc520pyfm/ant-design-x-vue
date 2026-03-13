@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'AXFileCardOverflowV2Setup' });
+
 import { FileCard } from 'ant-design-x-vue';
 import type { FileCardListProps } from 'ant-design-x-vue';
 import { Flex, Segmented } from 'ant-design-vue';
