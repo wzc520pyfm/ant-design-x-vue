@@ -8,10 +8,14 @@ const genSenderHeaderStyle: GenerateStyle<SenderToken> = (token) => {
 
   return {
     [componentCls]: {
+      [`&${headerCls}-rtl`]: {
+        direction: 'rtl',
+      },
       [headerCls]: {
         borderBottomWidth: token.lineWidth,
         borderBottomStyle: 'solid',
-        borderBottomColor: token.colorBorder,
+        borderBottomColor: token.colorBorderInput,
+
         // ======================== Header ========================
         '&-header': {
           background: token.colorFillAlter,
@@ -26,8 +30,8 @@ const genSenderHeaderStyle: GenerateStyle<SenderToken> = (token) => {
             _skip_check_: true,
             value: calc(token.borderRadius).mul(2).equal(),
           },
-          borderBottomRightRadius: 0,
-          borderBottomLeftRadius: 0,
+          borderEndStartRadius: 0,
+          borderEndEndRadius: 0,
 
           [`${headerCls}-title`]: {
             flex: 'auto',

@@ -1,4 +1,4 @@
-import type { ButtonProps, TextAreaProps } from "ant-design-vue";
+import type { ButtonProps, InputProps, TextAreaProps } from "ant-design-vue";
 import { Input } from "ant-design-vue";
 import type { ConfigProviderProps } from "ant-design-vue";
 import type { CSSProperties, VNode } from "vue";
@@ -10,6 +10,8 @@ import LoadingButton from "./components/LoadingButton.vue";
 import SpeechButton from "./components/SpeechButton/index.vue";
 
 export type SubmitType = 'enter' | 'shiftEnter' | false;
+
+export type insertPosition = 'start' | 'end' | 'cursor';
 
 export type KeyboardEventHandler = (e: KeyboardEvent) => void;
 
@@ -32,17 +34,84 @@ export type ActionsComponents = {
   SpeechButton: typeof SpeechButton;
 }
 
-export type ActionsRender = (
-  ori: VNode,
+export type BaseNode = VNode | false;
+export type NodeRender = (
+  oriNode: VNode,
   info: {
     components: ActionsComponents;
   },
-) => VNode;
+) => BaseNode;
 
-export type FooterRender = (info: { components: ActionsComponents }) => VNode;
+interface SlotConfigBaseType {
+  type: 'text' | 'input' | 'select' | 'tag' | 'custom';
+  formatResult?: (value: any) => string;
+}
+
+interface SlotConfigTextType extends SlotConfigBaseType {
+  type: 'text';
+  value: string;
+  key?: string;
+}
+
+interface SlotConfigInputType extends SlotConfigBaseType {
+  type: 'input';
+  key: string;
+  props?: {
+    defaultValue?: InputProps['defaultValue'];
+    placeholder?: string | undefined;
+  };
+}
+
+interface SlotConfigSelectType extends SlotConfigBaseType {
+  type: 'select';
+  key: string;
+  props?: {
+    defaultValue?: string;
+    options: string[];
+    placeholder?: string | undefined;
+  };
+}
+
+interface SlotConfigTagType extends SlotConfigBaseType {
+  type: 'tag';
+  key: string;
+  props?: {
+    label: VNode;
+    value?: string;
+  };
+}
+
+interface SlotConfigCustomType extends SlotConfigBaseType {
+  type: 'custom';
+  key: string;
+  props?: {
+    defaultValue?: any;
+    [key: string]: any;
+  };
+  customRender?: (
+    value: any,
+    onChange: (value: any) => void,
+    props: {
+      disabled?: boolean;
+      readOnly?: boolean;
+    },
+    item: SlotConfigType,
+  ) => VNode;
+}
+
+export type SlotConfigType =
+  | SlotConfigTextType
+  | SlotConfigInputType
+  | SlotConfigSelectType
+  | SlotConfigTagType
+  | SlotConfigCustomType;
+
+export type EventType = Event;
+
+type SemanticType = 'root' | 'prefix' | 'input' | 'suffix' | 'footer' | 'switch' | 'content';
 
 export interface SenderProps {
-  onKeyPress?: KeyboardEventHandler;
+  onKeyUp?: KeyboardEventHandler;
   onFocus?: TextAreaProps['onFocus'];
   onBlur?: TextAreaProps['onBlur'];
 
@@ -54,55 +123,75 @@ export interface SenderProps {
   readOnly?: boolean;
   submitType?: SubmitType;
   disabled?: boolean;
-  sendDisabled?: boolean;
-  onSubmit?: (message: string) => void;
+  slotConfig?: Readonly<SlotConfigType[]>;
+  onSubmit?: (message: string, slotConfig?: SlotConfigType[]) => void;
   onChange?: (
     value: string,
-    event?: ChangeEvent,
-    // event?: FormEvent | ChangeEvent,
+    event?: EventType,
+    slotConfig?: SlotConfigType[],
   ) => void;
   onCancel?: VoidFunction;
   onKeyDown?: KeyboardEventHandler;
   onPaste?: ClipboardEventHandler;
-  onPasteFile?: (firstFile: File, files: FileList) => void;
+  onPasteFile?: (files: FileList) => void;
   components?: SenderComponents;
-  styles?: {
-    prefix?: CSSProperties;
-    input?: CSSProperties;
-    actions?: CSSProperties;
-    footer?: CSSProperties;
-  };
+  classNames?: Partial<Record<SemanticType, string>>;
+  styles?: Partial<Record<SemanticType, CSSProperties>>;
   rootClassName?: string;
-  classNames?: {
-    prefix?: string;
-    input?: string;
-    actions?: string;
-    footer?: string;
-  };
   style?: CSSProperties;
   className?: string;
-  actions?: VNode | ActionsRender | false;
   allowSpeech?: AvoidValidation<AllowSpeech>;
-  prefix?: VNode | (() => VNode);
-  footer?: VNode | FooterRender;
-  header?: VNode | (() => VNode);
+  prefix?: BaseNode | NodeRender;
+  footer?: BaseNode | NodeRender;
+  suffix?: BaseNode | NodeRender;
+  header?: BaseNode | NodeRender;
+  /** @deprecated Use `suffix` instead */
+  actions?: VNode | ((oriNode: VNode, info: { components: ActionsComponents }) => VNode) | false;
+  /** @deprecated */
+  sendDisabled?: boolean;
   autoSize?: AvoidValidation<boolean | { minRows?: number; maxRows?: number }>;
 }
 
 export interface InputFocusOptions extends FocusOptions {
   cursor?: 'start' | 'end' | 'all';
 }
-export type SenderRef = {
-  nativeElement: HTMLDivElement;
+
+export type TextAreaRef = {
+  nativeElement: HTMLTextAreaElement;
   focus: (options?: InputFocusOptions) => void;
   blur: () => void;
+  insert: (value: string, position?: insertPosition) => void;
+  clear: () => void;
+  getValue: () => { value: string; config: any[] };
 };
+
+export type SlotTextAreaRef = {
+  focus: (options?: FocusOptions) => void;
+  blur: () => void;
+  nativeElement: HTMLDivElement;
+  insert: (
+    slotConfig: SlotConfigType[],
+    position?: insertPosition,
+    replaceCharacters?: string,
+  ) => void;
+  clear: () => void;
+  getValue: () => {
+    value: string;
+    config: SlotConfigType[];
+  };
+};
+
+export type SenderRef = Omit<TextAreaRef, 'nativeElement'> &
+  Omit<SlotTextAreaRef, 'nativeElement'> & {
+    inputElement: TextAreaRef['nativeElement'] | SlotTextAreaRef['nativeElement'];
+    nativeElement: HTMLDivElement;
+  };
 
 export interface SenderHeaderContextProps {
   prefixCls?: ConfigProviderProps['prefixCls'];
 }
 
-export type SemanticType = 'header' | 'content';
+export type SenderHeaderSemanticType = 'header' | 'content';
 
 export interface SenderHeaderProps {
   forceRender?: boolean;
@@ -112,16 +201,13 @@ export interface SenderHeaderProps {
   children?: VNode;
   className?: string;
   style?: CSSProperties;
-  classNames?: Partial<Record<SemanticType, string>>;
-  styles?: Partial<Record<SemanticType, CSSProperties>>;
+  classNames?: Partial<Record<SenderHeaderSemanticType, string>>;
+  styles?: Partial<Record<SenderHeaderSemanticType, CSSProperties>>;
   closable?: boolean;
 }
 
 export interface RecordingIconProps {
   className?: string;
-  audioIcon?: ButtonProps['icon'];
-  audioDisabledIcon?: ButtonProps['icon'];
-  audioRecordingIcon?: ButtonProps['icon'];
 }
 
 export interface ActionButtonContextProps {
@@ -138,7 +224,6 @@ export interface ActionButtonContextProps {
   disabled?: boolean;
 }
 
-// refer from the ButtonProps of ant-design-vue
 export interface AntdButtonProps {
   prefixCls?: ButtonProps['prefixCls'];
   type?: ButtonProps['type'];
@@ -156,11 +241,27 @@ export interface AntdButtonProps {
   title?: ButtonProps['title'];
   onClick?: ButtonProps['onClick'];
   onMousedown?: ButtonProps['onMousedown'];
-  audioIcon?: ButtonProps['icon'] | VNode;
-  audioDisabledIcon?: ButtonProps['icon'] | VNode
-  audioRecordingIcon?: ButtonProps['icon'] | VNode;
 }
 
 export interface ActionButtonProps extends AntdButtonProps {
   action: 'onSend' | 'onClear' | 'onCancel' | 'onSpeech';
+}
+
+export type SenderSwitchSemanticType = 'root' | 'content' | 'icon' | 'title';
+
+export interface SenderSwitchProps {
+  prefixCls?: string;
+  rootClassName?: string;
+  className?: string;
+  style?: CSSProperties;
+  checkedChildren?: VNode;
+  unCheckedChildren?: VNode;
+  value?: boolean;
+  defaultValue?: boolean;
+  icon?: VNode;
+  loading?: boolean;
+  disabled?: boolean;
+  onChange?: (checked: boolean) => void;
+  classNames?: Partial<Record<SenderSwitchSemanticType, string>>;
+  styles?: Partial<Record<SenderSwitchSemanticType, CSSProperties>>;
 }

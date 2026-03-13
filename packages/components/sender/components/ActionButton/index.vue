@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { Button } from 'ant-design-vue';
-import { useActionButtonContextInject } from './context'
+import { useActionButtonContextInject } from './context';
 import classNames from 'classnames';
 import type { ActionButtonProps } from '../../interface';
 import { computed } from 'vue';
@@ -16,10 +16,10 @@ const {
 } = defineProps<ActionButtonProps>();
 
 const slots = defineSlots<{
-  default(): any
+  default(): any;
 }>();
 
-const context = useActionButtonContextInject()
+const context = useActionButtonContextInject();
 
 const mergedDisabled = computed(() => {
   const rootDisabled = context.value.disabled;
@@ -27,9 +27,7 @@ const mergedDisabled = computed(() => {
   return propDisable ?? rootDisabled ?? actionDisable;
 });
 
-const prefixCls = computed(() => {
-  return context.value.prefixCls
-});
+const prefixCls = computed(() => context.value.prefixCls);
 
 defineRender(() => {
   return (
@@ -45,12 +43,13 @@ defineRender(() => {
           onClick(e);
         }
       }}
+      disabled={mergedDisabled.value}
       class={classNames(prefixCls.value, {
         [`${prefixCls.value}-disabled`]: mergedDisabled.value,
       })}
     >
-      {{ icon: () => slots.default() }}
+      {{ icon: () => slots.default?.() }}
     </Button>
   );
-})
+});
 </script>

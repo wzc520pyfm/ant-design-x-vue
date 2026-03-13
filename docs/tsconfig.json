@@ -16,6 +16,7 @@
     "paths": {
       "ant-design-x-vue": ["../packages/components"],
       "ant-design-x-vue/*": ["../packages/components/*"],
+      "ant-design-x-vue/es/*": ["../packages/components/*"],
       "@ant-design-x-vue/components": ["../packages/components"],
       "@ant-design-x-vue/components/*": ["../packages/components/*"],
       "~/*": ["./.vitepress/vitepress/*"]

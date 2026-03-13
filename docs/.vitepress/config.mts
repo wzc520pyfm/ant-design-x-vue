@@ -124,6 +124,7 @@ export default defineConfig({
           text: '表达',
           items: [
             { text: 'Sender 输入框', link: '/component/sender' },
+            { text: 'Sender 输入框 (v2)', link: '/component/sender-v2' },
             { text: 'Attachments 输入附件', link: '/component/attachments' },
             { text: 'Suggestion 快捷指令', link: '/component/suggestion' },
             { text: 'FileCard 文件卡片 (v2)', link: '/component/file-card-v2' }

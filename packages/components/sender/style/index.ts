@@ -1,82 +1,53 @@
 import { unit } from '../../_util/cssinjs';
 import { mergeToken } from '../../_util/cssinjs-utils';
+import { FastColor } from '@ant-design/fast-color';
 import type {
   FullToken,
   GenerateStyle,
   GetDefaultToken,
 } from '../../theme/cssinjs-utils';
 import { genStyleHooks } from '../../theme/genStyleUtils';
-import { genTransitionCollapseStyle } from '../../transition-collapse';
 import genSenderHeaderStyle from './header';
+import genSenderSwitchStyle from './switch';
+import genSlotTextAreaStyle from './slot-textarea';
 
-// biome-ignore lint/suspicious/noEmptyInterface: ComponentToken need to be empty by default
-export interface ComponentToken {}
+export interface ComponentToken {
+  colorBgSlot: string;
+  colorTextSlot: string;
+  colorTextSlotPlaceholder: string;
+  colorBorderSlot: string;
+  colorBorderSlotHover: string;
+  switchCheckedBg: string;
+  switchCheckedHoverBg: string;
+  switchUncheckedHoverBg: string;
+  colorBorderInput: string;
+}
 
 export interface SenderToken extends FullToken<'Sender'> {
   SenderContentMaxWidth: number | string;
 }
 
 const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
-  const {
-    componentCls,
-    padding,
-    paddingSM,
-    paddingXS,
-    paddingXXS,
-    lineWidth,
-    lineWidthBold,
-    calc,
-  } = token;
+  const { componentCls, paddingSM, paddingXS, paddingXXS, lineWidth, calc } = token;
 
   return {
-    [componentCls]: {
+    [`${componentCls}:not(${componentCls}-switch):not(${componentCls}-header)`]: {
       position: 'relative',
       width: '100%',
-
       boxSizing: 'border-box',
       boxShadow: `${token.boxShadowTertiary}`,
-      transition: `background ${token.motionDurationSlow}`,
-
-      // Border
       borderRadius: {
         _skip_check_: true,
         value: calc(token.borderRadius).mul(2).equal(),
       },
-      borderColor: token.colorBorder,
-      borderWidth: 0,
+
+      borderColor: token.colorBorderInput,
+      borderWidth: lineWidth,
       borderStyle: 'solid',
-
-      // Border
-      '&:after': {
-        content: '""',
-        position: 'absolute',
-        inset: 0,
-        pointerEvents: 'none',
-        transition: `border-color ${token.motionDurationSlow}`,
-
-        borderRadius: {
-          _skip_check_: true,
-          value: 'inherit',
-        },
-        borderStyle: 'inherit',
-        borderColor: 'inherit',
-        borderWidth: lineWidth,
-      },
-
-      // Focus
-      '&:focus-within': {
-        boxShadow: `${token.boxShadowSecondary}`,
-        borderColor: token.colorPrimary,
-
-        '&:after': {
-          borderWidth: lineWidthBold,
-        },
-      },
 
       '&-disabled': {
         background: token.colorBgContainerDisabled,
       },
-
       // ============================== RTL ==============================
       [`&${componentCls}-rtl`]: {
         direction: 'rtl',
@@ -87,14 +58,12 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
         display: 'flex',
         gap: paddingXS,
         width: '100%',
-
         paddingBlock: paddingSM,
-        paddingInlineStart: padding,
+        paddingInlineStart: paddingSM,
         paddingInlineEnd: paddingSM,
         boxSizing: 'border-box',
         alignItems: 'flex-end',
       },
-
       // ============================ Prefix =============================
       [`${componentCls}-prefix`]: {
         flex: 'none',
@@ -107,6 +76,7 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
         flex: 'auto',
         alignSelf: 'center',
         minHeight: 'auto',
+        caretColor: token.colorPrimary,
       },
 
       // ============================ Actions ============================
@@ -121,7 +91,9 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
 
       [`${componentCls}-actions-btn`]: {
         '&-disabled': {
+          background: token.colorPrimary,
           opacity: 0.45,
+          color: token.colorTextLightSolid,
         },
 
         '&-loading-button': {
@@ -143,7 +115,7 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
 
       // ============================ Footer =============================
       [`${componentCls}-footer`]: {
-        paddingInlineStart: padding,
+        paddingInlineStart: paddingSM,
         paddingInlineEnd: paddingSM,
         paddingBlockEnd: paddingSM,
         paddingBlockStart: paddingXXS,
@@ -153,7 +125,32 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
   };
 };
 
-export const prepareComponentToken: GetDefaultToken<'Sender'> = () => ({});
+export const prepareComponentToken: GetDefaultToken<'Sender'> = (token) => {
+  const { colorPrimary, colorFillTertiary } = token;
+
+  const colorBgSlot = new FastColor(colorPrimary).setA(0.06).toRgbString();
+  const colorTextSlot = colorPrimary;
+  const colorTextSlotPlaceholder = new FastColor(colorPrimary).setA(0.25).toRgbString();
+  const colorBorderSlotHover = new FastColor(colorPrimary).setA(0.1).toRgbString();
+  const colorBorderSlot = colorBgSlot;
+  const switchCheckedBg = new FastColor(colorPrimary).setA(0.08).toRgbString();
+
+  const switchUncheckedHoverBg = new FastColor(colorFillTertiary).setA(0.04).toRgbString();
+  const switchCheckedHoverBg = new FastColor(colorPrimary).setA(0.1).toRgbString();
+  const colorBorderInput = new FastColor(colorFillTertiary).setA(0.1).toRgbString();
+
+  return {
+    colorBgSlot,
+    colorTextSlot,
+    colorTextSlotPlaceholder,
+    colorBorderSlotHover,
+    colorBorderSlot,
+    switchCheckedBg,
+    switchCheckedHoverBg,
+    switchUncheckedHoverBg,
+    colorBorderInput,
+  };
+};
 
 export default genStyleHooks<'Sender'>(
   'Sender',
@@ -167,7 +164,8 @@ export default genStyleHooks<'Sender'>(
     return [
       genSenderStyle(SenderToken),
       genSenderHeaderStyle(SenderToken),
-      genTransitionCollapseStyle(SenderToken),
+      genSenderSwitchStyle(SenderToken),
+      genSlotTextAreaStyle(SenderToken),
     ];
   },
   prepareComponentToken,

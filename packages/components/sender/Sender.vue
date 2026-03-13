@@ -1,39 +1,37 @@
 <script setup lang="tsx">
-import { Flex, Input } from 'ant-design-vue';
+import { Flex } from 'ant-design-vue';
 import classnames from 'classnames';
 import pickAttrs from '../_util/pick-attrs';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
-import SenderHeaderContextProvider from './context';
+import { SenderHeaderContextProvider, SenderContextProvider } from './context';
 import ActionButtonContextProvider from './components/ActionButton/context';
 import ClearButton from './components/ClearButton.vue';
 import LoadingButton from './components/LoadingButton.vue';
 import SendButton from './components/SendButton.vue';
 import SpeechButton from './components/SpeechButton/index.vue';
+import TextArea from './TextArea.vue';
+import SlotTextArea from './SlotTextArea.vue';
 import useStyle from './style';
 import useSpeech from './useSpeech';
-import type { SenderComponents, SenderProps } from './interface';
+import type {
+  ActionsComponents,
+  BaseNode,
+  SenderProps,
+  SenderRef,
+  SlotTextAreaRef,
+} from './interface';
 import { computed, ref, watch, type VNode } from 'vue';
-import getValue from '../_util/getValue';
-import type { ChangeEvent, ClipboardEventHandler, MouseEventHandler } from "ant-design-vue/es/_util/EventInterface";;
 
-function getComponent<T>(
-  components: SenderComponents | undefined,
-  path: string[],
-  defaultComponent: typeof Input.TextArea,
-): typeof Input.TextArea {
-  return getValue(components, path) || defaultComponent;
-}
+defineOptions({ name: 'AXSender' });
 
 /** Used for actions render needed components */
-const sharedRenderComponents = {
+const sharedRenderComponents: ActionsComponents = {
   SendButton,
   ClearButton,
   LoadingButton,
   SpeechButton,
 };
-
-defineOptions({ name: 'AXSender' });
 
 const {
   prefixCls: customizePrefixCls,
@@ -48,13 +46,14 @@ const {
   readOnly,
   submitType = 'enter',
   onSubmit,
-  sendDisabled,
   loading,
   components,
   onCancel,
   onChange,
-  actions = undefined,
-  onKeyPress,
+  suffix,
+  actions,
+  sendDisabled,
+  onKeyUp,
   onKeyDown,
   disabled = undefined,
   allowSpeech,
@@ -64,6 +63,9 @@ const {
   onPaste,
   onPasteFile,
   autoSize = { maxRows: 8 },
+  slotConfig,
+  onFocus,
+  onBlur,
   ...rest
 } = defineProps<SenderProps>();
 
@@ -74,38 +76,36 @@ const emit = defineEmits<{
 const slots = defineSlots<{
   header?(): VNode;
   prefix?(): VNode;
-  actions?(props: {
-    ori: VNode,
+  suffix?(props: {
+    ori: VNode;
     info: {
-      components: {
-        SendButton: typeof SendButton;
-        ClearButton: typeof ClearButton;
-        LoadingButton: typeof LoadingButton;
-        SpeechButton: typeof SpeechButton;
-      };
-    }
+      components: ActionsComponents;
+    };
+  }): VNode;
+  /** @deprecated Use suffix slot instead */
+  actions?(props: {
+    ori: VNode;
+    info: {
+      components: ActionsComponents;
+    };
   }): VNode;
   footer?(props: {
+    ori: VNode;
     info: {
-      components: {
-        SendButton: typeof SendButton;
-        ClearButton: typeof ClearButton;
-        LoadingButton: typeof LoadingButton;
-        SpeechButton: typeof SpeechButton;
-      };
-    }
+      components: ActionsComponents;
+    };
   }): VNode;
 }>();
 
+const isSlotMode = computed(() => Array.isArray(slotConfig));
+
 // ============================= MISC =============================
 const { direction, getPrefixCls } = useXProviderContext();
-const prefixCls = computed(() => {
-  return getPrefixCls('sender', customizePrefixCls)
-});
+const prefixCls = computed(() => getPrefixCls('sender', customizePrefixCls));
 
 // ============================= Refs =============================
 const containerRef = ref<HTMLDivElement | null>(null);
-const inputRef = ref<InstanceType<typeof Input.TextArea> | null>(null);
+const inputRef = ref<any>(null);
 
 // ======================= Component Config =======================
 const contextConfig = useXComponentConfig('sender');
@@ -113,20 +113,22 @@ const inputCls = computed(() => `${prefixCls.value}-input`);
 
 // ============================ Styles ============================
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls.value);
-const mergedCls = computed(() => {
-  return classnames(
+const mergedCls = computed(() =>
+  classnames(
     prefixCls.value,
     contextConfig.value.className,
     className,
     rootClassName,
+    contextConfig.value.classNames?.root,
+    classNames.root,
     hashId.value,
     cssVarCls,
     {
       [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
       [`${prefixCls.value}-disabled`]: disabled,
     },
-  );
-})
+  ),
+);
 
 const actionBtnCls = computed(() => `${prefixCls.value}-actions-btn`);
 const actionListCls = computed(() => `${prefixCls.value}-actions-list`);
@@ -135,14 +137,27 @@ const actionListCls = computed(() => `${prefixCls.value}-actions-list`);
 const innerValue = ref(value ?? defaultValue ?? '');
 const setInnerValue = (v: string) => {
   innerValue.value = v;
-}
-watch(() => value, () => {
-  setInnerValue(value);
-});
+};
+watch(
+  () => value,
+  () => {
+    if (value !== undefined) {
+      setInnerValue(value);
+    }
+  },
+);
 
-const triggerValueChange: SenderProps['onChange'] = (nextValue, event) => {
+const triggerValueChange: SenderProps['onChange'] = (nextValue, event, slotConfigData) => {
+  if (slotConfigData) {
+    setInnerValue(nextValue);
+    emit('update:value', nextValue);
+    if (onChange) {
+      onChange(nextValue, event, slotConfigData);
+    }
+    return;
+  }
+
   setInnerValue(nextValue);
-
   emit('update:value', nextValue);
   if (onChange) {
     onChange(nextValue, event);
@@ -150,142 +165,108 @@ const triggerValueChange: SenderProps['onChange'] = (nextValue, event) => {
 };
 
 // ============================ Speech ============================
-const { speechPermission, triggerSpeech, recording: speechRecording } = useSpeech((transcript) => {
-  triggerValueChange(`${innerValue.value} ${transcript}`);
-}, () => allowSpeech);
-
-// ========================== Components ==========================
-const InputTextArea = getComponent(components, ['input'], Input.TextArea);
-
-const domProps = computed(() => pickAttrs(rest, {
-  attr: true,
-  aria: true,
-  data: true,
-}))
-
-const inputProps = computed(() => {
-  return {
-    ...domProps.value,
-    ref: inputRef,
-  };
-})
+const { speechPermission, triggerSpeech, recording: speechRecording } = useSpeech(
+  (transcript) => {
+    if (isSlotMode.value) {
+      (inputRef.value as SlotTextAreaRef)?.insert?.([
+        {
+          type: 'text',
+          value: transcript,
+        },
+      ]);
+    } else {
+      triggerValueChange(`${innerValue.value} ${transcript}`);
+    }
+  },
+  () => allowSpeech,
+);
 
 // ============================ Events ============================
 const triggerSend = () => {
-  const shouldSend = sendDisabled !== undefined 
-    ? !sendDisabled 
+  const shouldSend = sendDisabled !== undefined
+    ? !sendDisabled
     : !!(innerValue.value && !loading);
-  const isSend = shouldSend && !!onSubmit;
-  if (isSend) {
+  if (shouldSend && onSubmit) {
     onSubmit(innerValue.value);
   }
 };
 
 const triggerClear = () => {
   triggerValueChange('');
-};
-
-// ============================ Submit ============================
-const isCompositionRef = ref(false);
-
-const onInternalCompositionStart = () => {
-  isCompositionRef.value = true;
-};
-
-const onInternalCompositionEnd = () => {
-  isCompositionRef.value = false;
-};
-
-const onInternalKeyPress: SenderProps['onKeyPress'] = (e) => {
-  const canSubmit = e.key === 'Enter' && !isCompositionRef.value;
-
-  // Check for `submitType` to submit
-  switch (submitType) {
-    case 'enter':
-      if (canSubmit && !e.shiftKey) {
-        e.preventDefault();
-        triggerSend();
-      }
-      break;
-
-    case 'shiftEnter':
-      if (canSubmit && e.shiftKey) {
-        e.preventDefault();
-        triggerSend();
-      }
-      break;
+  if (isSlotMode.value) {
+    (inputRef.value as SlotTextAreaRef)?.clear?.();
   }
-
-  if (onKeyPress) {
-    onKeyPress(e);
-  }
-};
-
-// ============================ Paste =============================
-const onInternalPaste: ClipboardEventHandler = (e) => {
-  // Get files
-  const files = e.clipboardData?.files;
-  if (files?.length && onPasteFile) {
-    onPasteFile(files[0], files);
-    e.preventDefault();
-  }
-
-  onPaste?.(e);
-};
-
-// ============================ Focus =============================
-const onContentMouseDown: MouseEventHandler = (e) => {
-  // If input focused but click on the container,
-  // input will lose focus.
-  // We call `preventDefault` to prevent this behavior
-  if (e.target !== containerRef.value?.querySelector(`.${inputCls.value}`)) {
-    e.preventDefault();
-  }
-
-  // @ts-expect-error
-  inputRef.value?.focus();
 };
 
 // ============================ Action ============================
-const actionNode = computed(() => {
-  let _actionNode: VNode | false = (
-    <Flex class={`${actionListCls.value}-presets`}>
-      {allowSpeech && (
-        <SpeechButton
-          {...(typeof allowSpeech === 'object' ? 
-            { 
-              audioIcon: allowSpeech.audioIcon, 
-              audioDisabledIcon: allowSpeech.audioDisabledIcon, 
-              audioRecordingIcon: allowSpeech.audioRecordingIcon 
-            } : {}
-          )}
-        />
-      )}
-      {/* Loading or Send */}
-      {loading ? <LoadingButton /> : <SendButton />}
-    </Flex>
-  );
+const actionNode = computed((): VNode => (
+  <Flex class={`${actionListCls.value}-presets`}>
+    {allowSpeech && <SpeechButton />}
+    {loading ? <LoadingButton /> : <SendButton />}
+  </Flex>
+));
 
-  const info = {
-    components: sharedRenderComponents,
-  }
+// ============================ Suffix ============================
+const suffixNode = computed(() => {
+  let node: BaseNode = actionNode.value;
+  const info = { components: sharedRenderComponents };
 
-  // Custom actions
-  if (slots.actions) {
-    _actionNode = slots.actions({ ori: _actionNode, info });
+  if (slots.suffix) {
+    node = slots.suffix({ ori: actionNode.value, info });
+  } else if (typeof suffix === 'function') {
+    node = suffix(actionNode.value, info);
+  } else if (suffix || suffix === false) {
+    node = suffix;
+  } else if (slots.actions) {
+    node = slots.actions({ ori: actionNode.value, info });
   } else if (typeof actions === 'function') {
-    _actionNode = actions(_actionNode, info);
+    node = actions(actionNode.value, info);
   } else if (actions || actions === false) {
-    _actionNode = actions;
+    node = actions;
   }
-  return _actionNode;
+
+  return node;
+});
+
+// ============================ Prefix ============================
+const prefixNode = computed(() => {
+  if (slots.prefix) {
+    return slots.prefix();
+  }
+  return typeof prefix === 'function'
+    ? prefix(actionNode.value, { components: sharedRenderComponents })
+    : prefix || null;
+});
+
+// ============================ Header ============================
+const headerNode = computed(() => {
+  if (slots.header) {
+    return slots.header();
+  }
+  return typeof header === 'function'
+    ? header(actionNode.value, { components: sharedRenderComponents })
+    : header || null;
+});
+
+// ============================ Footer ============================
+const footerNode = computed(() => {
+  if (slots.footer) {
+    return slots.footer({ ori: actionNode.value, info: { components: sharedRenderComponents } });
+  }
+  if (typeof footer === 'function') {
+    if (footer.length <= 1) {
+      return (footer as any)({ components: sharedRenderComponents });
+    }
+    return footer(actionNode.value, { components: sharedRenderComponents });
+  }
+  return footer || null;
 });
 
 // Custom actions context props
 const actionsButtonContextProps = computed(() => ({
   prefixCls: actionBtnCls.value,
   onSend: triggerSend,
-  onSendDisabled: sendDisabled!==undefined? sendDisabled : !innerValue.value,
+  onSendDisabled: sendDisabled !== undefined ? sendDisabled : !innerValue.value,
   onClear: triggerClear,
   onClearDisabled: !innerValue.value,
   onCancel,
@@ -296,127 +277,146 @@ const actionsButtonContextProps = computed(() => ({
   disabled,
 }));
 
-// ============================ Footer ============================
-const footerNode = computed(() => {
-  let _footerNode: VNode = null;
+// ============================ Context ============================
+const domProps = computed(() =>
+  pickAttrs(rest, {
+    attr: true,
+    aria: true,
+    data: true,
+  }),
+);
 
-  const info = {
-    components: sharedRenderComponents,
-  }
+const contextValue = computed<SenderProps>(() => ({
+  value: innerValue.value,
+  onChange: triggerValueChange,
+  slotConfig,
+  onKeyUp,
+  onKeyDown,
+  onPaste,
+  onPasteFile,
+  disabled,
+  readOnly,
+  submitType,
+  prefixCls: prefixCls.value,
+  styles,
+  classNames,
+  autoSize,
+  components,
+  onSubmit,
+  placeholder,
+  onFocus,
+  onBlur,
+  ...rest,
+}));
 
-  if (slots.footer) {
-    _footerNode = slots.footer({ info });
-  } else if (typeof footer === 'function') {
-    _footerNode = footer({
-      components: sharedRenderComponents,
-    });
-  } else if (footer) {
-    _footerNode = footer;
+// ============================ Focus =============================
+const onContentMouseDown = (e: MouseEvent) => {
+  if (
+    !isSlotMode.value &&
+    e.target !== containerRef.value?.querySelector(`.${inputCls.value}`)
+  ) {
+    e.preventDefault();
   }
-  return _footerNode;
-});
+  if (e.target === containerRef.value?.querySelector(`.${inputCls.value}`)) {
+    inputRef.value?.focus();
+  }
+};
 
-const headerComp = computed(() => {
-  if (slots.header) {
-    return slots.header();
-  }
-  return typeof header === 'function' ? header() : header;
-});
-
-const prefixComp = computed(() => {
-  if (slots.prefix) {
-    return slots.prefix();
-  }
-  return typeof prefix === 'function' ? prefix() : prefix;
+defineExpose<SenderRef>({
+  nativeElement: containerRef.value!,
+  inputElement: inputRef.value?.nativeElement,
+  focus: (opt: any) => inputRef.value?.focus(opt),
+  blur: () => inputRef.value?.blur(),
+  insert: (...args: any[]) => inputRef.value?.insert?.(...args),
+  clear: () => inputRef.value?.clear?.(),
+  getValue: () => inputRef.value?.getValue?.(),
 });
 
 defineRender(() => {
   return wrapCSSVar(
-    <div ref={containerRef} class={mergedCls.value} style={{ ...contextConfig.value.style, ...style }}>
-      {/* Header */}
-      {headerComp.value && (
-        <SenderHeaderContextProvider value={{ prefixCls: prefixCls.value }}>{headerComp.value}</SenderHeaderContextProvider>
-      )}
-      <ActionButtonContextProvider value={actionsButtonContextProps.value}>
+    <div
+      ref={containerRef}
+      class={mergedCls.value}
+      style={{
+        ...contextConfig.value.style,
+        ...style,
+        ...contextConfig.value.styles?.root,
+        ...styles.root,
+      }}
+      {...domProps.value}
+    >
+      <SenderContextProvider value={contextValue.value}>
+        <ActionButtonContextProvider value={actionsButtonContextProps.value}>
+          {/* Header */}
+          {headerNode.value && (
+            <SenderHeaderContextProvider value={{ prefixCls: prefixCls.value }}>
+              {headerNode.value}
+            </SenderHeaderContextProvider>
+          )}
+          <div
+            class={classnames(`${prefixCls.value}-content`, classNames.content)}
+            style={styles.content}
+            onMousedown={onContentMouseDown}
+          >
+            {/* Prefix */}
+            {prefixNode.value && (
+              <div
+                class={classnames(
+                  `${prefixCls.value}-prefix`,
+                  contextConfig.value.classNames?.prefix,
+                  classNames.prefix,
+                )}
+                style={{
+                  ...contextConfig.value.styles?.prefix,
+                  ...styles.prefix,
+                }}
+              >
+                {prefixNode.value}
+              </div>
+            )}
 
-        <div class={`${prefixCls.value}-content`} onMousedown={onContentMouseDown}>
-          {/* Prefix */}
-          {prefixComp.value && (
+            {/* Input */}
+            {isSlotMode.value ? (
+              <SlotTextArea ref={inputRef} />
+            ) : (
+              <TextArea ref={inputRef} />
+            )}
+
+            {/* Action List */}
+            {suffixNode.value && (
+              <div
+                class={classnames(
+                  actionListCls.value,
+                  contextConfig.value.classNames?.suffix,
+                  classNames.suffix,
+                )}
+                style={{
+                  ...contextConfig.value.styles?.suffix,
+                  ...styles.suffix,
+                }}
+              >
+                {suffixNode.value}
+              </div>
+            )}
+          </div>
+          {footerNode.value && (
             <div
               class={classnames(
-                `${prefixCls.value}-prefix`,
-                contextConfig.value.classNames.prefix,
-                classNames.prefix,
+                `${prefixCls.value}-footer`,
+                contextConfig.value.classNames?.footer,
+                classNames.footer,
               )}
-              style={{ ...contextConfig.value.styles.prefix, ...styles.prefix }}
+              style={{
+                ...contextConfig.value.styles?.footer,
+                ...styles.footer,
+              }}
             >
-              {prefixComp.value}
+              {footerNode.value}
             </div>
           )}
-
-          {/* Input */}
-          <InputTextArea
-            {...inputProps.value}
-            disabled={disabled}
-            style={{ ...contextConfig.value.styles.input, ...styles.input }}
-            class={classnames(inputCls.value, contextConfig.value.classNames.input, classNames.input)}
-            autoSize={autoSize}
-            value={innerValue.value}
-            onChange={(event: Event) => {
-              triggerValueChange(
-                (event.target as HTMLTextAreaElement).value,
-                event as ChangeEvent,
-              );
-              triggerSpeech(true);
-            }}
-            onPressEnter={onInternalKeyPress}
-            onCompositionstart={onInternalCompositionStart}
-            onCompositionend={onInternalCompositionEnd}
-            onKeydown={onKeyDown}
-            placeholder={placeholder}
-            // @ts-expect-error
-            onPaste={onInternalPaste}
-            bordered={false}
-            readOnly={readOnly}
-          />
-
-          {/* Action List */}
-          {actionNode.value && (<div
-            class={classnames(
-              actionListCls.value,
-              contextConfig.value.classNames.actions,
-              classNames.actions,
-            )}
-            style={{ ...contextConfig.value.styles.actions, ...styles.actions }}
-          >
-            {actionNode.value}
-          </div>)}
-        </div>
-        {footerNode.value && (
-          <div
-            class={classnames(
-              `${prefixCls.value}-footer`,
-              contextConfig.value.classNames.footer,
-              classNames.footer,
-            )}
-            style={{
-              ...contextConfig.value.styles.footer,
-              ...styles.footer,
-            }}
-          >
-            {footerNode.value}
-          </div>
-        )}
-      </ActionButtonContextProvider>
+        </ActionButtonContextProvider>
+      </SenderContextProvider>
     </div>,
   );
-});
-
-defineExpose({
-  nativeElement: containerRef.value,
-  // @ts-expect-error
-  focus: (opt: any) => inputRef.value?.focus(opt),
-  // @ts-expect-error
-  blur: () => inputRef.value?.blur(),
 });
 </script>
