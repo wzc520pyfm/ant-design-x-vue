@@ -37,7 +37,14 @@ export interface PromptProps extends BasePromptItem {
   children?: BasePromptItem[];
 }
 
-export type SemanticType = 'list' | 'item' | 'itemContent' | 'title' | 'subList' | 'subItem';
+export type SemanticType =
+  | 'root'
+  | 'list'
+  | 'item'
+  | 'itemContent'
+  | 'title'
+  | 'subList'
+  | 'subItem';
 
 export interface PromptsProps
   extends Omit<HTMLAttributes, 'onClick' | 'title'> {
@@ -94,4 +101,16 @@ export interface PromptsProps
    * @descEN Style class name for the root node.
    */
   rootClassName?: string;
+
+  /**
+   * @desc 是否开启渲染渐入
+   * @descEN Whether to enable fade-in rendering.
+   */
+  fadeIn?: boolean;
+
+  /**
+   * @desc 是否开启渲染从左到右渐入
+   * @descEN Whether to enable fade-in rendering from left to right.
+   */
+  fadeInLeft?: boolean;
 }

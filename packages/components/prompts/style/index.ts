@@ -2,6 +2,7 @@ import { genStyleHooks } from "../../theme/genStyleUtils";
 import { unit } from "../../_util/cssinjs";
 import type { FullToken, GenerateStyle, GetDefaultToken } from "../../theme/cssinjs-utils";
 import { mergeToken } from "../../_util/cssinjs-utils";
+import { initFadeLeftMotion, initFadeMotion } from '../../style';
 
 export interface ComponentToken {}
 
@@ -165,7 +166,12 @@ export default genStyleHooks(
   'Prompts',
   (token) => {
     const compToken = mergeToken<PromptsToken>(token, {});
-    return [genPromptsStyle(compToken), genNestStyle(compToken)];
+    return [
+      genPromptsStyle(compToken),
+      genNestStyle(compToken),
+      initFadeLeftMotion(compToken),
+      initFadeMotion(compToken),
+    ];
   },
   prepareComponentToken,
 );

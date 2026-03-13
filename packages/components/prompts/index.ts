@@ -1,7 +1,7 @@
 import type { App } from 'vue';
 import Prompts from './Prompts.vue';
 
-export type { PromptsProps } from './interface';
+export type { PromptsProps, PromptProps, BasePromptItem } from './interface';
 
 // @ts-ignore
 Prompts.install = function(app: App) {
