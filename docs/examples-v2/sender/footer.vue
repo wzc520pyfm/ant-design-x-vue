@@ -34,22 +34,17 @@ defineRender(() => (
       return (
         <Flex justify="space-between" align="center">
           <Flex gap="small" align="center">
-            <Button style={iconStyle} type="text">
-              {{ icon: () => <LinkOutlined /> }}
-            </Button>
+            <Button style={iconStyle} type="text" icon={<LinkOutlined />} />
             <Divider type="vertical" />
             Deep Thinking
             <Switch size="small" />
             <Divider type="vertical" />
-            <Button>
-              {{ icon: () => <SearchOutlined /> }}
+            <Button icon={<SearchOutlined />}>
               Global Search
             </Button>
           </Flex>
           <Flex align="center">
-            <Button type="text" style={iconStyle}>
-              {{ icon: () => <ApiOutlined /> }}
-            </Button>
+            <Button type="text" style={iconStyle} icon={<ApiOutlined />} />
             <Divider type="vertical" />
             <SpeechButton style={iconStyle} />
             <Divider type="vertical" />

@@ -141,7 +141,7 @@ const onSubmit = (value: string) => {
 
 <template>
   <Flex vertical :gap="16">
-    <Flex wrap :gap="8">
+    <Flex wrap="wrap" :gap="8">
       <Button @click="onClear">Clear</Button>
       <Button @click="onGetValue">Get Value</Button>
       <Button @click="onGetSlot">Get Slot</Button>

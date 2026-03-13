@@ -8,7 +8,7 @@ import { Button, Flex } from 'ant-design-vue';
 const senderRef = ref<InstanceType<typeof Sender> | null>(null);
 
 defineRender(() => (
-  <Flex wrap gap={12}>
+  <Flex wrap="wrap" gap={12}>
     <Button onClick={() => { senderRef.value!.insert('some text'); }}>
       Insert Text
     </Button>

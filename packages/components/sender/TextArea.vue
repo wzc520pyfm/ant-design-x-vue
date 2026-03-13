@@ -129,7 +129,6 @@ defineExpose({
 defineRender(() => {
   const ctx = senderContext.value;
   const domProps = pickAttrs(ctx, {
-    attr: true,
     aria: true,
     data: true,
   });

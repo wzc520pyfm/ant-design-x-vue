@@ -50,16 +50,16 @@ const {
   components,
   onCancel,
   onChange,
-  suffix,
-  actions,
-  sendDisabled,
+  suffix = undefined,
+  actions = undefined,
+  sendDisabled = undefined,
   onKeyUp,
   onKeyDown,
   disabled = undefined,
   allowSpeech,
-  prefix,
-  footer,
-  header,
+  prefix = undefined,
+  footer = undefined,
+  header = undefined,
   onPaste,
   onPasteFile,
   autoSize = { maxRows: 8 },
@@ -215,13 +215,13 @@ const suffixNode = computed(() => {
     node = slots.suffix({ ori: actionNode.value, info });
   } else if (typeof suffix === 'function') {
     node = suffix(actionNode.value, info);
-  } else if (suffix || suffix === false) {
+  } else if (suffix !== undefined) {
     node = suffix;
   } else if (slots.actions) {
     node = slots.actions({ ori: actionNode.value, info });
   } else if (typeof actions === 'function') {
     node = actions(actionNode.value, info);
-  } else if (actions || actions === false) {
+  } else if (actions !== undefined) {
     node = actions;
   }
 
@@ -383,7 +383,7 @@ defineRender(() => {
             )}
 
             {/* Action List */}
-            {suffixNode.value && (
+            {suffixNode.value !== false && (
               <div
                 class={classnames(
                   actionListCls.value,

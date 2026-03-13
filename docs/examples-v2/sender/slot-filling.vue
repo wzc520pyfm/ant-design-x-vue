@@ -83,7 +83,7 @@ const displayValue = ref('');
 
 defineRender(() => (
   <Flex vertical gap={16}>
-    <Flex wrap gap={8}>
+    <Flex wrap="wrap" gap={8}>
       <Button onClick={() => { senderRef.value?.clear?.(); }}>
         Clear
       </Button>

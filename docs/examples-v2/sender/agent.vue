@@ -178,7 +178,7 @@ defineRender(() => (
       ref={senderRef}
       placeholder="Press Enter to send message"
       header={senderHeader()}
-      footer={(actionNode) => (
+      footer={(actionNode, _info) => (
         <Flex justify="space-between" align="center">
           <Flex gap="small" align="center">
             <Button style={IconStyle} type="text" icon={<PaperClipOutlined />} />

@@ -206,7 +206,7 @@ const onCancel = () => {
               />
             </SenderHeader>
           </template>
-          <template #footer="{ node }">
+          <template #footer="{ ori }">
             <a-flex justify="space-between" align="center">
               <a-flex gap="small" align="center">
                 <a-button :style="{ fontSize: '16px' }" type="text">
@@ -242,7 +242,7 @@ const onCancel = () => {
                   <template #icon><ApiOutlined /></template>
                 </a-button>
                 <a-divider type="vertical" />
-                <component :is="node" />
+                <component :is="ori" />
               </a-flex>
             </a-flex>
           </template>

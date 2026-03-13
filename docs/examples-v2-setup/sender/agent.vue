@@ -183,7 +183,7 @@ const footerRender = (actionNode: any) => actionNode;
           />
         </SenderHeader>
       </template>
-      <template #footer="{ node }">
+      <template #footer="{ ori }">
         <a-flex
           justify="space-between"
           align="center"
@@ -244,7 +244,7 @@ const footerRender = (actionNode: any) => actionNode;
               </template>
             </a-button>
             <a-divider type="vertical" />
-            <component :is="node" />
+            <component :is="ori" />
           </a-flex>
         </a-flex>
       </template>

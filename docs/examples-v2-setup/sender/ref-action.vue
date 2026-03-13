@@ -17,7 +17,7 @@ const blur = () => senderRef.value!.blur();
 </script>
 
 <template>
-  <a-flex wrap :gap="12">
+  <a-flex wrap="wrap" :gap="12">
     <a-button @click="insertText">Insert Text</a-button>
     <a-button @click="insertTextEnd">Insert Text End</a-button>
     <a-button @click="insertTextStart">Insert Text Start</a-button>
