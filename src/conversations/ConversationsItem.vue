@@ -98,7 +98,8 @@ defineRender(() => {
           ellipsis={{
             onEllipsis,
           }}
-        >{info.label}</Typography.Text>
+          content={info.label as string}
+        />
         {!disabled.value && menu && (
           <Dropdown
             placement={direction === 'rtl' ? 'bottomLeft' : 'bottomRight'}
