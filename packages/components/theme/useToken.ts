@@ -119,13 +119,8 @@ export function useInternalToken(): [
       },
     })),
   );
-  const [
-    _, // token
-    __, // hashId
-    // @ts-expect-error
-    realToken,
-  ] = unref(catchToken);
   const token = computed(() => catchToken.value[0]);
+  const realToken = computed(() => catchToken.value[0]);
   const hashId = computed(() => hashed.value ? catchToken.value[1] : '');
   return [theme as Ref<Theme<SeedToken, AliasToken>>, realToken, hashId, token, cssVar];
 }

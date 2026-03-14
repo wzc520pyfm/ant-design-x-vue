@@ -262,6 +262,7 @@ function genStyleUtils<
       cssVar: object;
     }) => {
       const { realToken } = useToken();
+      const resolvedRealToken = unref(realToken);
       useCSSVarRegister(
         {
           path: [component],
@@ -269,7 +270,7 @@ function genStyleUtils<
           key: cssVar.key!,
           unitless: compUnitless,
           ignore,
-          token: realToken,
+          token: resolvedRealToken,
           scope: rootCls,
         },
         () => {
@@ -277,10 +278,10 @@ function genStyleUtils<
             CompTokenMap,
             AliasToken,
             C
-          >(component, realToken, getDefaultToken);
+          >(component, resolvedRealToken, getDefaultToken);
           const componentToken = getComponentToken<CompTokenMap, AliasToken, C>(
             component,
-            realToken,
+            resolvedRealToken,
             defaultToken,
             {
               deprecatedTokens: options?.deprecatedTokens,
@@ -432,16 +433,17 @@ function genStyleUtils<
 
           const { token: proxyToken, flush } = statisticToken(token);
 
+          const resolvedRealToken = unref(realToken);
           const defaultComponentToken = getDefaultComponentToken<
             CompTokenMap,
             AliasToken,
             C
-          >(component, realToken, getDefaultToken);
+          >(component, resolvedRealToken, getDefaultToken);
 
           const componentCls = `.${prefixCls}`;
           const componentToken = getComponentToken<CompTokenMap, AliasToken, C>(
             component,
-            realToken,
+            resolvedRealToken,
             defaultComponentToken,
             { deprecatedTokens: options.deprecatedTokens },
           );
