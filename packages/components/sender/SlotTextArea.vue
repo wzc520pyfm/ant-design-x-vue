@@ -180,9 +180,9 @@ const renderSlot = (node: SlotConfigType, slotSpan: HTMLSpanElement): VNode => {
                 </span>
               ),
               overlay: () => (
-                <div class={`${prefixCls.value}-slot-select-dropdown`}>
+                <ul class={`${prefixCls.value}-slot-select-dropdown`}>
                   {node.props?.options?.map((opt: string) => (
-                    <div
+                    <li
                       key={opt}
                       class={classnames({
                         active: value === opt,
@@ -192,9 +192,9 @@ const renderSlot = (node: SlotConfigType, slotSpan: HTMLSpanElement): VNode => {
                       }}
                     >
                       {opt}
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               ),
             }}
           />

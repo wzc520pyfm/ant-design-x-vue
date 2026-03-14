@@ -383,7 +383,7 @@ defineRender(() => {
             )}
 
             {/* Action List */}
-            {suffixNode.value !== false && (
+            {suffixNode.value && (
               <div
                 class={classnames(
                   actionListCls.value,

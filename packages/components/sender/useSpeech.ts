@@ -1,8 +1,6 @@
-import { ButtonProps } from 'ant-design-vue';
 import useMergedState from '../_util/hooks/useMergedState';
 import { computed, ref, watchEffect, type MaybeRefOrGetter, toValue, onWatcherCleanup, type ComputedRef, type Ref } from 'vue';
 
-// Ensure that the SpeechRecognition API is available in the browser
 let SpeechRecognition: any;
 
 if (!SpeechRecognition && typeof window !== 'undefined') {
@@ -11,10 +9,7 @@ if (!SpeechRecognition && typeof window !== 'undefined') {
 
 export type ControlledSpeechConfig = {
   recording?: boolean;
-  onRecordingChange?: (recording: boolean) => void;
-  audioIcon?: ButtonProps['icon'];
-  audioDisabledIcon?: ButtonProps['icon']
-  audioRecordingIcon?: ButtonProps['icon'];
+  onRecordingChange: (recording: boolean) => void;
 };
 
 export type AllowSpeech = boolean | ControlledSpeechConfig;
@@ -32,33 +27,31 @@ export default function useSpeech(
   const onEventSpeech = onSpeech;
 
   // ========================== Speech Config ==========================
-  //All promoted to be reactive
-  const allowSpeechItem  =
-    computed(() => {
-      const allowSpeechRaw = toValue(allowSpeech);
-      if (typeof allowSpeechRaw === 'object') {
-        return {
-          controlledRecording: allowSpeechRaw.recording,
-          onControlledRecordingChange: allowSpeechRaw.onRecordingChange,
-          speechInControlled: typeof allowSpeechRaw.recording === 'boolean',
-        } as const;
-      }
-
+  const allowSpeechItem = computed(() => {
+    const allowSpeechRaw = toValue(allowSpeech);
+    if (typeof allowSpeechRaw === 'object') {
       return {
-        controlledRecording: undefined,
-        onControlledRecordingChange: undefined,
-        speechInControlled: false,
-      }
-    });
-const controlledRecording = computed(() => allowSpeechItem.value.controlledRecording);
-const onControlledRecordingChange = computed(() => allowSpeechItem.value.onControlledRecordingChange);
-const speechInControlled = computed(() => allowSpeechItem.value.speechInControlled);
+        controlledRecording: allowSpeechRaw.recording,
+        onControlledRecordingChange: allowSpeechRaw.onRecordingChange,
+        speechInControlled: typeof allowSpeechRaw.recording === 'boolean',
+      } as const;
+    }
+
+    return {
+      controlledRecording: undefined,
+      onControlledRecordingChange: undefined,
+      speechInControlled: false,
+    };
+  });
+  const controlledRecording = computed(() => allowSpeechItem.value.controlledRecording);
+  const onControlledRecordingChange = computed(() => allowSpeechItem.value.onControlledRecordingChange);
+  const speechInControlled = computed(() => allowSpeechItem.value.speechInControlled);
 
   // ======================== Speech Permission ========================
   const permissionState = ref<PermissionState | null>(null);
 
   watchEffect(() => {
-    if (typeof navigator !== 'undefined' && 'permissions' in navigator) {
+    if (!speechInControlled.value && typeof navigator !== 'undefined' && 'permissions' in navigator) {
       let lastPermission: PermissionStatus | null = null;
 
       (navigator as any).permissions
@@ -66,7 +59,6 @@ const speechInControlled = computed(() => allowSpeechItem.value.speechInControll
         .then((permissionStatus: PermissionStatus) => {
           permissionState.value = permissionStatus.state;
 
-          // Keep the last permission status.
           permissionStatus.onchange = function () {
             permissionState.value = this.state;
           };
@@ -75,7 +67,6 @@ const speechInControlled = computed(() => allowSpeechItem.value.speechInControll
         });
 
       onWatcherCleanup(() => {
-        // Avoid memory leaks
         if (lastPermission) {
           lastPermission.onchange = null;
         }
@@ -83,8 +74,9 @@ const speechInControlled = computed(() => allowSpeechItem.value.speechInControll
     }
   });
 
-  // Convert permission state to a simple type
-  const mergedAllowSpeech = computed(() => SpeechRecognition && permissionState.value !== 'denied');
+  const mergedAllowSpeech = computed(() =>
+    speechInControlled.value || (SpeechRecognition && permissionState.value !== 'denied'),
+  );
 
   // ========================== Speech Events ==========================
   const recognitionRef = ref<any | null>(null);

@@ -45,17 +45,15 @@ const genSenderHeaderStyle: GenerateStyle<SenderToken> = (token) => {
 
         // ======================== Motion ========================
         '&-motion': {
-          transition: ['height', 'border']
-            .map((prop) => `${prop} ${token.motionDurationSlow}`)
-            .join(','),
-          overflow: 'hidden',
-
-          '&-enter-start, &-leave-active': {
-            borderBottomColor: 'transparent',
+          '&-enter-active, &-leave-active': {
+            transition: ['height', 'border']
+              .map((prop) => `${prop} ${token.motionDurationSlow}`)
+              .join(','),
+            overflow: 'hidden',
           },
 
-          '&-hidden': {
-            display: 'none',
+          '&-enter-from, &-leave-to': {
+            borderBottomColor: 'transparent',
           },
         },
       },
