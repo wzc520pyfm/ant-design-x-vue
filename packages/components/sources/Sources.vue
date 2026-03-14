@@ -131,6 +131,7 @@ defineRender(() =>
               onClick={onClick}
             />
           }
+          overlayClassName={classnames(prefixCls, hashId.value, cssVarCls)}
           overlayStyle={{ width: typeof popoverOverlayWidth === 'number' ? `${popoverOverlayWidth}px` : popoverOverlayWidth }}
           placement="top"
         >

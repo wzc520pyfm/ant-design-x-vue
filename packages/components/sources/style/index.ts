@@ -31,7 +31,7 @@ const genSourcesStyle: GenerateStyle<SourcesToken> = (token) => {
 
   return {
     [componentCls]: {
-      '&-title-wrapper': {
+      [`${componentCls}-title-wrapper`]: {
         width: 'fit-content',
         display: 'flex',
         flexDirection: 'row',
@@ -44,34 +44,34 @@ const genSourcesStyle: GenerateStyle<SourcesToken> = (token) => {
         marginBottom: marginSM,
       },
 
-      '&-title-down-icon': {
+      [`${componentCls}-title-down-icon`]: {
         fontSize: fontSizeSM,
         svg: {
           transition: `all ${token.motionDurationMid} ${token.motionEaseInOut}`,
         },
       },
 
-      '&-icon-position-end': {
+      [`${componentCls}-icon-position-end`]: {
         [`${componentCls}-title-down-icon`]: {
           order: 1,
         },
       },
 
-      '&-list': {
+      [`${componentCls}-list`]: {
         listStyle: 'none',
         padding: 0,
         margin: 0,
       },
 
-      '&-list-item': {
+      [`${componentCls}-list-item`]: {
         marginBottom: marginXS,
       },
 
-      '&-content': {
+      [`${componentCls}-content`]: {
         overflow: 'hidden',
       },
 
-      '&-link': {
+      [`${componentCls}-link`]: {
         color: colorText,
         display: 'flex',
         gap: marginXXS,
@@ -82,7 +82,7 @@ const genSourcesStyle: GenerateStyle<SourcesToken> = (token) => {
         },
       },
 
-      '&-inline': {
+      [`&${componentCls}-inline`]: {
         display: 'inline-flex',
 
         [`${componentCls}-title-wrapper`]: {
@@ -100,12 +100,12 @@ const genSourcesStyle: GenerateStyle<SourcesToken> = (token) => {
         },
       },
 
-      '&-carousel-title': {
+      [`${componentCls}-carousel-title`]: {
         display: 'flex',
         justifyContent: 'space-between',
       },
 
-      '&-carousel-btn': {
+      [`${componentCls}-carousel-btn`]: {
         display: 'inline-flex',
         cursor: 'pointer',
         height: token.controlHeight,
@@ -117,12 +117,12 @@ const genSourcesStyle: GenerateStyle<SourcesToken> = (token) => {
         },
       },
 
-      '&-carousel-btn-disabled': {
+      [`${componentCls}-carousel-btn-disabled`]: {
         opacity: 0.4,
         cursor: 'text',
       },
 
-      '&-carousel-item': {
+      [`${componentCls}-carousel-item`]: {
         padding: paddingXS,
         boxSizing: 'border-box',
         fontSize: fontSize,
