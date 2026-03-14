@@ -9,3 +9,4 @@ export * from './attachments';
 export * from './thought-chain';
 export * from './actions';
 export * from './file-card';
+export * from './sources';

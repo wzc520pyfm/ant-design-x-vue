@@ -10,6 +10,7 @@ import type { SenderProps } from '../sender';
 import type { SuggestionProps } from '../suggestion';
 import type { ThoughtChainProps } from '../thought-chain';
 import type { FileCardProps } from '../file-card';
+import type { SourcesProps } from '../sources';
 import type { WelcomeProps } from '../welcome';
 
 // refer from the ConfigProviderProps of ant-design-vue
@@ -63,6 +64,7 @@ export interface XComponentsConfig {
   thoughtChain?: ComponentStyleConfig<ThoughtChainProps>;
   attachments?: ComponentStyleConfig<AttachmentsProps>;
   fileCard?: ComponentStyleConfig<FileCardProps>;
+  sources?: ComponentStyleConfig<SourcesProps>;
   welcome?: ComponentStyleConfig<WelcomeProps>;
 }
 

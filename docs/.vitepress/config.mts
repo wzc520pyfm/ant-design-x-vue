@@ -133,7 +133,8 @@ export default defineConfig({
         {
           text: '确认',
           items: [
-            { text: 'ThoughtChain 思维链', link: '/component/thought-chain' }
+            { text: 'ThoughtChain 思维链', link: '/component/thought-chain' },
+            { text: 'Sources 引用来源 (v2)', link: '/component/sources-v2' }
           ]
         },
         {
