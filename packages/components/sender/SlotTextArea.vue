@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { Dropdown, Input } from 'ant-design-vue';
+import { Dropdown, Input, Menu } from 'ant-design-vue';
 import { CaretDownFilled } from '@ant-design/icons-vue';
 import classnames from 'classnames';
 import pickAttrs from '../_util/pick-attrs';
@@ -180,21 +180,17 @@ const renderSlot = (node: SlotConfigType, slotSpan: HTMLSpanElement): VNode => {
                 </span>
               ),
               overlay: () => (
-                <ul class={`${prefixCls.value}-slot-select-dropdown`}>
-                  {node.props?.options?.map((opt: string) => (
-                    <li
-                      key={opt}
-                      class={classnames({
-                        active: value === opt,
-                      })}
-                      onClick={() => {
-                        updateSlot(node.key as string, opt);
-                      }}
-                    >
-                      {opt}
-                    </li>
-                  ))}
-                </ul>
+                <Menu
+                  items={node.props?.options?.map((opt: any) => ({
+                    label: opt,
+                    key: opt,
+                  }))}
+                  selectedKeys={value ? [value] : []}
+                  selectable
+                  onSelect={({ key, domEvent }: { key: string | number; domEvent: Event }) => {
+                    updateSlot(node.key as string, String(key), domEvent as EventType);
+                  }}
+                />
               ),
             }}
           />
