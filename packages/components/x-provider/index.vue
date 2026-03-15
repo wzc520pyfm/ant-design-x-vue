@@ -15,6 +15,7 @@ const {
   prompts,
   sender,
   suggestion,
+  think,
   thoughtChain,
   welcome,
   ...antdConfProps
@@ -32,6 +33,7 @@ const xProviderProps = computed(() => ({
   prompts,
   sender,
   suggestion,
+  think,
   thoughtChain,
   welcome,
 }));

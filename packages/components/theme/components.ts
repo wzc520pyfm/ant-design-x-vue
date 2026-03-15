@@ -9,6 +9,7 @@ import type { ComponentToken as ThoughtChainComponentToken } from '../thought-ch
 import type { ComponentToken as TransitionCollapseComponentToken } from '../transition-collapse/style';
 import type { ComponentToken as FileCardComponentToken } from '../file-card/style';
 import type { ComponentToken as SourcesComponentToken } from '../sources/style';
+import type { ComponentToken as ThinkComponentToken } from '../think/style';
 import type { ComponentToken as WelcomeComponentToken } from '../welcome/style';
 
 export interface ComponentTokenMap {
@@ -23,5 +24,6 @@ export interface ComponentTokenMap {
   Suggestion?: SuggestionComponentToken;
   ThoughtChain?: ThoughtChainComponentToken;
   Sources?: SourcesComponentToken;
+  Think?: ThinkComponentToken;
   Welcome?: WelcomeComponentToken;
 }
