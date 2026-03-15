@@ -39,12 +39,18 @@ html:hover {
 }
 
 /* Prevent VitePress styles from interfering with component demos */
-.vp-doc .example-showcase [class*='-sources'] a,
 .vp-doc .example-showcase [class*='-sources'] ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.vp-doc .example-showcase [class*='-sources'] a {
   color: inherit;
   text-decoration: none;
   font-weight: inherit;
-  list-style: none;
-  padding: revert-layer;
-  margin: revert-layer;
+}
+
+.vp-doc .example-showcase [class*='-sources'] a:hover {
+  color: var(--ant-color-link, #1677ff);
 }
