@@ -154,7 +154,8 @@ export default defineConfig({
             { text: 'useXChat 数据管理', link: '/component/use-x-chat' },
             { text: 'XStream 流', link: '/component/x-stream' },
             { text: 'XRequest 请求', link: '/component/x-request' },
-            { text: 'XProvider 全局化配置', link: '/component/x-provider' }
+            { text: 'XProvider 全局化配置', link: '/component/x-provider' },
+            { text: 'XProvider 全局化配置 (v2)', link: '/component/x-provider-v2' }
           ]
         },
       ],

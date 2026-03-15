@@ -1,8 +1,20 @@
-import { objectType, type AnyObject } from '../_util/type';
+import { objectType, type AnyObject, type ShortcutKeys } from '../_util/type';
 import type { ActionsProps } from '../actions';
-import type{ AttachmentsProps } from '../attachments';
+import type { AttachmentsProps } from '../attachments';
 import type { BubbleProps } from '../bubble';
-import { computed, ComputedRef, CSSProperties, defineComponent, inject, InjectionKey, provide, shallowRef, triggerRef, unref, watch } from 'vue';
+import {
+  computed,
+  type ComputedRef,
+  type CSSProperties,
+  defineComponent,
+  inject,
+  type InjectionKey,
+  provide,
+  shallowRef,
+  triggerRef,
+  unref,
+  watch,
+} from 'vue';
 import type { ConfigProviderProps as OriAntdConfigProviderProps } from 'ant-design-vue';
 import type { ConversationsProps } from '../conversations';
 import type { PromptsProps } from '../prompts';
@@ -13,8 +25,9 @@ import type { ThoughtChainProps } from '../thought-chain';
 import type { FileCardProps } from '../file-card';
 import type { SourcesProps } from '../sources';
 import type { WelcomeProps } from '../welcome';
+import type { OverrideToken } from '../theme/cssinjs-utils';
+import type { MarkdownComponentsConfig as XMarkdownComponentsConfig } from './XMarkdownComponents';
 
-// refer from the ConfigProviderProps of ant-design-vue
 export interface AntdConfigProviderProps {
   iconPrefixCls?: OriAntdConfigProviderProps['iconPrefixCls'];
   getTargetContainer?: OriAntdConfigProviderProps['getTargetContainer'];
@@ -41,24 +54,26 @@ export interface AntdConfigProviderProps {
   wave?: OriAntdConfigProviderProps['wave'];
 }
 
-export interface XComponentStyleConfig {
-  classNames: Record<string, string>;
+interface BaseComponentConfig {
+  style: CSSProperties;
   styles: Record<string, CSSProperties>;
   className: string;
-  style: CSSProperties;
+  classNames: Record<string, string>;
 }
 
-export type DefaultPickType = keyof XComponentStyleConfig;
+export interface XComponentConfig extends BaseComponentConfig {
+  shortcutKeys: Record<string, ShortcutKeys>;
+}
 
 export type ComponentStyleConfig<
   CompProps extends AnyObject,
-  PickType extends keyof CompProps = DefaultPickType,
-> = Pick<CompProps, PickType | DefaultPickType>;
+  PickType extends keyof CompProps = keyof BaseComponentConfig,
+> = Pick<CompProps, PickType>;
 
 export interface XComponentsConfig {
   actions?: ComponentStyleConfig<ActionsProps>;
   bubble?: ComponentStyleConfig<BubbleProps>;
-  conversations?: ComponentStyleConfig<ConversationsProps>;
+  conversations?: ComponentStyleConfig<ConversationsProps, keyof XComponentConfig>;
   prompts?: ComponentStyleConfig<PromptsProps>;
   sender?: ComponentStyleConfig<SenderProps>;
   suggestion?: ComponentStyleConfig<SuggestionProps>;
@@ -70,9 +85,17 @@ export interface XComponentsConfig {
   welcome?: ComponentStyleConfig<WelcomeProps>;
 }
 
-export type XProviderProps = XComponentsConfig & AntdConfigProviderProps & {
-  // Non-component config props
+type ComponentsConfig = {
+  [key in keyof OverrideToken]?: OverrideToken[key];
 };
+
+export type XProviderProps = XComponentsConfig &
+  XMarkdownComponentsConfig &
+  Omit<AntdConfigProviderProps, 'theme'> & {
+    theme?: Omit<NonNullable<AntdConfigProviderProps['theme']>, 'components'> & {
+      components?: NonNullable<AntdConfigProviderProps['theme']>['components'] & ComponentsConfig;
+    };
+  };
 
 const XProviderContextKey: InjectionKey<ComputedRef<XProviderProps>> =
   Symbol('XProviderContext');
@@ -97,6 +120,7 @@ export const useXProviderContextInject = () => {
     computed(() => globalXProviderApi.value || {}),
   );
 };
+
 export const XProviderContextProvider = defineComponent({
   props: {
     value: objectType<XProviderProps>(),

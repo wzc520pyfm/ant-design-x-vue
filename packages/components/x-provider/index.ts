@@ -1,19 +1,20 @@
+import type { App } from 'vue';
 import useXProviderContext, {
   defaultPrefixCls,
 } from './hooks/use-x-provider-context';
 import XProvider from './index.vue';
 
-export type { XProviderProps } from './context';
+export type { XProviderProps, XComponentsConfig, XComponentConfig } from './context';
+export type { MarkdownComponentsConfig } from './XMarkdownComponents';
 
-// @ts-ignore
-XProvider.install = function(app: App) {
-  app.component(XProvider.name, XProvider);
+XProvider.install = function (app: App) {
+  app.component(XProvider.name!, XProvider);
 
   // @deprecated
   app.component('AXConfigProvider', XProvider);
 
   return app;
-}
+};
 
 export { XProvider, defaultPrefixCls, useXProviderContext };
 

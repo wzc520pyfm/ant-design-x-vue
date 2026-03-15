@@ -8,16 +8,19 @@ import { ConfigProvider as AntdConfigProvider } from 'ant-design-vue';
 defineOptions({ name: 'AXProvider', inheritAttrs: false });
 
 const {
+  actions,
   attachments,
   bubble,
   conversations,
-  fileCard,
   prompts,
   sender,
   suggestion,
-  think,
   thoughtChain,
   welcome,
+  fileCard,
+  think,
+  mermaid,
+  highlightCode,
   ...antdConfProps
 } = defineProps<XProviderProps>();
 
@@ -26,15 +29,18 @@ const slots = defineSlots<{
 }>();
 
 const xProviderProps = computed(() => ({
+  actions,
   attachments,
   bubble,
   conversations,
-  fileCard,
   prompts,
   sender,
   suggestion,
-  think,
   thoughtChain,
+  fileCard,
+  think,
+  mermaid,
+  highlightCode,
   welcome,
 }));
 
@@ -52,11 +58,6 @@ defineRender(() => {
     <XProviderContextProvider value={xProviderProps.value}>
       <AntdConfigProvider
         {...antdConfProps}
-        // Note:  we can not set `cssVar` by default.
-        //        Since when developer not wrap with XProvider,
-        //        the generate css is still using css var but no css var injected.
-        // Origin comment: antdx enable cssVar by default, and antd v6 will enable cssVar by default
-        // theme={{ cssVar: true, ...antdConfProps?.theme }}
         theme={mergedTheme.value}
       >
         {childNode.value}
