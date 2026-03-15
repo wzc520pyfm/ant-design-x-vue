@@ -74,8 +74,6 @@ export default function useActive(
       return;
     }
 
-    console.log('e.key', e)
-
     switch (e.key) {
       case 'ArrowDown':
         offsetRow(1);
