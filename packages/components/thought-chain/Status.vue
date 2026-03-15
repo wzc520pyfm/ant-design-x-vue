@@ -22,7 +22,8 @@ const StatusIcon = {
 const statusCls = `${prefixCls}-status`;
 
 defineRender(() => {
-  const IconNode = status ? StatusIcon[status]() : icon;
+  const statusFn = status ? StatusIcon[status as keyof typeof StatusIcon] : undefined;
+  const IconNode = statusFn ? statusFn() : icon;
 
   return (
     <div
