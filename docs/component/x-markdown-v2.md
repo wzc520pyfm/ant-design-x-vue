@@ -1,6 +1,6 @@
 # XMarkdown 富文本 (v2)
 
-流式友好、可扩展的 Markdown 渲染组件，与 @ant-design/x-markdown 能力对齐。
+流式友好、可扩展的 Markdown 渲染组件。
 
 ## 何时使用
 
