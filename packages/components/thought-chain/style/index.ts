@@ -1,7 +1,8 @@
 import { type CSSObject, unit } from '../../_util/cssinjs';
 import { mergeToken } from '../../_util/cssinjs-utils';
 import { FastColor } from '@ant-design/fast-color';
-import { blinkMotion, genCollapseMotion } from '../../style';
+import { genCollapseMotion } from '../../style';
+import { blink } from '../../style/motion/blink';
 import type { FullToken, GenerateStyle, GetDefaultToken } from '../../theme/cssinjs-utils';
 import { genStyleHooks } from '../../theme/genStyleUtils';
 import genThoughtChainItemStyle from './item';
@@ -78,7 +79,7 @@ const genThoughtChainStyle: GenerateStyle<ThoughtChainToken, CSSObject> = (token
         '&:after': {
           content: '""',
           position: 'absolute',
-          height: unit(calc('100%').sub(calc(token.iconSize).mul(token.lineHeight)).equal()),
+          height: `calc(100% - ${unit(calc(token.iconSize).mul(token.lineHeight).equal())})`,
           borderInlineStart: `${unit(token.lineWidth)} solid ${token.colorFillContent}`,
           insetInlineStart: unit(calc(token.iconSize).sub(1).div(2).equal()),
           top: unit(calc(token.iconSize).mul(token.lineHeight).equal()),
@@ -105,6 +106,19 @@ const genThoughtChainStyle: GenerateStyle<ThoughtChainToken, CSSObject> = (token
         height: token.iconSize,
         backgroundColor: token.colorFillContent,
         borderRadius: unit(calc(token.iconSize).div(2).equal()),
+      },
+      [`& ${componentCls}-motion-blink`]: {
+        backgroundClip: 'text',
+        color: token.colorTextBlinkDefault,
+        WebkitBackgroundClip: 'text',
+        backgroundImage: `linear-gradient(90deg,transparent,${token.colorTextBlink},transparent)`,
+        animationDuration: '1s',
+        animationIterationCount: 'infinite',
+        animationTimingFunction: 'linear',
+        animationFillMode: 'forwards',
+        backgroundSize: '50%',
+        backgroundRepeat: 'no-repeat',
+        animationName: blink,
       },
       [`&${componentCls}-rtl`]: {
         direction: 'rtl',
@@ -140,13 +154,12 @@ export default genStyleHooks<'ThoughtChain'>(
   'ThoughtChain',
   (token) => {
     const compToken = mergeToken<ThoughtChainToken>(token, {});
-    const { componentCls } = token;
     return [
       genThoughtChainStyle(compToken),
       genThoughtChainItemStyle(compToken),
+      blink,
       genCollapseMotion(compToken),
       genTransitionCollapseStyle(compToken),
-      blinkMotion(compToken, `${componentCls}-motion-blink`),
     ];
   },
   prepareComponentToken,
