@@ -1,7 +1,7 @@
 import type { CSSProperties, VNode } from "vue";
 import type { AvoidValidation } from '../type-utility'
 
-export type SemanticType = 'title' | 'description' | 'icon' | 'extra';
+export type SemanticType = 'root' | 'title' | 'description' | 'icon' | 'extra';
 
 export interface WelcomeProps {
   prefixCls?: string;
