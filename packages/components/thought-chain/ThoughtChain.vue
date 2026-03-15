@@ -7,8 +7,8 @@ import { useXProviderContext } from '../x-provider';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import useCollapsible from './hooks/useCollapsible';
 import useStyle from './style';
-import ThoughtChainNodeContextProvider from './context';
-import ThoughtChainNode from './item.vue';
+import ThoughtChainContextProvider from './context';
+import ThoughtChainNode from './ThoughtChainNode.vue';
 
 defineOptions({ name: 'AXThoughtChain' });
 
@@ -17,11 +17,13 @@ const {
   rootClassName,
   class: className,
   items,
-  collapsible,
+  defaultExpandedKeys,
+  expandedKeys: customExpandedKeys,
+  onExpand,
   styles = {},
   style,
   classNames = {},
-  size = 'middle',
+  line = true,
   ...restProps
 } = defineProps<ThoughtChainProps>();
 
@@ -31,43 +33,34 @@ const domProps = computed(() => pickAttrs(restProps, {
   data: true,
 }));
 
-// ============================ Prefix ============================
 const { getPrefixCls, direction } = useXProviderContext();
-
-const rootPrefixCls = computed(() => getPrefixCls());
 
 const prefixCls = computed(() => getPrefixCls('thought-chain', customizePrefixCls));
 
-// ===================== Component Config =========================
 const contextConfig = useXComponentConfig('thoughtChain');
 
-// ============================ UseCollapsible ============================
-const [
-  enableCollapse,
-  expandedKeys,
-  onItemExpand,
-  // collapseMotion
-] = useCollapsible(
-  () => collapsible,
-  prefixCls.value,
-  rootPrefixCls.value,
-);
-
-// ============================ Style ============================
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 
 const mergedCls = computed(() => classnames(
   className,
-  rootClassName,
   prefixCls.value,
   contextConfig.value.className,
+  contextConfig.value.classNames.root,
+  rootClassName,
   hashId.value,
   cssVarCls,
+  classNames.root,
+  `${prefixCls.value}-box`,
   {
     [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
   },
-  `${prefixCls.value}-${size}`,
 ));
+
+const [expandedKeys, onItemExpand] = useCollapsible({
+  defaultExpandedKeys,
+  expandedKeys: customExpandedKeys,
+  onExpand,
+});
 
 defineRender(() => {
   return wrapCSSVar(
@@ -76,43 +69,41 @@ defineRender(() => {
       class={mergedCls.value}
       style={{
         ...(typeof contextConfig.value.style === 'object' ? contextConfig.value.style : {}),
-        ...(typeof style === 'object' ? style : {})
+        ...styles.root,
+        ...(typeof style === 'object' ? style : {}),
       }}
     >
-      <ThoughtChainNodeContextProvider
+      <ThoughtChainContextProvider
         value={{
           prefixCls: prefixCls.value,
-          enableCollapse: enableCollapse.value,
-          // collapseMotion,
           expandedKeys: expandedKeys.value,
-          direction: direction.value,
+          onItemExpand,
           classNames: {
             itemHeader: classnames(contextConfig.value.classNames.itemHeader, classNames.itemHeader),
             itemContent: classnames(contextConfig.value.classNames.itemContent, classNames.itemContent),
             itemFooter: classnames(contextConfig.value.classNames.itemFooter, classNames.itemFooter),
+            itemIcon: classnames(contextConfig.value.classNames.itemIcon, classNames.itemIcon),
           },
           styles: {
             itemHeader: { ...contextConfig.value.styles.itemHeader, ...styles.itemHeader },
             itemContent: { ...contextConfig.value.styles.itemContent, ...styles.itemContent },
             itemFooter: { ...contextConfig.value.styles.itemFooter, ...styles.itemFooter },
+            itemIcon: { ...contextConfig.value.styles.itemIcon, ...styles.itemIcon },
           },
         }}
       >
         {items?.map((item, index) => (
           <ThoughtChainNode
             key={item.key || `key_${index}`}
+            index={index}
+            line={line}
             class={classnames(contextConfig.value.classNames.item, classNames.item)}
             style={{ ...contextConfig.value.styles.item, ...styles.item }}
-            info={{
-              ...item,
-              icon: item.icon || index + 1,
-            }}
-            onClick={onItemExpand}
-            nextStatus={items[index + 1]?.status || item.status}
+            info={item}
           />
         ))}
-      </ThoughtChainNodeContextProvider>
-    </div>
-  )
+      </ThoughtChainContextProvider>
+    </div>,
+  );
 });
 </script>

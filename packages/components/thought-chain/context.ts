@@ -1,40 +1,41 @@
-import { computed, type ComputedRef, defineComponent, inject, type InjectionKey, provide, shallowRef, triggerRef, unref, watch } from "vue";
-import { objectType } from "../_util/type";
-import type { ThoughtChainNodeContextProps } from "./interface";
+import { computed, type ComputedRef, defineComponent, inject, type InjectionKey, provide, shallowRef, triggerRef, unref, watch } from 'vue';
+import { objectType } from '../_util/type';
+import type { ThoughtChainContextType } from './interface';
 
-const ThoughtChainNodeContextKey: InjectionKey<ComputedRef<ThoughtChainNodeContextProps>> =
-  Symbol('ThoughtChainNodeContext');
+const ThoughtChainContextKey: InjectionKey<ComputedRef<ThoughtChainContextType>> =
+  Symbol('ThoughtChainContext');
 
-export const globalThoughtChainNodeContextApi = shallowRef<ThoughtChainNodeContextProps>();
+export const globalThoughtChainContextApi = shallowRef<ThoughtChainContextType>();
 
-export const useThoughtChainNodeContextProvider = (value: ComputedRef<ThoughtChainNodeContextProps>) => {
-  provide(ThoughtChainNodeContextKey, value);
+export const useThoughtChainContextProvider = (value: ComputedRef<ThoughtChainContextType>) => {
+  provide(ThoughtChainContextKey, value);
   watch(
     value,
     () => {
-      globalThoughtChainNodeContextApi.value = unref(value);
-      triggerRef(globalThoughtChainNodeContextApi);
+      globalThoughtChainContextApi.value = unref(value);
+      triggerRef(globalThoughtChainContextApi);
     },
     { immediate: true, deep: true },
   );
 };
 
-export const useThoughtChainNodeContextInject = () => {
+export const useThoughtChainContextInject = () => {
   return inject(
-    ThoughtChainNodeContextKey,
-    computed(() => globalThoughtChainNodeContextApi.value || {}),
+    ThoughtChainContextKey,
+    computed(() => globalThoughtChainContextApi.value || {}),
   );
 };
-export const ThoughtChainNodeContextProvider = defineComponent({
+
+export const ThoughtChainContextProvider = defineComponent({
   props: {
-    value: objectType<ThoughtChainNodeContextProps>(),
+    value: objectType<ThoughtChainContextType>(),
   },
   setup(props, { slots }) {
-    useThoughtChainNodeContextProvider(computed(() => props.value));
+    useThoughtChainContextProvider(computed(() => props.value));
     return () => {
       return slots.default?.();
     };
   },
 });
 
-export default ThoughtChainNodeContextProvider;
+export default ThoughtChainContextProvider;

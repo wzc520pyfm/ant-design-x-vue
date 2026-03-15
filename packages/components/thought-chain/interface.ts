@@ -1,37 +1,13 @@
-import type { CSSProperties, HTMLAttributes, VNode } from "vue";
-import type { Collapsible } from "./hooks/useCollapsible";
-import type { ConfigProviderProps, TooltipProps } from "ant-design-vue";
+import type { CSSProperties, HTMLAttributes, VNode } from 'vue';
 
 export enum THOUGHT_CHAIN_ITEM_STATUS {
-  /**
-   * @desc 等待状态
-   */
-  PENDING = 'pending',
-  /**
-   * @desc 成功状态
-   */
+  LOADING = 'loading',
   SUCCESS = 'success',
-  /**
-   * @desc 错误状态
-   */
   ERROR = 'error',
+  ABORT = 'abort',
 }
 
-export interface TooltipConfig {
-  /**
-   * @desc Title tooltip 配置
-   * @descEN Title tooltip configuration
-   */
-  titleConfig?: TooltipProps;
-
-  /**
-   * @desc Description tooltip 配置
-   * @descEN Description tooltip configuration
-   */
-  descriptionConfig?: TooltipProps;
-}
-
-export interface ThoughtChainItem {
+export interface ThoughtChainItemType {
   /**
    * @desc 思维节点唯一标识符
    * @descEN Unique identifier
@@ -42,7 +18,7 @@ export interface ThoughtChainItem {
    * @desc 思维节点图标
    * @descEN Thought chain item icon
    */
-  icon?: VNode | string | number;
+  icon?: VNode | string | number | false;
 
   /**
    * @desc 思维节点标题
@@ -55,12 +31,6 @@ export interface ThoughtChainItem {
    * @descEN Thought chain item description
    */
   description?: VNode | string;
-
-  /**
-   * @desc 思维节点额外内容
-   * @descEN Thought chain item extra content
-   */
-  extra?: VNode | string;
 
   /**
    * @desc 思维节点内容
@@ -80,29 +50,51 @@ export interface ThoughtChainItem {
    */
   status?: `${THOUGHT_CHAIN_ITEM_STATUS}`;
 
-  tooltip?: boolean | TooltipConfig;
+  /**
+   * @desc 是否可折叠
+   * @descEN Whether collapsible
+   */
+  collapsible?: boolean;
+
+  /**
+   * @desc 闪烁
+   * @descEN blink
+   */
+  blink?: boolean;
 }
 
-export type SemanticType = 'item' | 'itemHeader' | 'itemContent' | 'itemFooter';
+export type SemanticType =
+  | 'root'
+  | 'item'
+  | 'itemHeader'
+  | 'itemIcon'
+  | 'itemContent'
+  | 'itemFooter';
 
 export interface ThoughtChainProps extends Omit<HTMLAttributes, 'title'> {
   /**
    * @desc 思维节点集合
    * @descEN chain items
    */
-  items?: ThoughtChainItem[];
+  items?: ThoughtChainItemType[];
 
   /**
-   * @desc 是否可折叠
-   * @descEN Whether collapsible
+   * @desc 初始化展开的节点
+   * @descEN default expanded keys
    */
-  collapsible?: Collapsible;
+  defaultExpandedKeys?: string[];
 
   /**
-   * @desc 组件大小
-   * @descEN Component size
+   * @desc 当前展开的节点
+   * @descEN current expanded keys
    */
-  size?: ConfigProviderProps['componentSize'];
+  expandedKeys?: string[];
+
+  /**
+   * @desc 展开节点变化回调
+   * @descEN callback when expanded keys change
+   */
+  onExpand?: (expandedKeys: string[]) => void;
 
   /**
    * @desc 语义化结构 style
@@ -123,24 +115,97 @@ export interface ThoughtChainProps extends Omit<HTMLAttributes, 'title'> {
   prefixCls?: string;
 
   /**
-   * @desc 自定义根类名
-   * @descEN Custom class name
+   * @desc 线条样式
+   * @descEN Line style
+   */
+  line?: boolean | 'solid' | 'dashed' | 'dotted';
+
+  /**
+   * @desc 根节点样式类
+   * @descEN Root node style class.
    */
   rootClassName?: string;
 }
 
-export interface ThoughtChainNodeContextProps {
+export type ItemSemanticType = 'root' | 'icon' | 'title' | 'description';
+
+export interface ThoughtChainItemProps extends Omit<HTMLAttributes, 'title' | 'content'> {
+  /**
+   * @desc 思维节点唯一标识符
+   * @descEN Unique identifier
+   */
+  key?: string;
+
+  /**
+   * @desc 自定义前缀
+   * @descEN Prefix
+   */
   prefixCls?: string;
-  // collapseMotion?: CSSMotionProps;
-  enableCollapse?: boolean;
+
+  /**
+   * @desc 思维节点图标
+   * @descEN Thought chain item icon
+   */
+  icon?: VNode | string;
+
+  /**
+   * @desc 思维节点标题
+   * @descEN Thought chain item title
+   */
+  title?: VNode | string;
+
+  /**
+   * @desc 思维节点描述
+   * @descEN Thought chain item description
+   */
+  description?: VNode | string;
+
+  /**
+   * @desc 根节点样式类
+   * @descEN Root node style class.
+   */
+  rootClassName?: string;
+
+  /**
+   * @desc 思维节点状态
+   * @descEN Thought chain item status
+   */
+  status?: `${THOUGHT_CHAIN_ITEM_STATUS}`;
+
+  /**
+   * @desc 思维节点变体
+   * @descEN Thought chain item variant
+   */
+  variant?: 'solid' | 'outlined' | 'text';
+
+  /**
+   * @desc 闪烁
+   * @descEN blink
+   */
+  blink?: boolean;
+
+  classNames?: Partial<Record<ItemSemanticType, string>>;
+  styles?: Partial<Record<ItemSemanticType, CSSProperties>>;
+}
+
+export interface ThoughtChainNodeProps extends Omit<HTMLAttributes, 'onClick'> {
+  info?: ThoughtChainItemType;
+  line?: ThoughtChainProps['line'];
+  index: number;
+}
+
+export interface ThoughtChainContextType {
+  prefixCls?: string;
   expandedKeys?: string[];
-  direction?: ConfigProviderProps['direction'];
+  onItemExpand?: (curKey: string) => void;
   styles?: ThoughtChainProps['styles'];
   classNames?: ThoughtChainProps['classNames'];
 }
 
-export interface ThoughtChainNodeProps extends Omit<HTMLAttributes, 'onClick'> {
-  info?: ThoughtChainItem;
-  nextStatus?: ThoughtChainItem['status'];
-  onClick?: (key: string) => void;
+export interface StatusProps {
+  icon?: VNode | string | number;
+  status?: `${THOUGHT_CHAIN_ITEM_STATUS}`;
+  prefixCls?: string;
+  class?: string;
+  style?: CSSProperties;
 }
