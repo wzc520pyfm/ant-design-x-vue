@@ -58,7 +58,7 @@ const mergedCls = computed(() => classnames(
 
 const [expandedKeys, onItemExpand] = useCollapsible({
   defaultExpandedKeys,
-  expandedKeys: customExpandedKeys,
+  expandedKeys: () => customExpandedKeys,
   onExpand,
 });
 
