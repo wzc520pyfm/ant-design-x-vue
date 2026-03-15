@@ -30,6 +30,8 @@ const parsedHtml = computed(() => {
   if (!props.content) return '';
   const transformed = applyPlugins(props.content);
   const raw = parseMarkdown(transformed, props.config);
+  // DOMPurify 依赖 document，SSR 环境下跳过 sanitize，仅客户端做净化
+  if (typeof document === 'undefined') return raw;
   return DOMPurify.sanitize(raw);
 });
 
