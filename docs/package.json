@@ -5,7 +5,7 @@
   "main": "",
   "scripts": {
     "dev": "vitepress dev",
-    "build": "vitepress build",
+    "build": "node scripts/build.mjs",
     "preview": "vitepress preview"
   },
   "keywords": [],

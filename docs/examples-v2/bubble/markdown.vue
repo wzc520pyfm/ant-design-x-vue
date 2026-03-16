@@ -25,9 +25,10 @@ const renderMarkdown: BubbleProps['contentRender'] = (content) => {
 };
 
 const index = ref(text.length);
+const isServer = import.meta.env.SSR;
 
 watchEffect((onCleanup) => {
-  if (index.value < text.length) {
+  if (!isServer && index.value < text.length) {
     const timerId = setTimeout(() => {
       index.value += 5;
     }, 20);

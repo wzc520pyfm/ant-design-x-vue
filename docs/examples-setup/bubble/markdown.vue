@@ -22,14 +22,17 @@ const renderMarkdown: BubbleProps['messageRender'] = (content) =>
   });
 
 const renderKey = ref(0);
+const isServer = import.meta.env.SSR;
 
 watchEffect(() => {
-  const id = setTimeout(() => {
-    renderKey.value = renderKey.value + 1;
-  }, text.length * 100 + 2000);
-  onWatcherCleanup(() => {
-    clearTimeout(id);
-  });
+  if (!isServer) {
+    const id = setTimeout(() => {
+      renderKey.value = renderKey.value + 1;
+    }, text.length * 100 + 2000);
+    onWatcherCleanup(() => {
+      clearTimeout(id);
+    });
+  }
 });
 </script>
 

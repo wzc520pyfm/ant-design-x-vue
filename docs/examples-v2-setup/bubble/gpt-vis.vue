@@ -25,6 +25,7 @@ Here's a visualization of Haidilao's food delivery revenue from 2013 to 2022. Yo
 
 const index = ref(text.length);
 let timer: ReturnType<typeof setTimeout> | null = null;
+const isServer = import.meta.env.SSR;
 
 const renderStream = () => {
   if (index.value >= text.length) {
@@ -38,7 +39,7 @@ const renderStream = () => {
 };
 
 watchEffect(() => {
-  if (index.value < text.length) {
+  if (!isServer && index.value < text.length) {
     renderStream();
   }
 });
