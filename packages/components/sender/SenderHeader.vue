@@ -96,7 +96,6 @@ defineRender(() => {
           ...style,
         }}
       >
-        {/* Header */}
         {(closable !== false || title) && (
           <div
             class={
@@ -121,8 +120,6 @@ defineRender(() => {
             )}
           </div>
         )}
-
-        {/* Content */}
         {slots.default && (
           <div
             class={classNames(`${headerCls.value}-content`, classes.content)}

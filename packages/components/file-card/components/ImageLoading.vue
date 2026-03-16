@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import type { CSSProperties } from 'vue';
 import { toRef } from 'vue';
-import { Flex, Skeleton, Spin } from 'ant-design-vue';
+import { Flex, Spin } from 'ant-design-vue';
 import type { SpinProps } from 'ant-design-vue';
 import classnames from 'classnames';
 import type { FileCardProps } from '../interface';
@@ -43,27 +43,21 @@ defineRender(() => {
 
   return (
     <div class={classnames(`${props.prefixCls}-image-loading`, props.class)} style={props.style}>
-      <Skeleton.Node rootClassName={classnames(`${props.prefixCls}-image-skeleton`)} active>
-        {{
-          default: () => (
-            <>
-              <Flex
-                class={classnames(`${props.prefixCls}-image-spin`, {
-                  [`${props.prefixCls}-image-spin-${mergeSinkProps.size}`]: mergeSinkProps.size,
-                })}
-                align="center"
-                gap="small"
-              >
-                <Spin percent={mergedPercent.value} {...(props.spinProps as SpinProps)} />
-                {mergeSinkProps.showText && (
-                  <div class={`${props.prefixCls}-image-spin-text`}>{percentText.value}</div>
-                )}
-              </Flex>
-              {mergeSinkProps.icon}
-            </>
-          ),
-        }}
-      </Skeleton.Node>
+      <div class={classnames(`${props.prefixCls}-image-skeleton`)}>
+        <Flex
+          class={classnames(`${props.prefixCls}-image-spin`, {
+            [`${props.prefixCls}-image-spin-${mergeSinkProps.size}`]: mergeSinkProps.size,
+          })}
+          align="center"
+          gap="small"
+        >
+          <Spin percent={mergedPercent.value} {...(props.spinProps as SpinProps)} />
+          {mergeSinkProps.showText && (
+            <div class={`${props.prefixCls}-image-spin-text`}>{percentText.value}</div>
+          )}
+        </Flex>
+        {mergeSinkProps.icon}
+      </div>
     </div>
   );
 });

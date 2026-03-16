@@ -102,7 +102,6 @@ defineRender(() => {
           ...styles.root,
         }}
       >
-        {/* Title */}
         {titleNode.value && (
           <Typography.Title
             level={5}
@@ -117,7 +116,6 @@ defineRender(() => {
             {titleNode.value}
           </Typography.Title>
         )}
-        {/* Prompt List */}
         <div class={mergedListCls.value} style={{ ...contextConfig.value.styles.list, ...styles.list }}>
           {items?.map((info, index) => {
             const isNest = info.children && info.children.length > 0;
@@ -141,9 +139,7 @@ defineRender(() => {
                   }
                 }}
               >
-                {/* Icon */}
                 {info.icon && <div class={`${prefixCls}-icon`}>{info.icon}</div>}
-                {/* Content */}
                 <div
                   class={classnames(
                     `${prefixCls}-content`,
@@ -152,13 +148,8 @@ defineRender(() => {
                   )}
                   style={{ ...contextConfig.value.styles.itemContent, ...styles.itemContent }}
                 >
-                  {/* Label */}
                   {info.label && <h6 class={`${prefixCls}-label`}>{info.label}</h6>}
-
-                  {/* Description */}
                   {info.description && <p class={`${prefixCls}-desc`}>{info.description}</p>}
-
-                  {/* Children */}
                   {isNest && (
                     <Prompts
                       class={`${prefixCls}-nested`}

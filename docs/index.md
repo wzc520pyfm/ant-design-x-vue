@@ -1,5 +1,5 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
+ # https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
@@ -22,4 +22,3 @@ features:
   - title: 组件丰富，选用自如
     details: Ant Design X Vue 全新 AI 组件 , 大量实用组件满足你的需求 , 灵活定制与拓展
 ---
-

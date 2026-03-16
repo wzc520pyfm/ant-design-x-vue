@@ -51,8 +51,6 @@ x-request/model
 
 ### XRequestOptions
 
-<!-- todo: add dangerouslyApiKey decs link  -->
-
 | 属性 | 描述 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | baseURL | API 请求的基础 URL | string | - | - |

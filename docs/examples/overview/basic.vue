@@ -247,7 +247,6 @@ const handleComponentClick = (component: any) => {
 const Demo = () => {
   return (
     <div>
-      {/* 搜索框 */}
       <Affix offsetTop={54}>
         <div
           style={{
@@ -269,7 +268,6 @@ const Demo = () => {
         </div>
       </Affix>
 
-      {/* 动态渲染各分类 */}
       {Object.entries(groupedComponents.value).map(([category, components]) => (
         <div key={category}>
           <div
@@ -286,7 +284,6 @@ const Demo = () => {
           <Row gutter={[16, 24]} style={{ marginBottom: '48px' }}>
             {components.map((component) => (
               <Col key={component.id} xs={24} lg={12}>
-                  {/* 组件演示区域 */}
                   <Card size="small" title={component.title} bodyStyle={{ padding: '16px' }} hoverable={true} class="overview-card">
                     <div
                       style={{
@@ -329,7 +326,6 @@ const Demo = () => {
         </div>
       ))}
 
-      {/* 无搜索结果 */}
       {Object.keys(groupedComponents.value).length === 0 && (
         <div style={{ textAlign: 'center', padding: '60px 0', color: '#999' }}>
           <SearchOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />

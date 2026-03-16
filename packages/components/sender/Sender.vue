@@ -347,7 +347,6 @@ defineRender(() => {
     >
       <SenderContextProvider value={contextValue.value}>
         <ActionButtonContextProvider value={actionsButtonContextProps.value}>
-          {/* Header */}
           {headerNode.value && (
             <SenderHeaderContextProvider value={{ prefixCls: prefixCls.value }}>
               {headerNode.value}
@@ -358,7 +357,6 @@ defineRender(() => {
             style={styles.content}
             onMousedown={onContentMouseDown}
           >
-            {/* Prefix */}
             {prefixNode.value && (
               <div
                 class={classnames(
@@ -374,15 +372,11 @@ defineRender(() => {
                 {prefixNode.value}
               </div>
             )}
-
-            {/* Input */}
             {isSlotMode.value ? (
               <SlotTextArea ref={inputRef} />
             ) : (
               <TextArea ref={inputRef} />
             )}
-
-            {/* Action List */}
             {suffixNode.value && (
               <div
                 class={classnames(

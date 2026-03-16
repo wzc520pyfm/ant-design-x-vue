@@ -81,11 +81,6 @@ if (typeof props.content !== 'string') {
 defineRender(() => {
   return (
     <>
-      {/**
-       * 为什么使用 div
-       * input、textarea 是固定行为、固定宽高的元素，无法对内容自适应，体验差
-       * div.contentEditable 提供了编辑 innerHTML 的能力，同时具备内容自适应能力，体验好
-       */}
       <div ref={mockInputRef} contenteditable />
       <Flex class={`${props.prefixCls}-editing-opts`} gap={8}>
         <Button type="primary" shape="round" size="small" onClick={onConfirm}>

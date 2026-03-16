@@ -38,6 +38,10 @@ export function useTyping({
   const renderedData = ref('');
   const currentTask = ref(1);
   const raf = ref(-1);
+  const canUseAnimationApi =
+    typeof requestAnimationFrame === 'function' &&
+    typeof cancelAnimationFrame === 'function' &&
+    typeof performance !== 'undefined';
 
   // typing legal check
   const memoedAnimationCfg = computed<BubbleAnimationOption>(() => {
@@ -77,8 +81,21 @@ export function useTyping({
 
   const getUid = () => Math.random().toString().slice(2);
 
+  const setStaticContent = (text: string, taskId: number) => {
+    renderedData.value = text;
+    output.value = text
+      ? [{ text, id: getUid(), taskId, done: true }]
+      : [];
+    animating.value = false;
+  };
+
   // scoped function use ref to reach newest state
   const executeAnimation = (taskId: number) => {
+    if (!canUseAnimationApi) {
+      setStaticContent(content.value, taskId);
+      return;
+    }
+
     let lastActivedFrameTime = 0;
     // start with LCP
     renderedData.value = memoedAnimationCfg.value.keepPrefix
@@ -143,7 +160,9 @@ export function useTyping({
   };
 
   const reset = () => {
-    cancelAnimationFrame(raf.value);
+    if (canUseAnimationApi) {
+      cancelAnimationFrame(raf.value);
+    }
     output.value = [];
     renderedData.value = '';
     animating.value = false;
@@ -154,6 +173,10 @@ export function useTyping({
     (newContent) => {
       if (!newContent) {
         reset();
+        return;
+      }
+      if (!canUseAnimationApi) {
+        setStaticContent(newContent, currentTask.value);
         return;
       }
       if (newContent === renderedData.value) return;
@@ -171,7 +194,9 @@ export function useTyping({
   );
 
   onBeforeUnmount(() => {
-    cancelAnimationFrame(raf.value);
+    if (canUseAnimationApi) {
+      cancelAnimationFrame(raf.value);
+    }
   });
 
   return { renderedData: output, animating, memoedAnimationCfg };

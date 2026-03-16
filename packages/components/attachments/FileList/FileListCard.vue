@@ -282,8 +282,6 @@ defineRender(() => {
       ref="file-list-card-container"
     >
       {content.value}
-
-      {/* Remove Icon */}
       {!disabled.value && onRemove && (
         <button
           type="button"

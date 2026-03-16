@@ -1,4 +1,3 @@
-
 # FileCard 文件卡片 <Badge type="warning" text="v2" />
 
 用卡片的形式展示文件。
@@ -11,75 +10,75 @@
 
 ### 基础用法
 
-:::demo-v2 不同类型文件会自动匹配对应图标和颜色。
+::::demo-v2 不同类型文件会自动匹配对应图标和颜色。
 
 file-card/basic
 
-:::
+::::
 
 ### 卡片大小
 
-:::demo-v2 通过 `size` 属性设置卡片大小。
+::::demo-v2 通过 `size` 属性设置卡片大小。
 
 file-card/size
 
-:::
+::::
 
 ### 图片文件
 
-:::demo-v2 图片类型文件会自动展示图片预览。可通过 `type="file"` 强制展示为文件卡片。
+::::demo-v2 图片类型文件会自动展示图片预览。可通过 `type="file"` 强制展示为文件卡片。
 
 file-card/image
 
-:::
+::::
 
 ### 图片加载
 
-:::demo-v2 图片加载时显示加载动画。
+::::demo-v2 图片加载时显示加载动画。
 
 file-card/image-loading
 
-:::
+::::
 
 ### 音视频类型
 
-:::demo-v2 音频和视频类型文件支持内联播放，也可通过 `type="file"` 以文件卡片形式展示。
+::::demo-v2 音频和视频类型文件支持内联播放，也可通过 `type="file"` 以文件卡片形式展示。
 
 file-card/audio
 
-:::
+::::
 
 ### 使用遮罩
 
-:::demo-v2 通过 `mask` 属性添加遮罩内容。
+::::demo-v2 通过 `mask` 属性添加遮罩内容。
 
 file-card/mask
 
-:::
+::::
 
 ### 自定义图标
 
-:::demo-v2 通过 `icon` 属性自定义图标，支持传入预设图标名称或自定义 VNode。
+::::demo-v2 通过 `icon` 属性自定义图标，支持传入预设图标名称或自定义 VNode。
 
 file-card/icon
 
-:::
+::::
 
 ### 文件列表
 
-:::demo-v2 使用 `FileCard.List` 展示文件列表，支持删除和图片预览。
+::::demo-v2 使用 `FileCard.List` 展示文件列表，支持删除和图片预览。
 
 file-card/list
 
-:::
+::::
 
 ### 超出样式
 
-:::demo-v2 通过 `overflow` 属性控制列表超出时的展示方式。
+::::demo-v2 通过 `overflow` 属性控制列表超出时的展示方式。
 
 file-card/overflow
 
-:::
+::::
 
 ## API
 

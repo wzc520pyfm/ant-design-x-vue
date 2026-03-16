@@ -149,12 +149,8 @@ defineRender(() => {
       )}
       style={{ ...style, ...styles.root }}
     >
-      {/* Icon */}
       {iconNode.value}
-
-      {/* Content */}
       <Flex vertical class={`${prefixCls}-content-wrapper`}>
-        {/* Title */}
         {(slots.extra || extra) ? (
           <Flex align="flex-start" class={`${prefixCls}-title-wrapper`}>
             {titleNode.value}
@@ -163,8 +159,6 @@ defineRender(() => {
         ) : (
           titleNode.value
         )}
-
-        {/* Description */}
         {descriptionNode.value && (
           <Typography.Text
             // @ts-expect-error

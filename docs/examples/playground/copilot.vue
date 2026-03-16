@@ -396,7 +396,6 @@ const Copilot = (props: CopilotProps) => {
         <Button icon={<AppstoreAddOutlined />}>More</Button>
       </div>
 
-      {/** 输入框 */}
       <Suggestion items={MOCK_SUGGESTIONS} onSelect={(itemVal) => inputValue.value = `[${itemVal}]:`}
         children={({ onTrigger, onKeyDown }) => (
           <Sender
@@ -446,13 +445,8 @@ const Copilot = (props: CopilotProps) => {
 
   return (
     <div style={{ ...styles.value.copilotChat, display: copilotOpen ? 'flex' : 'none' }}>
-      {/** 对话区 - header */}
       {chatHeader}
-
-      {/** 对话区 - 消息列表 */}
       {chatList}
-
-      {/** 对话区 - 输入框 */}
       {chatSender}
     </div>
   );
@@ -603,7 +597,6 @@ const copilotOpen = ref<boolean>(true)
 defineRender(() => {
   return (
     <div style={workareaStyles.value.copilotWrapper}>
-      {/** 左侧工作区 */}
       <div style={workareaStyles.value.workarea}>
         <div style={workareaStyles.value.workareaHeader}>
           <div style={workareaStyles.value.headerTitle}>
@@ -669,7 +662,6 @@ defineRender(() => {
         </div>
       </div>
 
-      {/** 右侧对话区 */}
       <Copilot copilotOpen={copilotOpen.value} setCopilotOpen={(value: boolean) => copilotOpen.value = value} />
     </div>
   );

@@ -343,7 +343,6 @@ const onSubmit = (val: string) => {
 // ==================== Nodes ====================
 const chatSider = computed(() => (
   <div style={styles.value.sider}>
-    {/* 🌟 Logo */}
     <div style={styles.value.logo}>
       <img
         src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original"
@@ -355,7 +354,6 @@ const chatSider = computed(() => (
       <span style={styles.value.logoTitle}>Ant Design X</span>
     </div>
 
-    {/* 🌟 添加会话 */}
     <Button
       onClick={() => {
         if (loading.value) {
@@ -384,7 +382,6 @@ const chatSider = computed(() => (
       New Conversation
     </Button>
 
-    {/* 🌟 会话管理 */}
     <Conversations
       items={conversations.value}
       style={styles.value.conversations}
@@ -555,7 +552,6 @@ const senderHeader = computed(() => (
 ));
 const chatSender = computed(() => (
   <>
-    {/* 🌟 提示词 */}
     <Prompts
       items={SENDER_PROMPTS}
       onItemClick={(info) => {
@@ -566,7 +562,6 @@ const chatSender = computed(() => (
       }}
       style={styles.value.senderPrompt}
     />
-    {/* 🌟 输入框 */}
     <Sender
       value={inputValue.value}
       header={senderHeader.value}

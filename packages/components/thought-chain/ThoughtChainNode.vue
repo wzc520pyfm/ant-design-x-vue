@@ -62,7 +62,6 @@ defineRender(() => {
         />
       )}
       <div class={classnames(`${nodeCls.value}-box`)}>
-        {/* Header */}
         <div
           class={classnames(`${nodeCls.value}-header`, classNames.value.itemHeader)}
           style={styles.value.itemHeader}
@@ -91,7 +90,6 @@ defineRender(() => {
           </div>
           {description && <div class={`${nodeCls.value}-description`}>{description}</div>}
         </div>
-        {/* Content */}
         {content && (
           <TransitionCollapse prefixCls={prefixCls.value}>
             <div
@@ -107,7 +105,6 @@ defineRender(() => {
             </div>
           </TransitionCollapse>
         )}
-        {/* Footer */}
         {footer && (
           <div
             class={classnames(`${nodeCls.value}-footer`, classNames.value.itemFooter)}
