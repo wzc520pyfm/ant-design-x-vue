@@ -5,13 +5,12 @@ import { Divider } from 'ant-design-vue';
 import type {
   ConversationItemType,
   ConversationsItemProps,
-  ConversationsProps,
   ItemType,
 } from './interface';
 import ConversationsItem from './ConversationsItem.vue';
 import GroupTitle from './GroupTitle.vue';
 import Creation from './Creation.vue';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, type CSSProperties, watch } from 'vue';
 import useMergedState from '../_util/hooks/useMergedState';
 import { useXProviderContext } from '../x-provider';
 import useGroupable from './hooks/useGroupable';
@@ -21,6 +20,26 @@ import useStyle from './style';
 import GroupTitleContextProvider from './context';
 
 defineOptions({ name: 'AXConversations' });
+
+type ConversationsSemanticType = 'root' | 'creation' | 'group' | 'item';
+type ConversationMenu = ConversationsItemProps['menu'];
+type ActiveKey = ConversationItemType['key'] | undefined;
+
+interface ResolvedConversationsProps {
+  prefixCls?: string;
+  rootClassName?: string;
+  items?: ItemType[];
+  activeKey?: ActiveKey;
+  defaultActiveKey?: ActiveKey;
+  onActiveChange?: (value: string) => void;
+  menu?: ConversationMenu | ((value: ConversationItemType) => ConversationMenu);
+  styles?: Partial<Record<ConversationsSemanticType, CSSProperties>>;
+  classNames?: Partial<Record<ConversationsSemanticType, string>>;
+  groupable?: any;
+  class?: any;
+  style?: CSSProperties;
+  creation?: any;
+}
 
 const {
   prefixCls: customizePrefixCls,
@@ -37,7 +56,7 @@ const {
   style,
   creation,
   ...restProps
-} = defineProps<ConversationsProps>();
+} = defineProps<ResolvedConversationsProps>();
 
 const activeKey = ref(activeKeyProp);
 
@@ -50,7 +69,7 @@ const domProps = computed(() => pickAttrs(restProps, {
 const containerRef = ref<HTMLElement>();
 
 // ============================ ActiveKey ============================
-const [mergedActiveKey, setMergedActiveKey] = useMergedState<ConversationsProps['activeKey']>(
+const [mergedActiveKey, setMergedActiveKey] = useMergedState<ActiveKey>(
   defaultActiveKey,
   {
     value: activeKey,

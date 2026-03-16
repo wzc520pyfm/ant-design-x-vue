@@ -7,8 +7,9 @@ class XNotification {
   private static permissionMap: Map<string, any> = new Map();
   static permissible: boolean;
   constructor() {
-    XNotification.permissible = !!globalThis?.Notification;
-    if (!XNotification.permissible) {
+    const isBrowser = typeof window !== 'undefined';
+    XNotification.permissible = isBrowser && !!globalThis?.Notification;
+    if (isBrowser && !XNotification.permissible) {
       console.warn('Notification API is not supported in this environment.');
     }
   }

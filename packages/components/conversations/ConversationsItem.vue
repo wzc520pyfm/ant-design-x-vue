@@ -1,13 +1,26 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
 import type { EventHandler, MouseEventHandler } from 'ant-design-vue/es/_util/EventInterface';
-import type { ConversationItemType, ConversationsItemProps } from './interface';
+import type { ConversationItemType } from './interface';
 import pickAttrs from '../_util/pick-attrs';
 import { computed } from 'vue';
 import { Dropdown, Menu, Typography } from 'ant-design-vue';
 import { EllipsisOutlined } from '@ant-design/icons-vue';
 
 defineOptions({ name: 'AXConversationsItem' });
+
+interface ResolvedConversationsItemProps {
+  info: ConversationItemType;
+  prefixCls?: string;
+  direction?: 'ltr' | 'rtl';
+  menu?: Record<string, any> & {
+    trigger?: any;
+    getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
+  };
+  active?: boolean;
+  onClick?: (value: string) => void;
+  class?: any;
+}
 
 const {
   prefixCls,
@@ -18,7 +31,7 @@ const {
   active,
   menu,
   ...restProps
-} = defineProps<ConversationsItemProps>();
+} = defineProps<ResolvedConversationsItemProps>();
 
 const domProps = computed(() => pickAttrs(restProps, {
   aria: true,

@@ -1,11 +1,56 @@
 <script setup lang="tsx">
 import { computed } from 'vue';
 import XProviderContextProvider from './context';
-import type { XProviderProps } from './context';
+import type { AntdConfigProviderProps, XComponentsConfig } from './context';
+import type { MarkdownComponentsConfig } from './XMarkdownComponents';
 import useXProviderContext from './hooks/use-x-provider-context';
 import { ConfigProvider as AntdConfigProvider } from 'ant-design-vue';
 
 defineOptions({ name: 'AXProvider', inheritAttrs: false });
+
+interface ResolvedXProviderTheme {
+  components?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+interface ResolvedXProviderProps {
+  actions?: XComponentsConfig['actions'];
+  attachments?: XComponentsConfig['attachments'];
+  bubble?: XComponentsConfig['bubble'];
+  conversations?: XComponentsConfig['conversations'];
+  prompts?: XComponentsConfig['prompts'];
+  sender?: XComponentsConfig['sender'];
+  suggestion?: XComponentsConfig['suggestion'];
+  thoughtChain?: XComponentsConfig['thoughtChain'];
+  welcome?: XComponentsConfig['welcome'];
+  fileCard?: XComponentsConfig['fileCard'];
+  think?: XComponentsConfig['think'];
+  mermaid?: MarkdownComponentsConfig['mermaid'];
+  highlightCode?: MarkdownComponentsConfig['highlightCode'];
+  iconPrefixCls?: AntdConfigProviderProps['iconPrefixCls'];
+  getTargetContainer?: AntdConfigProviderProps['getTargetContainer'];
+  getPopupContainer?: AntdConfigProviderProps['getPopupContainer'];
+  prefixCls?: AntdConfigProviderProps['prefixCls'];
+  getPrefixCls?: AntdConfigProviderProps['getPrefixCls'];
+  renderEmpty?: AntdConfigProviderProps['renderEmpty'];
+  transformCellText?: AntdConfigProviderProps['transformCellText'];
+  csp?: AntdConfigProviderProps['csp'];
+  input?: AntdConfigProviderProps['input'];
+  autoInsertSpaceInButton?: AntdConfigProviderProps['autoInsertSpaceInButton'];
+  locale?: AntdConfigProviderProps['locale'];
+  pageHeader?: AntdConfigProviderProps['pageHeader'];
+  componentSize?: AntdConfigProviderProps['componentSize'];
+  componentDisabled?: AntdConfigProviderProps['componentDisabled'];
+  direction?: AntdConfigProviderProps['direction'];
+  space?: AntdConfigProviderProps['space'];
+  virtual?: AntdConfigProviderProps['virtual'];
+  dropdownMatchSelectWidth?: AntdConfigProviderProps['dropdownMatchSelectWidth'];
+  form?: AntdConfigProviderProps['form'];
+  pagination?: AntdConfigProviderProps['pagination'];
+  theme?: ResolvedXProviderTheme;
+  select?: AntdConfigProviderProps['select'];
+  wave?: AntdConfigProviderProps['wave'];
+}
 
 const {
   actions,
@@ -22,7 +67,7 @@ const {
   mermaid,
   highlightCode,
   ...antdConfProps
-} = defineProps<XProviderProps>();
+} = defineProps<ResolvedXProviderProps>();
 
 const slots = defineSlots<{
   default(props?: any): any
@@ -55,10 +100,10 @@ const childNode = computed(() => slots.default?.());
 
 defineRender(() => {
   return (
-    <XProviderContextProvider value={xProviderProps.value}>
+    <XProviderContextProvider value={xProviderProps.value as any}>
       <AntdConfigProvider
         {...antdConfProps}
-        theme={mergedTheme.value}
+        theme={mergedTheme.value as any}
       >
         {childNode.value}
       </AntdConfigProvider>
