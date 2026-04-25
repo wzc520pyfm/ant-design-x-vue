@@ -148,8 +148,28 @@ module.exports = {
 
 - 通用: `Bubble` - 消息气泡、`Conversations` - 会话管理
 - 唤醒: `Welcome` - 欢迎、`Prompts` - 提示集
-- 表达: `Sender` - 发送框、`Attachment` - 附件、`Suggestion` - 快捷指令
-- 确认: `ThoughtChain` - 思维链
+- 表达: `Sender` - 发送框、`Attachments` - 输入附件、`Suggestion` - 快捷指令
+- 确认: `Think` - 思考过程、`ThoughtChain` - 思维链
+- 反馈: `Actions` - 操作列表、`Attachments.FileCard` - 文件卡片
+- 其他: `XProvider` - 全局配置：主题、国际化等
+
+## ⚡️ 对接模型/智能体服务，AI 对话数据流管理
+
+我们通过提供 X SDK（`@ant-design-x-vue/x-sdk`），帮助你开箱即用地对接模型和智能体服务，并提供好用的基础工具：
+
+- `XRequest`：通用 HTTP 请求 + 流式响应解析
+- `XStream`：基于 Web Streams 的 SSE 流式数据解析
+- `useXChat`：AI 会话状态管理，配合 `ChatProvider` 适配各种模型 API
+- `useXConversations`：会话列表与切换状态管理
+- `XMCPClient`：基于 `XRequest` 实现的 MCP（Model Context Protocol）客户端
+
+## ✨ Markdown 高性能流式渲染引擎
+
+我们提供专为流式内容优化的 X Markdown（`@ant-design-x-vue/x-markdown`）渲染解决方案：
+
+- 流式增量缓冲：自动识别未完成的 markdown token（链接、图片、表格、HTML 等），保证渲染期间不出现"半个语法"。
+- 内置插件：`Latex`（基于 KaTeX）、`HighlightCode`（基于 highlight.js）、`Mermaid`（基于 mermaid）。
+- 主题样式：内置 `themes/light.css`、`themes/dark.css`，可按需引入。
 
 下面是使用原子组件搭建一个最简单的对话框的代码示例:
 

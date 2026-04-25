@@ -73,6 +73,18 @@ attachments/files-custom
 
 </ClientOnly>
 
+### 调用文件选择
+
+<ClientOnly>
+
+:::demo 通过 `attachmentsRef.select()` 动态覆盖 `accept` / `multiple`，按类别唤起系统文件选择器。
+
+attachments/select-files
+
+:::
+
+</ClientOnly>
+
 ## API
 
 <!-- 通用属性参考：[通用属性](/docs/react/common-props)。 -->
@@ -110,10 +122,12 @@ interface PlaceholderType {
 
 ### Attachments Expose
 
-| 属性          | 说明             | 类型                 | 版本 |
-| ------------- | ---------------- | -------------------- | ---- |
-| nativeElement | 获取原生节点     | HTMLElement          | -    |
-| upload        | 手工调用上传文件 | (file: File \| File[] \| FileList) => void | -    |
+| 属性              | 说明                                                   | 类型                                                                 | 版本 |
+| ----------------- | ------------------------------------------------------ | -------------------------------------------------------------------- | ---- |
+| nativeElement     | 获取根节点                                             | HTMLElement                                                          | -    |
+| fileNativeElement | 获取原生 `<input type="file" />` 节点                 | HTMLInputElement                                                     | -    |
+| upload            | 手动上传文件                                           | `(file: File \| File[] \| FileList) => void`                         | -    |
+| select            | 打开文件选择器，可临时覆盖 `accept` / `multiple`      | `(options: { accept?: string; multiple?: boolean }) => void`         | -    |
 
 ### Attachments.FileCard Props
 
