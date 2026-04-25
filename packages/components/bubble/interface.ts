@@ -275,6 +275,11 @@ export interface BubbleListProps extends /* @vue-ignore */ Omit<HTMLAttributes, 
    * @description 数据类别基础配置项，优先级低，会被 items 配置覆盖。默认 ai、system、user、divider 四类，允许自定义类别
    */
   roles?: AvoidValidation<RoleType>;
+  /**
+   * @description 与 `roles` 等价。提供该字段是为了与 `@ant-design/x` (React) 2.0 的 API 保持一致。
+   * 当同时传入 `role` 与 `roles` 时优先使用 `roles`。
+   */
+  role?: AvoidValidation<RoleType>;
   onScroll?: (e: Event) => void;
 }
 

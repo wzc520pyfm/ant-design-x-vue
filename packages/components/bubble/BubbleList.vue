@@ -64,7 +64,11 @@ const domProps = computed(
 );
 
 const items = ref<BubbleItemType[]>(props.items);
-const roles = ref(props.roles);
+
+// `roles` is the canonical Vue field; `role` is supported for parity with the
+// React `@ant-design/x` 2.0 BubbleList API. `roles` always wins when both are set.
+const resolvedRoles = computed(() => props.roles ?? props.role);
+const roles = ref(resolvedRoles.value);
 
 watch(
   () => props.items,
@@ -73,12 +77,9 @@ watch(
   },
 );
 
-watch(
-  () => props.roles,
-  () => {
-    roles.value = props.roles;
-  },
-);
+watch(resolvedRoles, (next) => {
+  roles.value = next;
+});
 
 // ============================= Refs =============================
 const listRef = ref<HTMLDivElement | null>(null);
