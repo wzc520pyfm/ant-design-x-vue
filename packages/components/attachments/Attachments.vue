@@ -120,23 +120,29 @@ const getPlaceholderNode = (
 
 const hasFileList = computed(() => fileList.value.length > 0);
 
-defineExpose<AttachmentsRef>({
-  nativeElement: containerRef.value,
-  upload: (file) => {
-    // get native element
-    const fileInput = placeholderUploaderRef.value?.nativeElement.querySelector?.('input[type="file"]') as HTMLInputElement;
+const getFileInput = (): HTMLInputElement | null =>
+  (placeholderUploaderRef.value?.nativeElement?.querySelector?.(
+    'input[type="file"]',
+  ) as HTMLInputElement | null) ?? null;
 
+defineExpose<AttachmentsRef>({
+  get nativeElement() {
+    return containerRef.value;
+  },
+  get fileNativeElement() {
+    return getFileInput();
+  },
+  upload: (file) => {
+    const fileInput = getFileInput();
     if (!fileInput) return;
 
     const dataTransfer = new DataTransfer();
     try {
-      // If length exists, it's a File array or FileList — handle together.
       if ('length' in file && file.length >= 1) {
         for (let i = 0; i < file.length; i++) {
           dataTransfer.items.add(file[i]);
         }
       } else {
-        // Single File
         dataTransfer.items.add(file as File);
       }
       fileInput.files = dataTransfer.files;
@@ -144,6 +150,13 @@ defineExpose<AttachmentsRef>({
     } catch (err) {
       console.error('upload failed', err);
     }
+  },
+  select: ({ accept, multiple = false }) => {
+    const fileInput = getFileInput();
+    if (!fileInput) return;
+    fileInput.multiple = multiple;
+    fileInput.accept = accept || (props as any).accept || '';
+    fileInput.click();
   },
 });
 

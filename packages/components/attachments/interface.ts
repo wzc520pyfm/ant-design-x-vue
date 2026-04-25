@@ -153,7 +153,14 @@ export interface AttachmentsProps extends AntdUploadProps {
 
 export interface AttachmentsRef {
   nativeElement: HTMLDivElement | null;
+  fileNativeElement: HTMLInputElement | null;
   upload: (file: File | File[] | FileList) => void;
+  /**
+   * Programmatically open the file-picker dialog. Mirrors React's
+   * `ref.select(options)` API – overrides `accept` / `multiple` on
+   * the native `<input type="file" />` for the duration of the click.
+   */
+  select: (options: { accept?: string; multiple?: boolean }) => void;
 }
 
 
