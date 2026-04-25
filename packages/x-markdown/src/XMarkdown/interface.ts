@@ -1,5 +1,6 @@
-import type { Component } from 'vue';
-import type { VNode } from 'vue';
+import type { Config as DOMPurifyConfig } from 'dompurify';
+import type { MarkedExtension, Tokens as MarkedTokens } from 'marked';
+import type { Component, CSSProperties, VNode } from 'vue';
 
 /** Stream status for useStreaming hook */
 export type StreamStatus = 'idle' | 'streaming' | 'complete' | 'error';
@@ -57,38 +58,126 @@ export interface ComponentProps {
 }
 
 /**
- * Marked parse options (align with @ant-design/x-markdown config)
+ * Marked parse configuration – accepts any marked extension (renderer, tokenizer,
+ * extensions) or a combined object produced by plugin factories (e.g. `Latex()`).
  */
-export type MarkedConfig = Record<string, any>;
+export type MarkedConfig = MarkedExtension | { extensions: MarkedTokens.Generic[] } | Record<string, any>;
+
+export interface AnimationConfig {
+  /**
+   * The duration of the fade-in animation in milliseconds.
+   * @default 200
+   */
+  fadeDuration?: number;
+  /**
+   * Easing function for the animation.
+   * @default 'ease-in-out'
+   */
+  easing?: string;
+}
+
+export enum StreamCacheTokenType {
+  Text = 'text',
+  Link = 'link',
+  Image = 'image',
+  Html = 'html',
+  Emphasis = 'emphasis',
+  List = 'list',
+  Table = 'table',
+}
+
+export interface StreamingOption {
+  /**
+   * When false, flushes all cached content and completes rendering.
+   * @default false
+   */
+  hasNextChunk?: boolean;
+  /**
+   * Enables text fade-in animation for block elements (p, li, h1–h4).
+   * @default false
+   */
+  enableAnimation?: boolean;
+  /**
+   * Configuration for text appearance animation effects.
+   */
+  animationConfig?: AnimationConfig;
+  /**
+   * Mapping configuration to convert incomplete Markdown formats to custom
+   * loading components for unclosed links / images during streaming rendering.
+   */
+  incompleteMarkdownComponentMap?: Partial<
+    Record<Exclude<StreamCacheTokenType, StreamCacheTokenType.Text>, string>
+  >;
+}
 
 export interface XMarkdownProps {
   /**
-   * Markdown content to render
+   * Markdown content to render.
    */
   content?: string;
 
   /**
-   * Whether content is being streamed (custom components receive streamStatus)
+   * Alias for `content`.
    */
-  streaming?: boolean;
+  children?: string;
 
   /**
-   * Map HTML/custom tag names to Vue components (e.g. h1, pre, code, mermaid, think)
+   * Whether content is being streamed. Passes `'loading' | 'done'` to custom
+   * components. Accepts a boolean or a StreamingOption object (aligned with
+   * @ant-design/x-markdown).
+   */
+  streaming?: boolean | StreamingOption;
+
+  /**
+   * Map HTML/custom tag names to Vue components (e.g. h1, pre, code, mermaid, think).
    */
   components?: Record<string, Component>;
 
   /**
-   * Plugins to extend functionality (transform content before parse)
+   * Plugins – legacy hook (transform) shape, still supported for back-compat.
+   * Prefer `config` with marked extensions.
    */
   plugins?: any[];
 
   /**
-   * Marked parse configuration
+   * Marked parse configuration / extension.
    */
   config?: MarkedConfig;
 
   /**
-   * Class name for the root element
+   * Root class name.
    */
   className?: string;
+
+  /**
+   * Alias of `className`, matching React's `rootClassName`.
+   */
+  rootClassName?: string;
+
+  /**
+   * Inline style for root container.
+   */
+  style?: CSSProperties;
+
+  /**
+   * CSS class prefix override.
+   */
+  prefixCls?: string;
+
+  /**
+   * Custom paragraph tag (e.g. 'div') to avoid invalid nesting.
+   * @default 'p'
+   */
+  paragraphTag?: string;
+
+  /**
+   * Add target="_blank" + rel="noopener noreferrer" on anchors.
+   * @default false
+   */
+  openLinksInNewTab?: boolean;
+
+  /**
+   * DOMPurify sanitize configuration.
+   */
+  dompurifyConfig?: DOMPurifyConfig;
 }

@@ -1,32 +1,8 @@
-import type { XMarkdownPlugin } from '../type';
+import HighlightCode from './HighlightCode.vue';
 
-export interface HighlightCodeOptions {
-  /**
-   * Theme for code highlighting
-   */
-  theme?: 'light' | 'dark' | string;
+export type {
+  default as HighlightCodeComponent,
+} from './HighlightCode.vue';
 
-  /**
-   * Languages to support
-   */
-  languages?: string[];
-}
-
-/**
- * HighlightCode plugin for syntax highlighting in code blocks
- * TODO: Implement full functionality with react-syntax-highlighter equivalent
- */
-export function createHighlightCodePlugin(
-  options: HighlightCodeOptions = {}
-): XMarkdownPlugin {
-  return {
-    name: 'highlight-code',
-    languages: options.languages || ['javascript', 'typescript', 'python', 'css', 'html'],
-    transform: (content: string) => {
-      // TODO: Implement syntax highlighting
-      return content;
-    },
-  };
-}
-
-export default createHighlightCodePlugin;
+export { HighlightCode };
+export default HighlightCode;

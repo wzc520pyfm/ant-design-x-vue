@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { computed, h, type VNode } from 'vue';
+import { computed, h, shallowRef, watch, type CSSProperties, type VNode } from 'vue';
 import type { XMarkdownProps } from './interface';
-import { parseMarkdown, htmlToVNode } from './core';
+import { Parser, htmlToVNode } from './core';
 import DOMPurify from 'dompurify';
+import { useStreaming } from './hooks';
+import classnames from 'classnames';
+import { useXProviderContext } from '@ant-design-x-vue/components';
 
 defineOptions({
   name: 'XMarkdown',
@@ -12,7 +15,20 @@ const props = withDefaults(defineProps<XMarkdownProps>(), {
   streaming: false,
 });
 
-/** Apply plugin transforms to content before parse */
+const { direction: contextDirection, getPrefixCls } = useXProviderContext();
+
+const prefixCls = computed(() => getPrefixCls('x-markdown', props.prefixCls));
+
+const mergedCls = computed(() =>
+  classnames(prefixCls.value, 'x-markdown', props.rootClassName, props.className),
+);
+
+const mergedStyle = computed<CSSProperties>(() => ({
+  direction: contextDirection?.value === 'rtl' ? 'rtl' : 'ltr',
+  ...(props.style || {}),
+}));
+
+// Legacy plugin transform hook (back-compat with v1 API).
 function applyPlugins(content: string): string {
   let result = content;
   const plugins = props.plugins || [];
@@ -24,18 +40,56 @@ function applyPlugins(content: string): string {
   return result;
 }
 
-const streamStatus = computed(() => (props.streaming ? ('loading' as const) : ('done' as const)));
-
-const parsedHtml = computed(() => {
-  if (!props.content) return '';
-  const transformed = applyPlugins(props.content);
-  const raw = parseMarkdown(transformed, props.config);
-  // DOMPurify 依赖 document，SSR 环境下跳过 sanitize，仅客户端做净化
-  if (typeof document === 'undefined') return raw;
-  return DOMPurify.sanitize(raw);
+const streamingObject = computed(() => {
+  if (typeof props.streaming === 'object' && props.streaming !== null) {
+    return props.streaming;
+  }
+  return undefined;
 });
 
-/** Render HTML as VNodes with optional component replacement */
+const streamingFlag = computed(() => {
+  if (typeof props.streaming === 'boolean') return props.streaming;
+  return !!streamingObject.value;
+});
+
+const streamStatus = computed(() => (streamingFlag.value ? 'loading' : 'done'));
+
+const rawContent = computed(() => props.content ?? props.children ?? '');
+
+const { displayedContent: displayContent } = useStreaming({
+  content: rawContent,
+  streaming: streamingFlag,
+  streamingOption: streamingObject,
+});
+
+const parser = shallowRef<Parser>(
+  new Parser({
+    markedConfig: props.config as any,
+    paragraphTag: props.paragraphTag,
+    openLinksInNewTab: props.openLinksInNewTab,
+  }),
+);
+
+watch(
+  () => [props.config, props.paragraphTag, props.openLinksInNewTab],
+  () => {
+    parser.value = new Parser({
+      markedConfig: props.config as any,
+      paragraphTag: props.paragraphTag,
+      openLinksInNewTab: props.openLinksInNewTab,
+    });
+  },
+);
+
+const parsedHtml = computed(() => {
+  const source = displayContent.value ?? rawContent.value;
+  if (!source) return '';
+  const transformed = applyPlugins(source);
+  const raw = parser.value.parse(transformed);
+  if (typeof document === 'undefined') return raw;
+  return DOMPurify.sanitize(raw, props.dompurifyConfig as any) as unknown as string;
+});
+
 const bodyVNodes = computed((): VNode[] => {
   const html = parsedHtml.value;
   if (!html) return [];
@@ -45,39 +99,38 @@ const bodyVNodes = computed((): VNode[] => {
   });
 });
 
-const rootClass = computed(() =>
-  ['x-markdown', 'x-markdown-root', props.className].filter(Boolean).join(' '),
-);
-
-defineRender(() => h('div', { class: rootClass.value }, bodyVNodes.value));
+defineRender(() => {
+  if (!rawContent.value) return null;
+  return h(
+    'div',
+    { class: mergedCls.value, style: mergedStyle.value },
+    bodyVNodes.value,
+  );
+});
 </script>
 
 <style scoped>
-.x-markdown-root {
+:deep(.x-markdown) {
   line-height: 1.6;
 }
-
-.x-markdown-root :deep(pre) {
+:deep(.x-markdown) pre {
   background-color: #f5f5f5;
   padding: 16px;
   border-radius: 4px;
   overflow-x: auto;
 }
-
-.x-markdown-root :deep(code) {
+:deep(.x-markdown) code {
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 }
-
-.x-markdown-root :deep(p) {
+:deep(.x-markdown) p {
   margin: 0 0 16px;
 }
-
-.x-markdown-root :deep(h1),
-.x-markdown-root :deep(h2),
-.x-markdown-root :deep(h3),
-.x-markdown-root :deep(h4),
-.x-markdown-root :deep(h5),
-.x-markdown-root :deep(h6) {
+:deep(.x-markdown) h1,
+:deep(.x-markdown) h2,
+:deep(.x-markdown) h3,
+:deep(.x-markdown) h4,
+:deep(.x-markdown) h5,
+:deep(.x-markdown) h6 {
   margin-top: 24px;
   margin-bottom: 16px;
   font-weight: 600;

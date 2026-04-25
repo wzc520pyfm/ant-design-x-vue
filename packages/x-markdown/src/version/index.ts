@@ -1,2 +1,3 @@
-// Auto-generated version file
-export default '0.0.1';
+const version = '0.0.1';
+
+export default version;
