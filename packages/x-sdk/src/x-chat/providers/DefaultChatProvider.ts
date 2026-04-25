@@ -1,20 +1,42 @@
-import { AbstractChatProvider } from './AbstractChatProvider';
-import type { XModelParams, XModelResponse } from './types/model';
+import type { XRequestOptions } from '../../x-request';
+import AbstractChatProvider, { type TransformMessage } from './AbstractChatProvider';
 
-/**
- * Default chat provider implementation
- * TODO: Implement full functionality
- */
-export class DefaultChatProvider extends AbstractChatProvider {
-  async chat(params: XModelParams): Promise<XModelResponse> {
-    // TODO: Implement
-    throw new Error('Not implemented');
+export default class DefaultChatProvider<ChatMessage, Input, Output> extends AbstractChatProvider<
+  ChatMessage,
+  Input,
+  Output
+> {
+  transformParams(
+    requestParams: ChatMessage & Partial<Input>,
+    options: XRequestOptions<Input, Output>,
+  ): Input {
+    if (typeof requestParams !== 'object') {
+      throw new Error('requestParams must be an object');
+    }
+    return {
+      ...(options?.params || {}),
+      ...(requestParams || {}),
+    } as Input;
   }
 
-  async *chatStream(
-    params: XModelParams
-  ): AsyncGenerator<string, void, unknown> {
-    // TODO: Implement
-    throw new Error('Not implemented');
+  transformLocalMessage(requestParams: Partial<Input>): ChatMessage {
+    return requestParams as unknown as ChatMessage;
+  }
+
+  transformMessage(info: TransformMessage<ChatMessage, Output>): ChatMessage {
+    const { chunk, chunks, originMessage } = info;
+
+    if (chunk) {
+      return chunk as unknown as ChatMessage;
+    }
+
+    if (Array.isArray(chunks)) {
+      const last = chunks?.length > 0 ? chunks?.[chunks?.length - 1] : undefined;
+      return originMessage ? originMessage : (last as unknown as ChatMessage);
+    }
+
+    return chunks as unknown as ChatMessage;
   }
 }
+
+export { DefaultChatProvider };

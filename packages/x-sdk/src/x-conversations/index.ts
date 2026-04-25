@@ -1,71 +1,67 @@
-import { ref, shallowRef } from 'vue';
-import type { ShallowRef } from 'vue';
+import { onBeforeUnmount, shallowRef, type ShallowRef } from 'vue';
+import { ConversationStore, type ConversationData } from './store';
 
-export interface ConversationData {
-  id: string;
-  title: string;
-  createdAt?: number;
-  updatedAt?: number;
-  [key: string]: any;
-}
+export type { ConversationData };
+export { ConversationStore, conversationStoreHelper } from './store';
 
-export interface UseXConversationsOptions {
+export interface XConversationConfig {
   defaultConversations?: ConversationData[];
-  defaultActiveId?: string;
+  defaultActiveConversationKey?: string;
 }
 
 export interface UseXConversationsReturn {
   conversations: ShallowRef<ConversationData[]>;
-  activeId: ShallowRef<string | undefined>;
-  setConversations: (conversations: ConversationData[]) => void;
-  addConversation: (conversation: ConversationData) => void;
-  updateConversation: (id: string, data: Partial<ConversationData>) => void;
-  removeConversation: (id: string) => void;
-  setActiveId: (id: string | undefined) => void;
+  activeConversationKey: ShallowRef<string>;
+  setActiveConversationKey: (key: string) => boolean;
+  addConversation: (
+    conversation: ConversationData,
+    placement?: 'prepend' | 'append',
+  ) => boolean;
+  removeConversation: (key: ConversationData['key']) => boolean;
+  setConversation: (
+    key: ConversationData['key'],
+    conversation: ConversationData,
+  ) => boolean;
+  getConversation: (key: ConversationData['key']) => ConversationData | undefined;
+  setConversations: (list: ConversationData[]) => boolean;
+  getMessages: (key: ConversationData['key']) => unknown;
 }
 
 /**
- * useXConversations - Vue composable for managing conversations
- * TODO: Implement full functionality
+ * Vue port of React's `useXConversations` – exposes reactive `conversations`
+ * and `activeConversationKey` refs plus the store mutations. The underlying
+ * `ConversationStore` is shared across hooks through `conversationStoreHelper`
+ * so `useXChat` can resolve history by conversation key.
  */
-export function useXConversations(
-  options: UseXConversationsOptions = {}
-): UseXConversationsReturn {
-  const { defaultConversations = [], defaultActiveId } = options;
+export function useXConversations(config: XConversationConfig = {}): UseXConversationsReturn {
+  const store = new ConversationStore(
+    config.defaultConversations || [],
+    config.defaultActiveConversationKey || '',
+  );
 
-  const conversations = shallowRef<ConversationData[]>([...defaultConversations]);
-  const activeId = shallowRef<string | undefined>(defaultActiveId);
+  const conversations = shallowRef<ConversationData[]>(store.getSnapshot());
+  const activeConversationKey = shallowRef<string>(store.getActiveConversationKey());
 
-  const setConversations = (newConversations: ConversationData[]) => {
-    conversations.value = [...newConversations];
-  };
+  const unsubscribe = store.subscribe(() => {
+    conversations.value = [...store.getSnapshot()];
+    activeConversationKey.value = store.getActiveConversationKey();
+  });
 
-  const addConversation = (conversation: ConversationData) => {
-    conversations.value = [...conversations.value, conversation];
-  };
-
-  const updateConversation = (id: string, data: Partial<ConversationData>) => {
-    conversations.value = conversations.value.map((conv) =>
-      conv.id === id ? { ...conv, ...data } : conv
-    );
-  };
-
-  const removeConversation = (id: string) => {
-    conversations.value = conversations.value.filter((conv) => conv.id !== id);
-  };
-
-  const setActiveId = (id: string | undefined) => {
-    activeId.value = id;
-  };
+  onBeforeUnmount(() => {
+    unsubscribe();
+    store.destroy();
+  });
 
   return {
     conversations,
-    activeId,
-    setConversations,
-    addConversation,
-    updateConversation,
-    removeConversation,
-    setActiveId,
+    activeConversationKey,
+    setActiveConversationKey: store.setActiveConversationKey,
+    addConversation: store.addConversation,
+    removeConversation: store.removeConversation,
+    setConversation: store.setConversation,
+    getConversation: store.getConversation,
+    setConversations: store.setConversations,
+    getMessages: store.getMessages,
   };
 }
 

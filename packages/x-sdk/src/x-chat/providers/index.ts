@@ -1,4 +1,5 @@
-export { AbstractChatProvider } from './AbstractChatProvider';
-export { DefaultChatProvider } from './DefaultChatProvider';
-export { OpenAIChatProvider } from './OpenAIChatProvider';
-export { DeepSeekChatProvider } from './DeepSeekChatProvider';
+export type { ChatProviderConfig, TransformMessage } from './AbstractChatProvider';
+export { default as AbstractChatProvider } from './AbstractChatProvider';
+export { default as DeepSeekChatProvider } from './DeepSeekChatProvider';
+export { default as DefaultChatProvider } from './DefaultChatProvider';
+export { default as OpenAIChatProvider } from './OpenAIChatProvider';

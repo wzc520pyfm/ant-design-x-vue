@@ -1,27 +1,63 @@
-import { AbstractChatProvider } from './AbstractChatProvider';
-import type { XModelParams, XModelResponse } from './types/model';
+import type { XModelMessage, XModelParams } from './types/model';
+import type { XRequestOptions } from '../../x-request';
+import type { SSEFields } from '../../x-stream';
+import AbstractChatProvider, { type TransformMessage } from './AbstractChatProvider';
 
 /**
- * OpenAI-compatible chat provider
- * TODO: Implement full functionality
+ * LLM OpenAI Compatible Chat Provider
  */
-export class OpenAIChatProvider extends AbstractChatProvider {
-  constructor(options: { apiKey?: string; baseUrl?: string } = {}) {
-    super({
-      ...options,
-      baseUrl: options.baseUrl || 'https://api.openai.com/v1',
-    });
+export default class OpenAIChatProvider<
+  ChatMessage extends XModelMessage = XModelMessage,
+  Input extends XModelParams = XModelParams,
+  Output extends Partial<Record<SSEFields, any>> = Partial<Record<SSEFields, any>>,
+> extends AbstractChatProvider<ChatMessage, Input, Output> {
+  transformParams(requestParams: Partial<Input>, options: XRequestOptions<Input, Output>): Input {
+    return {
+      ...(options?.params || {}),
+      ...requestParams,
+      messages: this.getMessages(),
+    } as unknown as Input;
   }
 
-  async chat(params: XModelParams): Promise<XModelResponse> {
-    // TODO: Implement
-    throw new Error('Not implemented');
+  transformLocalMessage(requestParams: Partial<Input>): ChatMessage[] {
+    return (requestParams?.messages || []) as ChatMessage[];
   }
 
-  async *chatStream(
-    params: XModelParams
-  ): AsyncGenerator<string, void, unknown> {
-    // TODO: Implement
-    throw new Error('Not implemented');
+  transformMessage(info: TransformMessage<ChatMessage, Output>): ChatMessage {
+    const { originMessage, chunk, chunks, responseHeaders } = info;
+    let currentContent = '';
+    let role = 'assistant';
+    try {
+      let message: any;
+      if (responseHeaders.get('content-type')?.includes('text/event-stream')) {
+        if (chunk && (chunk as any).data?.trim() !== '[DONE]') {
+          message = JSON.parse((chunk as any).data);
+        }
+      } else {
+        message = chunk || chunks[0];
+      }
+      if (message) {
+        message?.choices?.forEach((choice: any) => {
+          if (choice?.delta) {
+            currentContent += choice.delta.content || '';
+            role = choice.delta.role || 'assistant';
+          } else if (choice?.message) {
+            currentContent += choice.message.content || '';
+            role = choice.message.role || 'assistant';
+          }
+        });
+      }
+    } catch (error) {
+      console.error('transformMessage error', error);
+    }
+
+    const content = `${(originMessage as any)?.content || ''}${currentContent || ''}`;
+
+    return {
+      content,
+      role,
+    } as ChatMessage;
   }
 }
+
+export { OpenAIChatProvider };

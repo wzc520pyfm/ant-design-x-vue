@@ -1,65 +1,71 @@
-export interface XMcpClientOptions {
-  serverUrl: string;
-  apiKey?: string;
-}
+import type { AnyObject } from '../_util/type';
+import XRequest, { type XRequestOptions } from '../x-request';
 
-export interface XMcpTool {
+export interface XMCPTool {
   name: string;
   description?: string;
-  inputSchema?: Record<string, any>;
+  inputSchema: {
+    type: 'object';
+    properties: AnyObject;
+  };
+  annotations?: {
+    title?: string;
+    readOnlyHint?: boolean;
+    destructiveHint?: boolean;
+    idempotentHint?: boolean;
+    openWorldHint?: boolean;
+  };
 }
 
-export interface XMcpResource {
-  uri: string;
-  name: string;
-  description?: string;
-  mimeType?: string;
-}
+export type XMCPClientOptions = Pick<
+  XRequestOptions,
+  'params' | 'headers' | 'timeout' | 'fetch'
+>;
 
 /**
- * XMcpClient - Model Context Protocol client
- * TODO: Implement full functionality
+ * MCP (Model Context Protocol) client that talks to a server exposing an
+ * MCP-compatible HTTP endpoint, built on top of `XRequest` so that it reuses
+ * the shared middleware, timeouts and abort semantics.
  */
-export class XMcpClient {
-  private serverUrl: string;
-  private apiKey?: string;
+export class XMCPClientClass {
+  readonly baseURL: string;
+  private options: XMCPClientOptions | undefined;
 
-  constructor(options: XMcpClientOptions) {
-    this.serverUrl = options.serverUrl;
-    this.apiKey = options.apiKey;
+  constructor(baseURL: string, options?: XMCPClientOptions) {
+    if (!baseURL || typeof baseURL !== 'string') {
+      throw new Error('The baseURL is not valid!');
+    }
+    this.baseURL = baseURL;
+    this.options = options;
   }
 
   /**
-   * List available tools from the MCP server
+   * Fetch the list of tools published by the MCP server.
    */
-  async listTools(): Promise<XMcpTool[]> {
-    // TODO: Implement
-    throw new Error('Not implemented');
-  }
-
-  /**
-   * Call a tool on the MCP server
-   */
-  async callTool(name: string, args: Record<string, any>): Promise<any> {
-    // TODO: Implement
-    throw new Error('Not implemented');
-  }
-
-  /**
-   * List available resources from the MCP server
-   */
-  async listResources(): Promise<XMcpResource[]> {
-    // TODO: Implement
-    throw new Error('Not implemented');
-  }
-
-  /**
-   * Read a resource from the MCP server
-   */
-  async readResource(uri: string): Promise<any> {
-    // TODO: Implement
-    throw new Error('Not implemented');
+  async tools(): Promise<XMCPTool[]> {
+    return new Promise((resolve, reject) => {
+      XRequest(this.baseURL, {
+        ...(this.options || {}),
+        callbacks: {
+          onSuccess(chunks) {
+            resolve((chunks?.[0] as XMCPTool[]) || []);
+          },
+          onError(error: Error) {
+            reject(error);
+          },
+        },
+      });
+    });
   }
 }
 
-export default XMcpClient;
+export function XMCPClient(baseURL: string, options?: XMCPClientOptions) {
+  return new XMCPClientClass(baseURL, options);
+}
+
+// Backwards-compatible aliases – early Vue releases exposed `XMcpClient` with a
+// different signature. Keep both so existing imports keep working.
+export const XMcpClient = XMCPClient;
+export type XMcpClientOptions = XMCPClientOptions;
+
+export default XMCPClient;
