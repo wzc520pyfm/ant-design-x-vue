@@ -1,39 +1,18 @@
-import type { MenuItemProps, MenuProps } from 'ant-design-vue';
-import type { CSSProperties, HTMLAttributes, VNode } from 'vue';
+import type { DropdownProps, MenuProps } from 'ant-design-vue';
+import type { CSSProperties, VNode, VNodeChild } from 'vue';
 
 type DataAttributes = {
-  [Key in `data-${string}`]: string | number;
+  [Key in `data-${string}`]?: string | number;
 };
 
-export interface SubItemType extends Pick<MenuItemProps, 'danger'>, DataAttributes {
-  /**
-   * @desc 自定义操作的显示标签
-   * @descEN Display label for the custom action.
-   */
-  label?: string;
-  /**
-   * @desc 自定义操作的唯一标识
-   * @descEN Unique identifier for the custom action.
-   */
-  key: string;
-  /**
-   * @desc 自定义操作的图标
-   * @descEN Icon for the custom action.
-   */
-  icon?: VNode;
-  /**
-   * @desc 点击自定义操作按钮时的回调函数
-   * @descEN Callback function when the custom action button is clicked.
-   */
-  onItemClick?: (info?: ActionItem) => void;
-}
+export type SemanticType = 'root' | 'item' | 'itemDropdown';
 
 export interface ItemType extends DataAttributes {
   /**
    * @desc 自定义操作的唯一标识
    * @descEN Unique identifier for the custom action.
    */
-  key: string;
+  key?: string;
   /**
    * @desc 自定义操作的显示标签
    * @descEN Display label for the custom action.
@@ -43,68 +22,110 @@ export interface ItemType extends DataAttributes {
    * @desc 自定义操作的图标
    * @descEN Icon for the custom action.
    */
-  icon?: VNode;
-  /**
-   * @desc 子操作项
-   * @descEN Child action items.
-   */
-  children?: ActionItem[];
-  /**
-   * @desc 触发子菜单的操作方式
-   * @descEN Action to trigger the sub-menu.
-   */
-  triggerSubMenuAction?: MenuProps['triggerSubMenuAction'];
+  icon?: VNodeChild;
   /**
    * @desc 点击自定义操作按钮时的回调函数
    * @descEN Callback function when the custom action button is clicked.
    */
-  onItemClick?: (info?: ActionItem) => void;
+  onItemClick?: (info?: ItemType) => void;
+  /**
+   * @desc 危险状态
+   * @descEN Danger status
+   */
+  danger?: boolean;
+  /**
+   * @desc 子操作项
+   * @descEN Child action items.
+   */
+  subItems?: Omit<ItemType, 'subItems' | 'triggerSubMenuAction' | 'actionRender'>[];
+  /**
+   * @desc 子菜单的触发方式
+   * @descEN Trigger mode of sub menu.
+   */
+  triggerSubMenuAction?: MenuProps['triggerSubMenuAction'];
+  /**
+   * @desc 自定义渲染操作项内容
+   * @descEN Custom render action item content
+   */
+  actionRender?: ((item: ItemType) => VNodeChild) | VNodeChild;
 }
 
-export type ActionItem = SubItemType | ItemType;
+/** @deprecated use ItemType instead */
+export type ActionItem = ItemType;
+/** @deprecated use ItemType instead */
+export type SubItemType = ItemType;
 
-export interface ActionsProps {
+export interface ActionsProps extends DataAttributes {
   /**
    * @desc 包含多个操作项的列表
    * @descEN A list containing multiple action items.
    */
-  items: ActionItem[];
+  items: ItemType[];
   /**
-   * @desc 根节点样式类
-   * @descEN Root node style class.
-   */
-  rootClassName?: string;
-  /**
-   * @desc 子操作项是否占据一行
-   * @descEN Whether the child action items occupy a line.
-   * @default false
-   */
-  block?: boolean;
-  /**
-   * @desc Item 操作项被点击时的回调函数。
-   * @descEN Callback function when an action item is clicked.
+   * @desc 组件被点击时的回调函数。
+   * @descEN Callback function when component is clicked.
    */
   onClick?: (menuInfo: {
-    item: ActionItem;
+    item: ItemType;
     key: string;
     keyPath: string[];
     domEvent: MouseEvent | KeyboardEvent;
   }) => void;
   /**
-   * @desc 根节点样式
-   * @descEN Style for the root node.
+   * @desc 下拉菜单的配置属性
+   * @descEN Configuration properties for dropdown menu
    */
-  style?: CSSProperties;
+  dropdownProps?: Partial<DropdownProps>;
   /**
    * @desc 变体
    * @descEN Variant.
    * @default 'borderless'
    */
-  variant?: 'borderless' | 'border';
+  variant?: 'borderless' | 'filled' | 'outlined';
   /**
    * @desc 样式类名的前缀。
-   * @descEN Prefix for style class names.
+   * @descEN Prefix for style classnames.
    */
   prefixCls?: string;
+  /**
+   * @desc 根节点样式类
+   * @descEN Root node style class.
+   */
+  rootClassName?: string;
+  /** @desc 外层 className */
+  className?: string;
+  /** @desc 外层样式 */
+  style?: CSSProperties;
+  /**
+   * @desc 语义化结构 className
+   * @descEN Semantic structure class names
+   */
+  classNames?: Partial<Record<SemanticType, string>>;
+  /**
+   * @desc 语义化结构 style
+   * @descEN Semantic structure styles
+   */
+  styles?: Partial<Record<SemanticType, CSSProperties>>;
+  /**
+   * @desc 是否开启渲染渐入
+   * @descEN Whether to enable fade-in rendering.
+   */
+  fadeIn?: boolean;
+  /**
+   * @desc 是否开启渲染从左到右渐入
+   * @descEN Whether to enable fade-in rendering from left to right.
+   */
+  fadeInLeft?: boolean;
+  /**
+   * @deprecated use variant instead
+   */
+  block?: boolean;
 }
 
+export interface ActionsItemProps extends Omit<ActionsProps, 'items' | 'variant'> {
+  item: ItemType;
+}
+
+export type ActionsRef = {
+  nativeElement: HTMLDivElement | null;
+};

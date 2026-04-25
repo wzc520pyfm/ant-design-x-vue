@@ -5,6 +5,8 @@ import type { AntdConfigProviderProps, XComponentsConfig } from './context';
 import type { MarkdownComponentsConfig } from './XMarkdownComponents';
 import useXProviderContext from './hooks/use-x-provider-context';
 import { ConfigProvider as AntdConfigProvider } from 'ant-design-vue';
+import LocaleProvider, { ANT_MARK } from '../locale/LocaleProvider';
+import type { Locale as XLocale } from '../locale/interface';
 
 defineOptions({ name: 'AXProvider', inheritAttrs: false });
 
@@ -37,7 +39,7 @@ interface ResolvedXProviderProps {
   csp?: AntdConfigProviderProps['csp'];
   input?: AntdConfigProviderProps['input'];
   autoInsertSpaceInButton?: AntdConfigProviderProps['autoInsertSpaceInButton'];
-  locale?: AntdConfigProviderProps['locale'];
+  locale?: XLocale;
   pageHeader?: AntdConfigProviderProps['pageHeader'];
   componentSize?: AntdConfigProviderProps['componentSize'];
   componentDisabled?: AntdConfigProviderProps['componentDisabled'];
@@ -103,9 +105,15 @@ defineRender(() => {
     <XProviderContextProvider value={xProviderProps.value as any}>
       <AntdConfigProvider
         {...antdConfProps}
+        locale={antdConfProps.locale as any}
         theme={mergedTheme.value as any}
       >
-        {childNode.value}
+        <LocaleProvider
+          locale={antdConfProps.locale as any}
+          {...{ _ANT_MARK__: ANT_MARK }}
+        >
+          {childNode.value}
+        </LocaleProvider>
       </AntdConfigProvider>
     </XProviderContextProvider>
   )

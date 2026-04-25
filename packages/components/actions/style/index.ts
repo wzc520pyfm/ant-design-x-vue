@@ -1,6 +1,11 @@
+import { unit } from '../../_util/cssinjs';
 import { mergeToken } from '../../_util/cssinjs-utils';
 import type { FullToken, GenerateStyle, GetDefaultToken } from '../../theme/cssinjs-utils';
 import { genStyleHooks } from '../../theme/genStyleUtils';
+import { initFadeLeftMotion, initFadeMotion } from '../../style';
+import genActionsAudioStyle from './audio';
+import genActionsCopyStyle from './copy';
+import genActionsFeedbackStyle from './feedback';
 
 // biome-ignore lint/suspicious/noEmptyInterface: ComponentToken need to be empty by default
 export interface ComponentToken {}
@@ -8,67 +13,71 @@ export interface ComponentToken {}
 export interface ActionsToken extends FullToken<'Actions'> {}
 
 const genActionsStyle: GenerateStyle<ActionsToken> = (token) => {
-  const { componentCls, calc } = token;
-
+  const { componentCls, antCls, calc } = token;
   return {
+    [`${componentCls}-item`]: {
+      cursor: 'pointer',
+      fontSize: token.fontSize,
+      paddingInline: unit(calc(token.paddingXXS).add(1).equal()),
+      paddingBlock: token.paddingXXS,
+      borderRadius: token.borderRadiusSM,
+      height: token.controlHeightSM,
+      boxSizing: 'border-box',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      lineHeight: token.lineHeight,
+      transition: `all ${token.motionDurationMid} ${token.motionEaseInOut}`,
+      '&-icon': {
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: token.fontSize,
+      },
+      '&:hover': {
+        background: token.colorBgTextHover,
+      },
+    },
+    [`${componentCls}-list`]: {
+      display: 'inline-flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      color: token.colorText,
+      gap: token.paddingXS,
+    },
     [componentCls]: {
+      [`& ${antCls}-pagination-item-link`]: {
+        width: token.controlHeightSM,
+      },
       [`&${componentCls}-rtl`]: {
         direction: 'rtl',
       },
-
-      [`${componentCls}-list`]: {
-        display: 'inline-flex',
-        flexDirection: 'row',
-        gap: token.paddingXS,
-        color: token.colorTextDescription,
-
-        '&-item, &-sub-item': {
-          cursor: 'pointer',
-          padding: token.paddingXXS,
-          borderRadius: token.borderRadius,
-          height: token.controlHeightSM,
-          width: token.controlHeightSM,
-          boxSizing: 'border-box',
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-
-          '&-icon': {
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: token.fontSize,
-            width: '100%',
-            height: '100%',
-          },
-
-          '&:hover': {
-            background: token.colorBgTextHover,
-          },
-        },
+      '&-variant-outlined': {
+        paddingInline: unit(calc(token.paddingXXS).add(1).equal()),
+        paddingBlock: token.paddingXXS,
+        borderRadius: token.borderRadius,
+        border: `${unit(token.lineWidth)} ${token.lineType} ${token.colorBorderSecondary}`,
       },
-      '& .border': {
-        padding: `${token.paddingXS}px ${token.paddingSM}px`,
-        gap: token.paddingSM,
-        borderRadius: calc(token.borderRadiusLG).mul(1.5).equal(),
+      '&-variant-filled': {
+        paddingInline: unit(calc(token.paddingXXS).add(1).equal()),
+        paddingBlock: token.paddingXXS,
+        borderRadius: token.borderRadius,
         backgroundColor: token.colorBorderSecondary,
-        color: token.colorTextSecondary,
 
-        [`${componentCls}-list-item, ${componentCls}-list-sub-item`]: {
-          padding: 0,
-          lineHeight: token.lineHeight,
-
+        [`${componentCls}-item`]: {
+          paddingInline: unit(calc(token.paddingXXS).add(1).equal()),
+          paddingBlock: token.paddingXXS,
           '&-icon': {
-            fontSize: token.fontSizeLG,
+            fontSize: token.fontSize,
           },
-
           '&:hover': {
-            opacity: 0.8,
+            color: token.colorTextSecondary,
+            background: 'transparent',
           },
         },
       },
-      '& .block': {
-        display: 'flex',
+      '&-list-danger': {
+        color: token.colorError,
       },
     },
   };
@@ -80,8 +89,14 @@ export default genStyleHooks(
   'Actions',
   (token) => {
     const compToken = mergeToken<ActionsToken>(token, {});
-    return [genActionsStyle(compToken)];
+    return [
+      genActionsStyle(compToken),
+      genActionsCopyStyle(compToken),
+      genActionsFeedbackStyle(compToken),
+      genActionsAudioStyle(compToken),
+      initFadeLeftMotion(compToken),
+      initFadeMotion(compToken),
+    ];
   },
   prepareComponentToken,
 );
-

@@ -1,131 +1,150 @@
 <script setup lang="tsx">
-import { Tooltip, type TooltipProps } from 'ant-design-vue';
 import classnames from 'classnames';
+import { computed, ref, useAttrs } from 'vue';
 import pickAttrs from '../_util/pick-attrs';
-import { computed } from 'vue';
-
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
-import ActionMenu from './ActionMenu.vue';
-import type { ActionsProps, ActionItem, SubItemType } from './interface';
-
+import { useActionsContextProvider } from './context';
+import InternalItem from './Item.vue';
+import type { ActionsProps, ActionsRef } from './interface';
 import useStyle from './style';
 
-defineOptions({ name: 'AXActions' });
+defineOptions({ name: 'AXActions', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ActionsProps>(), {
-  rootClassName: '',
-  variant: 'borderless',
-  block: false,
   items: () => [],
+  variant: 'borderless',
+  rootClassName: '',
+  className: '',
+  classNames: () => ({}),
+  styles: () => ({}),
+  style: () => ({}),
+  dropdownProps: () => ({}),
 });
 
 const emit = defineEmits<{
   click: [menuInfo: {
-    item: ActionItem;
+    item: any;
     key: string;
     keyPath: string[];
     domEvent: MouseEvent | KeyboardEvent;
   }];
 }>();
 
-// ============================ PrefixCls ============================
-const { getPrefixCls, direction } = useXProviderContext();
-const prefixCls = getPrefixCls('actions', props.prefixCls);
+const attrs = useAttrs();
 
-// ======================= Component Config =======================
+const { direction, getPrefixCls } = useXProviderContext();
+const prefixCls = getPrefixCls('actions', props.prefixCls);
+const rootPrefixCls = getPrefixCls();
+
 const contextConfig = useXComponentConfig('actions');
 
-// ============================ Styles ============================
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 
-const mergedCls = computed(() => classnames(
-  prefixCls,
-  contextConfig.value.className,
-  props.rootClassName,
-  cssVarCls,
-  hashId.value,
-  {
-    [`${prefixCls}-rtl`]: direction.value === 'rtl',
-  },
-));
+const motionName = computed(() => {
+  if (!props.fadeIn && !props.fadeInLeft) return '';
+  return `${rootPrefixCls}-x-fade${props.fadeInLeft ? '-left' : ''}`;
+});
+
+const mergedCls = computed(() =>
+  classnames(
+    prefixCls,
+    contextConfig.value.className,
+    (contextConfig.value.classNames as any)?.root,
+    props.rootClassName,
+    props.className,
+    props.classNames?.root,
+    cssVarCls,
+    hashId.value,
+    {
+      [`${prefixCls}-rtl`]: direction.value === 'rtl',
+    },
+  ),
+);
 
 const mergedStyle = computed(() => ({
   ...contextConfig.value.style,
-  ...(typeof props.style === 'object' ? props.style : {}),
+  ...props.styles?.root,
+  ...props.style,
 }));
 
-const getTooltipNode = (node: any, title?: string, tooltipProps?: TooltipProps) => {
-  if (title) {
-    return (
-      <Tooltip {...tooltipProps} title={title}>
-        {node}
-      </Tooltip>
-    );
-  }
-  return node;
-};
+const domProps = computed(() =>
+  pickAttrs({ ...(attrs as object), ...(props as any) }, {
+    attr: true,
+    aria: true,
+    data: true,
+  }),
+);
 
-const handleItemClick = (
-  key: string,
-  item: ActionItem,
-  domEvent: MouseEvent,
-) => {
-  if (item.onItemClick) {
-    item.onItemClick(item);
-    return;
-  }
-  emit('click', {
-    key,
-    item,
-    keyPath: [key],
-    domEvent,
-  });
-};
+const containerRef = ref<HTMLDivElement | null>(null);
 
-const handleMenuClick = (menuInfo: {
-  item: ActionItem;
+const innerCtx = computed(() => ({
+  prefixCls,
+  classNames: {
+    item: classnames(
+      (contextConfig.value.classNames as any)?.item,
+      props.classNames?.item,
+    ),
+    itemDropdown: classnames(
+      (contextConfig.value.classNames as any)?.itemDropdown,
+      props.classNames?.itemDropdown,
+    ),
+  },
+  styles: {
+    item: {
+      ...((contextConfig.value.styles as any)?.item || {}),
+      ...(props.styles?.item || {}),
+    },
+    itemDropdown: {
+      ...((contextConfig.value.styles as any)?.itemDropdown || {}),
+      ...(props.styles?.itemDropdown || {}),
+    },
+  },
+}));
+
+useActionsContextProvider(innerCtx.value as any);
+
+defineExpose<ActionsRef>({
+  get nativeElement() {
+    return containerRef.value;
+  },
+} as any);
+
+const handleClick = (menuInfo: {
+  item: any;
   key: string;
   keyPath: string[];
   domEvent: MouseEvent | KeyboardEvent;
 }) => {
+  props.onClick?.(menuInfo);
   emit('click', menuInfo);
 };
 
-const renderSingleItem = (item: SubItemType) => {
-  const { icon, label, key } = item;
-
-  return (
-    <div
-      class={classnames(`${prefixCls}-list-item`)}
-      onClick={(domEvent: MouseEvent) => handleItemClick(key, item, domEvent)}
-      key={key}
-    >
-      {getTooltipNode(<div class={`${prefixCls}-list-item-icon`}>{icon}</div>, label)}
-    </div>
-  );
-};
-
-const domProps = computed(() => pickAttrs(props, {
-  aria: true,
-  data: true,
-}));
-
 defineRender(() => {
   return wrapCSSVar(
-    <div class={mergedCls.value} {...domProps.value} style={mergedStyle.value}>
-      <div class={classnames(`${prefixCls}-list`, props.variant, { block: props.block })}>
-        {props.items.map((item) => {
-          if ('children' in item && item.children) {
-            return (
-              <ActionMenu key={item.key} item={item} prefixCls={prefixCls} onClick={handleMenuClick} />
-            );
-          }
-          return renderSingleItem(item as SubItemType);
-        })}
+    <div
+      ref={(el: any) => (containerRef.value = el)}
+      {...domProps.value}
+      class={mergedCls.value}
+      style={mergedStyle.value as any}
+    >
+      <div
+        class={classnames(
+          `${prefixCls}-list`,
+          `${prefixCls}-variant-${props.variant}`,
+          motionName.value,
+        )}
+      >
+        {(props.items || []).map((item, idx) => (
+          <InternalItem
+            key={item.key || idx}
+            item={item}
+            dropdownProps={props.dropdownProps}
+            onMenuClick={handleClick}
+          />
+        ))}
       </div>
     </div>,
   );
 });
 </script>
-
