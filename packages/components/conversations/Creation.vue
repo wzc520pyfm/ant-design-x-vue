@@ -13,6 +13,7 @@ defineRender(() => {
     label: props.label,
     icon: props.icon,
     align: props.align,
+    shortcutKeyInfo: props.shortcutKeyInfo,
   });
 
   return (

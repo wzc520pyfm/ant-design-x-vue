@@ -1,13 +1,17 @@
-import { defineConfig } from 'vitest/config';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { resolve } from 'node:path';
-
+import VueMacros from 'unplugin-vue-macros/vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [
-    vue(),
-    vueJsx(),
+    VueMacros({
+      plugins: {
+        vue: vue(),
+        vueJsx: vueJsx(),
+      },
+    }),
   ],
   resolve: {
     alias: {
@@ -17,7 +21,11 @@ export default defineConfig({
   },
   test: {
     environment: 'happy-dom',
-    include: ['packages/components/**/*.test.{ts,js,tsx}'],
+    include: [
+      'packages/components/**/*.test.{ts,tsx}',
+      'packages/x-markdown/**/*.test.{ts,tsx}',
+      'packages/x-sdk/**/*.test.{ts,tsx}',
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['html', 'text', 'json'],

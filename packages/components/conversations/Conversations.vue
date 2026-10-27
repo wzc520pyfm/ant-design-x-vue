@@ -5,6 +5,7 @@ import { Divider } from 'ant-design-vue';
 import type {
   ConversationItemType,
   ConversationsItemProps,
+  ConversationsProps,
   ItemType,
 } from './interface';
 import ConversationsItem from './ConversationsItem.vue';
@@ -16,6 +17,7 @@ import { useXProviderContext } from '../x-provider';
 import useGroupable from './hooks/useGroupable';
 import useCollapsible from '../_util/hooks/use-collapsible';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
+import useShortcutKeys, { type ShortcutKeyActionType } from '../_util/hooks/use-shortcut-keys';
 import useStyle from './style';
 import GroupTitleContextProvider from './context';
 
@@ -38,7 +40,8 @@ interface ResolvedConversationsProps {
   groupable?: any;
   class?: any;
   style?: CSSProperties;
-  creation?: any;
+  creation?: ConversationsProps['creation'];
+  shortcutKeys?: ConversationsProps['shortcutKeys'];
 }
 
 const {
@@ -55,6 +58,7 @@ const {
   class: className,
   style,
   creation,
+  shortcutKeys,
   ...restProps
 } = defineProps<ResolvedConversationsProps>();
 
@@ -116,6 +120,34 @@ const onConversationItemClick: ConversationsItemProps['onClick'] = (key) => {
     onActiveChange(key!);
   }
 };
+
+// ============================ Short Key =========================
+const [, shortcutKeysInfo, subscribeShortcutKeys] = useShortcutKeys(
+  'conversations',
+  () => shortcutKeys,
+);
+
+subscribeShortcutKeys((shortcutKeyAction: ShortcutKeyActionType) => {
+  const keyList = groupState.value[2];
+  switch (shortcutKeyAction?.name) {
+    case 'items': {
+      const index = shortcutKeyAction.actionKeyCodeNumber ?? shortcutKeyAction.index;
+      const target = typeof index === 'number' ? keyList?.[index] : undefined;
+      if (target && !target.disabled && target.key) {
+        onConversationItemClick(target.key);
+      }
+      break;
+    }
+    case 'creation': {
+      if (typeof creation?.onClick === 'function' && !creation?.disabled) {
+        creation.onClick();
+      }
+      break;
+    }
+    default:
+      break;
+  }
+});
 
 // ============================ Item Node ============================
 const getItemNode = (itemData: ItemType[]) =>
@@ -186,6 +218,7 @@ defineRender(() => {
             ...contextConfig.value.styles.creation,
             ...styles.creation,
           }}
+          shortcutKeyInfo={shortcutKeysInfo.value?.creation}
           prefixCls={`${prefixCls.value}-creation`}
           {...creation}
         />

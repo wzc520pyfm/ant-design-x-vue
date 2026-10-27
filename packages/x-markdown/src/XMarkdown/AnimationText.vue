@@ -1,83 +1,72 @@
 <script setup lang="ts">
-import { ref, watch, onUnmounted } from 'vue';
+import { computed, ref, watch } from 'vue';
+import type { AnimationConfig } from './interface';
 
 defineOptions({
   name: 'AnimationText',
 });
 
-interface Props {
+const props = defineProps<{
   /**
-   * Text content to animate
+   * Text content. Newly appended slices fade in.
+   */
+  text?: string;
+  /**
+   * Alias of `text`, kept for earlier call sites.
    */
   content?: string;
-  
-  /**
-   * Animation speed (characters per frame)
-   */
-  speed?: number;
-  
-  /**
-   * Whether animation is enabled
-   */
-  animated?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  content: '',
-  speed: 1,
-  animated: true,
-});
-
-const emit = defineEmits<{
-  (e: 'complete'): void;
+  animationConfig?: AnimationConfig;
 }>();
 
-const displayedText = ref('');
-const isAnimating = ref(false);
-let animationFrame: number | null = null;
-
-const startAnimation = () => {
-  if (!props.animated || !props.content) {
-    displayedText.value = props.content || '';
-    return;
-  }
-
-  isAnimating.value = true;
-  let index = 0;
-
-  const animate = () => {
-    if (index < props.content.length) {
-      displayedText.value = props.content.slice(0, index + props.speed);
-      index += props.speed;
-      animationFrame = requestAnimationFrame(animate);
-    } else {
-      isAnimating.value = false;
-      emit('complete');
-    }
-  };
-
-  animate();
-};
+const source = computed(() => props.text ?? props.content ?? '');
+const chunks = ref<string[]>([]);
+const previous = ref('');
 
 watch(
-  () => props.content,
-  () => {
-    if (animationFrame) {
-      cancelAnimationFrame(animationFrame);
+  source,
+  (text) => {
+    if (text === previous.value) return;
+
+    if (!(previous.value && text.indexOf(previous.value) === 0)) {
+      chunks.value = text ? [text] : [];
+      previous.value = text;
+      return;
     }
-    displayedText.value = '';
-    startAnimation();
+
+    const next = text.slice(previous.value.length);
+    if (!next) return;
+    chunks.value = [...chunks.value, next];
+    previous.value = text;
   },
-  { immediate: true }
+  { immediate: true },
 );
 
-onUnmounted(() => {
-  if (animationFrame) {
-    cancelAnimationFrame(animationFrame);
-  }
+const animationStyle = computed(() => {
+  const fadeDuration = props.animationConfig?.fadeDuration ?? 200;
+  const easing = props.animationConfig?.easing ?? 'ease-in-out';
+  return {
+    animation: `x-markdown-fade-in ${fadeDuration}ms ${easing} forwards`,
+  };
 });
 </script>
 
 <template>
-  <span class="animation-text">{{ displayedText }}</span>
+  <span
+    v-for="(chunk, index) in chunks"
+    :key="index"
+    class="x-markdown-animation-text"
+    :style="animationStyle"
+  >{{ chunk }}</span>
 </template>
+
+<style>
+@keyframes x-markdown-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+</style>

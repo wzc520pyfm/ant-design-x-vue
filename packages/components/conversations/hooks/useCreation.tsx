@@ -1,19 +1,42 @@
 import { PlusOutlined } from '@ant-design/icons-vue';
 import classNames from 'classnames';
-import type { VNode } from 'vue';
+import { defineComponent, type PropType, type VNode } from 'vue';
+import type { ShortcutKeyInfoType } from '../../_util/hooks/use-shortcut-keys';
+import enUS from '../../locale/en_US';
+import useLocale from '../../locale/useLocale';
 import type { CreationProps } from '../interface';
 
-export interface CreationLabelProps {
-  prefixCls: string;
-}
-
-const CreationLabel = ({ prefixCls }: CreationLabelProps) => {
-  return (
-    <div class={classNames(prefixCls)}>
-      <span>New Conversation</span>
-    </div>
-  );
-};
+export const CreationLabel = defineComponent({
+  name: 'AXConversationsCreationLabel',
+  props: {
+    prefixCls: { type: String, required: true },
+    shortcutKeysIcon: { type: Array as PropType<string[]>, default: undefined },
+  },
+  setup(props) {
+    const [locale] = useLocale('Conversations', enUS.Conversations);
+    return () => {
+      const showShortcutKeys = !!props.shortcutKeysIcon?.length;
+      return (
+        <div
+          class={classNames(props.prefixCls, {
+            [`${props.prefixCls}-shortcut-keys-show`]: showShortcutKeys,
+          })}
+        >
+          <span>{locale.value.create}</span>
+          {showShortcutKeys && (
+            <span class={`${props.prefixCls}-shortcut-keys`}>
+              {props.shortcutKeysIcon!.map((keyIcon) => (
+                <span class={`${props.prefixCls}-shortcut-key`} key={keyIcon}>
+                  {keyIcon}
+                </span>
+              ))}
+            </span>
+          )}
+        </div>
+      );
+    };
+  },
+});
 
 interface BaseConfig {
   label: VNode | string;
@@ -25,15 +48,20 @@ const useCreation = ({
   icon,
   label,
   align,
+  shortcutKeyInfo,
   prefixCls,
-}: Pick<CreationProps, 'label' | 'icon' | 'align' | 'prefixCls'>): [
-  VNode,
-  VNode | string,
-  CreationProps['align'],
-] => {
+}: Pick<
+  CreationProps,
+  'label' | 'icon' | 'align' | 'shortcutKeyInfo' | 'prefixCls'
+>): [VNode, VNode | string, CreationProps['align']] => {
+  const { shortcutKeysIcon } = shortcutKeyInfo || {};
+
   const creationConfig: BaseConfig = {
     label: (
-      <CreationLabel prefixCls={`${prefixCls}-label`} />
+      <CreationLabel
+        prefixCls={`${prefixCls}-label`}
+        shortcutKeysIcon={shortcutKeysIcon as string[] | undefined}
+      />
     ),
     icon: <PlusOutlined class={`${prefixCls}-icon`} />,
     align: 'center',
@@ -42,14 +70,21 @@ const useCreation = ({
   if (label) {
     creationConfig.label =
       typeof label === 'function'
-        ? label({ components: { CreationLabel } })
+        ? label({
+            shortcutKeyInfo: shortcutKeyInfo as ShortcutKeyInfoType | undefined,
+            components: { CreationLabel },
+          })
         : label;
   }
   if (icon) {
     creationConfig.icon = typeof icon === 'function' ? icon() : icon;
   }
 
-  return [creationConfig.icon, creationConfig.label, align || creationConfig.align];
+  return [
+    creationConfig.icon,
+    creationConfig.label,
+    align || creationConfig.align,
+  ];
 };
 
 export default useCreation;
