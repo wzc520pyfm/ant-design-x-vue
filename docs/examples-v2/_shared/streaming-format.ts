@@ -6,7 +6,7 @@ export interface StreamingFormatDemo {
 /** Same samples as React `demo/streaming/format.tsx`. */
 export const streamingFormatDemos: StreamingFormatDemo[] = [
   {
-    title: 'Mixed Syntax',
+    title: 'Mixed',
     content: `## Ant Design X｜AI interface solution
 ![Ant Design X](https://mdn.alipayobjects.com/huamei_yz9z7c/afts/img/0lMhRYbo0-8AAAAAQDAAAAgADlJoAQFr/original)
 
@@ -33,11 +33,11 @@ Provides a complete set of **tool APIs**. [Click here for details.](/x-sdks/intr
 `,
   },
   {
-    title: 'Link Syntax',
+    title: 'Link',
     content: 'Visit [Ant Design X](https://github.com/ant-design/x)  for more details.',
   },
   {
-    title: 'Image Syntax',
+    title: 'Image',
     content:
       '![Ant Design X](https://mdn.alipayobjects.com/huamei_yz9z7c/afts/img/0lMhRYbo0-8AAAAAQDAAAAgADlJoAQFr/original)',
   },
