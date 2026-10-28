@@ -31,6 +31,9 @@ const genPromptsStyle: GenerateStyle<PromptsToken> = (token) => {
 
       [`& ${componentCls}-list`]: {
         display: 'flex',
+        // Wrap whole cards onto the next line. Shrinking them below the longest
+        // word and breaking with overflow-wrap:anywhere splits labels mid-glyph.
+        flexWrap: 'wrap',
         gap: token.paddingSM,
         overflowX: 'auto',
         // Hide scrollbar
@@ -49,6 +52,7 @@ const genPromptsStyle: GenerateStyle<PromptsToken> = (token) => {
         },
         '&-vertical': {
           flexDirection: 'column',
+          flexWrap: 'nowrap',
           alignItems: 'flex-start',
         },
       },
@@ -56,6 +60,8 @@ const genPromptsStyle: GenerateStyle<PromptsToken> = (token) => {
       // ========================= Item =========================
       [`${componentCls}-item`]: {
         flex: 'none',
+        maxWidth: '100%',
+        minWidth: 0,
         display: 'flex',
         gap: token.paddingXS,
         height: 'auto',
@@ -97,6 +103,12 @@ const genPromptsStyle: GenerateStyle<PromptsToken> = (token) => {
           lineHeight: token.lineHeight,
           textAlign: 'start',
           whiteSpace: 'normal',
+          // Break only when a single word is wider than the card. `anywhere`
+          // and `word-break: break-word` shrink the flex min-content to a few
+          // characters and split "Creativity" as "Crea" / "tivity".
+          overflowWrap: 'break-word',
+          wordBreak: 'normal',
+          maxWidth: '100%',
         },
 
         [`${componentCls}-label`]: {

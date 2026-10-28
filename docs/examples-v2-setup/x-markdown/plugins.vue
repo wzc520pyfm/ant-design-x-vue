@@ -14,8 +14,11 @@ const emphasizeTodo = {
 </script>
 
 <template>
-  <a-flex vertical :gap="12">
-    <a-switch v-model:checked="enabled" checked-children="plugin" un-checked-children="plain" />
+  <a-flex vertical :gap="12" align="flex-start">
+    <a-flex align="center" :gap="8" style="align-self: flex-start">
+      <a-switch v-model:checked="enabled" />
+      <span>plugin</span>
+    </a-flex>
     <XMarkdown :content="content" :plugins="enabled ? [emphasizeTodo] : []" />
   </a-flex>
 </template>

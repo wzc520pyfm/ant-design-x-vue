@@ -54,21 +54,24 @@ const renderMarkdown = (content: string) => {
   let html = content
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/\n/g, '<br />');
-  
-  // 简单的表格处理
-  const tableRegex = /\|(.+)\|\n\|[-|]+\|\n((?:\|.+\|\n?)+)/g;
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+  // Turn GFM tables into HTML before newlines become <br>.
+  // @antv/gpt-vis is React-only, so this demo shows the table instead of a chart.
+  const tableRegex = /\|(.+)\|\n\|[-| ]+\|\n((?:\|.+\|\n?)+)/g;
   html = html.replace(tableRegex, (_, header, body) => {
     const headers = header.split('|').filter(Boolean).map((h: string) => `<th>${h.trim()}</th>`).join('');
     const rows = body.trim().split('\n').map((row: string) => {
       const cells = row.split('|').filter(Boolean).map((c: string) => `<td>${c.trim()}</td>`).join('');
       return `<tr>${cells}</tr>`;
     }).join('');
-    return `<table border="1" style="border-collapse: collapse;"><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
+    return `<table border="1" style="border-collapse:collapse;margin:8px 0;"><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
   });
-  
+
+  html = html
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br />');
+
   return `<p>${html}</p>`;
 };
 

@@ -18,6 +18,9 @@ export const genVariantStyle: GenerateStyle<BubbleToken> = (token) => {
 
         // Shadow:
         '&-shadow': {
+          // Tertiary shadow is nearly invisible on a dark page. Elevated fill
+          // keeps the React light look and gives the dark bubble an edge.
+          backgroundColor: token.colorBgElevated,
           boxShadow: token.boxShadowTertiary,
         },
 

@@ -5,7 +5,7 @@ import { Bubble } from 'ant-design-x-vue';
 </script>
 
 <template>
-  <a-flex vertical gap="small">
+  <a-flex vertical gap="small" class="ax-bubble-variants">
     <a-flex gap="small" wrap>
       <Bubble content="filled - default" />
       <Bubble content="filled - round" shape="round" />
@@ -33,3 +33,10 @@ import { Bubble } from 'ant-design-x-vue';
     </a-flex>
   </a-flex>
 </template>
+
+<style>
+.ax-bubble-variants :deep(.ant-bubble) {
+  flex: none;
+  max-width: 100%;
+}
+</style>

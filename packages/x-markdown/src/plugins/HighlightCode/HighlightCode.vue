@@ -2,9 +2,27 @@
 import { computed, ref, watchEffect, type CSSProperties, type VNode } from 'vue';
 import classnames from 'classnames';
 import hljs from 'highlight.js/lib/core';
-import { message } from 'ant-design-vue';
+import hljsBash from 'highlight.js/lib/languages/bash';
+import hljsCss from 'highlight.js/lib/languages/css';
+import hljsJavascript from 'highlight.js/lib/languages/javascript';
+import hljsJson from 'highlight.js/lib/languages/json';
+import hljsMarkdown from 'highlight.js/lib/languages/markdown';
+import hljsPython from 'highlight.js/lib/languages/python';
+import hljsTypescript from 'highlight.js/lib/languages/typescript';
+import hljsXml from 'highlight.js/lib/languages/xml';
+import { message, theme } from 'ant-design-vue';
 import { useLocale, useXProviderContext } from 'ant-design-x-vue';
 import 'highlight.js/styles/atom-one-light.css';
+import { isDarkColor } from '../is-dark-color';
+
+hljs.registerLanguage('bash', hljsBash);
+hljs.registerLanguage('css', hljsCss);
+hljs.registerLanguage('javascript', hljsJavascript);
+hljs.registerLanguage('json', hljsJson);
+hljs.registerLanguage('markdown', hljsMarkdown);
+hljs.registerLanguage('python', hljsPython);
+hljs.registerLanguage('typescript', hljsTypescript);
+hljs.registerLanguage('xml', hljsXml);
 
 defineOptions({ name: 'AXHighlightCode' });
 
@@ -23,6 +41,9 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const { token } = theme.useToken();
+const darkSurface = computed(() => isDarkColor(token.value.colorBgContainer));
+
 const [contextLocale] = useLocale('HighlightCode');
 
 const { direction, getPrefixCls } = useXProviderContext();
@@ -40,7 +61,24 @@ const headerCls = computed(() =>
 const headerTitleCls = computed(() =>
   classnames(`${prefixCls.value}-header-title`, props.classNames?.headerTitle),
 );
-const codeBoxCls = computed(() => classnames(`${prefixCls.value}-code`, props.classNames?.code));
+const codeBoxCls = computed(() => classnames(`${prefixCls.value}-code`, props.classNames?.code, {
+  [`${prefixCls.value}-code-dark`]: darkSurface.value,
+}));
+
+const headerStyle = computed(() => ({
+  background: token.value.colorFillContent,
+  color: token.value.colorText,
+  ...(props.styles?.header || {}),
+}));
+const codeStyle = computed(() => ({
+  background: token.value.colorBgContainer,
+  borderColor: token.value.colorBorderSecondary,
+  color: token.value.colorText,
+  ...(props.styles?.code || {}),
+}));
+const copyStyle = computed(() => ({
+  color: token.value.colorText,
+}));
 
 async function handleCopyCode() {
   if (!props.children) return;
@@ -98,14 +136,14 @@ watchEffect(async () => {
     <div
       v-else-if="header !== null"
       :class="headerCls"
-      :style="styles?.header"
+      :style="headerStyle"
     >
       <span :class="headerTitleCls" :style="styles?.headerTitle">{{ lang }}</span>
-      <button type="button" :class="`${prefixCls}-copy-btn`" @click="handleCopyCode">
+      <button type="button" :class="`${prefixCls}-copy-btn`" :style="copyStyle" @click="handleCopyCode">
         {{ contextLocale.copy }}
       </button>
     </div>
-    <div :class="codeBoxCls" :style="styles?.code">
+    <div :class="codeBoxCls" :style="codeStyle">
       <pre><code :class="`language-${lang}`" v-html="highlightedCode || (children || '').replace(/\n$/, '')" /></pre>
     </div>
   </div>
@@ -117,35 +155,79 @@ watchEffect(async () => {
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.04);
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }
-:deep([class$='-highlightCode-code']) {
-  border: 1px solid rgba(0, 0, 0, 0.06);
+:deep([class*='-highlightCode-code']) {
+  border: 1px solid transparent;
   border-top: none;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   overflow: auto;
-  background: #fff;
 }
-:deep([class$='-highlightCode-code']) pre,
-:deep([class$='-highlightCode-code']) code {
+:deep([class$='-highlightCode-code-dark'] .hljs),
+:deep([class$='-highlightCode-code-dark'] .hljs-subst) {
+  color: #abb2bf;
+  background: transparent;
+}
+:deep([class$='-highlightCode-code-dark'] .hljs-comment),
+:deep([class$='-highlightCode-code-dark'] .hljs-quote) {
+  color: #5c6370;
+}
+:deep([class$='-highlightCode-code-dark'] .hljs-doctag),
+:deep([class$='-highlightCode-code-dark'] .hljs-keyword),
+:deep([class$='-highlightCode-code-dark'] .hljs-formula) {
+  color: #c678dd;
+}
+:deep([class$='-highlightCode-code-dark'] .hljs-string),
+:deep([class$='-highlightCode-code-dark'] .hljs-regexp),
+:deep([class$='-highlightCode-code-dark'] .hljs-addition),
+:deep([class$='-highlightCode-code-dark'] .hljs-attribute) {
+  color: #98c379;
+}
+:deep([class$='-highlightCode-code-dark'] .hljs-number),
+:deep([class$='-highlightCode-code-dark'] .hljs-attr),
+:deep([class$='-highlightCode-code-dark'] .hljs-variable) {
+  color: #d19a66;
+}
+:deep([class$='-highlightCode-code-dark'] .hljs-title),
+:deep([class$='-highlightCode-code-dark'] .hljs-section),
+:deep([class$='-highlightCode-code-dark'] .hljs-name) {
+  color: #61aeee;
+}
+:deep([class*='-highlightCode-code']) pre,
+:deep([class*='-highlightCode-code']) code {
   white-space: pre;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   background: transparent !important;
+  color: inherit;
   padding: 12px !important;
   line-height: 1.7;
   border-radius: 0;
+}
+:deep([class*='-highlightCode-code']:not([class*='-code-dark']) .hljs-keyword) {
+  color: #a626a4;
+}
+:deep([class*='-highlightCode-code']:not([class*='-code-dark']) .hljs-string) {
+  color: #50a14f;
+}
+:deep([class*='-highlightCode-code']:not([class*='-code-dark']) .hljs-number) {
+  color: #986801;
+}
+:deep([class*='-highlightCode-code']:not([class*='-code-dark']) .hljs-title),
+:deep([class*='-highlightCode-code']:not([class*='-code-dark']) .hljs-section) {
+  color: #4078f2;
+}
+:deep([class*='-highlightCode-code']:not([class*='-code-dark']) .hljs-comment) {
+  color: #a0a1a7;
 }
 :deep([class$='-highlightCode-copy-btn']) {
   border: none;
   background: transparent;
   cursor: pointer;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.65);
 }
 :deep([class$='-highlightCode-copy-btn']:hover) {
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--ant-color-text, inherit);
 }
 </style>

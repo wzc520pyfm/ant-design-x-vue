@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { computed, h } from 'vue';
 import { useActionsContextInject } from './context';
 import type { ItemType, ActionsProps } from './interface';
+import { resolveActionIcon } from './resolve-icon';
 
 defineOptions({ name: 'AXActionsMenu' });
 
@@ -60,7 +61,7 @@ const handleMenuClick = (payload: {
 };
 
 defineRender(() => {
-  const icon = props.item.icon ?? h(EllipsisOutlined);
+  const icon = resolveActionIcon(props.item.icon) ?? h(EllipsisOutlined);
   const rootClassName = classnames(
     `${ctx.prefixCls}-dropdown`,
     ctx.classNames?.itemDropdown,
@@ -71,7 +72,7 @@ defineRender(() => {
       items={subItems.value.map((it) => ({
         key: it.key,
         label: it.label,
-        icon: it.icon,
+        icon: resolveActionIcon(it.icon),
         danger: it.danger,
       })) as any}
       onClick={handleMenuClick as any}

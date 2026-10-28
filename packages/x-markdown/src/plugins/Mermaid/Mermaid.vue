@@ -12,7 +12,7 @@ import {
 } from 'vue';
 import classnames from 'classnames';
 import throttle from 'lodash.throttle';
-import { message, Segmented } from 'ant-design-vue';
+import { message, Segmented, theme } from 'ant-design-vue';
 import {
   CopyOutlined,
   DownloadOutlined,
@@ -21,6 +21,7 @@ import {
 } from '@ant-design/icons-vue';
 import { useLocale, useXProviderContext, Actions } from 'ant-design-x-vue';
 import mermaid from 'mermaid';
+import { isDarkColor } from '../is-dark-color';
 
 defineOptions({ name: 'AXMermaid' });
 
@@ -45,12 +46,19 @@ enum RenderType {
 
 let uuidSeq = 0;
 
-mermaid.initialize({
-  startOnLoad: false,
-  securityLevel: 'strict',
-  theme: 'default',
-  fontFamily: 'monospace',
-});
+const { token } = theme.useToken();
+const darkSurface = computed(() => isDarkColor(token.value.colorBgContainer));
+
+function syncMermaidTheme() {
+  mermaid.initialize({
+    startOnLoad: false,
+    securityLevel: 'strict',
+    theme: darkSurface.value ? 'dark' : 'default',
+    fontFamily: 'monospace',
+  });
+}
+
+syncMermaidTheme();
 
 const [contextLocale] = useLocale('Mermaid');
 const { direction, getPrefixCls } = useXProviderContext();
@@ -81,9 +89,27 @@ const lastMousePos = ref({ x: 0, y: 0 });
 const containerRef = shallowRef<HTMLDivElement | null>(null);
 const diagramId = `mermaid-${uuidSeq++}`;
 
+const headerStyle = computed(() => ({
+  background: token.value.colorFillContent,
+  color: token.value.colorText,
+  ...(props.styles?.header || {}),
+}));
+const graphStyle = computed(() => ({
+  background: token.value.colorBgContainer,
+  borderColor: token.value.colorBorderSecondary,
+  ...(props.styles?.graph || {}),
+}));
+const codeStyle = computed(() => ({
+  background: token.value.colorBgContainer,
+  borderColor: token.value.colorBorderSecondary,
+  color: token.value.colorText,
+  ...(props.styles?.code || {}),
+}));
+
 async function renderDiagramInner() {
   const text = props.children;
   if (!text || !containerRef.value || renderType.value === RenderType.Code) return;
+  syncMermaidTheme();
   try {
     const isValid = await mermaid.parse(text, { suppressErrors: true });
     if (!isValid) throw new Error('Invalid Mermaid syntax');
@@ -98,7 +124,7 @@ async function renderDiagramInner() {
 const renderDiagram = throttle(renderDiagramInner, 100);
 
 watch(
-  () => [props.children, renderType.value] as const,
+  () => [props.children, renderType.value, darkSurface.value] as const,
   () => {
     if (renderType.value === RenderType.Code && containerRef.value) {
       containerRef.value.innerHTML = '';
@@ -215,11 +241,13 @@ async function handleDownload() {
   img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
 }
 
-const actionItems = computed(() => {
+// Build during render. A cached vnode is reused on the next patch, and a
+// render function stored on `icon` is stringified as text by the icon slot.
+function buildActionItems() {
   const base: any[] = [
     {
       key: 'copy',
-      icon: () => h(CopyOutlined),
+      icon: h(CopyOutlined),
       label: contextLocale.value.copy,
       onItemClick: handleCopyCode,
     },
@@ -228,13 +256,13 @@ const actionItems = computed(() => {
     base.push(
       {
         key: 'zoomIn',
-        icon: () => h(ZoomInOutlined),
+        icon: h(ZoomInOutlined),
         label: contextLocale.value.zoomIn,
         onItemClick: handleZoomIn,
       },
       {
         key: 'zoomOut',
-        icon: () => h(ZoomOutOutlined),
+        icon: h(ZoomOutOutlined),
         label: contextLocale.value.zoomOut,
         onItemClick: handleZoomOut,
       },
@@ -245,14 +273,14 @@ const actionItems = computed(() => {
       },
       {
         key: 'download',
-        icon: () => h(DownloadOutlined),
+        icon: h(DownloadOutlined),
         label: contextLocale.value.download,
         onItemClick: handleDownload,
       },
     );
   }
   return base;
-});
+}
 
 const segmentedOptions = computed(() => [
   { label: contextLocale.value.image, value: RenderType.Image },
@@ -270,16 +298,16 @@ onBeforeUnmount(() => {
     <div
       v-else-if="header !== null"
       :class="headerCls"
-      :style="styles?.header"
+      :style="headerStyle"
     >
       <Segmented v-model:value="renderType" :options="segmentedOptions" />
-      <Actions :items="actionItems" />
+      <Actions :items="buildActionItems()" />
     </div>
 
     <div
       ref="containerRef"
       :class="graphCls"
-      :style="styles?.graph"
+      :style="graphStyle"
       @mousedown="handleMouseDown"
       @mousemove="handleMouseMove"
       @mouseup="handleMouseUp"
@@ -289,7 +317,7 @@ onBeforeUnmount(() => {
     <div
       v-if="renderType === RenderType.Code"
       :class="codeCls"
-      :style="styles?.code"
+      :style="codeStyle"
     >
       <pre><code>{{ (children || '').replace(/\n$/, '') }}</code></pre>
     </div>
@@ -302,27 +330,24 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.04);
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }
 :deep([class$='-mermaid-graph']) {
   overflow: hidden;
   padding: 12px;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid transparent;
   border-top: none;
 }
 :deep([class$='-mermaid-graph-hidden']) {
   display: none;
 }
 :deep([class$='-mermaid-code']) {
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid transparent;
   border-top: none;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   overflow: auto;
-  background: #fff;
   padding: 12px;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 }

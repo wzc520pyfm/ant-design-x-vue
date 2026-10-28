@@ -36,7 +36,7 @@ defineRender(() => (
           <Flex gap="small" align="center">
             <Button style={iconStyle} type="text" icon={<LinkOutlined />} />
             <Divider type="vertical" />
-            Deep Thinking
+            <span style={{ whiteSpace: 'nowrap' }}>Deep Thinking</span>
             <Switch size="small" />
             <Divider type="vertical" />
             <Button icon={<SearchOutlined />}>

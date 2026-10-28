@@ -92,6 +92,12 @@ const SwitchTextStyle = {
   alignItems: 'center',
 };
 
+const ThinkLabelStyle = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  whiteSpace: 'nowrap',
+};
+
 const FileInfo: Record<string, { icon: VNode; label: string }> = {
   file_image: {
     icon: <FileImageOutlined />,
@@ -185,14 +191,14 @@ defineRender(() => (
             <SenderSwitch
               value={deepThink.value}
               checkedChildren={
-                <div>
+                <span style={ThinkLabelStyle}>
                   Deep Think:<span style={SwitchTextStyle}>on</span>
-                </div>
+                </span>
               }
               unCheckedChildren={
-                <div>
+                <span style={ThinkLabelStyle}>
                   Deep Think:<span style={SwitchTextStyle}>off</span>
-                </div>
+                </span>
               }
               onChange={(checked: boolean) => { deepThink.value = checked; }}
               icon={<RobotOutlined />}

@@ -13,7 +13,7 @@
 
 支持的 token：`text`、`link`、`image`、`heading`、`emphasis`、`list`、`table`、`xml`。`text` 不生成占位标签。
 
-:::demo-v2 半截链接先走自定义占位，点按钮后补全。
+:::demo-v2 对齐 React 流式页：上方切换 Mixed / Link / Image / Html / Table / Emphasis / InlineCode，左边是正在打出的源码，右边是渲染结果。没写完的链接显示 16px 占位图标，而不是原始 `[text](url`。Re-Render 与 Run Stream 都会重头打字，并打开淡入。`streaming.tail` 和 `debug` 性能面板还不在 Vue 2.0 的 StreamingOption 里，尾标 `▋` 由示例自己画在结果后面。
 
 x-markdown/streaming-syntax
 

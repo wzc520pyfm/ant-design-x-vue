@@ -32,7 +32,7 @@ const styles = computed(() => {
   return {
     'layout': {
       'width': '100%',
-      'min-width': '970px',
+      'min-width': 0,
       'height': '722px',
       'border-radius': `${token.value.borderRadius}px`,
       'display': 'flex',

@@ -1,4 +1,23 @@
-## history 路由模式
+# VitePress publishes one HTML file per page (`/component/actions.html`).
+# An extensionless URL must serve that file. The catch-all below used to send
+# `/component/actions` to `/index.html`, so the client hydrated the home page
+# and cleared `#app`. Limit the rewrite to doc sections so `/assets/*.js`
+# is never rewritten.
+[[redirects]]
+  from = "/component/:page"
+  to = "/component/:page.html"
+  status = 200
+
+[[redirects]]
+  from = "/playground/:page"
+  to = "/playground/:page.html"
+  status = 200
+
+[[redirects]]
+  from = "/development/:page"
+  to = "/development/:page.html"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

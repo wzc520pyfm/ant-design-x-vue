@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import ActionsMenu from './ActionsMenu.vue';
 import { useActionsContextInject } from './context';
 import type { ActionsProps, ItemType } from './interface';
+import { resolveActionIcon } from './resolve-icon';
 
 defineOptions({ name: 'AXActionsInternalItem' });
 
@@ -70,7 +71,7 @@ defineRender(() => {
       }}
     >
       <Tooltip title={item.label}>
-        <div class={`${ctx.prefixCls}-icon`}>{item.icon as any}</div>
+        <div class={`${ctx.prefixCls}-icon`}>{resolveActionIcon(item.icon)}</div>
       </Tooltip>
     </div>
   );

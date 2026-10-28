@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 import { RedoOutlined } from '@ant-design/icons-vue';
-import { App, Button, Pagination, Switch } from 'ant-design-vue';
+import { App, Button, Flex, Pagination, Switch } from 'ant-design-vue';
 import { Actions, type ActionsProps } from 'ant-design-x-vue';
 
 defineOptions({ name: 'AXActionsFadeIn' });
@@ -38,8 +38,8 @@ const Demo = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+    <Flex gap="middle" vertical align="flex-start">
+      <Flex gap="middle" align="center">
         <Switch
           checkedChildren="fadeInLeft"
           unCheckedChildren="fadeIn"
@@ -47,7 +47,7 @@ const Demo = () => {
           onChange={(val: any) => (fadeInLeft.value = !!val)}
         />
         <Button onClick={() => (key.value += 1)}>Re-Render</Button>
-      </div>
+      </Flex>
       <Actions
         key={key.value}
         fadeIn={!fadeInLeft.value}
@@ -56,7 +56,7 @@ const Demo = () => {
         onClick={onClick}
         variant="borderless"
       />
-    </div>
+    </Flex>
   );
 };
 

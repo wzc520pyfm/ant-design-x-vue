@@ -15,8 +15,11 @@ const emphasizeTodo = {
 };
 
 defineRender(() => (
-  <Flex vertical gap={12}>
-    <Switch v-model:checked={enabled.value} checked-children="plugin" un-checked-children="plain" />
+  <Flex vertical gap={12} align="flex-start">
+    <Flex align="center" gap={8} style={{ alignSelf: 'flex-start' }}>
+      <Switch v-model:checked={enabled.value} />
+      <span>plugin</span>
+    </Flex>
     <XMarkdown content={content} plugins={enabled.value ? [emphasizeTodo] : []} />
   </Flex>
 ));

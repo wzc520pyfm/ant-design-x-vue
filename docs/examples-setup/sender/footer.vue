@@ -59,7 +59,7 @@ watch(loading, () => {
             :icon="h(LinkOutlined)"
           />
           <Divider type="vertical" />
-          Deep Thinking
+          <span style="white-space: nowrap">Deep Thinking</span>
           <Switch size="small" />
           <Divider type="vertical" />
           <Button :icon="h(SearchOutlined)">
