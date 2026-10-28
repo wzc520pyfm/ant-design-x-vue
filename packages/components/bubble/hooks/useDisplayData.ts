@@ -41,7 +41,7 @@ export default function useDisplayData(items: Ref<ListItemType[]>): UseDisplayDa
 
   // Continue to show if last one finished typing
   const onTypingComplete = useEventCallback((key: string | number) => {
-    if (key === unref(displayListLastKey)) {
+    if (key === unref(displayListLastKey) && unref(displayCount) < items.value.length) {
       setDisplayCount(unref(displayCount) + 1);
     }
   });

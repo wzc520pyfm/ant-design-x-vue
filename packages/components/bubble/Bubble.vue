@@ -17,7 +17,7 @@ import Loading from './loading.vue';
 import useStyle from './style';
 import TypingContent from './TypingContent.vue';
 import pickAttrs from '../_util/pick-attrs';
-import { computed, isVNode, ref, unref, watch, watchEffect, type VNode } from 'vue';
+import { computed, isVNode, ref, unref, watch, type VNode } from 'vue';
 
 defineOptions({ name: 'AXBubble' });
 
@@ -112,14 +112,21 @@ const usingInnerAnimation = computed(
  * 3、流式输入 content 的场景下，应当在流式结束时（streaming === false）才执行 onTypingComplete，
  *    保证一次流式传输归属于一个动画周期。
  **/
-watchEffect(() => {
-  if (usingInnerAnimation.value) return;
-  if (props.streaming) return;
-  if (content.value) {
-    props.onTypingComplete?.(content.value as string);
-    emit('typingComplete', content.value as string);
-  }
-});
+// Match React's effect deps. A pre-flush watchEffect also tracks the callback
+// identity, and Bubble.List passes a fresh onTypingComplete that advances the
+// visible count, so the effect re-entered on every parent render.
+watch(
+  () => [memoedContent.value, usingInnerAnimation.value, props.streaming] as const,
+  () => {
+    if (usingInnerAnimation.value) return;
+    if (props.streaming) return;
+    if (content.value) {
+      props.onTypingComplete?.(content.value as string);
+      emit('typingComplete', content.value as string);
+    }
+  },
+  { flush: 'post', immediate: true },
+);
 
 // Notify bubble update for auto scroll
 watch(memoedContent, () => {

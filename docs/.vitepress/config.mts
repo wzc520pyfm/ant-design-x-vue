@@ -5,9 +5,13 @@ import { fileURLToPath, URL } from 'node:url'
 import { mdPlugin } from './config/plugins'
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { MarkdownTransform } from './plugins/markdown-transform';
+import { prependDocsStyles } from './theme/docs-style';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  postRender(ctx) {
+    return prependDocsStyles(ctx)
+  },
   vite: {
     css: {
       preprocessorOptions: {
