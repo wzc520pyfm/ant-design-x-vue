@@ -2,22 +2,27 @@
 import type { CSSProperties } from 'vue';
 import { toRef } from 'vue';
 import { Flex, Spin } from 'ant-design-vue';
-import type { SpinProps } from 'ant-design-vue';
 import classnames from 'classnames';
-import type { FileCardProps } from '../interface';
+import type { VNode } from 'vue';
 import ImageIcon from './ImageIcon.vue';
 import usePercent from './usePercent';
 
 defineOptions({ name: 'AXFileCardImageLoading' });
 
+export interface ImageLoadingProps {
+  prefixCls?: string;
+  style?: CSSProperties;
+  class?: string;
+  spinProps?: {
+    size?: 'small' | 'default' | 'large';
+    showText?: boolean;
+    icon?: VNode;
+  } & Record<string, unknown>;
+  percent?: number | 'auto';
+}
+
 const props = withDefaults(
-  defineProps<{
-    prefixCls?: string;
-    style?: CSSProperties;
-    class?: string;
-    spinProps?: FileCardProps['spinProps'];
-    percent?: number | 'auto';
-  }>(),
+  defineProps<ImageLoadingProps>(),
   {
     prefixCls: undefined,
     style: undefined,
@@ -51,7 +56,7 @@ defineRender(() => {
           align="center"
           gap="small"
         >
-          <Spin {...({ percent: mergedPercent.value, ...(props.spinProps || {}) } as SpinProps)} />
+          <Spin {...({ percent: mergedPercent.value, ...(props.spinProps || {}) } as any)} />
           {mergeSinkProps.showText && (
             <div class={`${props.prefixCls}-image-spin-text`}>{percentText.value}</div>
           )}

@@ -2,7 +2,14 @@
 
 2.0 的会话数据从 `ant-design-x-vue` 导出，实现在 `@ant-design-x-vue/x-sdk`。Markdown 渲染仍从 `@ant-design-x-vue/x-markdown` 引入。
 
-从 1.x 迁过来时先看 [从 v1 到 v2](/development/migration-v2)。
+从 1.x 迁过来时先看 [从 v1 到 v2](/development/migration-v2)。下面几页按 React 2.0 的 x-sdk 目录拆开：
+
+- [介绍](/component/x-sdk-introduce)
+- [Chat Provider](/component/x-sdk-chat-provider)
+- [useXChat](/component/x-sdk-use-x-chat)
+- [useXConversations](/component/x-sdk-use-x-conversations)
+- [XRequest](/component/x-sdk-x-request)
+- [XStream](/component/x-sdk-x-stream)
 
 ## useXConversations
 
@@ -55,6 +62,8 @@ const provider = new OpenAIChatProvider({
 ```
 
 `manual` 不是 `true` 时，Provider 构造会抛出 `request must be manual`。
+
+`createOpenAIChatProvider({ baseURL, model, dangerouslyApiKey })` 把上面两步收成一次调用。裸 token 会变成 `Authorization: Bearer <token>`。已经带 `Bearer `、`Basic ` 或 `Tbox-` 前缀的值保持原样。`key` 是 `dangerouslyApiKey` 的别名。
 
 ## XRequest 与 XStream
 

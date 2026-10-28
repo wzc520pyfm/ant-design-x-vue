@@ -35,6 +35,14 @@ export default defineConfig({
           replacement: path.resolve(__dirname, '../../packages/x-markdown/src/index.ts')
         },
         {
+          find: /^@ant-design-x-vue\/x-markdown\/themes\/(.*)/,
+          replacement: path.resolve(__dirname, '../../packages/x-markdown/themes/$1')
+        },
+        {
+          find: /^@ant-design-x-vue\/x-markdown\/plugins\/(.*)/,
+          replacement: path.resolve(__dirname, '../../packages/x-markdown/src/plugins/$1/index.ts')
+        },
+        {
           find: /^@ant-design-x-vue\/x-sdk$/,
           replacement: path.resolve(__dirname, '../../packages/x-sdk/src/index.ts')
         },
@@ -108,6 +116,14 @@ export default defineConfig({
           text: '从 v1 到 v2',
           link: '/development/migration-v2'
         },
+        {
+          text: '设计范式',
+          link: '/development/spec'
+        },
+        {
+          text: '2.0 核对清单',
+          link: '/development/release-checklist'
+        },
       ],
       '/component/': [
         {
@@ -163,11 +179,20 @@ export default defineConfig({
           text: '工具',
           items: [
             { text: 'SDK 数据流 (v2)', link: '/component/sdk-v2' },
+            { text: 'SDK 介绍', link: '/component/x-sdk-introduce' },
+            { text: 'Chat Provider', link: '/component/x-sdk-chat-provider' },
+            { text: 'useXChat 会话数据 (v2)', link: '/component/x-sdk-use-x-chat' },
+            { text: 'useXConversations 会话列表 (v2)', link: '/component/x-sdk-use-x-conversations' },
+            { text: 'XRequest 请求 (v2)', link: '/component/x-sdk-x-request' },
+            { text: 'XStream 流 (v2)', link: '/component/x-sdk-x-stream' },
             { text: 'useXAgent 模型调度 (1.x)', link: '/component/use-x-agent' },
             { text: 'useXChat 数据管理 (1.x)', link: '/component/use-x-chat' },
-            { text: 'XStream 流', link: '/component/x-stream' },
+            { text: 'XStream 流 (1.x)', link: '/component/x-stream' },
             { text: 'XRequest 请求 (1.x)', link: '/component/x-request' },
             { text: 'XMarkdown 富文本 (v2)', link: '/component/x-markdown-v2' },
+            { text: 'XMarkdown 插件', link: '/component/x-markdown-plugins' },
+            { text: 'XMarkdown 主题', link: '/component/x-markdown-themes' },
+            { text: 'XMarkdown 流式语法', link: '/component/x-markdown-streaming' },
             { text: 'XProvider 全局化配置', link: '/component/x-provider' },
             { text: 'XProvider 全局化配置 (v2)', link: '/component/x-provider-v2' }
           ]
@@ -178,7 +203,9 @@ export default defineConfig({
           text: '样板间',
           items: [
             { text: '独立式', link: '/playground/independent' },
-            { text: '助手式', link: '/playground/copilot' }
+            { text: '助手式', link: '/playground/copilot' },
+            { text: '现代感', link: '/playground/ultramodern' },
+            { text: '百宝箱', link: '/playground/agent-tbox' }
           ]
         },
       ]

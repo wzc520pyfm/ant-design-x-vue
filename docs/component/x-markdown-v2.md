@@ -8,6 +8,12 @@
 - 需要流式输出时配合 `streaming` 与 `useStreaming`
 - 需要自定义标题、代码块、Mermaid 等节点时使用 `components` 映射
 
+更细的页面：
+
+- [插件：Latex、HighlightCode、Mermaid、自定义 transform](/component/x-markdown-plugins)
+- [主题 light / dark](/component/x-markdown-themes)
+- [流式语法](/component/x-markdown-streaming)
+
 ## 代码演示
 
 ### 基本用法

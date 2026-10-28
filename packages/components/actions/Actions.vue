@@ -6,12 +6,13 @@ import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import { useActionsContextProvider } from './context';
 import InternalItem from './Item.vue';
-import type { ActionsProps, ActionsRef } from './interface';
+import type { ActionsRef } from './interface';
+import type { ActionsRuntimeProps } from './runtime-props';
 import useStyle from './style';
 
 defineOptions({ name: 'AXActions', inheritAttrs: false });
 
-const props = withDefaults(defineProps<ActionsProps>(), {
+const props = withDefaults(defineProps<ActionsRuntimeProps>(), {
   items: () => [],
   variant: 'borderless',
   rootClassName: '',

@@ -1,10 +1,12 @@
 import {
+  createOpenAIChatProvider as sdkCreateOpenAIChatProvider,
   useXChat as sdkUseXChat,
   XRequest as sdkXRequest,
   XStream as sdkXStream,
 } from '@ant-design-x-vue/x-sdk';
 import { mount } from '@vue/test-utils';
 import {
+  createOpenAIChatProvider,
   DefaultChatProvider,
   useLegacyXChat,
   useXChat,
@@ -21,6 +23,7 @@ describe('ant-design-x-vue 2.0 runtime exports', () => {
     expect(useXChat).toBe(sdkUseXChat);
     expect(XRequest).toBe(sdkXRequest);
     expect(XStream).toBe(sdkXStream);
+    expect(createOpenAIChatProvider).toBe(sdkCreateOpenAIChatProvider);
     expect(useLegacyXChat).not.toBe(useXChat);
     expect(XRequestLegacy).not.toBe(XRequest);
   });
