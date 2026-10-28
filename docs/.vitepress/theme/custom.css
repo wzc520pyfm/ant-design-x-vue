@@ -27,6 +27,7 @@
 
   .VPNavBar .content-body > .version-switch {
     order: 2;
+    margin-right: 16px;
   }
 
   .VPNavBar .content-body > .translations {
