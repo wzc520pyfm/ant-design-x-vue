@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, useId } from 'vue';
+import { computed, ref, useId } from 'vue';
 import pickAttrs from '../_util/pick-attrs';
 import { useXProviderContext } from '../x-provider';
 import { THOUGHT_CHAIN_ITEM_STATUS, type ThoughtChainItemProps } from './interface';
@@ -33,6 +33,7 @@ const domProps = computed(() => pickAttrs(restProps, {
 }));
 
 const id = useId();
+const itemRef = ref<HTMLElement>();
 
 const { getPrefixCls, direction } = useXProviderContext();
 
@@ -43,6 +44,7 @@ const itemCls = computed(() => `${prefixCls.value}-item`);
 defineRender(() => {
   return wrapCSSVar(
     <div
+      ref={itemRef}
       key={id}
       onClick={onClick}
       style={style}
@@ -99,4 +101,6 @@ defineRender(() => {
     </div>,
   );
 });
+
+defineExpose({ nativeElement: itemRef });
 </script>

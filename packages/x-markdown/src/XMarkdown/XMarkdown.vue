@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, h, shallowRef, watch, type CSSProperties, type VNode } from 'vue';
 import type { XMarkdownProps } from './interface';
-import { Parser, htmlToVNode } from './core';
+import { Parser, htmlToVNode, buildDomPurifyConfig } from './core';
 import DOMPurify from 'dompurify';
 import { useStreaming } from './hooks';
 import classnames from 'classnames';
@@ -87,7 +87,10 @@ const parsedHtml = computed(() => {
   const transformed = applyPlugins(source);
   const raw = parser.value.parse(transformed);
   if (typeof document === 'undefined') return raw;
-  return DOMPurify.sanitize(raw, props.dompurifyConfig as any) as unknown as string;
+  return DOMPurify.sanitize(
+    raw,
+    buildDomPurifyConfig(props.components, props.dompurifyConfig) as any,
+  ) as unknown as string;
 });
 
 const bodyVNodes = computed((): VNode[] => {
@@ -96,6 +99,7 @@ const bodyVNodes = computed((): VNode[] => {
   return htmlToVNode(html, {
     components: props.components || {},
     streamStatus: streamStatus.value,
+    streaming: props.streaming,
   });
 });
 

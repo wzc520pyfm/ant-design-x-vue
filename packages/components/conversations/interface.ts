@@ -1,10 +1,13 @@
-import type { CSSProperties, HTMLAttributes, VNode } from 'vue';
-import type { AnyObject } from '../_util/type';
-import type GroupTitle from './GroupTitle.vue';
-import type { ConfigProviderProps, DirectionType } from 'ant-design-vue/es/config-provider';
 import type { MenuProps } from 'ant-design-vue';
-import type { AvoidValidation } from '../type-utility';
+import type {
+  ConfigProviderProps,
+  DirectionType,
+} from 'ant-design-vue/es/config-provider';
+import type { CSSProperties, VNode } from 'vue';
 import type { CollapsibleOptions } from '../_util/hooks/use-collapsible';
+import type { ShortcutKeyInfoType } from '../_util/hooks/use-shortcut-keys';
+import type { AnyObject, ShortcutKeys } from '../_util/type';
+import type { AvoidValidation } from '../type-utility';
 import type { GroupInfoType } from './hooks/useGroupable';
 
 type GroupType = string;
@@ -112,7 +115,9 @@ export interface ConversationsProps {
    * @desc 会话操作菜单
    * @descEN Operation menu for conversations
    */
-  menu?: ConversationsItemProps['menu'] | ((value: ConversationItemType) => ConversationsItemProps['menu']);
+  menu?:
+    | ConversationsItemProps['menu']
+    | ((value: ConversationItemType) => ConversationsItemProps['menu']);
 
   /**
    * @desc 是否支持分组, 开启后默认按 {@link Conversation.group} 字段分组
@@ -145,6 +150,15 @@ export interface ConversationsProps {
   rootClassName?: string;
 
   /**
+   * @desc 自定义快捷键。`creation` 触发新建会话，`items` 按顺序选中会话。
+   * @descEN Custom shortcut keys. `creation` triggers the new-chat button, `items` selects a conversation.
+   */
+  shortcutKeys?: {
+    creation?: ShortcutKeys<number>;
+    items?: ShortcutKeys<'number'> | ShortcutKeys<number>[];
+  };
+
+  /**
    * @desc 新建对话按钮的配置
    * @descEN Config of the new chat button
    */
@@ -158,7 +172,10 @@ export interface ConversationsItemProps {
   menu?: MenuProps & {
     trigger?:
       | VNode
-      | ((conversation: ConversationItemType, info: { originNode: VNode }) => VNode);
+      | ((
+          conversation: ConversationItemType,
+          info: { originNode: VNode },
+        ) => VNode);
     getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
   };
   active?: boolean;
@@ -174,9 +191,14 @@ export interface CreationProps {
   disabled?: boolean;
   icon?: VNode | (() => VNode);
   onClick?: (event?: MouseEvent) => void;
+  /**
+   * Injected by Conversations from the resolved `creation` shortcut.
+   */
+  shortcutKeyInfo?: ShortcutKeyInfoType;
 }
 
 export interface CreationLabelInfo {
+  shortcutKeyInfo?: ShortcutKeyInfoType;
   components: { CreationLabel: any };
 }
 

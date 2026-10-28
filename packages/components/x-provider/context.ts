@@ -1,7 +1,4 @@
-import { objectType, type AnyObject, type ShortcutKeys } from '../_util/type';
-import type { ActionsProps } from '../actions';
-import type { AttachmentsProps } from '../attachments';
-import type { BubbleProps } from '../bubble';
+import type { ConfigProviderProps as OriAntdConfigProviderProps } from 'ant-design-vue';
 import {
   computed,
   type ComputedRef,
@@ -15,17 +12,20 @@ import {
   unref,
   watch,
 } from 'vue';
-import type { ConfigProviderProps as OriAntdConfigProviderProps } from 'ant-design-vue';
+import { type AnyObject, objectType, type ShortcutKeys } from '../_util/type';
+import type { ActionsProps } from '../actions';
+import type { AttachmentsProps } from '../attachments';
+import type { BubbleProps } from '../bubble';
 import type { ConversationsProps } from '../conversations';
+import type { FileCardProps } from '../file-card';
 import type { PromptsProps } from '../prompts';
 import type { SenderProps } from '../sender';
+import type { SourcesProps } from '../sources';
 import type { SuggestionProps } from '../suggestion';
+import type { OverrideToken } from '../theme/cssinjs-utils';
 import type { ThinkProps } from '../think';
 import type { ThoughtChainProps } from '../thought-chain';
-import type { FileCardProps } from '../file-card';
-import type { SourcesProps } from '../sources';
 import type { WelcomeProps } from '../welcome';
-import type { OverrideToken } from '../theme/cssinjs-utils';
 import type { MarkdownComponentsConfig as XMarkdownComponentsConfig } from './XMarkdownComponents';
 
 export interface AntdConfigProviderProps {
@@ -62,7 +62,7 @@ interface BaseComponentConfig {
 }
 
 export interface XComponentConfig extends BaseComponentConfig {
-  shortcutKeys: Record<string, ShortcutKeys>;
+  shortcutKeys: Record<string, ShortcutKeys | ShortcutKeys[]>;
 }
 
 export type ComponentStyleConfig<
@@ -73,7 +73,10 @@ export type ComponentStyleConfig<
 export interface XComponentsConfig {
   actions?: ComponentStyleConfig<ActionsProps>;
   bubble?: ComponentStyleConfig<BubbleProps>;
-  conversations?: ComponentStyleConfig<ConversationsProps, keyof XComponentConfig>;
+  conversations?: ComponentStyleConfig<
+    ConversationsProps,
+    keyof XComponentConfig
+  >;
   prompts?: ComponentStyleConfig<PromptsProps>;
   sender?: ComponentStyleConfig<SenderProps>;
   suggestion?: ComponentStyleConfig<SuggestionProps>;
@@ -92,8 +95,12 @@ type ComponentsConfig = {
 export type XProviderProps = XComponentsConfig &
   XMarkdownComponentsConfig &
   Omit<AntdConfigProviderProps, 'theme'> & {
-    theme?: Omit<NonNullable<AntdConfigProviderProps['theme']>, 'components'> & {
-      components?: NonNullable<AntdConfigProviderProps['theme']>['components'] & ComponentsConfig;
+    theme?: Omit<
+      NonNullable<AntdConfigProviderProps['theme']>,
+      'components'
+    > & {
+      components?: NonNullable<AntdConfigProviderProps['theme']>['components'] &
+        ComponentsConfig;
     };
   };
 
@@ -102,7 +109,9 @@ const XProviderContextKey: InjectionKey<ComputedRef<XProviderProps>> =
 
 export const globalXProviderApi = shallowRef<XProviderProps>();
 
-export const useXProviderContextProvider = (value: ComputedRef<XProviderProps>) => {
+export const useXProviderContextProvider = (
+  value: ComputedRef<XProviderProps>,
+) => {
   provide(XProviderContextKey, value);
   watch(
     value,

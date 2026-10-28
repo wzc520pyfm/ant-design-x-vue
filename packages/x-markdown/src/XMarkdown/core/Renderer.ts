@@ -1,35 +1,19 @@
-import type { Token, Tokens } from '../interface';
+import type { VNode } from 'vue';
+import { htmlToVNode, type HtmlToVNodeOptions } from './htmlToVNode';
 
 /**
- * Render tokens to HTML string
- * TODO: Implement full functionality
+ * Turn sanitized HTML into VNodes, replacing mapped tags with Vue components.
+ * Aligned with `@ant-design/x-markdown`'s Renderer.
  */
 export class Renderer {
-  render(tokens: Tokens): string {
-    return tokens
-      .map((token) => this.renderToken(token))
-      .join('');
+  private readonly options: HtmlToVNodeOptions;
+
+  constructor(options: HtmlToVNodeOptions = {}) {
+    this.options = options;
   }
 
-  renderToken(token: Token): string {
-    switch (token.type) {
-      case 'paragraph':
-        return `<p>${token.text}</p>`;
-      case 'heading':
-        return `<h${token.depth}>${token.text}</h${token.depth}>`;
-      case 'code':
-        return `<pre><code class="language-${token.lang || ''}">${token.text}</code></pre>`;
-      case 'blockquote':
-        return `<blockquote>${token.text}</blockquote>`;
-      case 'list':
-        const tag = token.ordered ? 'ol' : 'ul';
-        const items = token.items?.map((item: Token) => `<li>${item.text}</li>`).join('') || '';
-        return `<${tag}>${items}</${tag}>`;
-      case 'space':
-        return '';
-      default:
-        return token.raw || '';
-    }
+  public render(html: string): VNode[] {
+    return htmlToVNode(html, this.options);
   }
 }
 

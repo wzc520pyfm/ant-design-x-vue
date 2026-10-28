@@ -1,9 +1,15 @@
-import { h, type VNode } from 'vue';
+import type { ChildNode, Document, Element, Text } from 'domhandler';
+import type { Config as DOMPurifyConfig } from 'dompurify';
 import { parseDocument } from 'htmlparser2';
-import type { Element, Text, ChildNode, Document } from 'domhandler';
-import type { DOMNode } from '../interface';
-import type { Component } from 'vue';
-import type { ComponentStreamStatus } from '../interface';
+import { h, markRaw, toRaw, type Component, type VNode } from 'vue';
+import AnimationText from '../AnimationText.vue';
+import type {
+  ComponentStreamStatus,
+  DOMNode,
+  StreamingOption,
+} from '../interface';
+
+const NON_WHITESPACE_REGEX = /[^\r\n\s]+/;
 
 function isElement(node: ChildNode): node is Element {
   return 'name' in node && 'attribs' in node;
@@ -19,7 +25,7 @@ function toDOMNode(node: ChildNode): DOMNode {
       type: 'tag',
       name: node.name,
       attribs: { ...node.attribs },
-      children: node.children?.map((c) => toDOMNode(c)) ?? [],
+      children: node.children?.map((child) => toDOMNode(child)) ?? [],
     };
   }
   if (isText(node)) {
@@ -29,23 +35,95 @@ function toDOMNode(node: ChildNode): DOMNode {
     };
   }
   return {
-    type: (node as any).type,
-    ...(node as any),
+    type: (node as { type?: string }).type || 'unknown',
+    ...(node as object),
   };
 }
 
 function getAttribs(element: Element): Record<string, any> {
   const attrs: Record<string, any> = {};
-  const a = element.attribs || {};
-  for (const key in a) {
-    attrs[key] = a[key];
+  const source = element.attribs || {};
+  for (const key in source) {
+    attrs[key] = source[key];
   }
   return attrs;
 }
 
+function parentTagName(node: ChildNode): string | undefined {
+  const parent = (node as { parent?: Element }).parent;
+  return parent?.name?.toLowerCase();
+}
+
+/**
+ * Tags that are still open in the raw HTML. Custom components for those tags
+ * receive `streamStatus="loading"` (same rule as @ant-design/x-markdown).
+ */
+export function detectUnclosedTags(
+  htmlString: string,
+  components?: Record<string, unknown>,
+): Set<string> {
+  const unclosedTags = new Set<string>();
+  if (!components) return unclosedTags;
+
+  const stack: string[] = [];
+  const tagRegex = /<\/?([a-zA-Z][a-zA-Z0-9-]*)(?:\s[^>]*)?>/g;
+  let match = tagRegex.exec(htmlString);
+  while (match !== null) {
+    const [fullMatch, tagName] = match;
+    const normalized = tagName.toLowerCase();
+    const isClosing = fullMatch.startsWith('</');
+    const isSelfClosing = fullMatch.endsWith('/>');
+
+    if (components[normalized] || components[tagName]) {
+      if (isClosing) {
+        const lastIndex = stack.lastIndexOf(normalized);
+        if (lastIndex !== -1) {
+          stack.splice(lastIndex, 1);
+        }
+      } else if (!isSelfClosing) {
+        stack.push(normalized);
+      }
+    }
+    match = tagRegex.exec(htmlString);
+  }
+
+  stack.forEach((tag) => unclosedTags.add(tag));
+  return unclosedTags;
+}
+
+/**
+ * Keep custom component tags (and link targets) when DOMPurify runs.
+ */
+export function buildDomPurifyConfig(
+  components?: Record<string, unknown>,
+  userConfig?: DOMPurifyConfig,
+): DOMPurifyConfig {
+  const customComponents = Object.keys(components || {});
+  const allowedTags = Array.isArray(userConfig?.ADD_TAGS)
+    ? userConfig.ADD_TAGS
+    : [];
+  const addAttr = Array.isArray(userConfig?.ADD_ATTR)
+    ? userConfig.ADD_ATTR
+    : [];
+
+  return {
+    ...userConfig,
+    ADD_TAGS: Array.from(new Set([...customComponents, ...allowedTags])),
+    ADD_ATTR: Array.from(new Set(['target', 'rel', ...addAttr])),
+  };
+}
+
 export interface HtmlToVNodeOptions {
   components?: Record<string, Component>;
+  /**
+   * Fallback status used when a custom tag is already closed.
+   * Unclosed custom tags are always `'loading'`.
+   */
   streamStatus?: ComponentStreamStatus;
+  /**
+   * Streaming options. `enableAnimation` fades in newly rendered text.
+   */
+  streaming?: StreamingOption | boolean;
 }
 
 /**
@@ -59,15 +137,19 @@ export function htmlToVNode(
   const { components = {}, streamStatus = 'done' } = options;
   if (!html || !html.trim()) return [];
 
+  const streamingOption =
+    typeof options.streaming === 'object' ? options.streaming : undefined;
+  const enableAnimation = !!streamingOption?.enableAnimation;
+  const unclosedTags = detectUnclosedTags(html, components);
   const doc = parseDocument(html, { decodeEntities: true });
   const root = doc as Document;
 
   function walk(nodes: ChildNode[]): (VNode | string)[] {
     const result: (VNode | string)[] = [];
     for (const node of nodes) {
-      const v = visit(node);
-      if (v !== null && v !== undefined && v !== '') {
-        result.push(v);
+      const visited = visit(node);
+      if (visited !== null && visited !== undefined && visited !== '') {
+        result.push(visited);
       }
     }
     return result;
@@ -76,24 +158,56 @@ export function htmlToVNode(
   function visit(node: ChildNode): VNode | string | null {
     if (isText(node)) {
       const text = node.data || '';
+      const parentName = parentTagName(node);
+      const parentIsCustom = !!(parentName && components[parentName]);
+      if (
+        enableAnimation &&
+        NON_WHITESPACE_REGEX.test(text) &&
+        !parentIsCustom
+      ) {
+        return h(AnimationText, {
+          text,
+          animationConfig: streamingOption?.animationConfig,
+        });
+      }
       return text.trim() ? text : '';
     }
     if (!isElement(node)) return null;
 
     const element = node;
     const tagName = element.name?.toLowerCase() || element.name;
-    const CustomComponent = components[tagName];
+    const resolved = components[tagName] || components[element.name];
+    const CustomComponent = resolved ? markRaw(toRaw(resolved)) : undefined;
     const attribs = getAttribs(element);
     const childNodes = walk(element.children || []);
 
     if (CustomComponent) {
       const domNode = toDOMNode(node);
-      const props = {
+      const status: ComponentStreamStatus = unclosedTags.has(tagName)
+        ? 'loading'
+        : streamStatus;
+      const classes = [attribs.className, attribs.classname, attribs.class]
+        .filter(Boolean)
+        .join(' ')
+        .trim();
+      const props: Record<string, any> = {
         domNode,
-        streamStatus,
+        streamStatus: status,
         ...attribs,
+        ...(classes ? { class: classes, className: classes } : {}),
+        ...(attribs.disabled !== undefined && { disabled: true }),
+        ...(attribs.checked !== undefined && { checked: true }),
         children: childNodes.length ? childNodes : undefined,
       };
+
+      if (tagName === 'code') {
+        const block = (attribs['data-block'] ?? 'false') === 'true';
+        const codeStreamStatus =
+          attribs['data-state'] === 'loading' ? 'loading' : 'done';
+        props.block = block;
+        props.streamStatus = codeStreamStatus;
+      }
+
       return h(CustomComponent, props, () => childNodes) as VNode;
     }
 
@@ -101,7 +215,9 @@ export function htmlToVNode(
   }
 
   const children = walk(root.children || []);
-  return children.filter((c): c is VNode => c !== '' && typeof c === 'object') as VNode[];
+  return children.filter(
+    (child): child is VNode => child !== '' && typeof child === 'object',
+  );
 }
 
 export default htmlToVNode;

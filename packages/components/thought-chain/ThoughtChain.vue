@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import pickAttrs from '../_util/pick-attrs';
 import type { ThoughtChainProps } from './interface';
 import { useXProviderContext } from '../x-provider';
@@ -32,6 +32,8 @@ const domProps = computed(() => pickAttrs(restProps, {
   aria: true,
   data: true,
 }));
+
+const rootRef = ref<HTMLElement>();
 
 const { getPrefixCls, direction } = useXProviderContext();
 
@@ -65,6 +67,7 @@ const [expandedKeys, onItemExpand] = useCollapsible({
 defineRender(() => {
   return wrapCSSVar(
     <div
+      ref={rootRef}
       {...domProps.value}
       class={mergedCls.value}
       style={{
@@ -106,4 +109,6 @@ defineRender(() => {
     </div>,
   );
 });
+
+defineExpose({ nativeElement: rootRef });
 </script>
