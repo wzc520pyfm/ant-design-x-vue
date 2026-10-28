@@ -9,7 +9,7 @@ import { useSourceCode } from '../composables/source-code'
 import { usePlayground } from '../composables/use-playground'
 // import demoBlockLocale from '../../i18n/component/demo-block.json'
 import SourceCode from './demo/vp-source-code.vue'
-import { useData } from 'vitepress'
+import { antdDark } from '../../theme/antd-appearance'
 
 const props = defineProps<{
   source: string
@@ -25,9 +25,10 @@ const vm = getCurrentInstance()!
 
 const prefer = useStorage('antdx-docs-preference', 'tsx');
 
-const { isDark } = useData()
-
-const algorithm = computed(() => isDark.value ? theme.darkAlgorithm : theme.defaultAlgorithm)
+const demoTheme = computed(() => ({
+  algorithm: antdDark.value ? theme.darkAlgorithm : theme.defaultAlgorithm,
+  inherit: false,
+}))
 
 const { copy, isSupported } = useClipboard({
   source: () => decodeURIComponent(prefer.value === 'tsx' ? props.rawSource : props.rawSourceSetup),
@@ -75,9 +76,7 @@ const copyCode = async () => {
   <!-- danger here DO NOT USE INLINE SCRIPT TAG -->
   <div style="margin-top: 16px; margin-bottom: 16px;" v-html="decodedDescription" />
 
-  <XProvider :theme="{
-    algorithm,
-  }">
+  <XProvider :theme="demoTheme">
 
     <div class="example">
       <div class="example-showcase">
@@ -138,6 +137,18 @@ const copyCode = async () => {
   .example-showcase {
     ul {
       list-style: none;
+    }
+
+    :is(.x-markdown, .x-markdown-light, .x-markdown-dark) ul {
+      list-style: disc;
+      margin: 0 0 12px 1.25em;
+      padding: 0;
+    }
+
+    :is(.x-markdown, .x-markdown-light, .x-markdown-dark) ol {
+      list-style: decimal;
+      margin: 0 0 12px 1.25em;
+      padding: 0;
     }
   }
 }

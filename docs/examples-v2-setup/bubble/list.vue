@@ -111,7 +111,7 @@ const addWithRef = () => {
 
 <template>
   <a-flex vertical :style="{ height: '720px' }" :gap="20">
-    <a-flex gap="small">
+    <a-flex gap="small" wrap>
       <a-button type="primary" @click="addBubble">Add Bubble</a-button>
       <a-button @click="addMarkdownMsg">Add Markdown Msg</a-button>
       <a-button @click="addDivider">Add Divider</a-button>

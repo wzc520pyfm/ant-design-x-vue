@@ -14,7 +14,12 @@ import {
 } from 'ant-design-x-vue';
 import { Button, Flex } from 'ant-design-vue';
 import { XMarkdown } from '@ant-design-x-vue/x-markdown';
+import '@ant-design-x-vue/x-markdown/themes/light.css';
+import '@ant-design-x-vue/x-markdown/themes/dark.css';
 import { useMockChat } from '../../examples-v2/_shared/use-mock-chat';
+import { usePlaygroundShell } from '../../examples-v2/_shared/playground-shell';
+
+const shell = usePlaygroundShell('720px', '16px');
 
 const chat = useMockChat((question) => [
   `About **${question}**:`,
@@ -39,8 +44,8 @@ const chain = computed(() => [
 
 defineRender(() => (
   <XProvider>
-    <Flex style={{ height: '720px', border: '1px solid #f0f0f0', borderRadius: '8px', overflow: 'hidden' }}>
-      <Flex vertical gap={8} style={{ width: '240px', padding: '12px', background: '#fafafa' }}>
+    <Flex style={shell.shellStyle.value}>
+      <Flex vertical gap={8} style={shell.sideStyle.value}>
         <Button type="primary" onClick={() => chat.addChat()}>New chat</Button>
         <Conversations
           items={chat.conversations.value}
@@ -48,7 +53,7 @@ defineRender(() => (
           onActiveChange={(key: string) => chat.setActiveConversationKey(key)}
         />
       </Flex>
-      <Flex vertical gap={12} style={{ flex: 1, padding: '16px', minWidth: 0, overflow: 'auto' }}>
+      <Flex vertical gap={12} style={{ ...shell.mainStyle.value, overflow: 'auto' }}>
         {chat.bubbles.value.length === 0 && (
           <>
             <Welcome
@@ -72,7 +77,9 @@ defineRender(() => (
             user: { placement: 'end' },
             ai: {
               placement: 'start',
-              contentRender: (content: string) => <XMarkdown content={content} />,
+              contentRender: (content: string) => (
+                <XMarkdown className={shell.markdownClass.value} content={content} />
+              ),
             },
           }}
         />
