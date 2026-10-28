@@ -8,16 +8,10 @@ const more: DefaultTheme.NavItem = {
   ],
 }
 
-export const v2Nav: DefaultTheme.NavItem[] = [
+export const nav: DefaultTheme.NavItem[] = [
   { text: '研发', link: '/development/introduce' },
   { text: '组件', link: '/component/overview' },
   { text: '演示', link: '/playground/independent' },
-  more,
-]
-
-export const v1Nav: DefaultTheme.NavItem[] = [
-  { text: '组件', link: '/v1/component/overview' },
-  { text: '升级到 2.x', link: '/development/migration-v2' },
   more,
 ]
 
@@ -111,59 +105,8 @@ const playgroundSidebar: DefaultTheme.SidebarItem[] = [
   },
 ]
 
-export const v2Sidebar: DefaultTheme.Sidebar = {
+export const sidebar: DefaultTheme.Sidebar = {
   '/development/': developmentSidebar,
   '/component/': v2ComponentSidebar,
   '/playground/': playgroundSidebar,
 }
-
-export const v1Sidebar: DefaultTheme.SidebarItem[] = [
-  {
-    text: '总览',
-    link: '/v1/component/overview',
-  },
-  {
-    text: '通用',
-    items: [
-      { text: 'Bubble 对话气泡框', link: '/v1/component/bubble' },
-      { text: 'Conversations 管理对话', link: '/v1/component/conversations' },
-    ],
-  },
-  {
-    text: '唤醒',
-    items: [
-      { text: 'Welcome 欢迎', link: '/v1/component/welcome' },
-      { text: 'Prompts 提示集', link: '/v1/component/prompts' },
-    ],
-  },
-  {
-    text: '表达',
-    items: [
-      { text: 'Sender 输入框', link: '/v1/component/sender' },
-      { text: 'Attachments 输入附件', link: '/v1/component/attachments' },
-      { text: 'Suggestion 快捷指令', link: '/v1/component/suggestion' },
-    ],
-  },
-  {
-    text: '确认',
-    items: [
-      { text: 'ThoughtChain 思维链', link: '/v1/component/thought-chain' },
-    ],
-  },
-  {
-    text: '反馈',
-    items: [
-      { text: 'Actions 操作列表', link: '/v1/component/actions' },
-    ],
-  },
-  {
-    text: '工具',
-    items: [
-      { text: 'useXAgent 模型调度', link: '/v1/component/use-x-agent' },
-      { text: 'useXChat 数据管理', link: '/v1/component/use-x-chat' },
-      { text: 'XStream 流', link: '/v1/component/x-stream' },
-      { text: 'XRequest 请求', link: '/v1/component/x-request' },
-      { text: 'XProvider 全局化配置', link: '/v1/component/x-provider' },
-    ],
-  },
-]

@@ -4,12 +4,6 @@
   }
 }
 
-/* Built-in locale menu is a language control. Versions use the header select. */
-.VPNavBarTranslations,
-.VPNavScreenTranslations {
-  display: none !important;
-}
-
 .version-switch {
   display: flex;
   align-items: center;

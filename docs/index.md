@@ -12,7 +12,7 @@ hero:
       link: /component/overview
     - theme: alt
       text: 1.x 文档
-      link: /v1/
+      link: https://antd-design-x-vue.netlify.app/
     - theme: alt
       text: 设计语言
       link: https://x.ant.design/docs/spec/introduce-cn

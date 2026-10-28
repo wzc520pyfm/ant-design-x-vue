@@ -3,7 +3,7 @@
 用于显示一组与当前上下文相关的预定义的问题或建议。
 
 ::: warning 注意
-这是 2.x 的 Prompts。1.x 文档在 [Prompts 提示集](/v1/component/prompts)，也可以用页头的版本切换。
+这是 2.x 的 Prompts。1.x 文档在 [Prompts 提示集](https://antd-design-x-vue.netlify.app/component/prompts)，也可以用页头的版本切换。
 :::
 
 ## 新功能

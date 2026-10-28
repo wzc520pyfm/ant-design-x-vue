@@ -1,29 +1,32 @@
 <script setup lang="ts">
 import { Select } from 'ant-design-vue'
-import { computed } from 'vue'
-import { useData, useRouter } from 'vitepress'
+import { onMounted, ref } from 'vue'
 import {
   V1_VERSION_LABEL,
   V2_VERSION_LABEL,
-  resolveVersionTarget,
+  currentDocsVersion,
+  resolveVersionHref,
   type DocVersionId,
 } from '../../config/version-switch'
 
 defineOptions({ name: 'VpVersionSwitch' })
-
-const { page, localeIndex } = useData()
-const router = useRouter()
 
 const options = [
   { label: V2_VERSION_LABEL, value: 'v2' },
   { label: V1_VERSION_LABEL, value: 'v1' },
 ]
 
-const current = computed<DocVersionId>(() => (localeIndex.value === 'v1' ? 'v1' : 'v2'))
+// SSR and the first client render agree. The 1.x origin is detected after mount.
+const current = ref<DocVersionId>('v2')
 
-const onChange = (value: DocVersionId) => {
+onMounted(() => {
+  current.value = currentDocsVersion(window.location.origin)
+})
+
+const onChange = (value: unknown) => {
+  if (value !== 'v1' && value !== 'v2') return
   if (value === current.value) return
-  router.go(resolveVersionTarget(page.value.relativePath, value))
+  window.location.assign(resolveVersionHref(window.location.pathname, value))
 }
 </script>
 

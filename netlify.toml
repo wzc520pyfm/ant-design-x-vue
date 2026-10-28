@@ -4,8 +4,8 @@
 # and cleared `#app`. Limit the rewrite to doc sections so `/assets/*.js`
 # is never rewritten.
 #
-# Legacy flat URLs are listed before the section rewrites. Shared component
-# names (`/component/bubble`) are 2.x. 1.x-only pages and `*-v2` slugs redirect.
+# Legacy `*-v2` slugs stay on this 2.x site and point at the clean path.
+# 1.x docs are another origin; the header select leaves this site.
 
 [[redirects]]
   from = "/component/bubble-v2"
@@ -78,36 +78,6 @@
   status = 301
 
 [[redirects]]
-  from = "/component/attachments"
-  to = "/v1/component/attachments"
-  status = 301
-
-[[redirects]]
-  from = "/component/actions"
-  to = "/v1/component/actions"
-  status = 301
-
-[[redirects]]
-  from = "/component/use-x-agent"
-  to = "/v1/component/use-x-agent"
-  status = 301
-
-[[redirects]]
-  from = "/component/use-x-chat"
-  to = "/v1/component/use-x-chat"
-  status = 301
-
-[[redirects]]
-  from = "/component/x-stream"
-  to = "/v1/component/x-stream"
-  status = 301
-
-[[redirects]]
-  from = "/component/x-request"
-  to = "/v1/component/x-request"
-  status = 301
-
-[[redirects]]
   from = "/component/:page"
   to = "/component/:page.html"
   status = 200
@@ -120,16 +90,6 @@
 [[redirects]]
   from = "/development/:page"
   to = "/development/:page.html"
-  status = 200
-
-[[redirects]]
-  from = "/v1/component/:page"
-  to = "/v1/component/:page.html"
-  status = 200
-
-[[redirects]]
-  from = "/v1/"
-  to = "/v1/index.html"
   status = 200
 
 [[redirects]]

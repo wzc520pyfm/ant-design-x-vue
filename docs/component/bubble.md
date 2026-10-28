@@ -3,7 +3,7 @@
 用于聊天的气泡组件，v2 版本新增了更多功能特性。
 
 ::: warning 注意
-这是 2.x 的 Bubble。1.x 文档在 [Bubble 对话气泡](/v1/component/bubble)，也可以用页头的版本切换。
+这是 2.x 的 Bubble。1.x 文档在 [Bubble 对话气泡](https://antd-design-x-vue.netlify.app/component/bubble)，也可以用页头的版本切换。
 :::
 
 ## 新功能

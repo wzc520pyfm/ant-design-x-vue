@@ -196,19 +196,19 @@ const getComponentSubText = (component: any) => {
 
 // 组件路由映射
 const componentRoutes: Record<string, string> = {
-  bubble: '/v1/component/bubble',
-  conversations: '/v1/component/conversations',
-  welcome: '/v1/component/welcome',
-  prompts: '/v1/component/prompts',
-  attachments: '/v1/component/attachments',
-  sender: '/v1/component/sender',
-  suggestion: '/v1/component/suggestion',
-  'thought-chain': '/v1/component/thought-chain',
-  'use-x-agent': '/v1/component/use-x-agent',
-  'use-x-chat': '/v1/component/use-x-chat',
-  'x-stream': '/v1/component/x-stream',
-  'x-request': '/v1/component/x-request',
-  'x-provider': '/v1/component/x-provider',
+  bubble: '/component/bubble',
+  conversations: '/component/conversations',
+  welcome: '/component/welcome',
+  prompts: '/component/prompts',
+  attachments: '/component/attachments',
+  sender: '/component/sender',
+  suggestion: '/component/suggestion',
+  'thought-chain': '/component/thought-chain',
+  'use-x-agent': '/component/use-x-agent',
+  'use-x-chat': '/component/use-x-chat',
+  'x-stream': '/component/x-stream',
+  'x-request': '/component/x-request',
+  'x-provider': '/component/x-provider',
 };
 
 // 静态预览图映射

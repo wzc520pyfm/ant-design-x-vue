@@ -108,7 +108,6 @@ const uniqueImports = (lines: string[]) => Array.from(new Set(lines))
  * Demo containers render `<ax-v2-folder-file>` from the fence path, not from
  * the markdown filename. Pages such as `x-markdown-plugins.md` reference
  * `examples-v2/x-markdown/plugins.vue`, so the import has to follow the fence.
- * v1 pages live under `docs/v1/`, so the specifier is relative to that file.
  */
 export const toImportSpecifier = (fromFile: string, absTarget: string) => {
   let rel = path.relative(path.dirname(fromFile), absTarget).split(path.sep).join('/')

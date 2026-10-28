@@ -75,4 +75,4 @@ const { messages, onRequest, abort, isRequesting } = useXChat({
 
 ## 旧页面
 
-[useXAgent](/v1/component/use-x-agent)、[useXChat](/v1/component/use-x-chat)、[XRequest](/v1/component/x-request) 这三页描述的是 1.x。新代码按 [SDK 数据流](/component/sdk) 写。
+[useXAgent](https://antd-design-x-vue.netlify.app/component/use-x-agent)、[useXChat](https://antd-design-x-vue.netlify.app/component/use-x-chat)、[XRequest](https://antd-design-x-vue.netlify.app/component/x-request) 这三页在 1.x 文档站。新代码按 [SDK 数据流](/component/sdk) 写。
