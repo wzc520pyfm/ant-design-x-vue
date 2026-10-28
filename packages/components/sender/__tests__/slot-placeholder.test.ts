@@ -32,6 +32,7 @@ describe('Sender slot and switch layout', () => {
       .join('\n');
 
     expect(css).toMatch(/\.ant-sender-slot\{[^}]*vertical-align:middle/);
+    expect(css).toMatch(/\.ant-sender-slot\{[^}]*height:24px/);
     expect(css).not.toMatch(/\.ant-sender-slot\{[^}]*vertical-align:bottom/);
     expect(css).toMatch(/\.ant-sender-switch \.ant-btn\{[^}]*white-space:nowrap/);
     wrapper.unmount();

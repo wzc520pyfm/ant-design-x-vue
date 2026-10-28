@@ -31,15 +31,18 @@ const genSlotTextAreaStyle: GenerateStyle<SenderToken> = (token) => {
           color: token.colorTextPlaceholder,
         },
       },
-      // A 24px small input sits about 4px above the 16px glyphs. Size the
-      // chip to the font and center it on the text line.
+      // React 2.0 uses controlHeightSM (24). A 16px chip matches the glyph
+      // but reads as too short. Center the 24px chip on the text line so the
+      // extra height splits above and below, instead of stacking above the
+      // baseline the way vertical-align:bottom does.
       [slotCls]: {
         display: 'inline-flex',
         verticalAlign: 'middle',
         alignItems: 'center',
         marginBlock: 0,
-        height: calc(token.fontSize).add(2).equal(),
-        lineHeight: unit(calc(token.fontSize).add(2).equal()),
+        height: token.controlHeightSM,
+        minHeight: token.controlHeightSM,
+        lineHeight: unit(calc(token.controlHeightSM).sub(2).equal()),
         wordBreak: 'break-all',
         marginInline: token.marginXXS,
       },
