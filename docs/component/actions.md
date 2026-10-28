@@ -51,7 +51,7 @@ actions/fadeIn
 
 ## API
 
-通用属性参考：[通用属性](/docs/vue/common-props)
+<!-- 通用属性参考：[通用属性](/docs/vue/common-props) -->
 
 ### ActionsProps
 

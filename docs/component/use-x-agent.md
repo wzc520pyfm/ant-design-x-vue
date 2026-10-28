@@ -1,5 +1,8 @@
-
 # useXAgent 模型调度
+
+::: warning 1.x 页面
+2.0 不再用 `useXAgent` 调度模型。该导出仅为旧示例保留。新代码使用 Chat Provider，见 [从 v1 到 v2](/development/migration-v2) 和 [SDK 数据流](/component/sdk-v2)。
+:::
 
 用于模型调度的 Agent 钩子。
 
@@ -62,12 +65,13 @@ type useXAgent<AgentMessage> = (
 使用预设协议进行请求，尚未实现协议。
 
 <!-- todo: add dangerouslyApiKey desc link -->
-| 属性 | 说明 | 类型 | 默认值 | 版本 |
-| --- | --- | --- | --- | --- |
-| baseURL | 请求服务端地址 | string | - |  |
-| key | 请求秘钥 | string | - |  |
-| model | 协议模型 | string | - |  |
-| dangerouslyApiKey | **注意: 🔥 `dangerouslyApiKey` 存在安全风险，对此有详细的[说明](/#)。** | string | - | - |
+
+| 属性              | 说明                                                                    | 类型   | 默认值 | 版本 |
+| ----------------- | ----------------------------------------------------------------------- | ------ | ------ | ---- |
+| baseURL           | 请求服务端地址                                                          | string | -      |      |
+| key               | 请求秘钥                                                                | string | -      |      |
+| model             | 协议模型                                                                | string | -      |      |
+| dangerouslyApiKey | **注意: 🔥 `dangerouslyApiKey` 存在安全风险，对此有详细的[说明](/#)。** | string | -      | -    |
 
 ### XAgentConfigCustom
 
@@ -85,7 +89,7 @@ type useXAgent<AgentMessage> = (
 interface RequestFnInfo<Message> extends AnyObject {
   messages?: Message[];
   message?: Message;
-};
+}
 
 export type RequestFn<Message, Input, Output> = (
   info: RequestFnInfo<Message, Input>,
@@ -101,10 +105,11 @@ export type RequestFn<Message, Input, Output> = (
 
 ### Agent
 
-| 属性         | 说明                        | 类型          | 版本 |
-| ------------ | --------------------------- | ------------- | ---- |
+| 属性         | 说明                                                                                           | 类型          | 版本 |
+| ------------ | ---------------------------------------------------------------------------------------------- | ------------- | ---- |
 | request      | 调用 `useXAgent` 配置的请求，[详情](https://antd-design-x-vue.netlify.app/component/x-request) | RequestFn     |      |
-| isRequesting | 是否正在请求                | () => boolean |      |
+| isRequesting | 是否正在请求                                                                                   | () => boolean |      |
+
 ## 贡献者
 
 <doc-contributors component-name="use-x-agent" :max-count="50" :show-view-all="true" />

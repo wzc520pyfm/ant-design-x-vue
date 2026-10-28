@@ -1,9 +1,12 @@
-
 # XRequest 请求
+
+::: warning 1.x 页面
+2.0 的 `XRequest` 是 `XRequest(baseURL, options)`。本页示例使用兼容导出 `XRequestLegacy`。见 [从 v1 到 v2](/development/migration-v2) 和 [SDK 数据流](/component/sdk-v2)。
+:::
 
 ## 何时使用
 
-* 向符合 OpenAI 标准的 LLM 发起请求。
+- 向符合 OpenAI 标准的 LLM 发起请求。
 
 ## 代码演示
 
@@ -51,17 +54,20 @@ x-request/model
 
 ### XRequestOptions
 
-| 属性 | 描述 | 类型 | 默认值 | 版本 |
-| --- | --- | --- | --- | --- |
-| baseURL | API 请求的基础 URL | string | - | - |
-| model | 模型名称，例如 'gpt-3.5-turbo' | string | - | - |
-| dangerouslyApiKey | **注意: 🔥 `dangerouslyApiKey` 存在安全风险，对此有详细的[说明](/#)。** | string | - | - |
-| fetch | 可选的自定义 fetch 函数，用于发起请求 | fetch | - | - |
+| 属性              | 描述                                                                    | 类型   | 默认值 | 版本 |
+| ----------------- | ----------------------------------------------------------------------- | ------ | ------ | ---- |
+| baseURL           | API 请求的基础 URL                                                      | string | -      | -    |
+| model             | 模型名称，例如 'gpt-3.5-turbo'                                          | string | -      | -    |
+| dangerouslyApiKey | **注意: 🔥 `dangerouslyApiKey` 存在安全风险，对此有详细的[说明](/#)。** | string | -      | -    |
+| fetch             | 可选的自定义 fetch 函数，用于发起请求                                   | fetch  | -      | -    |
 
 ### XRequestFunction
 
 ```ts
-type XRequestFunction<Input = Record<PropertyKey, any>, Output = Record<string, string>> = (
+type XRequestFunction<
+  Input = Record<PropertyKey, any>,
+  Output = Record<string, string>,
+> = (
   params: XRequestParams & Input,
   callbacks: XRequestCallbacks<Output>,
   transformStream?: XStreamOptions<Output>['transformStream'],
@@ -78,12 +84,13 @@ type XRequestFunction<Input = Record<PropertyKey, any>, Output = Record<string, 
 
 #### XRequestCallbacks
 
-| 属性 | 描述 | 类型 | 默认值 | 版本 |
-| --- | --- | --- | --- | --- |
-| onSuccess | 成功时的回调。 | `(chunks: Output[]) => void` | - | - |
-| onError | 错误处理的回调。 | `(error: Error) => void` | - | - |
-| onUpdate | 消息更新的回调。 | `(chunk: Output) => void` | - | - |
-| transformStream | 可选的转换函数，用于处理流数据 | `XStreamOptions<Output>['transformStream']` | - | - |
+| 属性            | 描述                           | 类型                                        | 默认值 | 版本 |
+| --------------- | ------------------------------ | ------------------------------------------- | ------ | ---- |
+| onSuccess       | 成功时的回调。                 | `(chunks: Output[]) => void`                | -      | -    |
+| onError         | 错误处理的回调。               | `(error: Error) => void`                    | -      | -    |
+| onUpdate        | 消息更新的回调。               | `(chunk: Output) => void`                   | -      | -    |
+| transformStream | 可选的转换函数，用于处理流数据 | `XStreamOptions<Output>['transformStream']` | -      | -    |
+
 ## 贡献者
 
 <doc-contributors component-name="x-request" :max-count="50" :show-view-all="true" />

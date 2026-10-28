@@ -1,6 +1,6 @@
 {
   "name": "ant-design-x-vue-monorepo",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "private": true,
   "description": "Craft AI-driven interfaces effortlessly - Monorepo",
   "keywords": [
@@ -42,7 +42,7 @@
     "release": "pnpm --filter ant-design-x-vue release",
     "release:sdk": "pnpm --filter @ant-design-x-vue/x-sdk release",
     "release:markdown": "pnpm --filter @ant-design-x-vue/x-markdown release",
-    "test": "pnpm --filter @ant-design-x-vue/components test",
+    "test": "vitest run",
     "test:sdk": "pnpm --filter @ant-design-x-vue/x-sdk test",
     "test:markdown": "pnpm --filter @ant-design-x-vue/x-markdown test",
     "test:cov": "pnpm --filter @ant-design-x-vue/components test:cov",

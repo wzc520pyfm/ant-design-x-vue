@@ -1,6 +1,6 @@
 {
   "name": "ant-design-x-vue",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "description": "Craft AI-driven interfaces effortlessly",
   "keywords": [
     "AI",
@@ -41,8 +41,8 @@
     }
   },
   "main": "./lib/index.js",
-  "module": "./es/index.mjs",
   "unpkg": "./dist/index.umd.js",
+  "module": "./es/index.mjs",
   "types": "./typings/index.d.ts",
   "files": [
     "es",
@@ -63,6 +63,8 @@
     "test": "pnpm --filter @ant-design-x-vue/components test"
   },
   "dependencies": {
+    "@ant-design-x-vue/x-markdown": "2.0.0",
+    "@ant-design-x-vue/x-sdk": "2.0.0",
     "@ant-design/fast-color": "^2.0.6",
     "@emotion/hash": "^0.9.2",
     "@emotion/unitless": "^0.10.0",
@@ -73,8 +75,6 @@
   },
   "devDependencies": {
     "@ant-design-x-vue/components": "workspace:*",
-    "@ant-design-x-vue/x-sdk": "workspace:*",
-    "@ant-design-x-vue/x-markdown": "workspace:*",
     "@types/node": "^22.10.2",
     "@types/stylis": "^4.2.7",
     "changelogen": "^0.5.7",

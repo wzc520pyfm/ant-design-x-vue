@@ -8,6 +8,36 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 
 const externals = ['vue', 'ant-design-vue'];
 
+function externalizeRuntime(id: string) {
+  return (
+    id === 'vue' ||
+    id === 'ant-design-vue' ||
+    id.startsWith('ant-design-vue/') ||
+    id === '@ant-design-x-vue/x-sdk' ||
+    id.startsWith('@ant-design-x-vue/x-sdk/') ||
+    id === '@ant-design-x-vue/x-markdown' ||
+    id.startsWith('@ant-design-x-vue/x-markdown/')
+  );
+}
+
+/** Keep SDK imports as package specifiers even when dist has not been built. */
+function runtimeExternalPlugin() {
+  return {
+    name: 'externalize-x-runtime',
+    resolveId(id: string) {
+      if (
+        id === '@ant-design-x-vue/x-sdk' ||
+        id.startsWith('@ant-design-x-vue/x-sdk/') ||
+        id === '@ant-design-x-vue/x-markdown' ||
+        id.startsWith('@ant-design-x-vue/x-markdown/')
+      ) {
+        return { id, external: true };
+      }
+      return null;
+    },
+  };
+}
+
 // 组件包目录
 const componentsDir = resolve(__dirname, '../components');
 
@@ -20,6 +50,7 @@ export default defineConfig({
       },
       // 覆盖插件选项
     }),
+    runtimeExternalPlugin(),
   ],
   define: {
     'process.env.NODE_ENV': JSON.stringify('production'),
@@ -32,7 +63,7 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: [...externals, /^ant-design-vue/],
+      external: externalizeRuntime,
       input: Object.fromEntries(
         globSync(`${componentsDir}/**/*.{ts,tsx,vue,js}`, {
           absolute: false,

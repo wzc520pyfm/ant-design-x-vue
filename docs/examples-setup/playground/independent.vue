@@ -21,7 +21,7 @@ import {
   Prompts,
   Sender,
   useXAgent,
-  useXChat,
+  useLegacyXChat,
   Welcome,
 } from 'ant-design-x-vue'
 import { computed, h, ref, watch } from 'vue'
@@ -208,7 +208,7 @@ const [agent] = useXAgent<string, { message: string }, string>({
   },
 })
 
-const { onRequest, messages, setMessages } = useXChat({
+const { onRequest, messages, setMessages } = useLegacyXChat({
   agent: agent.value,
 })
 

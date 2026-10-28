@@ -24,7 +24,7 @@ import {
   Suggestion,
   Welcome,
   useXAgent,
-  useXChat,
+  useLegacyXChat,
   theme,
 } from 'ant-design-x-vue';
 import { Button, Image, Popover, Space, Spin, message } from 'ant-design-vue';
@@ -121,7 +121,7 @@ watch(() => agent.value.isRequesting(), () => {
   loading.value = agent.value.isRequesting();
 });
 
-const { messages, onRequest, setMessages } = useXChat({
+const { messages, onRequest, setMessages } = useLegacyXChat({
   agent: agent.value,
   requestFallback: (_, { error }) => {
     if (error.name === 'AbortError') {

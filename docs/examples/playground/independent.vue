@@ -9,7 +9,7 @@ import {
   Sender,
   Welcome,
   useXAgent,
-  useXChat,
+  useLegacyXChat,
 } from 'ant-design-x-vue';
 import {
   AppstoreAddOutlined,
@@ -274,7 +274,7 @@ watch(() => agent.value.isRequesting(), () => {
   loading.value = agent.value.isRequesting();
 });
 
-const { onRequest, messages, setMessages } = useXChat({
+const { onRequest, messages, setMessages } = useLegacyXChat({
   agent: agent.value,
   requestFallback: (_, { error }) => {
     if (error.name === 'AbortError') {

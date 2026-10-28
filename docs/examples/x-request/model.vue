@@ -1,7 +1,7 @@
 <script lang="tsx" setup>
 import { LoadingOutlined, TagsOutlined } from '@ant-design/icons-vue';
 import { Button, Descriptions, Flex, Input, Typography } from 'ant-design-vue';
-import { ThoughtChain, type ThoughtChainItem, XRequest } from 'ant-design-x-vue';
+import { ThoughtChain, type ThoughtChainItem, XRequestLegacy } from 'ant-design-x-vue';
 import { ref } from 'vue';
 
 defineOptions({ name: 'AXXRequestModel' });
@@ -25,7 +25,7 @@ const MODEL = 'deepseek-ai/DeepSeek-V3';
 
 const API_KEY = 'Bearer sk-xxxxxxxxxxxxxxxxxxxx';
 
-const exampleRequest = XRequest({
+const exampleRequest = XRequestLegacy({
   baseURL: BASE_URL,
   model: MODEL,
   dangerouslyApiKey: API_KEY,

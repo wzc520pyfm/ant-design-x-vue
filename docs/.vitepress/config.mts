@@ -35,6 +35,10 @@ export default defineConfig({
           replacement: path.resolve(__dirname, '../../packages/x-markdown/src/index.ts')
         },
         {
+          find: /^@ant-design-x-vue\/x-sdk$/,
+          replacement: path.resolve(__dirname, '../../packages/x-sdk/src/index.ts')
+        },
+        {
           find: /^.*\/VPHero\.vue$/,
           replacement: fileURLToPath(
             new URL('./vitepress/components/vp-hero.vue', import.meta.url)
@@ -100,6 +104,10 @@ export default defineConfig({
           text: '样式兼容',
           link: '/development/compatible-style'
         },
+        {
+          text: '从 v1 到 v2',
+          link: '/development/migration-v2'
+        },
       ],
       '/component/': [
         {
@@ -154,10 +162,11 @@ export default defineConfig({
         {
           text: '工具',
           items: [
-            { text: 'useXAgent 模型调度', link: '/component/use-x-agent' },
-            { text: 'useXChat 数据管理', link: '/component/use-x-chat' },
+            { text: 'SDK 数据流 (v2)', link: '/component/sdk-v2' },
+            { text: 'useXAgent 模型调度 (1.x)', link: '/component/use-x-agent' },
+            { text: 'useXChat 数据管理 (1.x)', link: '/component/use-x-chat' },
             { text: 'XStream 流', link: '/component/x-stream' },
-            { text: 'XRequest 请求', link: '/component/x-request' },
+            { text: 'XRequest 请求 (1.x)', link: '/component/x-request' },
             { text: 'XMarkdown 富文本 (v2)', link: '/component/x-markdown-v2' },
             { text: 'XProvider 全局化配置', link: '/component/x-provider' },
             { text: 'XProvider 全局化配置 (v2)', link: '/component/x-provider-v2' }

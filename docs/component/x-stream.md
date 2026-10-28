@@ -1,12 +1,13 @@
-
 # XStream 流
+
+`XStream` 现由 2.0 SDK 提供。调用形式仍是 `XStream({ readableStream, transformStream })`。
 
 转换可读数据流。
 
 ## 何时使用
 
-* 将 SSE 协议的 `ReadableStream` 转换为 `Record`
-* 将任何协议的 `ReadableStream` 解码并读取
+- 将 SSE 协议的 `ReadableStream` 转换为 `Record`
+- 将任何协议的 `ReadableStream` 解码并读取
 
 ## 使用说明
 
@@ -53,10 +54,11 @@ x-stream/custom-protocol
 
 ### XStreamOptions
 
-| 属性 | 说明 | 类型 | 默认值 | 版本 |
-| --- | --- | --- | --- | --- |
-| readableStream | ReadableStream 实例 | ReadableStream<'Uint8Array'> | - | - |
-| transformStream | 自定义的 transformStream 用于转换流的处理 | TransformStream<string, T> | sseTransformStream | - |
+| 属性            | 说明                                      | 类型                         | 默认值             | 版本 |
+| --------------- | ----------------------------------------- | ---------------------------- | ------------------ | ---- |
+| readableStream  | ReadableStream 实例                       | ReadableStream<'Uint8Array'> | -                  | -    |
+| transformStream | 自定义的 transformStream 用于转换流的处理 | TransformStream<string, T>   | sseTransformStream | -    |
+
 ## 贡献者
 
 <doc-contributors component-name="x-stream" :max-count="50" :show-view-all="true" />
