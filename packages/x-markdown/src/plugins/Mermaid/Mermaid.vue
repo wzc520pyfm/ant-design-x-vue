@@ -215,11 +215,13 @@ async function handleDownload() {
   img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
 }
 
-const actionItems = computed(() => {
+// Build during render. A cached vnode is reused on the next patch, and a
+// render function stored on `icon` is stringified as text by the icon slot.
+function buildActionItems() {
   const base: any[] = [
     {
       key: 'copy',
-      icon: () => h(CopyOutlined),
+      icon: h(CopyOutlined),
       label: contextLocale.value.copy,
       onItemClick: handleCopyCode,
     },
@@ -228,13 +230,13 @@ const actionItems = computed(() => {
     base.push(
       {
         key: 'zoomIn',
-        icon: () => h(ZoomInOutlined),
+        icon: h(ZoomInOutlined),
         label: contextLocale.value.zoomIn,
         onItemClick: handleZoomIn,
       },
       {
         key: 'zoomOut',
-        icon: () => h(ZoomOutOutlined),
+        icon: h(ZoomOutOutlined),
         label: contextLocale.value.zoomOut,
         onItemClick: handleZoomOut,
       },
@@ -245,14 +247,14 @@ const actionItems = computed(() => {
       },
       {
         key: 'download',
-        icon: () => h(DownloadOutlined),
+        icon: h(DownloadOutlined),
         label: contextLocale.value.download,
         onItemClick: handleDownload,
       },
     );
   }
   return base;
-});
+}
 
 const segmentedOptions = computed(() => [
   { label: contextLocale.value.image, value: RenderType.Image },
@@ -273,7 +275,7 @@ onBeforeUnmount(() => {
       :style="styles?.header"
     >
       <Segmented v-model:value="renderType" :options="segmentedOptions" />
-      <Actions :items="actionItems" />
+      <Actions :items="buildActionItems()" />
     </div>
 
     <div
