@@ -217,10 +217,10 @@ const onCancel = () => {
                   @change="(checked: boolean) => { deepThink = checked; }"
                 >
                   <template #checkedChildren>
-                    <div>Deep Think:<span :style="{ display: 'inline-flex', width: '28px', justifyContent: 'center', alignItems: 'center' }">on</span></div>
+                    <span style="display:inline-flex; align-items:center; white-space:nowrap;">Deep Think:<span :style="{ display: 'inline-flex', width: '28px', justifyContent: 'center', alignItems: 'center' }">on</span></span>
                   </template>
                   <template #unCheckedChildren>
-                    <div>Deep Think:<span :style="{ display: 'inline-flex', width: '28px', justifyContent: 'center', alignItems: 'center' }">off</span></div>
+                    <span style="display:inline-flex; align-items:center; white-space:nowrap;">Deep Think:<span :style="{ display: 'inline-flex', width: '28px', justifyContent: 'center', alignItems: 'center' }">off</span></span>
                   </template>
                   <template #icon><RobotOutlined /></template>
                 </SenderSwitch>
