@@ -1,7 +1,7 @@
 # useXChat 数据管理
 
 ::: warning 1.x 页面
-2.0 的 `useXChat` 来自 SDK，需要 Chat Provider。本页示例使用兼容导出 `useLegacyXChat`。请阅读 [从 v1 到 v2](/development/migration-v2) 和 [SDK 数据流](/component/sdk-v2)。
+2.0 的 `useXChat` 来自 SDK，需要 Chat Provider。本页示例使用兼容导出 `useLegacyXChat`。请阅读 [从 v1 到 v2](/development/migration-v2) 和 [SDK 数据流](/component/sdk)。
 :::
 
 配合 Agent hook 进行对话数据管理。
@@ -79,7 +79,7 @@ type useXChat<
 
 ### RequestParams
 
-继承 [XRequestParams](/component/x-request#xrequestparams)。
+继承 [XRequestParams](/v1/component/x-request#xrequestparams)。
 
 | 属性    | 说明           | 类型         | 默认值 | 版本 |
 | ------- | -------------- | ------------ | ------ | ---- |

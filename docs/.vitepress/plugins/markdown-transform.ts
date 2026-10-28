@@ -35,8 +35,8 @@ export function MarkdownTransform(): Plugin {
         headers: [],
         footers: [],
         scriptSetups: uniqueImports([
-          ...getDemoFenceImports(code),
-          ...(id.includes('/component/') ? getExampleImports(componentId) : []),
+          ...getDemoFenceImports(code, id),
+          ...(id.includes('/component/') ? getExampleImports(componentId, id) : []),
         ]).filter((line) => !code.includes(line)),
       }
 
@@ -108,8 +108,15 @@ const uniqueImports = (lines: string[]) => Array.from(new Set(lines))
  * Demo containers render `<ax-v2-folder-file>` from the fence path, not from
  * the markdown filename. Pages such as `x-markdown-plugins.md` reference
  * `examples-v2/x-markdown/plugins.vue`, so the import has to follow the fence.
+ * v1 pages live under `docs/v1/`, so the specifier is relative to that file.
  */
-const getDemoFenceImports = (code: string) => {
+export const toImportSpecifier = (fromFile: string, absTarget: string) => {
+  let rel = path.relative(path.dirname(fromFile), absTarget).split(path.sep).join('/')
+  if (!rel.startsWith('.')) rel = `./${rel}`
+  return rel
+}
+
+const getDemoFenceImports = (code: string, markdownId: string) => {
   const imports: string[] = []
   const re = /:::(demo-v2|demo)\b[^\n]*\n+([A-Za-z0-9_./-]+)\s*\n/g
   let match = re.exec(code)
@@ -120,51 +127,42 @@ const getDemoFenceImports = (code: string) => {
     const examplesDir = isV2 ? 'examples-v2' : 'examples'
     const setupDir = isV2 ? 'examples-v2-setup' : 'examples-setup'
     imports.push(
-      `import ${name} from '../${examplesDir}/${sourceFile}.vue'`,
-      `import ${name}Setup from '../${setupDir}/${sourceFile}.vue'`,
+      `import ${name} from '${toImportSpecifier(markdownId, path.resolve(docRoot, examplesDir, `${sourceFile}.vue`))}'`,
+      `import ${name}Setup from '${toImportSpecifier(markdownId, path.resolve(docRoot, setupDir, `${sourceFile}.vue`))}'`,
     )
     match = re.exec(code)
   }
   return imports
 }
 
-const getExampleImports = (componentId: string) => {
+const getExampleImports = (componentId: string, markdownId: string) => {
   const imports: string[] = []
 
   // 处理 v2 版本的 componentId（如 bubble-v2 -> bubble）
   const baseComponentId = componentId.replace(/-v2$/, '')
 
-  // v1 版本的 demo
-  const examplePath = path.resolve(docRoot, 'examples', baseComponentId)
-  if (fs.existsSync(examplePath)) {
+  const pushExampleDir = (
+    dirName: 'examples' | 'examples-setup' | 'examples-v2' | 'examples-v2-setup',
+    prefix: 'Ax' | 'Ax-V2',
+    setup: boolean,
+  ) => {
+    const examplePath = path.resolve(docRoot, dirName, baseComponentId)
+    if (!fs.existsSync(examplePath)) return
     const files = fs.readdirSync(examplePath)
     for (const item of files) {
       if (!/\.vue$/.test(item)) continue
       const file = item.replace(/\.vue$/, '')
-      const name = camelize(`Ax-${baseComponentId}-${file}`)
-
+      const name = camelize(`${prefix}-${baseComponentId}-${file}${setup ? '-setup' : ''}`)
       imports.push(
-        `import ${name} from '../examples/${baseComponentId}/${file}.vue'`,
-        `import ${name}Setup from '../examples-setup/${baseComponentId}/${file}.vue'`
+        `import ${name} from '${toImportSpecifier(markdownId, path.resolve(examplePath, item))}'`,
       )
     }
   }
 
-  // v2 版本的 demo
-  const exampleV2Path = path.resolve(docRoot, 'examples-v2', baseComponentId)
-  if (fs.existsSync(exampleV2Path)) {
-    const files = fs.readdirSync(exampleV2Path)
-    for (const item of files) {
-      if (!/\.vue$/.test(item)) continue
-      const file = item.replace(/\.vue$/, '')
-      const name = camelize(`Ax-V2-${baseComponentId}-${file}`)
-
-      imports.push(
-        `import ${name} from '../examples-v2/${baseComponentId}/${file}.vue'`,
-        `import ${name}Setup from '../examples-v2-setup/${baseComponentId}/${file}.vue'`
-      )
-    }
-  }
+  pushExampleDir('examples', 'Ax', false)
+  pushExampleDir('examples-setup', 'Ax', true)
+  pushExampleDir('examples-v2', 'Ax-V2', false)
+  pushExampleDir('examples-v2-setup', 'Ax-V2', true)
 
   return imports
 }

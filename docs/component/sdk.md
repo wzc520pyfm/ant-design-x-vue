@@ -1,4 +1,4 @@
-# SDK 数据流 (v2)
+# SDK 数据流
 
 2.0 的会话数据从 `ant-design-x-vue` 导出，实现在 `@ant-design-x-vue/x-sdk`。Markdown 渲染仍从 `@ant-design-x-vue/x-markdown` 引入。
 

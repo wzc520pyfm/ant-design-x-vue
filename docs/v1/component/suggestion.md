@@ -1,3 +1,4 @@
+
 # Suggestion 快捷指令
 
 用于给予用户快捷提示的组件。
@@ -10,41 +11,31 @@
 
 ### 基本
 
-<ClientOnly>
-
-:::demo-v2 基础用法，受控进行状态管理。自定义触发器。
+:::demo 基础用法，受控进行状态管理。自定义触发器。
 
 suggestion/basic
 
 :::
 
-</ClientOnly>
-
 ### 整行宽度
 
-<ClientOnly>
-
-:::demo-v2 通过 `block` 改为整行展示，`extra` 可用于配置额外信息。
+:::demo 通过 `block` 改为整行展示，`extra` 可用于配置额外信息。
 
 suggestion/block
 
 :::
 
-</ClientOnly>
-
 ### 自定义
 
-<ClientOnly>
-
-:::demo-v2 根据输入动态展示建议项的多标签示例。
+:::demo 根据输入动态展示建议项的多标签示例。
 
 suggestion/trigger
 
 :::
 
-</ClientOnly>
-
 ## API
+
+<!-- 通用属性参考：[通用属性](/docs/react/common-props) -->
 
 ### SuggestionsProps
 

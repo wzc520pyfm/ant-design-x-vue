@@ -12,4 +12,4 @@ x-sdk/x-request
 
 :::
 
-1.x 的 `new XRequest({ baseURL, model, dangerouslyApiKey }).create` 现在叫 `XRequestLegacy`，文档在 [XRequest 请求 (1.x)](/component/x-request)。
+1.x 的 `new XRequest({ baseURL, model, dangerouslyApiKey }).create` 现在叫 `XRequestLegacy`，文档在 [XRequest 请求](/v1/component/x-request)。

@@ -40,4 +40,4 @@ x-sdk/preset
 
 :::
 
-1.x 的 `useXChat({ agent })` 现在叫 `useLegacyXChat`，文档在 [useXChat 数据管理 (1.x)](/component/use-x-chat)。
+1.x 的 `useXChat({ agent })` 现在叫 `useLegacyXChat`，文档在 [useXChat 数据管理](/v1/component/use-x-chat)。

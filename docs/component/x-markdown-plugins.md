@@ -66,4 +66,4 @@ x-markdown/think
 
 ## 主题和文案
 
-`HighlightCode` 和 `Mermaid` 的按钮文案来自 `useLocale`。用 [XProvider](/component/x-provider-v2) 包一层即可替换。样式类名见 [主题](/component/x-markdown-themes)。
+`HighlightCode` 和 `Mermaid` 的按钮文案来自 `useLocale`。用 [XProvider](/component/x-provider) 包一层即可替换。样式类名见 [主题](/component/x-markdown-themes)。

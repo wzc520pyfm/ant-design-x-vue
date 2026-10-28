@@ -1,7 +1,7 @@
 # XRequest 请求
 
 ::: warning 1.x 页面
-2.0 的 `XRequest` 是 `XRequest(baseURL, options)`。本页示例使用兼容导出 `XRequestLegacy`。见 [从 v1 到 v2](/development/migration-v2) 和 [SDK 数据流](/component/sdk-v2)。
+2.0 的 `XRequest` 是 `XRequest(baseURL, options)`。本页示例使用兼容导出 `XRequestLegacy`。见 [从 v1 到 v2](/development/migration-v2) 和 [SDK 数据流](/component/sdk)。
 :::
 
 ## 何时使用

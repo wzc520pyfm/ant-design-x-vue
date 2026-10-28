@@ -1,7 +1,7 @@
 # useXAgent 模型调度
 
 ::: warning 1.x 页面
-2.0 不再用 `useXAgent` 调度模型。该导出仅为旧示例保留。新代码使用 Chat Provider，见 [从 v1 到 v2](/development/migration-v2) 和 [SDK 数据流](/component/sdk-v2)。
+2.0 不再用 `useXAgent` 调度模型。该导出仅为旧示例保留。新代码使用 Chat Provider，见 [从 v1 到 v2](/development/migration-v2) 和 [SDK 数据流](/component/sdk)。
 :::
 
 用于模型调度的 Agent 钩子。
@@ -85,7 +85,7 @@ type useXAgent<AgentMessage> = (
 
 #### RequestFn
 
-更多请查看 [XStreamOptions](/component/x-stream#xstreamoptions)。
+更多请查看 [XStreamOptions](/v1/component/x-stream#xstreamoptions)。
 
 ```tsx | pure
 interface RequestFnInfo<Message> extends AnyObject {
@@ -109,7 +109,7 @@ export type RequestFn<Message, Input, Output> = (
 
 | 属性         | 说明                                                                                           | 类型          | 版本 |
 | ------------ | ---------------------------------------------------------------------------------------------- | ------------- | ---- |
-| request      | 调用 `useXAgent` 配置的请求，[详情](https://antd-design-x-vue.netlify.app/component/x-request) | RequestFn     |      |
+| request      | 调用 `useXAgent` 配置的请求，[详情](/v1/component/x-request) | RequestFn     |      |
 | isRequesting | 是否正在请求                                                                                   | () => boolean |      |
 
 ## 贡献者

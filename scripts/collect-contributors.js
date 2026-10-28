@@ -43,10 +43,15 @@ class ComponentContributorsCollector {
     // 添加 docs/component 目录下的文档
     componentNames.forEach(name => {
       if (name !== 'playground') { // playground 在 component 目录中没有对应的 md 文件
-        const mdPath = `docs/component/${name}.md`
-        if (fs.existsSync(mdPath)) {
-          componentDirs.push({ name: `${name}-docs`, path: mdPath })
-        }
+        const mdPaths = [
+          [`docs/component/${name}.md`, `${name}-docs`],
+          [`docs/v1/component/${name}.md`, `${name}-v1-docs`],
+        ]
+        mdPaths.forEach(([mdPath, label]) => {
+          if (fs.existsSync(mdPath)) {
+            componentDirs.push({ name: label, path: mdPath })
+          }
+        })
       }
     })
 

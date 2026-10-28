@@ -4,6 +4,36 @@
   }
 }
 
+/* Built-in locale menu is a language control. Versions use the header select. */
+.VPNavBarTranslations,
+.VPNavScreenTranslations {
+  display: none !important;
+}
+
+.version-switch {
+  display: flex;
+  align-items: center;
+  margin-inline-end: 8px;
+}
+
+.version-switch .ant-select {
+  width: 108px;
+}
+
+.version-switch .ant-select .ant-select-selector {
+  border-radius: 8px !important;
+}
+
+.VPNavScreen .version-switch {
+  margin: 16px 24px 8px;
+}
+
+@media (max-width: 768px) {
+  .VPNavBar .version-switch {
+    display: none;
+  }
+}
+
 .hidden_aside {
   .aside {
     display: none !important;
