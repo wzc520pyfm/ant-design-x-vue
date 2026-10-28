@@ -40,15 +40,15 @@ const onClick: ActionsProps['onClick'] = ({ keyPath }) => {
 
 <template>
   <context-holder />
-  <div style="display:flex; flex-direction:column; gap:12px;">
-    <div style="display:flex; align-items:center; gap:12px;">
+  <a-flex gap="middle" vertical align="flex-start">
+    <a-flex gap="middle" align="center">
       <Switch
         v-model:checked="fadeInLeft"
         checked-children="fadeInLeft"
         un-checked-children="fadeIn"
       />
       <Button @click="rerenderKey += 1">Re-Render</Button>
-    </div>
+    </a-flex>
     <Actions
       :key="rerenderKey"
       :fade-in="!fadeInLeft"
@@ -57,5 +57,5 @@ const onClick: ActionsProps['onClick'] = ({ keyPath }) => {
       :on-click="onClick"
       variant="borderless"
     />
-  </div>
+  </a-flex>
 </template>

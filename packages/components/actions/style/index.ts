@@ -42,7 +42,8 @@ const genActionsStyle: GenerateStyle<ActionsToken> = (token) => {
         justifyContent: 'center',
         lineHeight: token.lineHeight,
         transition: `all ${token.motionDurationMid} ${token.motionEaseInOut}`,
-        '&-icon': {
+        // DOM class is `${componentCls}-icon`, not `${componentCls}-item-icon`.
+        [`${componentCls}-icon`]: {
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -61,12 +62,55 @@ const genActionsStyle: GenerateStyle<ActionsToken> = (token) => {
         color: token.colorText,
         gap: token.paddingXS,
       },
-      [`& ${antCls}-pagination-item-link`]: {
-        width: token.controlHeightSM,
+      // Simple pager: Vue aligns the previous chevron to the top of a 24px
+      // box, so it sits ~8px above the 1/5 pill and the next chevron.
+      // React keeps prev, pill, and next on one 32px row.
+      [`${antCls}-pagination${antCls}-pagination-simple`]: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        height: token.controlHeight,
+        lineHeight: unit(token.controlHeight),
+        verticalAlign: 'middle',
+        [`${antCls}-pagination-prev, ${antCls}-pagination-next, ${antCls}-pagination-simple-pager`]: {
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: token.controlHeight,
+          minHeight: token.controlHeight,
+          lineHeight: unit(token.controlHeight),
+          verticalAlign: 'middle',
+          marginBlock: 0,
+        },
+        // Nest under prev/next so this beats the simple pager's
+        // `.ant-pagination-simple .ant-pagination-prev .ant-pagination-item-link`
+        // (same class count, often injected later at 24px).
+        [`${antCls}-pagination-prev, ${antCls}-pagination-next`]: {
+          [`${antCls}-pagination-item-link`]: {
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: token.controlHeight,
+            height: token.controlHeight,
+            lineHeight: unit(token.controlHeight),
+            verticalAlign: 'middle',
+          },
+        },
+        [`${antCls}-pagination-simple-pager`]: {
+          height: token.controlHeight,
+          lineHeight: unit(token.controlHeight),
+          input: {
+            height: token.controlHeight,
+            lineHeight: unit(token.controlHeight),
+            verticalAlign: 'middle',
+            marginBlock: 0,
+          },
+        },
       },
       [`&${componentCls}-rtl`]: {
         direction: 'rtl',
       },
+      // Variant classes sit on the inner list. The cssinjs hash is only on
+      // the root, so these have to be descendants, not `&-variant-*`.
       [`${componentCls}-variant-outlined`]: {
         paddingInline: unit(calc(token.paddingXXS).add(1).equal()),
         paddingBlock: token.paddingXXS,
@@ -82,7 +126,7 @@ const genActionsStyle: GenerateStyle<ActionsToken> = (token) => {
         [`${componentCls}-item`]: {
           paddingInline: unit(calc(token.paddingXXS).add(1).equal()),
           paddingBlock: token.paddingXXS,
-          '&-icon': {
+          [`${componentCls}-icon`]: {
             fontSize: token.fontSize,
           },
           '&:hover': {
