@@ -5,7 +5,7 @@ import { h } from 'vue';
 import { XMarkdown } from '@ant-design-x-vue/x-markdown';
 import HighlightCode from '@ant-design-x-vue/x-markdown/plugins/HighlightCode';
 import type { ComponentProps } from '@ant-design-x-vue/x-markdown';
-import { codeRenderer } from '../_shared/markdown-code';
+import { codeRenderer } from '../../examples-v2/_shared/markdown-code';
 
 const content = [
   'A fenced block picks up the language class:',

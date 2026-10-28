@@ -4,7 +4,7 @@ defineOptions({ name: 'AXSdkPresetV2Setup' });
 import { Bubble, Sender } from 'ant-design-x-vue';
 import { XMarkdown } from '@ant-design-x-vue/x-markdown';
 import { h } from 'vue';
-import { useMockChat } from '../_shared/use-mock-chat';
+import { useMockChat } from '../../examples-v2/_shared/use-mock-chat';
 
 const chat = useMockChat();
 const roles = {

@@ -2,7 +2,7 @@
 defineOptions({ name: 'AXSdkConversationsV2Setup' });
 
 import { Conversations } from 'ant-design-x-vue';
-import { useMockChat } from '../_shared/use-mock-chat';
+import { useMockChat } from '../../examples-v2/_shared/use-mock-chat';
 
 const chat = useMockChat();
 </script>

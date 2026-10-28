@@ -5,7 +5,7 @@ import { h } from 'vue';
 import { XMarkdown } from '@ant-design-x-vue/x-markdown';
 import Mermaid from '@ant-design-x-vue/x-markdown/plugins/Mermaid';
 import type { ComponentProps } from '@ant-design-x-vue/x-markdown';
-import { codeRenderer } from '../_shared/markdown-code';
+import { codeRenderer } from '../../examples-v2/_shared/markdown-code';
 
 const isClient = typeof window !== 'undefined';
 const content = ['```mermaid', 'graph TD', '  A[Start] --> B[Answer]', '```'].join('\n');

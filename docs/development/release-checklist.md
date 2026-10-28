@@ -1,6 +1,14 @@
 # 2.0 核对清单
 
-对照 React `@ant-design/x@2.0.0`（tag `2.0.0`）。这页记录本分支相对那一版的对齐情况。命令结果以最近一次本地验证为准，发布前再跑一遍。
+对照 React `@ant-design/x@2.0.0`（tag `2.0.0`）。这页记录本分支相对那一版的对齐情况。
+
+本地验证（2026-10-28，Asia/Shanghai）：
+
+- `vue-tsc --project tsconfig.build.json --noEmit` 退出码 0。声明产物包含 `Actions.vue.d.ts`、`ActionsItem.vue.d.ts`、`ImageLoading.vue.d.ts`。
+- `vitest run`：9 个文件，22 个测试通过。
+- `pnpm --filter` 构建 `@ant-design-x-vue/x-sdk`、`@ant-design-x-vue/x-markdown`、`ant-design-x-vue` 成功。
+- `pnpm docs:build` 完成。
+- 本地 `npm pack`（未发布）：三个包都没有 `workspace:*`。SDK 无运行时依赖。主包依赖两个 `2.0.0` 子包。Markdown 依赖 `ant-design-x-vue@2.0.0`。
 
 ## 已对齐
 

@@ -3,7 +3,7 @@ defineOptions({ name: 'AXSdkXRequestV2Setup' });
 
 import { ref } from 'vue';
 import { XRequest } from 'ant-design-x-vue';
-import { createMockOpenAIFetch } from '../_shared/mock-chat';
+import { createMockOpenAIFetch } from '../../examples-v2/_shared/mock-chat';
 
 const lines = ref<string[]>([]);
 
