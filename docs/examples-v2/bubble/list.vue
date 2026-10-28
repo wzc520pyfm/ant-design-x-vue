@@ -160,7 +160,7 @@ const addWithRef = () => {
 
 defineRender(() => (
   <Flex vertical style={{ height: '720px' }} gap={20}>
-    <Flex gap="small" wrap>
+    <Flex gap="small" wrap="wrap" style={{ width: '100%', flexWrap: 'wrap' }}>
       <Button type="primary" onClick={addBubble}>
         Add Bubble
       </Button>

@@ -38,6 +38,22 @@ html:hover {
   scrollbar-color: #eaeaea transparent;
 }
 
+/*
+ * Docs SSR extracts the dark cssinjs cache. If an Actions root keeps that
+ * hash on a light page, icons stay `colorText` white (`rgba(255,255,255,0.85)`)
+ * on a white demo. The page chrome is light whenever `<html>` has no `.dark`
+ * class (the appearance boot script only adds it for dark), so force the
+ * light text color over the stale hash. :where() on the cssinjs rule has no
+ * specificity, and this selector wins.
+ */
+html:not(.dark) .example-showcase .ant-actions-item {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+html:not(.dark) .example-showcase .ant-actions-item .anticon {
+  color: inherit;
+}
+
 /* Prevent VitePress styles from interfering with component demos */
 .vp-doc .example-showcase [class*='-sources'] ul {
   list-style: none;
