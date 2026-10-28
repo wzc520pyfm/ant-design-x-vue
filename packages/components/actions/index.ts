@@ -9,9 +9,9 @@ export type {
   ActionsProps,
   ActionsRef,
   ActionItem,
-  ItemType,
+  ItemType as ActionsItemType,
   SubItemType,
-  SemanticType,
+  SemanticType as ActionsSemanticType,
 } from './interface';
 
 export type CompoundedActions = typeof ActionsComponent & {

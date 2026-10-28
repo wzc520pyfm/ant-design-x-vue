@@ -155,7 +155,7 @@ defineExpose<AttachmentsRef>({
     const fileInput = getFileInput();
     if (!fileInput) return;
     fileInput.multiple = multiple;
-    fileInput.accept = accept || (props as any).accept || '';
+    fileInput.accept = accept || (uploadProps as { accept?: string }).accept || '';
     fileInput.click();
   },
 });

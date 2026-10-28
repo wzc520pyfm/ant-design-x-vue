@@ -45,10 +45,12 @@ const mergedCls = computed(() =>
 defineRender(() => {
   return wrapCSSVar(
     <Typography.Text
-      class={mergedCls.value}
-      style={props.style}
-      prefixCls={copyCls}
-      copyable={{ text: props.text, icon: props.icon as any }}
+      {...({
+        class: mergedCls.value,
+        style: props.style,
+        prefixCls: copyCls,
+        copyable: { text: props.text, icon: props.icon },
+      } as any)}
     />,
   );
 });

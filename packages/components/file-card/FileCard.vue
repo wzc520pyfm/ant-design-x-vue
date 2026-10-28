@@ -151,7 +151,7 @@ defineRender(() => {
             height={styles?.file?.height}
             alt={props.name}
             src={props.src}
-            preview={preview}
+            preview={preview as any}
             {...(props.imageProps as ImageProps)}
           />
         )}

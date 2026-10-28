@@ -105,7 +105,7 @@ watchPostEffect(() => {
 });
 
 // ============================= Data =============================
-const mergedData = useListData(items, roles as any);
+const mergedData = useListData(items as any, roles as any);
 
 const [displayData, onTypingComplete] = useDisplayData(mergedData);
 
@@ -240,12 +240,14 @@ const renderBubble = (item: BubbleItemType, roleConfig: RoleProps) => {
     return (
       <BubbleContextProvider key={key} value={contextValue.value}>
         <DividerBubble
-          ref={initBubbleRef}
-          style={dividerStyle}
-          class={dividerClassName}
-          classNames={otherClassNames}
-          styles={otherStyles}
-          {...mergedProps}
+          {...({
+            ref: initBubbleRef,
+            style: dividerStyle,
+            class: dividerClassName,
+            classNames: otherClassNames,
+            styles: otherStyles,
+            ...mergedProps,
+          } as any)}
         />
       </BubbleContextProvider>
     );

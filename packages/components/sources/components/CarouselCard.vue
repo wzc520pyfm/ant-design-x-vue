@@ -32,7 +32,7 @@ const handleClick = (item: SourcesItem) => {
 };
 
 watch(slide, (val) => {
-  carouselRef.value?.goTo(val, false);
+  (carouselRef.value as { goTo?: (index: number, animate?: boolean) => void } | undefined)?.goTo?.(val, false);
 });
 
 defineRender(() => (

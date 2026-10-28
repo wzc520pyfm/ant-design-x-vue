@@ -49,6 +49,15 @@ const { messages, onRequest, abort, isRequesting } = useXChat({
 
 更完整的字段说明见 [SDK 数据流](/component/sdk-v2)。
 
+## 发布顺序
+
+三个包的版本都是 `2.0.0`：
+
+1. 先发布 `@ant-design-x-vue/x-sdk`。它没有运行时依赖。
+2. 再发布 `ant-design-x-vue` 和 `@ant-design-x-vue/x-markdown`。主包依赖后两者的 `2.0.0`，Markdown 依赖主包的 `2.0.0`。
+
+`npm publish` 本身不检查依赖是否已经在 registry 上。用户执行 `pnpm add ant-design-x-vue@2.0.0` 之前，三个包都要已经发布。发布包里的依赖版本是 `2.0.0`，不能留下 `workspace:*`。
+
 ## 组件
 
 - Bubble：`messageRender` 改为 `contentRender`。`messageRender` 仍保留为废弃入口。`Bubble.List` 要滚动托管时需要明确高度。

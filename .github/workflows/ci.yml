@@ -23,9 +23,6 @@ jobs:
       - run: pnpm install
       - run: pnpm test
       - run: pnpm lint
-      # vue-tsc in `pnpm build` still fails on pre-existing component errors.
-      # Gate the bundler steps that emit es/lib, dist, and the resolver.
       - run: pnpm --filter @ant-design-x-vue/x-sdk build
-      - run: pnpm --filter ant-design-x-vue exec vite build
-      - run: pnpm --filter ant-design-x-vue exec vite build --config ./vite.config.dist.mts
-      - run: pnpm --filter ant-design-x-vue exec tsc ../../resolver/index.ts --outDir resolver-dist --declaration
+      - run: pnpm --filter @ant-design-x-vue/x-markdown build
+      - run: pnpm --filter ant-design-x-vue build

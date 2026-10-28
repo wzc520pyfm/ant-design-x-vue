@@ -248,7 +248,8 @@ bubble/list-scroll
 | --- | --- | --- | --- |
 | autoScroll | 自动滚动到最新位置 | boolean | true |
 | items | 气泡数据列表 | BubbleItemType[] | - |
-| roles | 气泡默认属性配置 | RoleType | - |
+| roles | 气泡默认属性配置，与 `role` 等价。同时传入时优先 `roles` | RoleType | - |
+| role | 与 React 2.0 `Bubble.List` 的 `role` 相同 | RoleType | - |
 | styles | 语义化结构 style | Record<SemanticDOM, CSSProperties> | - |
 | classNames | 语义化结构 class | Record<SemanticDOM, string> | - |
 | onScroll | 滚动事件回调 | (e: Event) => void | - |

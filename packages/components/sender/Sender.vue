@@ -323,14 +323,18 @@ const onContentMouseDown = (e: MouseEvent) => {
 };
 
 defineExpose<SenderRef>({
-  nativeElement: containerRef.value!,
-  inputElement: inputRef.value?.nativeElement,
+  get nativeElement() {
+    return containerRef.value!;
+  },
+  get inputElement() {
+    return inputRef.value?.nativeElement;
+  },
   focus: (opt: any) => inputRef.value?.focus(opt),
   blur: () => inputRef.value?.blur(),
   insert: (...args: any[]) => inputRef.value?.insert?.(...args),
   clear: () => inputRef.value?.clear?.(),
   getValue: () => inputRef.value?.getValue?.(),
-});
+} as SenderRef);
 
 defineRender(() => {
   return wrapCSSVar(

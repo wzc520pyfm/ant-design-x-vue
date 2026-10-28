@@ -3,7 +3,7 @@ import { computed, ref, watchEffect, type CSSProperties, type VNode } from 'vue'
 import classnames from 'classnames';
 import hljs from 'highlight.js/lib/core';
 import { message } from 'ant-design-vue';
-import { useLocale, useXProviderContext } from '@ant-design-x-vue/components';
+import { useLocale, useXProviderContext } from 'ant-design-x-vue';
 import 'highlight.js/styles/atom-one-light.css';
 
 defineOptions({ name: 'AXHighlightCode' });

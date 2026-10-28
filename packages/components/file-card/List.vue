@@ -18,14 +18,14 @@ const props = withDefaults(defineProps<FileCardListProps>(), {
 
 const containerRef = useTemplateRef<HTMLDivElement>('containerRef');
 
-const list = ref<(FileCardProps & { key: string | number })[]>([]);
+const list = ref<any[]>([]);
 
 watch(
   () => props.items,
   (items) => {
     list.value = items.map((item, index) => ({
       ...item,
-      key: `${item.name}-${index}`,
+      key: item.key ?? `${item.name}-${index}`,
     }));
   },
   { immediate: true },

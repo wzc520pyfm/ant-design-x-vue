@@ -7,7 +7,7 @@
   "module": "index.ts",
   "scripts": {
     "lint": "eslint \"**/*.{js,jsx,ts,tsx,vue}\"",
-    "test": "vitest",
+    "test": "vitest run",
     "test:cov": "vitest --coverage",
     "typecheck": "vue-tsc --noEmit"
   },

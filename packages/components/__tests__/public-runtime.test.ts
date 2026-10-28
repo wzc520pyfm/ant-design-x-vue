@@ -5,6 +5,7 @@ import {
 } from '@ant-design-x-vue/x-sdk';
 import { mount } from '@vue/test-utils';
 import {
+  DefaultChatProvider,
   useLegacyXChat,
   useXChat,
   useXConversations,
@@ -54,7 +55,7 @@ describe('ant-design-x-vue 2.0 runtime exports', () => {
         onRequest: (params: Record<string, never>) => void;
         onReload: unknown;
         abort: unknown;
-        isRequesting: unknown;
+        isRequesting: { value: boolean };
       };
       conversations: { conversations: { value: Array<{ key: string }> } };
       legacy: { onRequest: unknown; onReload?: unknown; abort?: unknown };
@@ -64,8 +65,16 @@ describe('ant-design-x-vue 2.0 runtime exports', () => {
 
     expect(typeof vm.sdk.onReload).toBe('function');
     expect(typeof vm.sdk.abort).toBe('function');
-    expect(vm.sdk.isRequesting).toBeDefined();
+    expect(vm.sdk.isRequesting.value).toBe(false);
     expect(() => vm.sdk.onRequest({})).toThrow(/provider is required/);
+    expect(
+      () =>
+        new DefaultChatProvider({
+          request: XRequest('https://example.com/v1/chat/completions', {
+            manual: false,
+          }),
+        }),
+    ).toThrow(/request must be manual/);
     expect(vm.conversations.conversations.value[0]?.key).toBe('1');
     expect(vm.legacy.onReload).toBeUndefined();
     expect(vm.legacy.abort).toBeUndefined();

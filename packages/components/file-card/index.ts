@@ -2,7 +2,13 @@ import type { App } from 'vue';
 import FileCardComponent from './FileCard.vue';
 import ListComponent from './List.vue';
 
-export type { FileCardProps, FileCardListProps, SemanticType, PresetIcons } from './interface';
+export type {
+  FileCardProps,
+  FileCardListItem,
+  FileCardListProps,
+  SemanticType as FileCardSemanticType,
+  PresetIcons,
+} from './interface';
 
 type FileCardType = typeof FileCardComponent & {
   List: typeof ListComponent;

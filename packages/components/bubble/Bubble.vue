@@ -199,7 +199,10 @@ const renderAvatar = () => {
   if (!props.avatar) return null;
   const avatarContent =
     typeof props.avatar === 'function'
-      ? props.avatar()
+      ? (props.avatar as (content?: unknown, info?: unknown) => unknown)(
+          content.value,
+          info.value,
+        )
       : isVNode(props.avatar) || isVNodeArray(props.avatar)
         ? props.avatar
         : typeof props.avatar === 'object' && !isVNode(props.avatar)

@@ -51,7 +51,7 @@ defineRender(() => {
           align="center"
           gap="small"
         >
-          <Spin percent={mergedPercent.value} {...(props.spinProps as SpinProps)} />
+          <Spin {...({ percent: mergedPercent.value, ...(props.spinProps || {}) } as SpinProps)} />
           {mergeSinkProps.showText && (
             <div class={`${props.prefixCls}-image-spin-text`}>{percentText.value}</div>
           )}

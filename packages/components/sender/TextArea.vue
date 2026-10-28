@@ -54,7 +54,7 @@ const clear = () => {
 };
 
 const getValueFn = () => {
-  return { value: senderContext.value.value || '', config: [] };
+  return { value: senderContext.value.value || '', config: [] as any[] };
 };
 
 // ============================ Submit ============================
@@ -147,9 +147,9 @@ defineRender(() => {
       onCompositionstart={onInternalCompositionStart}
       onCompositionend={onInternalCompositionEnd}
       onKeydown={onInternalKeyDown}
-      onPaste={onInternalPaste}
+      {...({ onPaste: onInternalPaste } as object)}
       bordered={false}
-      readOnly={ctx.readOnly}
+      readonly={ctx.readOnly}
       placeholder={ctx.placeholder}
       onFocus={ctx.onFocus}
       onBlur={ctx.onBlur}

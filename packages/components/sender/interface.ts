@@ -245,6 +245,10 @@ export interface AntdButtonProps {
 
 export interface ActionButtonProps extends AntdButtonProps {
   action: 'onSend' | 'onClear' | 'onCancel' | 'onSpeech';
+  /** antd 6 Button color. Passed through for React 2.0 parity. */
+  color?: string;
+  /** antd 6 Button variant. Passed through for React 2.0 parity. */
+  variant?: string;
 }
 
 export type SenderSwitchSemanticType = 'root' | 'content' | 'icon' | 'title';

@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import Bubble from './Bubble.vue';
-import type { BubbleContentType, BubbleRef, SystemBubbleProps } from './interface';
+import type { BubbleContentType, SystemBubbleProps } from './interface';
 
 defineOptions({ name: 'AXSystemBubble' });
 
@@ -30,7 +30,7 @@ const rootMergedCls = computed(() => [
   props.rootClassName,
 ]);
 
-const bubbleRef = ref<InstanceType<typeof Bubble> | null>(null);
+const bubbleRef = ref<{ nativeElement?: HTMLElement } | null>(null);
 
 defineRender(() => {
   return (

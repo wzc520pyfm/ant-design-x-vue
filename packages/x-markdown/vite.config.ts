@@ -5,8 +5,21 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 import VueMacros from 'unplugin-vue-macros/vite';
 import dts from 'vite-plugin-dts';
 
+function externalizeUiPackage() {
+  return {
+    name: 'externalize-ant-design-x-vue',
+    resolveId(id: string) {
+      if (id === 'ant-design-x-vue' || id.startsWith('ant-design-x-vue/')) {
+        return { id, external: true };
+      }
+      return null;
+    },
+  };
+}
+
 export default defineConfig({
   plugins: [
+    externalizeUiPackage(),
     VueMacros({
       plugins: {
         vue: vue(),
@@ -30,7 +43,13 @@ export default defineConfig({
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'mjs' : 'js'}`,
     },
     rollupOptions: {
-      external: ['vue', 'ant-design-vue', /^ant-design-vue\//],
+      external: [
+        'vue',
+        'ant-design-vue',
+        'ant-design-x-vue',
+        /^ant-design-vue\//,
+        /^ant-design-x-vue\//,
+      ],
       output: {
         globals: {
           vue: 'Vue',

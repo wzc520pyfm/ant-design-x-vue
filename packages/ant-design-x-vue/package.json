@@ -53,14 +53,14 @@
   ],
   "scripts": {
     "build": "run-p build:es build:dist build:resolver",
-    "build:es": "vite build && vue-tsc --project ../../tsconfig.build.json",
+    "build:es": "vite build && vue-tsc --project ../../tsconfig.build.json && node -e \"require('fs').writeFileSync('typings/index.d.ts','export * from \\'./components/index\\';\\n')\" && rm -rf typings/x-sdk",
     "build:dist": "vite build --config ./vite.config.dist.mts",
     "build:resolver": "tsc ../../resolver/index.ts --outDir resolver-dist --declaration",
     "build:watch": "vite build --watch",
     "changelog": "changelogen --release",
     "release": "run-s test changelog build publish",
     "publish": "npm publish && git push --follow-tags",
-    "test": "pnpm --filter @ant-design-x-vue/components test"
+    "test": "pnpm -w exec vitest run --config vitest.config.mts"
   },
   "dependencies": {
     "@ant-design-x-vue/x-markdown": "2.0.0",
@@ -74,7 +74,6 @@
     "stylis": "^4.3.4"
   },
   "devDependencies": {
-    "@ant-design-x-vue/components": "workspace:*",
     "@types/node": "^22.10.2",
     "@types/stylis": "^4.2.7",
     "changelogen": "^0.5.7",

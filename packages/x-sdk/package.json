@@ -42,7 +42,7 @@
   "scripts": {
     "build": "vite build",
     "build:watch": "vite build --watch",
-    "test": "vitest",
+    "test": "vitest run",
     "test:cov": "vitest --coverage",
     "typecheck": "vue-tsc --noEmit"
   },

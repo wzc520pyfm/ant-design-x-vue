@@ -128,7 +128,7 @@ type PresetIcons =
 
 | 属性 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| items | 文件列表数据 | FileCardProps[] | - | - |
+| items | 文件列表数据。每一项是 FileCardProps，并可用 `key` 作为稳定标识；缺省时回退为 `name-index` | (FileCardProps & { key?: string \| number })[] | - | - |
 | size | 卡片大小 | `'small'` \| `'default'` | `'default'` | - |
 | removable | 是否可删除 | boolean \| ((item: FileCardProps) => boolean) | false | - |
 | onRemove | 删除事件回调 | (item: FileCardProps) => void | - | - |

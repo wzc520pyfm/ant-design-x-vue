@@ -78,7 +78,7 @@ export const getComputedToken = (
 };
 export function useInternalToken(): [
   theme: Ref<Theme<SeedToken, AliasToken>>,
-  token: GlobalToken,
+  token: Ref<GlobalToken>,
   hashId: Ref<string>,
   realToken: Ref<GlobalToken>,
   cssVar?: DesignTokenProviderProps['cssVar'],
