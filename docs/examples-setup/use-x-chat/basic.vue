@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { UserOutlined } from '@ant-design/icons-vue';
 import { Flex } from 'ant-design-vue';
-import { Bubble, Sender, useXAgent, useXChat, type BubbleListProps } from 'ant-design-x-vue';
+import { Bubble, Sender, useXAgent, useLegacyXChat, type BubbleListProps } from 'ant-design-x-vue';
 import { ref } from 'vue';
 
 defineOptions({ name: 'AXUseXChatBasicSetup' });
@@ -50,7 +50,7 @@ const [agent] = useXAgent<string, { message: string }, string>({
 });
 
 // Chat messages
-const { onRequest, messages } = useXChat({
+const { onRequest, messages } = useLegacyXChat({
   agent: agent.value,
   requestPlaceholder: 'Waiting...',
   requestFallback: 'Mock failed return. Please try again later.',

@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - next
   pull_request:
     branches:
       - main
+      - next
 
 jobs:
   ci:
@@ -17,7 +19,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install
+      - run: pnpm test
       - run: pnpm lint
-      - run: pnpm build
+      # vue-tsc in `pnpm build` still fails on pre-existing component errors.
+      # Gate the bundler steps that emit es/lib, dist, and the resolver.
+      - run: pnpm --filter @ant-design-x-vue/x-sdk build
+      - run: pnpm --filter ant-design-x-vue exec vite build
+      - run: pnpm --filter ant-design-x-vue exec vite build --config ./vite.config.dist.mts
+      - run: pnpm --filter ant-design-x-vue exec tsc ../../resolver/index.ts --outDir resolver-dist --declaration

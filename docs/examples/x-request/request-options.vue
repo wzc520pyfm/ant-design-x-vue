@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { LoadingOutlined, TagsOutlined } from '@ant-design/icons-vue';
-import { ThoughtChain, XRequest } from 'ant-design-x-vue';
+import { ThoughtChain, XRequestLegacy } from 'ant-design-x-vue';
 import { Button, Descriptions, Flex, Space } from 'ant-design-vue';
 
 import type { ThoughtChainItem } from 'ant-design-x-vue';
@@ -26,7 +26,7 @@ const requestOptions = ref({
   // dangerouslyApiKey: API_KEY
 });
 
-const exampleRequest = XRequest(requestOptions);
+const exampleRequest = XRequestLegacy(requestOptions);
 
 async function request() {
   status.value = 'pending';

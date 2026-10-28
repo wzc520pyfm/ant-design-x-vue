@@ -6,16 +6,13 @@
   "main": "index.ts",
   "module": "index.ts",
   "scripts": {
+    "lint": "eslint \"**/*.{js,jsx,ts,tsx,vue}\"",
     "test": "vitest",
     "test:cov": "vitest --coverage",
-    "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint \"**/*.{js,jsx,ts,tsx,vue}\""
-  },
-  "peerDependencies": {
-    "ant-design-vue": ">=4.0.0",
-    "vue": ">=3.5.0"
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@ant-design-x-vue/x-sdk": "2.0.0",
     "@ant-design/fast-color": "^2.0.6",
     "@emotion/hash": "^0.9.2",
     "@emotion/unitless": "^0.10.0",
@@ -35,5 +32,9 @@
     "happy-dom": "^15.7.4",
     "vitest": "^2.1.1",
     "vue": "^3.5.10"
+  },
+  "peerDependencies": {
+    "ant-design-vue": ">=4.0.0",
+    "vue": ">=3.5.0"
   }
 }

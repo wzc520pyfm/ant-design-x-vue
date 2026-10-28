@@ -1,0 +1,61 @@
+# 从 v1 到 v2
+
+`ant-design-x-vue@2.0.0` 对标 React `@ant-design/x@2.0.0` 的数据流。安装主包时会带上同版本的 `@ant-design-x-vue/x-sdk` 和 `@ant-design-x-vue/x-markdown`。
+
+```bash
+pnpm add ant-design-x-vue@2.0.0
+```
+
+`import { useXChat, XRequest, XStream, useXConversations } from 'ant-design-x-vue'` 拿到的是 SDK。`XMarkdown` 从 `@ant-design-x-vue/x-markdown` 引入。
+
+## 数据流
+
+1. `useXAgent` 不再是 2.0 的模型调度方式。它仍从主包导出，只为旧示例保留，新代码不要用。
+2. `useXChat` 改为接收 `provider`。没有 provider 时，`onRequest` / `abort` 会抛出 `provider is required`。返回值包含 `onRequest`、`messages`、`parsedMessages`、`setMessages`、`setMessage`、`abort`、`isRequesting`、`onReload`。`isRequesting` 是 computed。
+3. 用 `XRequest(baseURL, options)` 创建请求实例，交给 Provider 时必须 `manual: true`。1.x 的 `XRequest({ baseURL, model, dangerouslyApiKey })` 改名为 `XRequestLegacy`。
+4. 1.x 的 `useXChat({ agent })` 改名为 `useLegacyXChat`。旧文档示例已经改用这个名字，避免和 2.0 钩子撞车。
+5. `useXConversations` 管理会话列表。它和 `useXChat` 通过会话 key 共享消息。
+6. `XStream({ readableStream })` 的调用形式与 1.x 相同，实现改为 SDK。
+
+```vue
+<script setup lang="ts">
+import {
+  OpenAIChatProvider,
+  useXChat,
+  useXConversations,
+  XRequest,
+} from 'ant-design-x-vue';
+
+const { activeConversationKey } = useXConversations({
+  defaultConversations: [{ key: '1', label: '新对话' }],
+  defaultActiveConversationKey: '1',
+});
+
+const provider = new OpenAIChatProvider({
+  request: XRequest('https://api.example.com/v1/chat/completions', {
+    manual: true,
+    headers: { Authorization: 'Bearer YOUR_KEY' },
+  }),
+});
+
+const { messages, onRequest, abort, isRequesting } = useXChat({
+  provider,
+  conversationKey: activeConversationKey,
+});
+</script>
+```
+
+内置 Provider 还有 `DeepSeekChatProvider` 和 `DefaultChatProvider`。自定义协议时继承 `AbstractChatProvider`，实现 `transformParams`、`transformLocalMessage`、`transformMessage`。
+
+更完整的字段说明见 [SDK 数据流](/component/sdk-v2)。
+
+## 组件
+
+- Bubble：`messageRender` 改为 `contentRender`。`messageRender` 仍保留为废弃入口。`Bubble.List` 要滚动托管时需要明确高度。
+- Sender：操作区使用 `suffix`。不需要默认按钮时设为 `false`。`onPasteFile` 收到的是 `FileList`。
+- 文件卡片使用独立的 `FileCard`。文件字节数用 `byte`，卡片尺寸 `size` 为 `'small' | 'default'`。
+- ThoughtChain 的 `items` 不再使用 `extra`。
+
+## 旧页面
+
+[useXAgent](/component/use-x-agent)、[useXChat](/component/use-x-chat)、[XRequest](/component/x-request) 这三页描述的是 1.x。新代码按 [SDK 数据流](/component/sdk-v2) 写。

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SmileOutlined, UserOutlined } from '@ant-design/icons-vue';
 import { Flex } from 'ant-design-vue';
-import { Bubble, Prompts, Sender, useXAgent, useXChat, type BubbleListProps } from 'ant-design-x-vue';
+import { Bubble, Prompts, Sender, useXAgent, useLegacyXChat, type BubbleListProps } from 'ant-design-x-vue';
 import { ref, h } from 'vue';
 
 defineOptions({ name: 'AXUseXChatSuggestionsSetup' });
@@ -83,7 +83,7 @@ const [ agent ] = useXAgent<AgentMessage, { message: AgentMessage }, Record<stri
 });
 
 // Chat messages
-const { onRequest, parsedMessages } = useXChat({
+const { onRequest, parsedMessages } = useLegacyXChat({
   agent: agent.value,
 
   defaultMessages: [

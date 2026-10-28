@@ -171,6 +171,12 @@ importers:
 
   packages/ant-design-x-vue:
     dependencies:
+      '@ant-design-x-vue/x-markdown':
+        specifier: 2.0.0
+        version: link:../x-markdown
+      '@ant-design-x-vue/x-sdk':
+        specifier: 2.0.0
+        version: link:../x-sdk
       '@ant-design/fast-color':
         specifier: ^2.0.6
         version: 2.0.6
@@ -202,12 +208,6 @@ importers:
       '@ant-design-x-vue/components':
         specifier: workspace:*
         version: link:../components
-      '@ant-design-x-vue/x-markdown':
-        specifier: workspace:*
-        version: link:../x-markdown
-      '@ant-design-x-vue/x-sdk':
-        specifier: workspace:*
-        version: link:../x-sdk
       '@types/node':
         specifier: ^22.10.2
         version: 22.13.5
@@ -238,6 +238,9 @@ importers:
 
   packages/components:
     dependencies:
+      '@ant-design-x-vue/x-sdk':
+        specifier: 2.0.0
+        version: link:../x-sdk
       '@ant-design/fast-color':
         specifier: ^2.0.6
         version: 2.0.6
@@ -10379,7 +10382,7 @@ snapshots:
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.0
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
     optional: true
@@ -10387,7 +10390,7 @@ snapshots:
   https-proxy-agent@7.0.6:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.0
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
     optional: true

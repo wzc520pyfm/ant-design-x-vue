@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v2.0.0
+
+### ⚠️ Breaking changes
+
+- `import { useXChat, XRequest, XStream } from 'ant-design-x-vue'` now resolves to the 2.0 SDK. `useXChat` requires a Chat Provider. `XRequest(baseURL, options)` must be created with `manual: true` before it is passed to a provider.
+- The 1.x chat hook remains available as `useLegacyXChat`. The 1.x request helper remains available as `XRequestLegacy`. `useXAgent` is deprecated and is not the 2.0 data flow.
+- `@ant-design-x-vue/x-sdk` and `@ant-design-x-vue/x-markdown` are version `2.0.0` dependencies of `ant-design-x-vue`. `XMarkdown` is imported from `@ant-design-x-vue/x-markdown`.
+
+### 🚀 Enhancements
+
+- Add `useXConversations` and the Chat Provider set (`OpenAIChatProvider`, `DeepSeekChatProvider`, `DefaultChatProvider`) on the `ant-design-x-vue` entry.
+- Document the v1 to v2 migration and run unit tests in CI for `main` and `next`.
+
 ## v1.6.0
 
 [compare changes](https://github.com/wzc520pyfm/ant-design-x-vue/compare/v1.5.0...v1.6.0)

@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { TagsOutlined } from '@ant-design/icons-vue';
 import { Button, Flex } from 'ant-design-vue';
-import { ThoughtChain, type ThoughtChainItem, XRequest } from 'ant-design-x-vue';
+import { ThoughtChain, type ThoughtChainItem, XRequestLegacy } from 'ant-design-x-vue';
 import { ref } from 'vue';
 
 defineOptions({ name: 'AXXRequestCustomTransformer' });
@@ -41,7 +41,7 @@ async function mockFetch() {
   return response;
 }
 
-const exampleRequest = XRequest({
+const exampleRequest = XRequestLegacy({
   baseURL: BASE_URL + PATH,
   model: MODEL,
   fetch: mockFetch,

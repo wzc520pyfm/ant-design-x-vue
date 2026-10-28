@@ -17,6 +17,8 @@ export default defineConfig({
     alias: {
       'ant-design-x-vue': resolve(__dirname, 'packages/components'),
       '@ant-design-x-vue/components': resolve(__dirname, 'packages/components'),
+      '@ant-design-x-vue/x-sdk': resolve(__dirname, 'packages/x-sdk/src/index.ts'),
+      '@ant-design-x-vue/x-markdown': resolve(__dirname, 'packages/x-markdown/src/index.ts'),
     },
   },
   test: {

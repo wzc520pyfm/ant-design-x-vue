@@ -16,7 +16,9 @@
     "paths": {
       "ant-design-x-vue": ["./packages/components/index.ts"],
       "@ant-design-x-vue/components": ["./packages/components"],
-      "@ant-design-x-vue/components/*": ["./packages/components/*"]
+      "@ant-design-x-vue/components/*": ["./packages/components/*"],
+      "@ant-design-x-vue/x-sdk": ["./packages/x-sdk/src/index.ts"],
+      "@ant-design-x-vue/x-markdown": ["./packages/x-markdown/src/index.ts"]
     }
   },
   "vueCompilerOptions": {

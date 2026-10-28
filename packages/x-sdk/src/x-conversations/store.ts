@@ -1,5 +1,5 @@
-import { chatMessagesStoreHelper } from '../x-chat/store';
 import type { AnyObject } from '../_util/type';
+import { chatMessagesStoreHelper } from '../x-chat/store';
 
 export interface ConversationData extends AnyObject {
   key: string;
@@ -18,7 +18,9 @@ export const conversationStoreHelper = {
     conversationStoreHelper._allConversationStores.delete(key);
   },
   getConversation(conversationKey: string) {
-    for (const store of conversationStoreHelper._allConversationStores.values()) {
+    for (const store of Array.from(
+      conversationStoreHelper._allConversationStores.values(),
+    )) {
       const conversation = store.getConversation(conversationKey);
       if (conversation) return conversation;
     }
@@ -32,7 +34,10 @@ export class ConversationStore {
   private storeKey: string;
   private activeConversationKey: string;
 
-  constructor(defaultConversations: ConversationData[], defaultActiveConversationKey: string) {
+  constructor(
+    defaultConversations: ConversationData[],
+    defaultActiveConversationKey: string,
+  ) {
     this.conversations = [...defaultConversations];
     this.storeKey = Math.random().toString();
     conversationStoreHelper.set(this.storeKey, this);
@@ -59,7 +64,10 @@ export class ConversationStore {
     return this.conversations.find((item) => item.key === key);
   };
 
-  addConversation = (conversation: ConversationData, placement?: 'prepend' | 'append') => {
+  addConversation = (
+    conversation: ConversationData,
+    placement?: 'prepend' | 'append',
+  ) => {
     const exist = this.getConversation(conversation.key);
     if (!exist) {
       this.setConversations(
@@ -72,7 +80,10 @@ export class ConversationStore {
     return false;
   };
 
-  setConversation = (key: ConversationData['key'], conversation: ConversationData) => {
+  setConversation = (
+    key: ConversationData['key'],
+    conversation: ConversationData,
+  ) => {
     const exist = this.getConversation(key);
     if (exist) {
       Object.assign(exist, conversation);

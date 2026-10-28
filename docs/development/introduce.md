@@ -1,4 +1,3 @@
-
 # Ant Design X of Vue
 
 `ant-design-x-vue` 是遵循 Ant Design 设计体系的一个 Vue UI 库，是 `@ant-design/x` 的 Vue 实现，用于构建由 AI 驱动的界面，一键接入智能对话组件与 API 服务。
@@ -98,9 +97,9 @@ export default defineConfig({
   plugins: [
     // add the following plugin
     components({
-      resolvers: [AntDesignXVueResolver()]
-    })
-  ]
+      resolvers: [AntDesignXVueResolver()],
+    }),
+  ],
 });
 ```
 
@@ -116,10 +115,10 @@ module.exports = {
     plugins: [
       // add the following plugin
       Components.default({
-        resolvers: [AntDesignXVueResolver()]
-      })
-    ]
-  }
+        resolvers: [AntDesignXVueResolver()],
+      }),
+    ],
+  },
 };
 ```
 
@@ -131,16 +130,14 @@ module.exports = {
 
 ```html
 <script setup>
-// auto import equals to
-// import { Bubble as AXBubble } from 'ant-design-x-vue';
+  // auto import equals to
+  // import { Bubble as AXBubble } from 'ant-design-x-vue';
 </script>
 
 <template>
   <AXBubble content="Hello AI" />
 </template>
 ```
-
-
 
 ## 🧩 原子组件
 
@@ -150,12 +147,12 @@ module.exports = {
 - 唤醒: `Welcome` - 欢迎、`Prompts` - 提示集
 - 表达: `Sender` - 发送框、`Attachments` - 输入附件、`Suggestion` - 快捷指令
 - 确认: `Think` - 思考过程、`ThoughtChain` - 思维链
-- 反馈: `Actions` - 操作列表、`Attachments.FileCard` - 文件卡片
+- 反馈: `Actions` - 操作列表、`FileCard` - 文件卡片
 - 其他: `XProvider` - 全局配置：主题、国际化等
 
 ## ⚡️ 对接模型/智能体服务，AI 对话数据流管理
 
-我们通过提供 X SDK（`@ant-design-x-vue/x-sdk`），帮助你开箱即用地对接模型和智能体服务，并提供好用的基础工具：
+我们通过提供 X SDK（`@ant-design-x-vue/x-sdk`），帮助你开箱即用地对接模型和智能体服务，并提供好用的基础工具。这些符号从 `ant-design-x-vue` 直接导出。升级步骤见 [从 v1 到 v2](/development/migration-v2)。
 
 - `XRequest`：通用 HTTP 请求 + 流式响应解析
 - `XStream`：基于 Web Streams 的 SSE 流式数据解析
@@ -198,12 +195,12 @@ const messages = [
 </template>
 ```
 
-这里有一个在线示例可供参考：[Example Project](https://stackblitz.com/edit/atgajqmx?file=src%2FDemo.vue)，也推荐fork该示例反馈bug。
+这里有一个在线示例可供参考：[Example Project](https://stackblitz.com/edit/atgajqmx?file=src%2FDemo.vue)，也推荐 fork 该示例反馈 bug。
 
 ::: warning
 
 文档中 tsx 风格的代码示例采用 [`defineRender`](https://vue-macros.dev/zh-CN/macros/define-render.html) 编写，要运行它们，你还需要集成 [`Vue Macros`](https://vue-macros.dev/zh-CN/guide/bundler-integration.html).
 
-Vue模板风格的示例代码在逐步更新中，你可以在左上角将 **风格偏好** 切换至 `setup` 预览。
+Vue 模板风格的示例代码在逐步更新中，你可以在左上角将 **风格偏好** 切换至 `setup` 预览。
 
 :::
