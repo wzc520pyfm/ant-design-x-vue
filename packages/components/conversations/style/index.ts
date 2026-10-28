@@ -39,6 +39,7 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
       flexDirection: 'column',
       gap: token.paddingXXS,
       overflowY: 'auto',
+      minWidth: 0,
       padding: token.paddingSM,
       margin: 0,
       listStyle: 'none',
@@ -124,6 +125,7 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
       },
       [`& ${componentCls}-item`]: {
         display: 'flex',
+        minWidth: 0,
         height: token.controlHeightLG,
         minHeight: token.controlHeightLG,
         gap: token.paddingXS,
@@ -161,6 +163,7 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
       },
       [`& ${componentCls}-label`]: {
         flex: 1,
+        minWidth: 0,
         color: token.colorText,
         overflow: 'hidden',
         textOverflow: 'ellipsis',

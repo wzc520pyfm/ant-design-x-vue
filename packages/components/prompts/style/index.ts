@@ -51,11 +51,18 @@ const genPromptsStyle: GenerateStyle<PromptsToken> = (token) => {
           flexDirection: 'column',
           alignItems: 'flex-start',
         },
+        // Horizontal rows default to flex:none, so a hidden scrollbar clips the
+        // next card mid-word. Shrink items to the row; `wrap` still line-breaks.
+        [`&:not(${componentCls}-list-vertical) > ${componentCls}-item`]: {
+          flexShrink: 1,
+        },
       },
 
       // ========================= Item =========================
       [`${componentCls}-item`]: {
         flex: 'none',
+        maxWidth: '100%',
+        minWidth: 0,
         display: 'flex',
         gap: token.paddingXS,
         height: 'auto',
@@ -97,6 +104,9 @@ const genPromptsStyle: GenerateStyle<PromptsToken> = (token) => {
           lineHeight: token.lineHeight,
           textAlign: 'start',
           whiteSpace: 'normal',
+          overflowWrap: 'anywhere',
+          wordBreak: 'break-word',
+          maxWidth: '100%',
         },
 
         [`${componentCls}-label`]: {

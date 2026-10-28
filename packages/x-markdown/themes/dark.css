@@ -59,6 +59,16 @@
   margin: var(--margin-block);
 }
 
+.x-markdown-dark ul {
+  list-style: disc;
+  padding-inline-start: 1.25em;
+}
+
+.x-markdown-dark ol {
+  list-style: decimal;
+  padding-inline-start: 1.25em;
+}
+
 /* 列表项通用样式 */
 .x-markdown-dark li {
   position: relative;

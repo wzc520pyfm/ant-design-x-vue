@@ -93,6 +93,9 @@ const genBubbleStyle: GenerateStyle<BubbleToken> = (token) => {
         [`& ${componentCls}-body`]: {
           display: 'flex',
           flexDirection: 'column',
+          // Flex items default to min-width:auto, so a long bubble overflows
+          // the list instead of wrapping at max-width:100%.
+          minWidth: 0,
         },
 
         // ============================ Avatar =============================

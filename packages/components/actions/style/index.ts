@@ -30,6 +30,7 @@ const genActionsStyle: GenerateStyle<ActionsToken> = (token) => {
     [componentCls]: {
       [`${componentCls}-item`]: {
         cursor: 'pointer',
+        color: token.colorText,
         fontSize: token.fontSize,
         paddingInline: unit(calc(token.paddingXXS).add(1).equal()),
         paddingBlock: token.paddingXXS,
@@ -46,6 +47,8 @@ const genActionsStyle: GenerateStyle<ActionsToken> = (token) => {
           alignItems: 'center',
           justifyContent: 'center',
           fontSize: token.fontSize,
+          color: 'inherit',
+          lineHeight: 0,
         },
         '&:hover': {
           background: token.colorBgTextHover,
