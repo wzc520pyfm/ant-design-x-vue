@@ -1,8 +1,82 @@
-# VitePress publishes one HTML file per page (`/component/actions.html`).
+# VitePress publishes one HTML file per page (`/component/bubble.html`).
 # An extensionless URL must serve that file. The catch-all below used to send
-# `/component/actions` to `/index.html`, so the client hydrated the home page
+# `/component/bubble` to `/index.html`, so the client hydrated the home page
 # and cleared `#app`. Limit the rewrite to doc sections so `/assets/*.js`
 # is never rewritten.
+#
+# Legacy `*-v2` slugs stay on this 2.x site and point at the clean path.
+# 1.x docs are another origin; the header select leaves this site.
+
+[[redirects]]
+  from = "/component/bubble-v2"
+  to = "/component/bubble"
+  status = 301
+
+[[redirects]]
+  from = "/component/conversations-v2"
+  to = "/component/conversations"
+  status = 301
+
+[[redirects]]
+  from = "/component/welcome-v2"
+  to = "/component/welcome"
+  status = 301
+
+[[redirects]]
+  from = "/component/prompts-v2"
+  to = "/component/prompts"
+  status = 301
+
+[[redirects]]
+  from = "/component/sender-v2"
+  to = "/component/sender"
+  status = 301
+
+[[redirects]]
+  from = "/component/suggestion-v2"
+  to = "/component/suggestion"
+  status = 301
+
+[[redirects]]
+  from = "/component/thought-chain-v2"
+  to = "/component/thought-chain"
+  status = 301
+
+[[redirects]]
+  from = "/component/x-provider-v2"
+  to = "/component/x-provider"
+  status = 301
+
+[[redirects]]
+  from = "/component/notification-v2"
+  to = "/component/notification"
+  status = 301
+
+[[redirects]]
+  from = "/component/file-card-v2"
+  to = "/component/file-card"
+  status = 301
+
+[[redirects]]
+  from = "/component/think-v2"
+  to = "/component/think"
+  status = 301
+
+[[redirects]]
+  from = "/component/sources-v2"
+  to = "/component/sources"
+  status = 301
+
+[[redirects]]
+  from = "/component/sdk-v2"
+  to = "/component/sdk"
+  status = 301
+
+[[redirects]]
+  from = "/component/x-markdown-v2"
+  to = "/component/x-markdown"
+  status = 301
+
 [[redirects]]
   from = "/component/:page"
   to = "/component/:page.html"

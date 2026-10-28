@@ -40,4 +40,4 @@ x-sdk/preset
 
 :::
 
-1.x 的 `useXChat({ agent })` 现在叫 `useLegacyXChat`，文档在 [useXChat 数据管理 (1.x)](/component/use-x-chat)。
+1.x 的 `useXChat({ agent })` 现在叫 `useLegacyXChat`，文档在 [useXChat 数据管理](https://antd-design-x-vue.netlify.app/component/use-x-chat)。

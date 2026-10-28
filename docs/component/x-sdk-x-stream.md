@@ -18,4 +18,4 @@ x-sdk/x-stream
 
 :::
 
-1.x 页面仍在 [XStream 流 (1.x)](/component/x-stream)。2.0 的调用形式相同，实现来自 `@ant-design-x-vue/x-sdk`。
+1.x 页面仍在 [XStream 流](https://antd-design-x-vue.netlify.app/component/x-stream)。2.0 的调用形式相同，实现来自 `@ant-design-x-vue/x-sdk`。

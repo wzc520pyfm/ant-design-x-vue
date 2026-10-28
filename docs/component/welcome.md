@@ -11,7 +11,7 @@
 
 ### 基本
 
-:::demo 基础用法。
+:::demo-v2 基础用法。
 
 welcome/basic
 
@@ -19,7 +19,7 @@ welcome/basic
 
 ### 变体
 
-:::demo 通过 `variant` 属性设置样式变体。
+:::demo-v2 通过 `variant` 属性设置样式变体。
 
 welcome/variant
 
@@ -27,7 +27,7 @@ welcome/variant
 
 ### 背景定制
 
-:::demo 自定义部分样式。
+:::demo-v2 自定义部分样式。
 
 welcome/background
 
@@ -35,34 +35,37 @@ welcome/background
 
 ## API
 
-<!-- 通用属性参考：[通用属性](/docs/react/common-props) -->
-
 ### WelcomeProps
 
 | 属性 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| classNames | 自定义样式类名，用于各个提示项的不同部分。 | Record<'icon' \| 'title' \| 'description' \| 'extra', string> | - | - |
-| description | 显示在提示列表中的描述。 | VNode \| string \| (() => VNode \| string) | - | - |
-| extra | 显示在提示列表末尾的额外操作。 | VNode \| string \| (() => VNode \| string) | - | - |
-| icon | 显示在提示列表前侧的图标。 | VNode \| () => VNode | - | - |
+| classNames | 自定义样式类名，用于各个部分。 | Record\<SemanticType, string\> | - | - |
+| description | 描述内容。 | VNode \| string \| (() => VNode \| string) | - | - |
+| extra | 额外操作内容。 | VNode \| string \| (() => VNode \| string) | - | - |
+| icon | 图标，支持传入 URL 字符串自动渲染为图片。 | VNode \| string \| (() => VNode \| string) | - | - |
 | rootClassName | 根节点的样式类名。 | string | - | - |
-| styles | 自定义样式，用于各个提示项的不同部分。 | Record<'icon' \| 'title' \| 'description' \| 'extra', CSSProperties> | - | - |
-| title | 显示在提示列表顶部的标题。 | VNode \| string \| (() => VNode \| string) | - | - |
+| styles | 自定义样式，用于各个部分。 | Record\<SemanticType, CSSProperties\> | - | - |
+| title | 标题内容。 | VNode \| string \| (() => VNode \| string) | - | - |
 | variant | 变体类型。 | 'filled' \| 'borderless' | 'filled' | - |
 
 ### Welcome Slots
 
 | 插槽名 | 说明 |
 | --- | --- |
-| title | 显示在提示列表顶部的标题 |
-| description | 显示在提示列表中的描述 |
-| icon | 显示在提示列表前侧的图标 |
-| extra | 显示在提示列表末尾的额外操作 |
+| title | 标题内容 |
+| description | 描述内容 |
+| icon | 图标内容 |
+| extra | 额外操作内容 |
 
+### SemanticType
 
-## Semantic DOM
-
-<vp-semantic component="Welcome"></vp-semantic>
+| 名称 | 说明 |
+| --- | --- |
+| root | 根节点 |
+| title | 标题 |
+| description | 描述 |
+| icon | 图标 |
+| extra | 额外内容 |
 
 ## 主题变量（Design Token）
 

@@ -27,6 +27,7 @@ export default defineConfig({
       'packages/components/**/*.test.{ts,tsx}',
       'packages/x-markdown/**/*.test.{ts,tsx}',
       'packages/x-sdk/**/*.test.{ts,tsx}',
+      'docs/.vitepress/**/*.test.ts',
     ],
     coverage: {
       provider: 'v8',

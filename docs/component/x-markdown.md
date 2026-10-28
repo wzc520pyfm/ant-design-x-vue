@@ -1,4 +1,4 @@
-# XMarkdown 富文本 (v2)
+# XMarkdown 富文本
 
 流式友好、可扩展的 Markdown 渲染组件。
 

@@ -36,4 +36,4 @@ import {
 - [XRequest](/component/x-sdk-x-request)
 - [XStream](/component/x-sdk-x-stream)
 
-1.x 的 `useXAgent` 仍在主包里，只服务旧示例。字段说明见 [SDK 数据流](/component/sdk-v2)。
+1.x 的 `useXAgent` 仍在主包里，只服务旧示例。字段说明见 [SDK 数据流](/component/sdk)。

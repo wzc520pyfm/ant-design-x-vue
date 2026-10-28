@@ -4,6 +4,97 @@
   }
 }
 
+.version-switch {
+  display: flex;
+  align-items: center;
+}
+
+.version-switch .ant-select {
+  width: 84px;
+}
+
+.VPNavScreen .version-switch {
+  margin: 16px 24px 8px;
+}
+
+/* React puts the version control at the start of the header tools, before
+   theme and GitHub. VitePress only has a slot after those controls, so the
+   desktop bar reorders this one back in front of them. */
+@media (min-width: 768px) {
+  .VPNavBar .content-body > .menu {
+    order: 1;
+  }
+
+  .VPNavBar .content-body > .version-switch {
+    order: 2;
+    margin-right: 8px;
+  }
+
+  .VPNavBar .content-body > .translations {
+    order: 3;
+  }
+
+  .VPNavBar .content-body > .appearance {
+    order: 4;
+  }
+
+  .VPNavBar .content-body > .social-links {
+    order: 5;
+  }
+
+  .VPNavBar .content-body > .extra {
+    order: 6;
+  }
+
+  .VPNavBar .content-body > .hamburger {
+    order: 7;
+  }
+
+  .VPNavBar .menu + .appearance::before,
+  .VPNavBar .menu + .social-links::before,
+  .VPNavBar .translations + .appearance::before,
+  .VPNavBar .appearance + .social-links::before {
+    content: none;
+  }
+
+  .VPNavBar .version-switch::before {
+    content: "";
+    width: 1px;
+    height: 24px;
+    margin-right: 16px;
+    margin-left: 8px;
+    background-color: var(--vp-c-divider);
+  }
+}
+
+.VPNavBar .version-switch .ant-select-selector {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.VPNavBar .version-switch .ant-select-selection-item {
+  color: var(--vp-c-text-1);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.VPNavBar .version-switch .ant-select-arrow {
+  color: var(--vp-c-text-2);
+}
+
+.VPNavBar .version-switch .ant-select-open .ant-select-selector,
+.VPNavBar .version-switch .ant-select-focused .ant-select-selector {
+  border-color: #1677ff !important;
+  border-radius: 8px !important;
+}
+
+@media (max-width: 767px) {
+  .VPNavBar .version-switch {
+    display: none;
+  }
+}
+
 .hidden_aside {
   .aside {
     display: none !important;

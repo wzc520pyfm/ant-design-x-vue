@@ -3,6 +3,8 @@ import VueMacros from 'unplugin-vue-macros/vite'
 import path from 'node:path';
 import { fileURLToPath, URL } from 'node:url'
 import { mdPlugin } from './config/plugins'
+import { nav, sidebar } from './config/nav'
+import { legacyRewriteMap } from './config/version-switch'
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { MarkdownTransform } from './plugins/markdown-transform';
 import { prependDocsStyles } from './theme/docs-style';
@@ -89,132 +91,15 @@ export default defineConfig({
     ['link', { rel: 'icon', href: '/images/x-logo.svg' }],
   ],
   appearance: 'dark',
+  lang: 'zh-CN',
+  // Old `*-v2` slugs stay reachable on this 2.x site. 1.x lives on another origin.
+  rewrites: legacyRewriteMap(),
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original',
-    nav: [
-      { text: '研发', link: '/development/introduce' },
-      { text: '组件', link: '/component/overview' },
-      { text: '演示', link: '/playground/independent' },
-      {
-        text: '更多',
-        items: [
-          { text: 'Ant Design X of React', link: 'https://x.ant.design/index-cn' },
-          { text: 'Ant Design Vue', link: 'https://www.antdv.com/components/overview-cn' },
-        ]
-      }
-    ],
+    nav,
+    sidebar,
     outline: [2, 3],
-
-    sidebar: {
-      '/development': [
-        {
-          text: 'Ant Design X of Vue',
-          link: '/development/introduce'
-        },
-        {
-          text: '样式兼容',
-          link: '/development/compatible-style'
-        },
-        {
-          text: '从 v1 到 v2',
-          link: '/development/migration-v2'
-        },
-        {
-          text: '设计范式',
-          link: '/development/spec'
-        },
-        {
-          text: '2.0 核对清单',
-          link: '/development/release-checklist'
-        },
-      ],
-      '/component/': [
-        {
-          text: '总览',
-          link: '/component/overview'
-        },
-        {
-          text: '通用',
-          items: [
-            { text: 'Bubble 对话气泡框', link: '/component/bubble' },
-            { text: 'Bubble 对话气泡框 (v2)', link: '/component/bubble-v2' },
-            { text: 'Conversations 管理对话', link: '/component/conversations' },
-            { text: 'Conversations 管理对话 (v2)', link: '/component/conversations-v2' },
-            { text: 'Notification 系统通知 (v2)', link: '/component/notification-v2' }
-          ]
-        },
-        {
-          text: '唤醒',
-          items: [
-            { text: 'Welcome 欢迎', link: '/component/welcome' },
-            { text: 'Welcome 欢迎 (v2)', link: '/component/welcome-v2' },
-            { text: 'Prompts 提示集', link: '/component/prompts' },
-            { text: 'Prompts 提示集 (v2)', link: '/component/prompts-v2' }
-          ]
-        },
-        {
-          text: '表达',
-          items: [
-            { text: 'Sender 输入框', link: '/component/sender' },
-            { text: 'Sender 输入框 (v2)', link: '/component/sender-v2' },
-            { text: 'Attachments 输入附件', link: '/component/attachments' },
-            { text: 'Suggestion 快捷指令', link: '/component/suggestion' },
-            { text: 'Suggestion 快捷指令 (v2)', link: '/component/suggestion-v2' },
-            { text: 'FileCard 文件卡片 (v2)', link: '/component/file-card-v2' }
-          ]
-        },
-        {
-          text: '确认',
-          items: [
-            { text: 'Think 思考过程 (v2)', link: '/component/think-v2' },
-            { text: 'ThoughtChain 思维链', link: '/component/thought-chain' },
-            { text: 'ThoughtChain 思维链 (v2)', link: '/component/thought-chain-v2' },
-            { text: 'Sources 引用来源 (v2)', link: '/component/sources-v2' }
-          ]
-        },
-        {
-          text: '反馈',
-          items: [
-            { text: 'Actions 操作列表', link: '/component/actions' }
-          ]
-        },
-        {
-          text: '工具',
-          items: [
-            { text: 'SDK 数据流 (v2)', link: '/component/sdk-v2' },
-            { text: 'SDK 介绍', link: '/component/x-sdk-introduce' },
-            { text: 'Chat Provider', link: '/component/x-sdk-chat-provider' },
-            { text: 'useXChat 会话数据 (v2)', link: '/component/x-sdk-use-x-chat' },
-            { text: 'useXConversations 会话列表 (v2)', link: '/component/x-sdk-use-x-conversations' },
-            { text: 'XRequest 请求 (v2)', link: '/component/x-sdk-x-request' },
-            { text: 'XStream 流 (v2)', link: '/component/x-sdk-x-stream' },
-            { text: 'useXAgent 模型调度 (1.x)', link: '/component/use-x-agent' },
-            { text: 'useXChat 数据管理 (1.x)', link: '/component/use-x-chat' },
-            { text: 'XStream 流 (1.x)', link: '/component/x-stream' },
-            { text: 'XRequest 请求 (1.x)', link: '/component/x-request' },
-            { text: 'XMarkdown 富文本 (v2)', link: '/component/x-markdown-v2' },
-            { text: 'XMarkdown 插件', link: '/component/x-markdown-plugins' },
-            { text: 'XMarkdown 主题', link: '/component/x-markdown-themes' },
-            { text: 'XMarkdown 流式语法', link: '/component/x-markdown-streaming' },
-            { text: 'XProvider 全局化配置', link: '/component/x-provider' },
-            { text: 'XProvider 全局化配置 (v2)', link: '/component/x-provider-v2' }
-          ]
-        },
-      ],
-      '/playground/': [
-        {
-          text: '样板间',
-          items: [
-            { text: '独立式', link: '/playground/independent' },
-            { text: '助手式', link: '/playground/copilot' },
-            { text: '现代感', link: '/playground/ultramodern' },
-            { text: '百宝箱', link: '/playground/agent-tbox' }
-          ]
-        },
-      ]
-    },
-
     socialLinks: [
       { icon: 'github', link: 'https://github.com/wzc520pyfm/ant-design-x-vue' }
     ]
