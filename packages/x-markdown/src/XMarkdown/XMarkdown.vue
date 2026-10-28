@@ -5,7 +5,7 @@ import { Parser, htmlToVNode, buildDomPurifyConfig } from './core';
 import DOMPurify from 'dompurify';
 import { useStreaming } from './hooks';
 import classnames from 'classnames';
-import { useXProviderContext } from '@ant-design-x-vue/components';
+import { useXProviderContext } from 'ant-design-x-vue';
 
 defineOptions({
   name: 'XMarkdown',

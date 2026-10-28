@@ -40,6 +40,14 @@ x-provider/theme
 
 :::
 
+### 国际化
+
+:::demo-v2 通过 `locale` 切换组件文案。可以把 `ant-design-vue` 的语言包和 `ant-design-x-vue` 的 `zh_CN` / `en_US` 合并后传入。
+
+x-provider/locale
+
+:::
+
 ### 快捷键
 
 :::demo-v2 通过 `shortcutKeys` 设置快捷键。

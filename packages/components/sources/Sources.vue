@@ -103,7 +103,7 @@ const ContentNode = () => {
       </ul>
     );
   }
-  return slots.default?.();
+  return <>{slots.default?.()}</>;
 };
 
 defineRender(() =>
@@ -117,7 +117,7 @@ defineRender(() =>
         ...contextConfig.value.styles?.root,
         ...(typeof style === 'object' ? style : {}),
         ...styles.root,
-      }}
+      } as import('vue').CSSProperties}
     >
       {inline ? (
         <Popover

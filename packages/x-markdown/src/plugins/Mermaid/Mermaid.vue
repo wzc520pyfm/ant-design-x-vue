@@ -19,7 +19,7 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons-vue';
-import { useLocale, useXProviderContext, Actions } from '@ant-design-x-vue/components';
+import { useLocale, useXProviderContext, Actions } from 'ant-design-x-vue';
 import mermaid from 'mermaid';
 
 defineOptions({ name: 'AXMermaid' });

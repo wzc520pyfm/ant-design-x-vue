@@ -62,7 +62,9 @@ type useXAgent<AgentMessage> = (
 
 ### XAgentConfigPreset
 
-使用预设协议进行请求，尚未实现协议。
+1.x 预设。`baseURL`、`model`，以及 `key` 或 `dangerouslyApiKey`，会交给旧的 `XRequestLegacy`。`key` 与 `dangerouslyApiKey` 等价，按原样放进 `Authorization`，不会自动加 `Bearer`。
+
+2.0 的同一条接入路径是 [`createOpenAIChatProvider`](/component/x-sdk-chat-provider)。它创建 `OpenAIChatProvider`，请求为手动模式，裸 token 会写成 `Bearer <token>`。
 
 <!-- todo: add dangerouslyApiKey desc link -->
 

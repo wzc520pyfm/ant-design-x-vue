@@ -13,26 +13,15 @@ export type ActionsItemStatus = (typeof ACTIONS_ITEM_STATUS)[keyof typeof ACTION
 import { CloseCircleOutlined, LoadingOutlined } from '@ant-design/icons-vue';
 import { Tooltip } from 'ant-design-vue';
 import classnames from 'classnames';
-import { computed } from 'vue';
-import type { CSSProperties, VNodeChild } from 'vue';
+import { computed, type VNodeChild } from 'vue';
 import pickAttrs from '../_util/pick-attrs';
+import type { ActionsItemRuntimeProps } from './item-runtime-props';
 import { useXProviderContext } from '../x-provider';
 import useStyle from './style';
 
 defineOptions({ name: 'AXActionsItem' });
 
-interface Props {
-  status?: ActionsItemStatus;
-  defaultIcon?: VNodeChild;
-  label?: string;
-  runningIcon?: VNodeChild;
-  prefixCls?: string;
-  rootClassName?: string;
-  className?: string;
-  style?: CSSProperties;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<ActionsItemRuntimeProps>(), {
   status: 'default',
 });
 

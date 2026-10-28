@@ -141,18 +141,20 @@ const renderSlot = (node: SlotConfigType, slotSpan: HTMLSpanElement): VNode => {
       case 'input':
         return (
           <Input
-            readonly={senderContext.value.readOnly}
-            class={`${prefixCls.value}-slot-input`}
-            placeholder={node.props?.placeholder || ''}
-            data-slot-input={node.key}
-            size="small"
-            bordered={false}
-            value={value || ''}
-            tabindex={0}
-            onChange={(e: Event) => {
-              updateSlot(node.key as string, (e.target as HTMLInputElement).value, e as EventType);
-            }}
-            spellcheck={false}
+            {...({
+              readonly: senderContext.value.readOnly,
+              class: `${prefixCls.value}-slot-input`,
+              placeholder: node.props?.placeholder || '',
+              'data-slot-input': node.key,
+              size: 'small',
+              bordered: false,
+              value: value || '',
+              tabindex: 0,
+              spellcheck: false,
+              onChange: (e: Event) => {
+                updateSlot(node.key as string, (e.target as HTMLInputElement).value, e as EventType);
+              },
+            } as any)}
           />
         );
       case 'select':

@@ -46,6 +46,11 @@ export interface FileCardProps {
 
 export type ListSemanticType = 'root' | 'card';
 
+/** `key` is the list identity. Vue reserves `key` on the card component itself. */
+export type FileCardListItem = FileCardProps & {
+  key?: string | number;
+};
+
 export interface FileCardListProps {
   prefixCls?: string;
   class?: string;
@@ -53,10 +58,10 @@ export interface FileCardListProps {
   rootClassName?: string;
   style?: CSSProperties;
   styles?: Partial<Record<ListSemanticType | SemanticType, CSSProperties>>;
-  items: FileCardProps[];
+  items: FileCardListItem[];
   size?: 'small' | 'default';
-  removable?: boolean | ((item: FileCardProps) => boolean);
-  onRemove?: (item: FileCardProps) => void;
+  removable?: boolean | ((item: FileCardListItem) => boolean);
+  onRemove?: (item: FileCardListItem) => void;
   extension?: VNode;
   overflow?: 'scrollX' | 'scrollY' | 'wrap';
 }

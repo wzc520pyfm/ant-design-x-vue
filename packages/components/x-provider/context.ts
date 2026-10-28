@@ -75,7 +75,7 @@ export interface XComponentsConfig {
   bubble?: ComponentStyleConfig<BubbleProps>;
   conversations?: ComponentStyleConfig<
     ConversationsProps,
-    keyof XComponentConfig
+    Extract<keyof XComponentConfig, keyof ConversationsProps>
   >;
   prompts?: ComponentStyleConfig<PromptsProps>;
   sender?: ComponentStyleConfig<SenderProps>;

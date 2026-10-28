@@ -73,7 +73,7 @@ defineRender(() => {
         label: it.label,
         icon: it.icon,
         danger: it.danger,
-      }))}
+      })) as any}
       onClick={handleMenuClick as any}
     />
   );

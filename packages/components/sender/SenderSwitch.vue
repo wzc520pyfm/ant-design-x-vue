@@ -108,20 +108,22 @@ defineRender(() => {
       {...domProps.value}
     >
       <Button
-        disabled={disabled}
-        loading={loading}
-        styles={{
-          icon: styles.icon,
-          root: styles.content,
-          content: styles.title,
-        }}
-        classNames={{
-          root: classnames(`${switchCls.value}-content`, classes.content),
-          icon: classes.icon,
-          content: classes.title,
-        }}
-        variant="outlined"
-        color={mergedChecked.value ? 'primary' : 'default'}
+        {...({
+          disabled,
+          loading,
+          styles: {
+            icon: styles.icon,
+            root: styles.content,
+            content: styles.title,
+          },
+          classNames: {
+            root: classnames(`${switchCls.value}-content`, classes.content),
+            icon: classes.icon,
+            content: classes.title,
+          },
+          variant: 'outlined',
+          color: mergedChecked.value ? 'primary' : 'default',
+        } as any)}
         icon={iconNode}
         onClick={() => {
           setMergedChecked(!mergedChecked.value);

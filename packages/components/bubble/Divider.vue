@@ -34,7 +34,7 @@ const dividerContentRender = (content: T, _info: Info): VNode => {
   return <AntDivider {...props.dividerProps}>{content as any}</AntDivider>;
 };
 
-const bubbleRef = ref<InstanceType<typeof Bubble> | null>(null);
+const bubbleRef = ref<{ nativeElement?: HTMLElement } | null>(null);
 
 defineRender(() => {
   return (

@@ -99,15 +99,16 @@ export default function useXAgent<
   const agent = computed(
     () => {
       const { request, ...restConfig } = toValue(config);
-      return new XAgent<Message, Input, Output>({
-        // @ts-expect-error
-        request:
-          request! ||
-          XRequest({
+      const apiKey = restConfig.dangerouslyApiKey || restConfig.key;
+      const presetRequest = request
+        ? undefined
+        : XRequest({
             baseURL: restConfig.baseURL!,
             model: restConfig.model,
-            dangerouslyApiKey: restConfig.dangerouslyApiKey,
-          }).value.create,
+            dangerouslyApiKey: apiKey,
+          }).value.create;
+      return new XAgent<Message, Input, Output>({
+        request: request || (presetRequest as RequestFn<Message, Input, Output>),
         ...restConfig,
       });
     });

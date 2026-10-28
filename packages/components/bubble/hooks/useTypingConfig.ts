@@ -1,5 +1,11 @@
 import { computed, toValue, type MaybeRefOrGetter } from 'vue';
-import type { BubbleProps, TypingOption } from '../interface';
+import type { BubbleProps } from '../interface';
+
+interface TypingOption {
+  step?: number;
+  interval?: number;
+  suffix?: string | null;
+}
 
 function useTypingConfig(typing: MaybeRefOrGetter<BubbleProps['typing']>) {
   const typingEnabled = computed(() => {

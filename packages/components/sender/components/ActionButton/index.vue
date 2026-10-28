@@ -12,6 +12,8 @@ const {
   type = "text",
   disabled: propDisable = undefined,
   onClick,
+  color,
+  variant,
   ...restProps
 } = defineProps<ActionButtonProps>();
 
@@ -34,6 +36,7 @@ defineRender(() => {
     <Button
       type={type}
       {...restProps}
+      {...({ color, variant } as object)}
       onClick={(e) => {
         if (mergedDisabled.value) {
           return;

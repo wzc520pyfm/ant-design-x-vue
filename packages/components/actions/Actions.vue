@@ -1,17 +1,38 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, ref, useAttrs } from 'vue';
+import { computed, ref, useAttrs, type CSSProperties } from 'vue';
 import pickAttrs from '../_util/pick-attrs';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import { useActionsContextProvider } from './context';
 import InternalItem from './Item.vue';
-import type { ActionsProps, ActionsRef } from './interface';
+import type { ActionsRef, ItemType, SemanticType } from './interface';
 import useStyle from './style';
 
 defineOptions({ name: 'AXActions', inheritAttrs: false });
 
-const props = withDefaults(defineProps<ActionsProps>(), {
+export interface ActionsRuntimeProps {
+  items?: ItemType[];
+  variant?: 'borderless' | 'filled' | 'outlined';
+  prefixCls?: string;
+  rootClassName?: string;
+  className?: string;
+  style?: CSSProperties;
+  classNames?: Partial<Record<SemanticType, string>>;
+  styles?: Partial<Record<SemanticType, CSSProperties>>;
+  fadeIn?: boolean;
+  fadeInLeft?: boolean;
+  block?: boolean;
+  dropdownProps?: Record<string, any>;
+  onClick?: (menuInfo: {
+    item: any;
+    key: string;
+    keyPath: string[];
+    domEvent: MouseEvent | KeyboardEvent;
+  }) => void;
+}
+
+const props = withDefaults(defineProps<ActionsRuntimeProps>(), {
   items: () => [],
   variant: 'borderless',
   rootClassName: '',

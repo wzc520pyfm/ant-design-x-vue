@@ -82,20 +82,20 @@ const [isExpand, setIsExpand] = useMergedState<boolean>(defaultExpanded, {
 // ========================= Status Icon ==========================
 const StatusIconNode = () => {
   if (loading) {
-    return loading === true ? <LoadingOutlined /> : loading;
+    return <>{loading === true ? <LoadingOutlined /> : loading}</>;
   }
   if (slots.icon) {
-    return slots.icon();
+    return <>{slots.icon()}</>;
   }
-  return icon || <ThinkIcon />;
+  return <>{icon || <ThinkIcon />}</>;
 };
 
 // ========================= Title Node ==========================
 const TitleNode = () => {
   if (slots.title) {
-    return slots.title();
+    return <>{slots.title()}</>;
   }
-  return title;
+  return <>{title}</>;
 };
 
 // ============================ Render ============================

@@ -205,9 +205,6 @@ importers:
         specifier: '>=3.5.0'
         version: 3.5.13(typescript@5.8.2)
     devDependencies:
-      '@ant-design-x-vue/components':
-        specifier: workspace:*
-        version: link:../components
       '@types/node':
         specifier: ^22.10.2
         version: 22.13.5
@@ -296,12 +293,12 @@ importers:
 
   packages/x-markdown:
     dependencies:
-      '@ant-design-x-vue/components':
-        specifier: workspace:*
-        version: link:../components
       '@ant-design/icons-vue':
         specifier: ^7.0.1
         version: 7.0.1(vue@3.5.13(typescript@5.8.2))
+      ant-design-x-vue:
+        specifier: 2.0.0
+        version: link:../ant-design-x-vue
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
