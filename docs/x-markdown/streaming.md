@@ -19,4 +19,4 @@ x-markdown/streaming-syntax
 
 :::
 
-逐字输出还可以只用布尔 `streaming`，见 [富文本页的流式示例](/component/x-markdown)。
+逐字输出还可以只用布尔 `streaming`，见 [富文本页的流式示例](/x-markdown/introduce)。

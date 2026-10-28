@@ -1,4 +1,4 @@
-# SDK 介绍
+# 介绍
 
 `@ant-design-x-vue/x-sdk` 提供 2.0 的会话数据流，主包 `ant-design-x-vue` 再导出同一套 API。
 
@@ -30,10 +30,10 @@ import {
 
 页面：
 
-- [Chat Provider](/component/x-sdk-chat-provider)
-- [useXChat](/component/x-sdk-use-x-chat)
-- [useXConversations](/component/x-sdk-use-x-conversations)
-- [XRequest](/component/x-sdk-x-request)
-- [XStream](/component/x-sdk-x-stream)
+- [Chat Provider](/x-sdk/chat-provider)
+- [useXChat](/x-sdk/use-x-chat)
+- [useXConversations](/x-sdk/use-x-conversations)
+- [XRequest](/x-sdk/x-request)
+- [XStream](/x-sdk/x-stream)
 
-1.x 的 `useXAgent` 仍在主包里，只服务旧示例。字段说明见 [SDK 数据流](/component/sdk)。
+1.x 的 `useXAgent` 仍在主包里，只服务旧示例。字段说明见 [SDK 数据流](/x-sdk/data-flow)。

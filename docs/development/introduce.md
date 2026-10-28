@@ -143,16 +143,18 @@ module.exports = {
 
 我们基于 RICH 交互范式，在不同的交互阶段提供了大量的原子组件，帮助你灵活搭建你的 AI 对话应用：
 
-- 通用: `Bubble` - 消息气泡、`Conversations` - 会话管理
+- 通用: `Bubble` - 消息气泡、`Conversations` - 会话管理、`Notification` - 系统通知
 - 唤醒: `Welcome` - 欢迎、`Prompts` - 提示集
-- 表达: `Sender` - 发送框、`Attachments` - 输入附件、`Suggestion` - 快捷指令
+- 表达: `Attachments` - 输入附件、`Sender` - 发送框、`Suggestion` - 快捷指令
 - 确认: `Think` - 思考过程、`ThoughtChain` - 思维链
-- 反馈: `Actions` - 操作列表、`FileCard` - 文件卡片
+- 反馈: `Actions` - 操作列表、`FileCard` - 文件卡片、`Sources` - 来源引用
 - 其他: `XProvider` - 全局配置：主题、国际化等
+
+分组和顶栏与 React 文档一致，总览见 [组件](/component/overview)。`CodeHighlighter`、`Folder` 以及独立的 `Mermaid` 组件这版没有，X Markdown 里有代码高亮和 Mermaid。
 
 ## ⚡️ 对接模型/智能体服务，AI 对话数据流管理
 
-我们通过提供 X SDK（`@ant-design-x-vue/x-sdk`），帮助你开箱即用地对接模型和智能体服务，并提供好用的基础工具。这些符号从 `ant-design-x-vue` 直接导出。升级步骤见 [从 v1 到 v2](/development/migration-v2)。
+我们通过提供 X SDK（`@ant-design-x-vue/x-sdk`），帮助你开箱即用地对接模型和智能体服务，并提供好用的基础工具。这些符号从 `ant-design-x-vue` 直接导出。升级步骤见 [从 v1 到 v2](/development/migration-v2)。字段和示例在 [X SDK](/x-sdk/introduce)。
 
 - `XRequest`：通用 HTTP 请求 + 流式响应解析
 - `XStream`：基于 Web Streams 的 SSE 流式数据解析

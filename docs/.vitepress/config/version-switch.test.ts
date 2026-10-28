@@ -85,13 +85,25 @@ describe('cross-site version switch', () => {
       'https://x-vue.ant.design/component/bubble',
     )
     expect(resolveVersionHref('/component/use-x-chat', 'v2')).toBe(
-      'https://x-vue.ant.design/component/x-sdk-use-x-chat',
+      'https://x-vue.ant.design/x-sdk/use-x-chat',
+    )
+    expect(resolveVersionHref('/x-sdk/use-x-chat', 'v1')).toBe(
+      'https://antd-design-x-vue.netlify.app/component/use-x-chat',
+    )
+    expect(resolveVersionHref('/x-markdown/introduce', 'v1')).toBe(
+      'https://antd-design-x-vue.netlify.app/',
+    )
+    expect(resolveVersionHref('/design/role-design', 'v1')).toBe(
+      'https://antd-design-x-vue.netlify.app/',
+    )
+    expect(resolveVersionHref('/x-card/a2ui-v08', 'v1')).toBe(
+      'https://antd-design-x-vue.netlify.app/',
     )
     expect(resolveVersionHref('/component/attachments', 'v2')).toBe(
-      'https://x-vue.ant.design/component/overview',
+      'https://x-vue.ant.design/component/attachments',
     )
     expect(resolveVersionHref('/component/actions', 'v2')).toBe(
-      'https://x-vue.ant.design/component/overview',
+      'https://x-vue.ant.design/component/actions',
     )
   })
 

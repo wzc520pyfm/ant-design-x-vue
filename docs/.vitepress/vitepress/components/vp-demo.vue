@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, getCurrentInstance, ref, toRef } from 'vue'
 import { isClient, useClipboard, useStorage, useToggle } from '@vueuse/core'
-import { App, Divider, Tooltip, theme } from 'ant-design-vue'
+import { App, Tooltip, theme } from 'ant-design-vue'
 import { XProvider } from 'ant-design-x-vue'
 import { CaretUpFilled, CodepenOutlined, ThunderboltOutlined, FunctionOutlined } from '@ant-design/icons-vue'
 // import { useLang } from '../composables/lang'
@@ -74,8 +74,6 @@ const copyCode = async () => {
 
 <template>
   <!-- danger here DO NOT USE INLINE SCRIPT TAG -->
-  <div style="margin-top: 16px; margin-bottom: 16px;" v-html="decodedDescription" />
-
   <XProvider :theme="demoTheme">
 
     <div class="example">
@@ -88,7 +86,10 @@ const copyCode = async () => {
         </template>
       </div>
 
-      <Divider style="margin: 0;" />
+      <div class="example-meta">
+        <div v-if="title" class="example-title">{{ title }}</div>
+        <div v-if="decodedDescription" class="example-desc" v-html="decodedDescription" />
+      </div>
 
       <div class="op-btns">
         <Tooltip>

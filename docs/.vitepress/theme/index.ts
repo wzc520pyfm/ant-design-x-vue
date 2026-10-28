@@ -3,10 +3,13 @@ import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
 import './style.css'
 import './custom.css'
+import './site-chrome.css'
 import { computed, defineComponent, h, onMounted } from 'vue'
 import { theme, XProvider } from 'ant-design-x-vue'
 import PreferenceSwitch from './components/PreferenceSwitch.vue'
 import VersionSwitch from './components/VersionSwitch.vue'
+import HomeLanding from './components/HomeLanding.vue'
+import SiteFooter from './components/SiteFooter.vue'
 import { useData } from 'vitepress'
 import { DocsStyleCollector } from './docs-style'
 import { antdDark, bindAntdAppearance } from './antd-appearance'
@@ -32,6 +35,8 @@ const Layout = defineComponent({
         'sidebar-nav-before': () => h(PreferenceSwitch),
         'nav-bar-content-after': () => h(VersionSwitch),
         'nav-screen-content-after': () => h(VersionSwitch),
+        'home-hero-after': () => h(HomeLanding),
+        'layout-bottom': () => h(SiteFooter),
       }),
       h(DocsStyleCollector),
     ])

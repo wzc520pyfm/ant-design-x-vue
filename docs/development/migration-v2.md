@@ -47,7 +47,7 @@ const { messages, onRequest, abort, isRequesting } = useXChat({
 
 内置 Provider 还有 `DeepSeekChatProvider` 和 `DefaultChatProvider`。自定义协议时继承 `AbstractChatProvider`，实现 `transformParams`、`transformLocalMessage`、`transformMessage`。
 
-更完整的字段说明见 [SDK 数据流](/component/sdk)。
+更完整的字段说明见 [SDK 数据流](/x-sdk/data-flow)。
 
 ## 发布顺序
 
@@ -75,4 +75,4 @@ const { messages, onRequest, abort, isRequesting } = useXChat({
 
 ## 旧页面
 
-[useXAgent](https://antd-design-x-vue.netlify.app/component/use-x-agent)、[useXChat](https://antd-design-x-vue.netlify.app/component/use-x-chat)、[XRequest](https://antd-design-x-vue.netlify.app/component/x-request) 这三页在 1.x 文档站。新代码按 [SDK 数据流](/component/sdk) 写。
+[useXAgent](https://antd-design-x-vue.netlify.app/component/use-x-agent)、[useXChat](https://antd-design-x-vue.netlify.app/component/use-x-chat)、[XRequest](https://antd-design-x-vue.netlify.app/component/x-request) 这三页在 1.x 文档站。新代码按 [SDK 数据流](/x-sdk/data-flow) 写。

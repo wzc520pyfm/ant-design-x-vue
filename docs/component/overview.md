@@ -1,9 +1,9 @@
 # 总览
 
-`ant-design-x-vue` 是 `@ant-design/x` 的 Vue 实现，是一个专注于 Vue 生态的先进 AI 组件库，旨在简化与人工智能集成的开发过程。我们的库包括高度定制化的 AI 组件，允许开发者轻松地将对话 AI 集成到他们的应用中。除了丰富的 UI 组件，`ant-design-x-vue` 还提供了一揽子 API 解决方案，支持开发者通过令牌认证直接接入现有 AI 服务，无缝衔接与 AI 的对话和交互。无论是建立智能聊天应用、提升用户交互体验还是加快 AI 能力的集成，`ant-design-x-vue` 都是 Vue 开发者进入 AI 世界的理想伙伴。
+`ant-design-x-vue` 是 `@ant-design/x` 的 Vue 实现。组件按 RICH 的交互阶段分组，顺序和 React 组件页一致。
 
 ::: tip 文档版本
-这里是 **2.x** 组件。页头可以切换到 1.x 站点。1.x 总览在 [这里](https://antd-design-x-vue.netlify.app/component/overview)。
+这里是 **2.x**。页头可以切到 1.x 站点。Markdown、SDK、设计和样板间在顶栏各自一栏，不再塞进组件侧栏。
 :::
 
 ## 通用
@@ -19,31 +19,26 @@
 
 ## 表达
 
+- [Attachments 输入附件](/component/attachments)
 - [Sender 输入框](/component/sender)
 - [Suggestion 快捷指令](/component/suggestion)
-- [FileCard 文件卡片](/component/file-card)
 
 ## 确认
 
 - [Think 思考过程](/component/think)
 - [ThoughtChain 思维链](/component/thought-chain)
-- [Sources 引用来源](/component/sources)
 
-## 工具
+## 反馈
 
-- [SDK 数据流](/component/sdk)
-- [SDK 介绍](/component/x-sdk-introduce)
-- [Chat Provider](/component/x-sdk-chat-provider)
-- [useXChat 会话数据](/component/x-sdk-use-x-chat)
-- [useXConversations 会话列表](/component/x-sdk-use-x-conversations)
-- [XRequest 请求](/component/x-sdk-x-request)
-- [XStream 流](/component/x-sdk-x-stream)
-- [XMarkdown 富文本](/component/x-markdown)
-- [XMarkdown 插件](/component/x-markdown-plugins)
-- [XMarkdown 主题](/component/x-markdown-themes)
-- [XMarkdown 流式语法](/component/x-markdown-streaming)
+- [Actions 操作列表](/component/actions)
+- [CodeHighlighter 代码高亮](/component/code-highlighter)
+- [FileCard 文件卡片](/component/file-card)
+- [Folder 文件夹](/component/folder)
+- [Mermaid 图表](/component/mermaid)
+- [Sources 来源引用](/component/sources)
+
+## 其他
+
 - [XProvider 全局化配置](/component/x-provider)
 
-## 只在 1.x 保留的页面
-
-Attachments、Actions，以及 1.x 的 useXAgent、useXChat、XRequest、XStream，仍在 [1.x 文档站](https://antd-design-x-vue.netlify.app/component/overview)。新代码请从 [从 v1 到 v2](/development/migration-v2) 进入 2.x SDK。
+数据流在 [X SDK](/x-sdk/introduce)，富文本在 [X Markdown](/x-markdown/introduce)。X Card 和 X Skill 这版没有实现，栏目里写了差异和 React 文档链接。
