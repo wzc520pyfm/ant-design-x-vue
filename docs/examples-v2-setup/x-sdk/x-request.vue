@@ -34,8 +34,8 @@ function run() {
 </script>
 
 <template>
-  <a-flex vertical :gap="12">
-    <a-button type="primary" @click="run">Run manual request</a-button>
+  <a-flex vertical :gap="12" align="flex-start">
+    <a-button type="primary" style="align-self: flex-start; width: fit-content" @click="run">Run manual request</a-button>
     <pre style="white-space: pre-wrap">{{ lines.join('\n') || 'Idle. manual is true, so nothing runs until the button.' }}</pre>
   </a-flex>
 </template>

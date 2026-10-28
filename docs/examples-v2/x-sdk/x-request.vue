@@ -29,8 +29,8 @@ const request = XRequest('https://mock.local/v1/chat/completions', {
 });
 
 defineRender(() => (
-  <Flex vertical gap={12}>
-    <Button type="primary" onClick={() => { lines.value = []; request.run(); }}>
+  <Flex vertical gap={12} align="flex-start">
+    <Button type="primary" style={{ alignSelf: 'flex-start', width: 'fit-content' }} onClick={() => { lines.value = []; request.run(); }}>
       Run manual request
     </Button>
     <Typography.Paragraph>
