@@ -6,14 +6,6 @@ function link(text: string, href: string, activeMatch?: string): DefaultTheme.Na
   return { text, link: href, activeMatch }
 }
 
-/** Green version chip, same idea as the React sidebar tag. `text` is rendered as HTML. */
-function tagged(text: string, href: string): DefaultTheme.SidebarItem {
-  return {
-    text: `<span class="x-label">${text}</span> <span class="x-tag">2.0.0</span>`,
-    link: href,
-  }
-}
-
 function plain(text: string, href: string): DefaultTheme.SidebarItem {
   return { text, link: href }
 }
@@ -36,7 +28,7 @@ const componentSidebar: DefaultTheme.SidebarItem[] = [
     items: [
       plain('Bubble 对话气泡', '/component/bubble'),
       plain('Conversations 管理对话', '/component/conversations'),
-      tagged('Notification 系统通知', '/component/notification'),
+      plain('Notification 系统通知', '/component/notification'),
     ],
   },
   {
@@ -57,16 +49,16 @@ const componentSidebar: DefaultTheme.SidebarItem[] = [
   {
     text: '确认',
     items: [
-      tagged('Think 思考过程', '/component/think'),
-      tagged('ThoughtChain 思维链', '/component/thought-chain'),
-      tagged('Sources 来源引用', '/component/sources'),
+      plain('Think 思考过程', '/component/think'),
+      plain('ThoughtChain 思维链', '/component/thought-chain'),
+      plain('Sources 来源引用', '/component/sources'),
     ],
   },
   {
     text: '反馈',
     items: [
       plain('Actions 操作列表', '/component/actions'),
-      tagged('FileCard 文件卡片', '/component/file-card'),
+      plain('FileCard 文件卡片', '/component/file-card'),
     ],
   },
   {
@@ -156,7 +148,7 @@ const developmentSidebar: DefaultTheme.SidebarItem[] = [
   {
     text: '迁移',
     items: [
-      tagged('从 v1 到 v2', '/development/migration-v2'),
+      plain('从 v1 到 v2', '/development/migration-v2'),
     ],
   },
   {
@@ -170,7 +162,7 @@ const developmentSidebar: DefaultTheme.SidebarItem[] = [
 
 const markdownSidebar: DefaultTheme.SidebarItem[] = [
   plain('介绍', '/x-markdown/introduce'),
-  tagged('代码示例', '/x-markdown/examples'),
+  plain('代码示例', '/x-markdown/examples'),
   plain('在线体验', '/x-markdown/playground'),
   plain('主题', '/x-markdown/themes'),
   plain('流式渲染', '/x-markdown/streaming'),
@@ -199,24 +191,24 @@ const sdkSidebar: DefaultTheme.SidebarItem[] = [
     text: '数据流',
     items: [
       plain('总览', '/x-sdk/data-flow'),
-      tagged('useXChat 会话数据', '/x-sdk/use-x-chat'),
-      tagged('useXConversations 会话管理', '/x-sdk/use-x-conversations'),
+      plain('useXChat 会话数据', '/x-sdk/use-x-chat'),
+      plain('useXConversations 会话管理', '/x-sdk/use-x-conversations'),
     ],
   },
   {
     text: '数据提供',
     items: [
-      tagged('Chat Provider 数据提供', '/x-sdk/chat-provider'),
-      tagged('OpenAIChatProvider', '/x-sdk/chat-provider-openai'),
-      tagged('DeepSeekChatProvider', '/x-sdk/chat-provider-deepseek'),
-      tagged('Custom Chat Provider 自定义', '/x-sdk/chat-provider-custom'),
+      plain('Chat Provider 数据提供', '/x-sdk/chat-provider'),
+      plain('OpenAIChatProvider', '/x-sdk/chat-provider-openai'),
+      plain('DeepSeekChatProvider', '/x-sdk/chat-provider-deepseek'),
+      plain('Custom Chat Provider 自定义', '/x-sdk/chat-provider-custom'),
     ],
   },
   {
     text: '工具',
     items: [
-      tagged('XRequest 请求', '/x-sdk/x-request'),
-      tagged('XStream 流', '/x-sdk/x-stream'),
+      plain('XRequest 请求', '/x-sdk/x-request'),
+      plain('XStream 流', '/x-sdk/x-stream'),
     ],
   },
 ]

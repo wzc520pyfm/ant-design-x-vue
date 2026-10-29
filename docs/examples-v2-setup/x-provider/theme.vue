@@ -9,11 +9,27 @@ import {
 } from '@ant-design/icons-vue';
 import { Card, Divider, Flex, message, Space, Typography } from 'ant-design-vue';
 import { Conversations, Prompts, Sender, Suggestion, XProvider } from 'ant-design-x-vue';
-import { ref, h } from 'vue';
+import { computed, ref, h } from 'vue';
+
+function withAlpha(hex: string, alpha: number) {
+  const raw = hex.replace('#', '');
+  const full = raw.length === 3 ? raw.split('').map((c) => c + c).join('') : raw;
+  const value = Number.parseInt(full, 16);
+  if (!Number.isFinite(value) || full.length !== 6) return `rgba(0, 0, 0, ${alpha})`;
+  const r = (value >> 16) & 255;
+  const g = (value >> 8) & 255;
+  const b = value & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 defineOptions({ name: 'AXProviderThemeSetup' });
 
 const colorPrimary = ref('#d10eef');
+const textColor = ref('#141414');
+const promptTextStyle = computed(() => ({
+  '--ax-theme-demo-text': textColor.value,
+  '--ax-theme-demo-desc': withAlpha(textColor.value, 0.65),
+}));
 
 const promptItems = [
   {
@@ -70,6 +86,10 @@ const onColorChange = (e: Event) => {
   colorPrimary.value = (e.target as HTMLInputElement).value;
 };
 
+const onTextColorChange = (e: Event) => {
+  textColor.value = (e.target as HTMLInputElement).value;
+};
+
 const onPromptClick = (info: any) => {
   message.success(`You clicked a prompt: ${info.data.key}`);
 };
@@ -80,6 +100,8 @@ const onPromptClick = (info: any) => {
     <Flex :gap="12" style="margin-bottom: 16px" align="center">
       <Typography.Text>ColorPrimary:</Typography.Text>
       <input type="color" :value="colorPrimary" @input="onColorChange" />
+      <Typography.Text>文字颜色:</Typography.Text>
+      <input type="color" :value="textColor" @input="onTextColorChange" />
     </Flex>
     <Card>
       <XProvider :theme="{ token: { colorPrimary } }">
@@ -93,6 +115,8 @@ const onPromptClick = (info: any) => {
           <Divider type="vertical" style="height: 100%" />
           <Flex justify="space-between" vertical style="flex: 1" :gap="8">
             <Prompts
+              class="ax-provider-theme-prompts"
+              :style="promptTextStyle"
               title="Do you want?"
               :items="promptItems"
               wrap
@@ -131,3 +155,13 @@ const onPromptClick = (info: any) => {
     </Card>
   </div>
 </template>
+
+<style>
+.ax-provider-theme-prompts .ant-prompts-label {
+  color: var(--ax-theme-demo-text, #141414) !important;
+}
+.ax-provider-theme-prompts .ant-prompts-desc,
+.ax-provider-theme-prompts .ant-prompts-icon {
+  color: var(--ax-theme-demo-desc, rgba(0, 0, 0, 0.65)) !important;
+}
+</style>

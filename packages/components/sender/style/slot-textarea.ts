@@ -31,20 +31,19 @@ const genSlotTextAreaStyle: GenerateStyle<SenderToken> = (token) => {
           color: token.colorTextPlaceholder,
         },
       },
-      // React 2.0 uses controlHeightSM (24). A 16px chip matches the glyph
-      // but reads as too short. Center the 24px chip on the text line so the
-      // extra height splits above and below, instead of stacking above the
-      // baseline the way vertical-align:bottom does.
+      // React 2.0 @ant-design/x slot-textarea: horizontal margin is marginXXS,
+      // and marginBlock is marginXXS / 2. Inline margins do not collapse, so
+      // two wrapped slot rows keep a full marginXXS between the chips.
+      // vertical-align stays bottom so that gap sits under the line box
+      // instead of being eaten by a fixed 24px height.
       [slotCls]: {
         display: 'inline-flex',
-        verticalAlign: 'middle',
+        margin: `0 ${unit(token.marginXXS)}`,
+        verticalAlign: 'bottom',
         alignItems: 'center',
-        marginBlock: 0,
-        height: token.controlHeightSM,
+        marginBlock: unit(calc(token.marginXXS).div(2).equal()),
         minHeight: token.controlHeightSM,
-        lineHeight: unit(calc(token.controlHeightSM).sub(2).equal()),
         wordBreak: 'break-all',
-        marginInline: token.marginXXS,
       },
 
       [`${antInputCls}${slotInputCls}`]: {

@@ -283,6 +283,40 @@
   padding-top: var(--vp-nav-height);
 }
 
+/*
+ * VitePress paints a sticky `.curtain` over the brand row, but its `top` is
+ * hardcoded to -64px while this site's nav is 80px. Cover the full nav band
+ * and pin the preference row under the logo. Both masks use the sidebar
+ * surface (`--vp-c-bg-alt`), not the page background, so the column stays one
+ * color in light and dark.
+ */
+@media (min-width: 960px) {
+  .VPSidebar .curtain {
+    top: calc(var(--vp-nav-height) * -1);
+    z-index: 2;
+    background-color: var(--vp-sidebar-bg-color);
+  }
+
+  .VPSidebar .nav > .prefer {
+    position: sticky;
+    /* Pin to the sidebar's top edge, just under the fixed logo. An offset of
+       nav-height left a band where menu labels scrolled between them. */
+    top: 0;
+    z-index: 3;
+    margin: 8px -32px 8px;
+    padding: 8px 32px 10px;
+    background: var(--vp-sidebar-bg-color);
+  }
+
+  .VPSidebar .nav > .prefer::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0 -24px;
+    background: var(--vp-sidebar-bg-color);
+  }
+}
+
 .VPSidebar .nav {
   padding-inline-end: 16px;
   box-sizing: border-box;
@@ -310,27 +344,6 @@
   min-width: 0;
   box-sizing: border-box;
   padding: 5px 14px 5px 12px;
-}
-
-.x-label {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.x-tag {
-  flex: none;
-  margin-left: auto;
-  color: #49aa19;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 20px;
-  white-space: nowrap;
-}
-
-.dark .x-tag {
-  color: #6abe39;
 }
 
 .VPSidebarItem .link {

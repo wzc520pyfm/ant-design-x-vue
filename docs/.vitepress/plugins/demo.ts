@@ -3,6 +3,70 @@ import fs from 'fs'
 import { docRoot } from '@ant-design-x-vue/build-utils'
 import type { MarkdownRenderer } from 'vitepress'
 
+type DemoToken = {
+  type: string
+  children?: Array<{ type: string; content?: string }> | null
+}
+
+function escapeAttr(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+}
+
+function inlineText(token: DemoToken | undefined) {
+  if (!token || token.type !== 'inline') return ''
+  return (token.children ?? [])
+    .filter((child) => child.type === 'text' || child.type === 'code_inline')
+    .map((child) => child.content || '')
+    .join('')
+    .replace(/\u200b/g, '')
+    .trim()
+}
+
+function isHtmlOnlyInline(token: DemoToken) {
+  const text = inlineText(token)
+  if (!text || /^<\/?[A-Za-z][^>]*>$/.test(text)) return true
+  const children = token.children ?? []
+  if (!children.length) return true
+  return children.every((child) => child.type === 'html_inline' || !(child.content || '').trim())
+}
+
+/**
+ * Demo fences sit under an h3. `<ClientOnly>` (and the paragraph markdown-it
+ * wraps it in) lands between the heading and the container, so `tokens[idx - 2]`
+ * is no longer the heading inline and stringifies as the literal "undefined".
+ * Walk back to the nearest heading, skipping those wrappers.
+ */
+function readDemoTitle(tokens: DemoToken[], openIdx: number) {
+  for (let i = openIdx - 1; i >= 0; i -= 1) {
+    const token = tokens[i]
+    if (!token) break
+    if (token.type === 'heading_open') {
+      return escapeAttr(inlineText(tokens[i + 1]))
+    }
+    if (token.type === 'inline') {
+      if (tokens[i - 1]?.type === 'heading_open') {
+        return escapeAttr(inlineText(token))
+      }
+      if (isHtmlOnlyInline(token)) continue
+      break
+    }
+    if (
+      token.type === 'heading_close'
+      || token.type === 'html_block'
+      || token.type === 'html_inline'
+      || token.type === 'paragraph_open'
+      || token.type === 'paragraph_close'
+    ) {
+      continue
+    }
+    break
+  }
+  return ''
+}
+
 interface ContainerOpts {
   marker?: string | undefined
   validate?(params: string): boolean
@@ -19,7 +83,7 @@ function createDemoContainer(md: MarkdownRenderer): ContainerOpts {
     render(tokens, idx) {
       const m = tokens[idx].info.trim().match(/^demo\s*(.*)$/)
       if (tokens[idx].nesting === 1 /* means the tag is opening */) {
-        const title = tokens[idx - 2]?.children?.[0].content
+        const title = readDemoTitle(tokens, idx)
         const description = m && m.length > 1 ? m[1] : ''
         const sourceFileToken = tokens[idx + 2]
         let source = ''
@@ -65,7 +129,7 @@ function createDemoV2Container(md: MarkdownRenderer): ContainerOpts {
     render(tokens, idx) {
       const m = tokens[idx].info.trim().match(/^demo-v2\s*(.*)$/)
       if (tokens[idx].nesting === 1 /* means the tag is opening */) {
-        const title = tokens[idx - 2]?.children?.[0].content
+        const title = readDemoTitle(tokens, idx)
         const description = m && m.length > 1 ? m[1] : ''
         const sourceFileToken = tokens[idx + 2]
         let source = ''

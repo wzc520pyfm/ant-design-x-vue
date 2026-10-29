@@ -2,20 +2,6 @@
 
 用于显示一组与当前上下文相关的预定义的问题或建议。
 
-::: warning 注意
-这是 2.x 的 Prompts。1.x 文档在 [Prompts 提示集](https://antd-design-x-vue.netlify.app/component/prompts)，也可以用页头的版本切换。
-:::
-
-## 新功能
-
-v2 版本新增了以下功能：
-
-- **fadeIn** - 渐入动画效果
-- **fadeInLeft** - 从左到右渐入动画效果
-- **classNames.root** / **styles.root** - 根节点语义化样式支持
-- **disabled 校验** - 点击回调中增加 disabled 状态校验
-- **ref 暴露** - 通过 `ref` 获取组件原生 DOM 元素
-
 ## 代码演示
 
 ### 基本
@@ -89,8 +75,8 @@ prompts/nest
 | 属性 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | classNames | 自定义样式类名，用于各个提示项的不同部分 | Record<SemanticType, string> | - | - |
-| fadeIn | 是否开启渲染渐入 | boolean | `false` | v2 |
-| fadeInLeft | 是否开启渲染从左到右渐入 | boolean | `false` | v2 |
+| fadeIn | 是否开启渲染渐入 | boolean | `false` | - |
+| fadeInLeft | 是否开启渲染从左到右渐入 | boolean | `false` | - |
 | items | 包含多个提示项的列表 | PromptProps[] | - | - |
 | prefixCls | 样式类名的前缀 | string | - | - |
 | rootClassName | 根节点的样式类名 | string | - | - |

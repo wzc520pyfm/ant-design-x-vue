@@ -1,4 +1,4 @@
-# FileCard 文件卡片 <Badge type="warning" text="v2" />
+# FileCard 文件卡片
 
 用卡片的形式展示文件。
 

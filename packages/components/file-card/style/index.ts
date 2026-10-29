@@ -55,17 +55,25 @@ const genFileCardStyle: GenerateStyle<FileCardToken> = (token) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          flex: 'none',
         },
 
         [`${componentCls}-file-content`]: {
           flex: 1,
-          maxWidth: calc('100%').sub(calc(fontSizeHeading1).sub(2).equal()).sub(marginSM).equal(),
+          // Default min-width:auto keeps the row as wide as the filename, so the
+          // card's overflow:hidden clips the text and the prefix never ellipsizes.
+          // token.calc('100%') goes through the numeric calculator and becomes
+          // max-width:-48px, which browsers drop. Keep a real CSS calc.
+          minWidth: 0,
+          overflow: 'hidden',
+          maxWidth: `calc(100% - ${fontSizeHeading1 - 2 + marginSM}px)`,
         },
 
         [`${componentCls}-file-name`]: {
           fontSize: fontSize,
           color: colorTextBase,
           display: 'flex',
+          minWidth: 0,
           maxWidth: '100%',
         },
 
