@@ -240,8 +240,8 @@ onUnmounted(() => {
   max-width: calc(100vw - 32px);
   height: 48px;
   margin: 0;
-  padding: 0 18px 0 8px;
-  gap: 24px;
+  padding: 0 20px 0 12px;
+  gap: 28px;
   border-radius: 24px;
   transform: translateX(-50%);
 }
@@ -301,7 +301,7 @@ onUnmounted(() => {
   align-items: center;
   gap: 24px;
   height: 48px;
-  padding: 0 24px;
+  padding: 0 28px;
   border-radius: 24px;
   background: linear-gradient(117deg, rgba(255, 255, 255, 0.1) 17%, rgba(255, 255, 255, 0.05) 51%);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
@@ -312,7 +312,7 @@ onUnmounted(() => {
 .x-nav.mini {
   position: static;
   height: auto;
-  padding: 0;
+  padding: 0 8px;
   background: none;
   box-shadow: none;
   backdrop-filter: none;
@@ -321,6 +321,7 @@ onUnmounted(() => {
 
 .x-nav a,
 .x-drawer a {
+  padding: 0 6px;
   color: var(--vp-c-text-2);
   font-size: 16px;
   text-decoration: none;
@@ -361,7 +362,8 @@ onUnmounted(() => {
 .x-actions {
   display: flex;
   align-items: center;
-  margin-inline-end: 8px;
+  gap: 16px;
+  margin-inline-end: 16px;
 }
 
 .x-icon-btn {

@@ -281,12 +281,17 @@
   padding-top: var(--vp-nav-height);
 }
 
-.VPSidebarItem .text {
+.VPSidebar .VPSidebarItem .item > .link {
+  border-radius: 8px;
+}
+
+.VPSidebar .VPSidebarItem .text {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
   min-width: 0;
+  padding: 5px 12px;
 }
 
 .x-label {
