@@ -4,27 +4,6 @@
 
 <DocMeta name="Bubble" source="bubble" />
 
-::: warning 注意
-这是 2.x 的 Bubble。1.x 文档在 [Bubble 对话气泡](https://antd-design-x-vue.netlify.app/component/bubble)，也可以用页头的版本切换。
-:::
-
-## 新功能
-
-v2 版本新增了以下功能：
-
-- **Bubble.System** - 系统消息变体组件
-- **Bubble.Divider** - 分隔符变体组件
-- **editable** - 可编辑功能
-- **streaming** - 流式传输标志
-- **extra** - 额外内容插槽
-- **footerPlacement** - footer 位置配置
-- **contentRender** - 替代 messageRender，支持更多信息
-- **onTyping** - 动画执行时回调
-- **typing.effect** - 支持 fade-in 和 typing 两种动画效果
-- **typing.keepPrefix** - 重新开始动画时保留公共前缀
-- **typing.step** - 支持数组格式表示随机区间
-- **status / extraInfo** - 消息状态和额外信息
-
 ## 代码演示
 
 ### 基本
@@ -182,25 +161,25 @@ bubble/list-scroll
 | avatar | 展示头像 | VNode \| (content, info) => VNode | - | |
 | classNames | 语义化结构 class | Record<SemanticDOM, string> | - | |
 | content | 聊天内容 | ContentType | - | |
-| contentRender | 自定义渲染内容 | (content: ContentType, info: Info) => VNode | - | v2 |
-| editable | 是否可编辑 | boolean \| EditableBubbleOption | false | v2 |
-| extra | 额外内容 | VNode \| (content, info) => VNode | - | v2 |
+| contentRender | 自定义渲染内容 | (content: ContentType, info: Info) => VNode | - | - |
+| editable | 是否可编辑 | boolean \| EditableBubbleOption | false | - |
+| extra | 额外内容 | VNode \| (content, info) => VNode | - | - |
 | footer | 底部内容 | VNode \| (content, info) => VNode | - | |
-| footerPlacement | 底部位置 | `outer-start` \| `outer-end` \| `inner-start` \| `inner-end` | `outer-start` | v2 |
+| footerPlacement | 底部位置 | `outer-start` \| `outer-end` \| `inner-start` \| `inner-end` | `outer-start` | - |
 | header | 头部内容 | VNode \| (content, info) => VNode | - | |
 | loading | 聊天内容加载状态 | boolean | false | |
 | placement | 信息位置 | `start` \| `end` | `start` | |
 | shape | 气泡形状 | `default` \| `round` \| `corner` | `default` | v2 新增 default |
-| streaming | 是否流式传输 | boolean | false | v2 |
+| streaming | 是否流式传输 | boolean | false | - |
 | styles | 语义化结构 style | Record<SemanticDOM, CSSProperties> | - | |
 | typing | 打字动画配置 | boolean \| BubbleAnimationOption \| Function | false | v2 增强 |
 | variant | 气泡样式变体 | `filled` \| `borderless` \| `outlined` \| `shadow` | `filled` | |
 | loadingRender | 自定义渲染加载态内容 | () => VNode | - | |
 | messageRender | 自定义渲染内容（已废弃，请使用 contentRender） | (content: ContentType) => VNode | - | |
-| onTyping | 动画执行时回调 | (rendererContent: string, currentContent: string) => void | - | v2 |
+| onTyping | 动画执行时回调 | (rendererContent: string, currentContent: string) => void | - | - |
 | onTypingComplete | 动画结束回调 | (content?: string) => void | - | |
-| onEditConfirm | 编辑确认回调 | (content: string) => void | - | v2 |
-| onEditCancel | 编辑取消回调 | () => void | - | v2 |
+| onEditConfirm | 编辑确认回调 | (content: string) => void | - | - |
+| onEditCancel | 编辑取消回调 | () => void | - | - |
 
 ### BubbleAnimationOption
 

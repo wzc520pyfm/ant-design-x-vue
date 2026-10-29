@@ -346,27 +346,6 @@
   padding: 5px 14px 5px 12px;
 }
 
-.x-label {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.x-tag {
-  flex: none;
-  margin-left: auto;
-  color: #49aa19;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 20px;
-  white-space: nowrap;
-}
-
-.dark .x-tag {
-  color: #6abe39;
-}
-
 .VPSidebarItem .link {
   border-radius: 8px;
 }

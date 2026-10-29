@@ -1,5 +1,5 @@
 
-# Notification 系统通知 <Badge type="warning" text="v2" />
+# Notification 系统通知
 
 系统级别发送在页面外部显示的通知。
 
