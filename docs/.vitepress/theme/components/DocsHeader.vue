@@ -284,12 +284,14 @@ onUnmounted(() => {
   align-items: center;
   height: 18px;
   padding: 0 6px;
-  border: 1px solid currentColor;
+  border: 1px solid #42b883;
   border-radius: 9px;
+  background: rgba(66, 184, 131, 0.16);
+  color: #42b883;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  opacity: 0.75;
+  opacity: 1;
 }
 
 .x-nav {
@@ -341,9 +343,12 @@ onUnmounted(() => {
 
 .x-header.on-home .x-nav {
   background: linear-gradient(117deg, rgba(255, 255, 255, 0.14) 17%, rgba(255, 255, 255, 0.06) 51%);
-  box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.28),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+}
+
+.x-header.on-home .x-nav.mini {
+  background: none;
+  box-shadow: none;
 }
 
 .x-header.on-home .x-nav a {

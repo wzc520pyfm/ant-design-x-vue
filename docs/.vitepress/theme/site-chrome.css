@@ -73,12 +73,14 @@
   padding: 0 6px;
   height: 18px;
   border-radius: 9px;
-  border: 1px solid var(--x-pill-text);
-  color: var(--x-pill-text);
+  border: 1px solid #42b883;
+  background: rgba(66, 184, 131, 0.16);
+  color: #42b883;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
   line-height: 1;
+  opacity: 1;
 }
 
 /* Logo stays in the header, not inside the sidebar column. */
@@ -281,8 +283,22 @@
   padding-top: var(--vp-nav-height);
 }
 
+.VPSidebar .nav {
+  padding-inline-end: 16px;
+  box-sizing: border-box;
+}
+
+.VPSidebar .VPSidebarItem,
+.VPSidebar .VPSidebarItem .item,
+.VPSidebar .VPSidebarItem .item > .link {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
 .VPSidebar .VPSidebarItem .item > .link {
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .VPSidebar .VPSidebarItem .text {
@@ -290,8 +306,10 @@
   align-items: center;
   gap: 8px;
   width: 100%;
+  max-width: 100%;
   min-width: 0;
-  padding: 5px 12px;
+  box-sizing: border-box;
+  padding: 5px 14px 5px 12px;
 }
 
 .x-label {

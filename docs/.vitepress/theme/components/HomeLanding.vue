@@ -112,17 +112,26 @@ function onForegroundLoad(animation: { addEventListener: Function, loop: boolean
   })
 }
 
-let richAnimation: { play: () => void, loop: boolean } | null = null
-function onRichLoad(animation: { play: () => void, loop: boolean, addEventListener: (name: string, cb: () => void) => void }) {
+let richPlayed = false
+let richAnimation: { goToAndPlay: (frame: number, isFrame: boolean) => void } | null = null
+function onRichLoad(animation: {
+  play: () => void
+  loop: boolean
+  goToAndStop: (frame: number, isFrame: boolean) => void
+  goToAndPlay: (frame: number, isFrame: boolean) => void
+  addEventListener: (name: string, cb: () => void) => void
+}) {
   richAnimation = animation
+  animation.goToAndStop(120, true)
   animation.addEventListener('complete', () => {
-    animation.loop = true
-    animation.play()
+    animation.goToAndStop(120, true)
   })
   playRich()
 }
 function playRich() {
-  if (window.scrollY > 480) richAnimation?.play()
+  if (richPlayed || !richAnimation || window.scrollY <= 480) return
+  richPlayed = true
+  richAnimation.goToAndPlay(36, true)
 }
 function bindReveal() {
   const nodes = document.querySelectorAll('.home [data-reveal]')
@@ -506,22 +515,36 @@ function titleParts(title: string, label: string) {
   margin: 0 0 12px;
   color: #fff;
   font-size: 48px;
+  line-height: 1.35;
   text-align: center;
+  overflow: visible;
 }
 
 .rich {
   display: block;
-  height: 500px;
+  height: 720px;
+  padding-top: 20px;
   overflow: hidden;
   color: inherit;
   text-decoration: none;
   cursor: pointer;
+  scroll-margin-top: 96px;
+}
+
+.rich h2 {
+  padding-top: 4px;
+  line-height: 1.35;
 }
 
 .rich-lottie {
   width: 100%;
-  height: 360px;
-  transform: translateY(-8%);
+  height: 750px;
+  margin-top: -40px;
+}
+
+.rich-lottie :deep(svg) {
+  width: 100% !important;
+  height: auto !important;
 }
 
 .chain {
