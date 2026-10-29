@@ -1,9 +1,17 @@
 <script setup lang="ts">
 defineOptions({ name: 'AXXMarkdownStreamingV2Setup' });
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { XMarkdown, useStreaming } from '@ant-design-x-vue/x-markdown';
-import { Button, Flex, Space } from 'ant-design-vue';
+import { theme } from 'ant-design-vue';
+
+const { token } = theme.useToken();
+const wrapStyle = computed(() => ({
+  border: `1px solid ${token.value.colorBorderSecondary}`,
+  borderRadius: '4px',
+  padding: '16px',
+  minHeight: '120px',
+}));
 
 const fullContent = `# Streaming Demo
 
@@ -44,17 +52,8 @@ const startStream = () => {
       <a-button type="primary" @click="startStream">Start streaming</a-button>
       <span>Status: {{ status }}</span>
     </a-space>
-    <div class="x-markdown-demo-wrap">
+    <div :style="wrapStyle">
       <XMarkdown :content="displayedContent" :streaming="streaming" />
     </div>
   </a-flex>
 </template>
-
-<style scoped>
-.x-markdown-demo-wrap {
-  border: 1px solid #eee;
-  border-radius: 4px;
-  padding: 16px;
-  min-height: 120px;
-}
-</style>

@@ -30,17 +30,15 @@ const a = 1;
 <template>
   <a-flex vertical :gap="16">
     <a-input-text-area v-model:value="content" :rows="8" />
-    <div class="x-markdown-demo-wrap">
+    <div
+      :style="{
+        border: `1px solid ${token.colorBorderSecondary}`,
+        borderRadius: '4px',
+        padding: '16px',
+        minHeight: '120px',
+      }"
+    >
       <XMarkdown :class-name="markdownClass" :content="content" />
     </div>
   </a-flex>
 </template>
-
-<style scoped>
-.x-markdown-demo-wrap {
-  border: 1px solid var(--ant-color-border-secondary, rgba(0, 0, 0, 0.06));
-  border-radius: 4px;
-  padding: 16px;
-  min-height: 120px;
-}
-</style>
