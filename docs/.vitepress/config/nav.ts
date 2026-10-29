@@ -8,7 +8,10 @@ function link(text: string, href: string, activeMatch?: string): DefaultTheme.Na
 
 /** Green version chip, same idea as the React sidebar tag. `text` is rendered as HTML. */
 function tagged(text: string, href: string): DefaultTheme.SidebarItem {
-  return { text: `${text}<span class="x-tag">2.0.0</span>`, link: href }
+  return {
+    text: `<span class="x-label">${text}</span> <span class="x-tag">2.0.0</span>`,
+    link: href,
+  }
 }
 
 function plain(text: string, href: string): DefaultTheme.SidebarItem {

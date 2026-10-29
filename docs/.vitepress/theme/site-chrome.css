@@ -281,13 +281,29 @@
   padding-top: var(--vp-nav-height);
 }
 
+.VPSidebarItem .text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.x-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .x-tag {
-  float: right;
-  margin-left: 8px;
+  flex: none;
+  margin-left: auto;
   color: #49aa19;
   font-size: 12px;
   font-weight: 500;
-  line-height: 22px;
+  line-height: 20px;
+  white-space: nowrap;
 }
 
 .dark .x-tag {
@@ -442,6 +458,20 @@ body:has(.VPHome) {
 
 body:has(.VPHome) .x-header {
   color: rgba(255, 255, 255, 0.88);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 1;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 999;
 }
 
 body:has(.VPHome) .site-footer {

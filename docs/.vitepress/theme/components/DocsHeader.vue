@@ -20,6 +20,8 @@ const direction = ref<'up' | 'down' | ''>('')
 const menuOpen = ref(false)
 const narrow = ref(false)
 
+const onHome = computed(() => route.path === '/' || route.path === '/index.html')
+
 const activeKey = computed(() => {
   const path = route.path
   return items.find((item) => path === item.base || path.startsWith(`${item.base}/`))?.key
@@ -41,8 +43,33 @@ const isHidden = computed(() => {
 
 const actionsHidden = computed(() => scrollY.value > 200 && !narrow.value)
 
-function toggleTheme() {
-  isDark.value = !isDark.value
+function toggleTheme(event: MouseEvent) {
+  const goingDark = !isDark.value
+  const x = event.clientX
+  const y = event.clientY
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const start = document.startViewTransition?.bind(document)
+  if (!start || reduce) {
+    isDark.value = goingDark
+    return
+  }
+  const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
+  start(() => {
+    isDark.value = goingDark
+  }).ready.then(() => {
+    document.documentElement.animate(
+      {
+        clipPath: goingDark
+          ? [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`]
+          : [`circle(${endRadius}px at ${x}px ${y}px)`, `circle(0px at ${x}px ${y}px)`],
+      },
+      {
+        duration: 500,
+        easing: 'ease-in',
+        pseudoElement: goingDark ? '::view-transition-new(root)' : '::view-transition-old(root)',
+      },
+    )
+  })
 }
 
 let lastY = 0
@@ -83,6 +110,7 @@ onUnmounted(() => {
   <header
     class="x-header"
     :class="{
+      'on-home': onHome,
       mini: isMini && !narrow,
       hidden: isHidden && !menuOpen,
       glass: isMini || narrow,
@@ -129,8 +157,9 @@ onUnmounted(() => {
         :title="isDark ? '切换到浅色' : '切换到深色'"
         @click="toggleTheme"
       >
-        <span v-if="isDark" aria-hidden="true">☀</span>
-        <span v-else aria-hidden="true">☾</span>
+        <svg class="theme-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path d="M7.02 3.635l12.518 12.518a1.863 1.863 0 010 2.635l-1.317 1.318a1.863 1.863 0 01-2.635 0L3.068 7.588A2.795 2.795 0 117.02 3.635zm2.09 14.428a.932.932 0 110 1.864.932.932 0 010-1.864zm-.043-9.747L7.75 9.635l9.154 9.153 1.318-1.317-9.154-9.155zM3.52 12.473c.514 0 .931.417.931.931v.932h.932a.932.932 0 110 1.864h-.932v.931a.932.932 0 01-1.863 0l-.001-.931h-.93a.932.932 0 010-1.864h.93v-.932c0-.514.418-.931.933-.931zm15.374-3.727a1.398 1.398 0 110 2.795 1.398 1.398 0 010-2.795zM4.385 4.953a.932.932 0 000 1.317l2.046 2.047L7.75 7 5.703 4.953a.932.932 0 00-1.318 0zM14.701.36a.932.932 0 01.931.932v.931h.932a.932.932 0 010 1.864h-.933l.001.932a.932.932 0 11-1.863 0l-.001-.932h-.93a.932.932 0 110-1.864h.93v-.931a.932.932 0 01.933-.932z" />
+        </svg>
       </button>
       <a
         class="x-icon-btn"
@@ -303,6 +332,30 @@ onUnmounted(() => {
 .x-drawer a.active {
   color: var(--vp-c-text-1);
   font-weight: 500;
+}
+
+.x-header.on-home {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.x-header.on-home .x-nav {
+  background: linear-gradient(117deg, rgba(255, 255, 255, 0.14) 17%, rgba(255, 255, 255, 0.06) 51%);
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.x-header.on-home .x-nav a {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.x-header.on-home .x-nav a:hover,
+.x-header.on-home .x-nav a.active {
+  color: #fff;
+}
+
+.x-header.on-home .x-icon-btn {
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .x-actions {

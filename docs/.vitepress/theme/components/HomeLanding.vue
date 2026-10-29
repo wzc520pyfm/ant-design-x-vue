@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { theme, Welcome, Prompts, Bubble, XProvider } from 'ant-design-x-vue'
 import LottieBox from './LottieBox.vue'
+import HomeScene from './HomeScene.vue'
 
 const comma = '\u00A0,\u00A0\u00A0'
 const stages = [
@@ -111,12 +112,33 @@ function onForegroundLoad(animation: { addEventListener: Function, loop: boolean
   })
 }
 
-const richLottie = ref<{ animation?: { play?: () => void } } | null>(null)
-function onPageScroll() {
-  if (window.scrollY > 600) richLottie.value?.animation?.play?.()
+let richAnimation: { play: () => void, loop: boolean } | null = null
+function onRichLoad(animation: { play: () => void, loop: boolean, addEventListener: (name: string, cb: () => void) => void }) {
+  richAnimation = animation
+  animation.addEventListener('complete', () => {
+    animation.loop = true
+    animation.play()
+  })
+  playRich()
 }
-onMounted(() => window.addEventListener('scroll', onPageScroll, { passive: true }))
-onUnmounted(() => window.removeEventListener('scroll', onPageScroll))
+function playRich() {
+  if (window.scrollY > 480) richAnimation?.play()
+}
+function bindReveal() {
+  const nodes = document.querySelectorAll('.home [data-reveal]')
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) entry.target.classList.add('in')
+    })
+  }, { threshold: 0.18 })
+  nodes.forEach((node) => io.observe(node))
+}
+onMounted(() => {
+  window.addEventListener('scroll', playRich, { passive: true })
+  bindReveal()
+  playRich()
+})
+onUnmounted(() => window.removeEventListener('scroll', playRich))
 
 function titleParts(title: string, label: string) {
   const parts = title.split(label)
@@ -157,10 +179,10 @@ function titleParts(title: string, label: string) {
         <h2>AI 设计范式 - RICH</h2>
         <p>我们致力于构建 AI 设计理论，并在蚂蚁内部海量 AI 产品中实践、迭代。在此过程中，RICH 设计范式应运而生：角色（Role）、意图（Intention）、会话（Conversation）和混合界面（Hybrid UI）</p>
         <LottieBox
-          ref="richLottie"
           class="rich-lottie"
           :autoplay="false"
           path="https://mdn.alipayobjects.com/huamei_lkxviz/afts/file/nLaTTqe5cMAAAAAAQiAAAAgADtFMAQFr"
+          @load="onRichLoad"
         />
       </a>
     </section>
@@ -170,7 +192,13 @@ function titleParts(title: string, label: string) {
         <h2>AI 界面解决方案</h2>
         <p class="lead">基于RICH，延续熟悉的 Ant Design 设计语言，全新 AGI 混合界面（Hybrid-UI）解决方案，完美融合 GUI 和自然会话交互。从唤醒到表达，从过程到反馈，合适的组件恰当的呈现在所有的人机互动过程中。</p>
         <div class="chain">
-          <div v-for="(item, index) in stages" :key="item.label" class="chain-item">
+          <div
+            v-for="(item, index) in stages"
+            :key="item.label"
+            class="chain-item"
+            data-reveal
+            :style="{ transitionDelay: `${index * 80}ms` }"
+          >
             <div class="chain-rail">
               <div class="chain-icon">
                 <img :src="item.icon" alt="" />
@@ -201,7 +229,7 @@ function titleParts(title: string, label: string) {
       <div class="block">
         <h2>试一试 , 多种 AI 场景体验</h2>
         <p class="lead">提供多场景解决方案 , 帮助用户提高与 AI 协作效率</p>
-        <div class="scenes">
+        <div class="scenes" data-reveal>
           <div class="scene-tabs">
             <button
               v-for="item in scenes"
@@ -216,18 +244,18 @@ function titleParts(title: string, label: string) {
               <span>{{ item.desc }}</span>
             </button>
           </div>
-          <a v-if="activeScene?.img" class="scene-stage" :href="activeScene.href || undefined">
-            <img :src="activeScene.img" :alt="activeScene.title" />
-          </a>
+          <div v-if="activeScene && !activeScene.disabled" class="scene-stage">
+            <HomeScene :kind="activeScene.key === 'assistant' ? 'assistant' : activeScene.key === 'nest' ? 'nest' : 'independent'" />
+          </div>
         </div>
       </div>
 
       <div class="block">
         <h2>组件丰富 , 选用自如</h2>
         <p class="lead">Ant Design X 全新 AI 组件 , 大量实用组件满足你的需求 , 灵活定制与拓展</p>
-        <XProvider :theme="darkTheme">
-          <div class="cards">
-            <a class="card" href="/component/welcome">
+          <XProvider :theme="darkTheme">
+          <div class="cards" data-reveal>
+            <a class="card" data-reveal href="/component/welcome">
               <div class="card-preview">
                 <Welcome
                   style="width: 290px"
@@ -283,7 +311,7 @@ function titleParts(title: string, label: string) {
       <div class="block">
         <h2>AI 设计语言与研发框架</h2>
         <p class="lead">配套生态 , 让你快速搭建网站应用</p>
-        <div class="eco">
+        <div class="eco" data-reveal>
           <a href="/design/introduce">
             <img alt="" src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*poTnSZrI7-oAAAAAAAAAAAAADgCCAQ/fmt.webp" />
             <strong>RICH 设计指南</strong>
@@ -615,6 +643,33 @@ function titleParts(title: string, label: string) {
 .scene-stage img {
   width: min(100%, 760px);
   border-radius: 12px;
+}
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+[data-reveal].in {
+  opacity: 1;
+  transform: none;
+}
+
+.card:hover,
+.eco a:hover,
+.scene-tab:hover:not(:disabled) {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.chain-icon img:not(.blur) {
+  animation: glow 2.8s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { filter: none; }
+  50% { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.45)); }
 }
 
 .cards,
