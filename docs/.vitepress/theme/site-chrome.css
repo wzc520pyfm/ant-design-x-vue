@@ -283,6 +283,40 @@
   padding-top: var(--vp-nav-height);
 }
 
+/*
+ * VitePress paints a sticky `.curtain` over the brand row, but its `top` is
+ * hardcoded to -64px while this site's nav is 80px. The short mask lets menu
+ * labels scroll through the logo and the preference switch. Cover the full
+ * nav band, and keep the preference row stuck underneath it with the same
+ * opaque page background.
+ */
+@media (min-width: 960px) {
+  .VPSidebar .curtain {
+    top: calc(var(--vp-nav-height) * -1);
+    z-index: 2;
+    background-color: var(--vp-c-bg);
+  }
+
+  .VPSidebar .nav > .prefer {
+    position: sticky;
+    /* Pin to the sidebar's top edge, just under the fixed logo. An offset of
+       nav-height left a band where menu labels scrolled between them. */
+    top: 0;
+    z-index: 3;
+    margin: 8px -32px 8px;
+    padding: 8px 32px 10px;
+    background: var(--vp-c-bg);
+  }
+
+  .VPSidebar .nav > .prefer::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0 -24px;
+    background: var(--vp-c-bg);
+  }
+}
+
 .VPSidebar .nav {
   padding-inline-end: 16px;
   box-sizing: border-box;
