@@ -15,21 +15,14 @@ function plain(text: string, href: string): DefaultTheme.SidebarItem {
   return { text, link: href }
 }
 
+/** Matches `@ant-design/x@2.0.0` `Header/Navigation.tsx` defaultItems. */
 export const nav: DefaultTheme.NavItem[] = [
   link('设计', '/design/introduce', '/design/'),
   link('研发', '/development/introduce', '/development/'),
   link('组件', '/component/overview', '/component/'),
   link('X Markdown', '/x-markdown/introduce', '/x-markdown/'),
   link('X SDK', '/x-sdk/introduce', '/x-sdk/'),
-  link('X Card', '/x-card/introduce', '/x-card/'),
-  link('X Skill', '/x-skill/introduce', '/x-skill/'),
   link('演示', '/playground/ultramodern', '/playground/'),
-  {
-    text: '国内镜像',
-    link: 'https://ant-design-x.antgroup.com/index-cn',
-    target: '_blank',
-    rel: 'noreferrer',
-  },
 ]
 
 const componentSidebar: DefaultTheme.SidebarItem[] = [
@@ -63,17 +56,14 @@ const componentSidebar: DefaultTheme.SidebarItem[] = [
     items: [
       tagged('Think 思考过程', '/component/think'),
       tagged('ThoughtChain 思维链', '/component/thought-chain'),
+      tagged('Sources 来源引用', '/component/sources'),
     ],
   },
   {
     text: '反馈',
     items: [
       plain('Actions 操作列表', '/component/actions'),
-      plain('CodeHighlighter 代码高亮', '/component/code-highlighter'),
       tagged('FileCard 文件卡片', '/component/file-card'),
-      plain('Folder 文件夹', '/component/folder'),
-      plain('Mermaid 图表', '/component/mermaid'),
-      tagged('Sources 来源引用', '/component/sources'),
     ],
   },
   {
@@ -186,7 +176,7 @@ const markdownSidebar: DefaultTheme.SidebarItem[] = [
     items: [
       plain('总览', '/x-markdown/components'),
       plain('对话 Think · Sources', '/x-markdown/chat-enhancement'),
-      plain('图表 Mermaid · AntV', '/x-markdown/data-display'),
+      plain('Mermaid', '/x-markdown/data-display'),
       plain('高亮 Code', '/x-markdown/rich-text'),
     ],
   },
@@ -228,18 +218,6 @@ const sdkSidebar: DefaultTheme.SidebarItem[] = [
   },
 ]
 
-const cardSidebar: DefaultTheme.SidebarItem[] = [
-  plain('介绍', '/x-card/introduce'),
-  plain('A2UI v0.8', '/x-card/a2ui-v08'),
-  plain('A2UI v0.9', '/x-card/a2ui-v09'),
-]
-
-const skillSidebar: DefaultTheme.SidebarItem[] = [
-  plain('介绍', '/x-skill/introduce'),
-  plain('Prompt 模版', '/x-skill/prompt'),
-  plain('技能列表', '/x-skill/skills'),
-]
-
 const playgroundSidebar: DefaultTheme.SidebarItem[] = [
   {
     text: '样板间',
@@ -258,8 +236,6 @@ export const sidebar: DefaultTheme.Sidebar = {
   '/component/': componentSidebar,
   '/x-markdown/': markdownSidebar,
   '/x-sdk/': sdkSidebar,
-  '/x-card/': cardSidebar,
-  '/x-skill/': skillSidebar,
   '/playground/': playgroundSidebar,
 }
 

@@ -27,18 +27,15 @@
 
 - [Think 思考过程](/component/think)
 - [ThoughtChain 思维链](/component/thought-chain)
+- [Sources 来源引用](/component/sources)
 
 ## 反馈
 
 - [Actions 操作列表](/component/actions)
-- [CodeHighlighter 代码高亮](/component/code-highlighter)
 - [FileCard 文件卡片](/component/file-card)
-- [Folder 文件夹](/component/folder)
-- [Mermaid 图表](/component/mermaid)
-- [Sources 来源引用](/component/sources)
 
 ## 其他
 
 - [XProvider 全局化配置](/component/x-provider)
 
-数据流在 [X SDK](/x-sdk/introduce)，富文本在 [X Markdown](/x-markdown/introduce)。X Card 和 X Skill 这版没有实现，栏目里写了差异和 React 文档链接。
+数据流在 [X SDK](/x-sdk/introduce)，富文本在 [X Markdown](/x-markdown/introduce)。分组与 `@ant-design/x@2.0.0` 的组件导出一致。

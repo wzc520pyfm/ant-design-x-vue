@@ -96,9 +96,6 @@ describe('cross-site version switch', () => {
     expect(resolveVersionHref('/design/role-design', 'v1')).toBe(
       'https://antd-design-x-vue.netlify.app/',
     )
-    expect(resolveVersionHref('/x-card/a2ui-v08', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/',
-    )
     expect(resolveVersionHref('/component/attachments', 'v2')).toBe(
       'https://x-vue.ant.design/component/attachments',
     )

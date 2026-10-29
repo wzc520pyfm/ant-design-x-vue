@@ -19,9 +19,27 @@
   --x-sidebar-active-bg: rgba(22, 119, 255, 0.16);
 }
 
+/* Default VitePress bar stays in flow for the 80px offset and Cmd+K search.
+   The visible header is DocsHeader. */
 .VPNav {
-  position: sticky;
-  z-index: 50;
+  height: var(--vp-nav-height);
+  pointer-events: none;
+}
+
+.VPNavBar,
+.VPNav .divider {
+  visibility: hidden;
+}
+
+.x-header .version-switch .ant-select-selector {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.x-header .version-switch .ant-select-selection-item,
+.x-header .version-switch .ant-select-arrow {
+  color: inherit !important;
 }
 
 .VPNavBar {
@@ -413,15 +431,21 @@
 
 .VPHome {
   margin-top: calc(var(--vp-nav-height) * -1);
-  padding-top: var(--vp-nav-height);
+  padding-top: 0;
+  background: #0c0e10;
+  color: rgba(255, 255, 255, 0.88);
 }
 
-.dark .VPHome {
-  background:
-    radial-gradient(900px 420px at 18% 18%, rgba(90, 70, 180, 0.28), transparent 60%),
-    #121214;
+body:has(.VPHome) {
+  background: #0c0e10;
 }
 
-.VPNavBar.home.top {
-  background: transparent !important;
+body:has(.VPHome) .x-header {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+body:has(.VPHome) .site-footer {
+  background: #0c0e10;
+  color: rgba(255, 255, 255, 0.65);
+  border-top-color: rgba(255, 255, 255, 0.12);
 }
