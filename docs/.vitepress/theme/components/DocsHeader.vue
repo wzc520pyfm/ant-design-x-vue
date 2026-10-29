@@ -200,7 +200,6 @@ onUnmounted(() => {
 .x-header {
   position: fixed;
   top: 0;
-  left: 0;
   z-index: 1000;
   box-sizing: border-box;
   display: flex;
@@ -210,7 +209,20 @@ onUnmounted(() => {
   height: 80px;
   padding-inline-end: 8px;
   color: var(--vp-c-text-1);
-  transition: opacity 0.2s ease, transform 0.2s ease, width 0.2s ease, height 0.2s ease, margin 0.2s ease;
+  right: 0;
+  left: auto;
+  border-radius: 0;
+  transition:
+    padding 0.2s ease-in-out,
+    margin 0.2s ease-in-out,
+    opacity 0.2s ease-in-out,
+    width 0.2s ease-in-out,
+    height 0.2s ease-in-out,
+    top 0.2s ease-in-out,
+    right 0.2s ease-in-out,
+    border-radius 0.2s ease-in-out,
+    transform 0.2s ease-in-out,
+    gap 0.2s ease-in-out;
 }
 
 .x-header.hidden {
@@ -235,15 +247,16 @@ onUnmounted(() => {
 
 .x-header.mini {
   top: 16px;
-  left: 50%;
+  right: 50%;
   width: max-content;
-  max-width: calc(100vw - 32px);
+  max-width: calc(100vw - 48px);
   height: 48px;
   margin: 0;
   padding: 0 20px 0 12px;
-  gap: 28px;
+  gap: 24px;
+  overflow: hidden;
   border-radius: 24px;
-  transform: translateX(-50%);
+  transform: translateX(50%);
 }
 
 .x-logo {
