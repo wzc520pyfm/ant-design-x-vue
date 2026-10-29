@@ -29,18 +29,14 @@ const a = 1;
 defineRender(() => (
   <Flex vertical gap={16}>
     <Input.TextArea v-model:value={content.value} rows={8} />
-    <div class="x-markdown-demo-wrap">
+    <div style={{
+      border: `1px solid ${token.value.colorBorderSecondary}`,
+      borderRadius: '4px',
+      padding: '16px',
+      minHeight: '120px',
+    }}>
       <XMarkdown className={markdownClass.value} content={content.value} />
     </div>
   </Flex>
 ));
 </script>
-
-<style scoped>
-.x-markdown-demo-wrap {
-  border: 1px solid var(--ant-color-border-secondary, rgba(0, 0, 0, 0.06));
-  border-radius: 4px;
-  padding: 16px;
-  min-height: 120px;
-}
-</style>
