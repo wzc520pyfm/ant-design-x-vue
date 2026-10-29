@@ -27,8 +27,12 @@ export function MarkdownTransform(): Plugin {
 
     async transform(code, id) {
       if (!id.endsWith('.md')) return
-      const isDocPage = /\/(component|playground|development)\//.test(id)
-      if (!isDocPage) return
+      // Demo fences live under component, playground, development, and the
+      // 2.0 section roots (x-markdown, x-sdk, design). Skipping those roots
+      // left `<ax-v2-*>` unregistered, so the example boxes rendered empty.
+      const hasDemo = /:::(demo-v2|demo)\b/.test(code)
+      const isComponentDoc = /\/component\//.test(id)
+      if (!hasDemo && !isComponentDoc) return
 
       const componentId = path.basename(id, '.md')
       const append: Append = {

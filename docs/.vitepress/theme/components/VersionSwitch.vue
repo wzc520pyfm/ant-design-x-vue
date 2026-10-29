@@ -35,6 +35,8 @@ const onChange = (value: unknown) => {
     <Select
       :value="current"
       :options="options"
+      :bordered="false"
+      size="large"
       aria-label="文档版本"
       @change="onChange"
     />

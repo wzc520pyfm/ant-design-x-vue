@@ -1,0 +1,504 @@
+:root {
+  --vp-nav-height: 80px;
+  --x-pill-text: rgba(0, 0, 0, 0.65);
+  --x-pill-text-hover: rgba(0, 0, 0, 0.88);
+  --x-pill-active: #1677ff;
+  --x-header-bg: rgba(255, 255, 255, 0.86);
+  --x-pill-bg: linear-gradient(117deg, rgba(255, 255, 255, 0.72) 17%, rgba(255, 255, 255, 0.4) 51%);
+  --x-pill-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  --x-sidebar-active-bg: #e6f4ff;
+}
+
+.dark {
+  --x-pill-text: rgba(255, 255, 255, 0.65);
+  --x-pill-text-hover: rgba(255, 255, 255, 0.88);
+  --x-pill-active: #69b1ff;
+  --x-header-bg: rgba(12, 12, 14, 0.78);
+  --x-pill-bg: linear-gradient(117deg, rgba(255, 255, 255, 0.1) 17%, rgba(255, 255, 255, 0.05) 51%);
+  --x-pill-shadow: 0 6px 16px 0 rgba(255, 255, 255, 0.04), 0 3px 6px -4px rgba(0, 0, 0, 0.45);
+  --x-sidebar-active-bg: rgba(22, 119, 255, 0.16);
+}
+
+/* Default VitePress bar stays in flow for the 80px offset and Cmd+K search.
+   The visible header is DocsHeader. */
+.VPNav {
+  height: var(--vp-nav-height);
+  pointer-events: none;
+}
+
+.VPNavBar,
+.VPNav .divider {
+  visibility: hidden;
+}
+
+.x-header .version-switch .ant-select-selector {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.x-header .version-switch .ant-select-selection-item,
+.x-header .version-switch .ant-select-arrow {
+  color: inherit !important;
+}
+
+.VPNavBar {
+  background: var(--x-header-bg) !important;
+  backdrop-filter: blur(16px);
+}
+
+.VPNavBar .divider-line,
+.VPNavBar .divider {
+  background: transparent !important;
+}
+
+.VPNavBarTitle .title {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.18px;
+  border-bottom: none !important;
+  gap: 8px;
+}
+
+.VPNavBarTitle .logo {
+  height: 28px;
+  width: 28px;
+  object-fit: contain;
+}
+
+.brand-vue {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 0 6px;
+  height: 18px;
+  border-radius: 9px;
+  border: 1px solid #42b883;
+  background: rgba(66, 184, 131, 0.16);
+  color: #42b883;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  opacity: 1;
+}
+
+/* Logo stays in the header, not inside the sidebar column. */
+@media (min-width: 960px) {
+  .VPNavBar.has-sidebar .title {
+    position: static !important;
+    width: auto !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  .VPNavBar.has-sidebar .wrapper {
+    padding: 0 24px 0 28px !important;
+  }
+
+  .VPNavBar.has-sidebar .container {
+    max-width: none;
+  }
+
+  .VPNavBar.has-sidebar .content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .VPNavBarTitle.has-sidebar .title {
+    border-bottom-color: transparent !important;
+  }
+}
+
+/* Centered glass pill: search icon + section links. Tools sit on the right. */
+@media (min-width: 1280px) {
+  .VPNavBar .content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 16px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .VPNavBar .content-body {
+    height: 48px;
+    width: max-content;
+    max-width: calc(100vw - 460px);
+    padding: 0 16px 0 6px;
+    border-radius: 24px;
+    gap: 2px;
+    position: relative !important;
+    background: var(--x-pill-bg);
+    box-shadow: var(--x-pill-shadow);
+    pointer-events: auto;
+    justify-content: flex-start;
+  }
+
+  .VPNavBar .menu {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    background: transparent;
+  }
+
+  .VPNavBar .VPNavBarMenuLink {
+    padding: 0 10px;
+    line-height: 48px;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--x-pill-text);
+  }
+
+  .VPNavBar .VPNavBarMenuLink:hover,
+  .VPNavBar .VPNavBarMenuLink.active {
+    color: var(--x-pill-active);
+  }
+
+  .VPNavBar .content-body > .version-switch,
+  .VPNavBar .content-body > .appearance,
+  .VPNavBar .content-body > .social-links {
+    position: fixed;
+    top: 20px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    z-index: 5;
+  }
+
+  .VPNavBar .content-body > .version-switch {
+    right: 132px;
+    margin: 0;
+  }
+
+  .VPNavBar .content-body > .appearance {
+    right: 76px;
+  }
+
+  .VPNavBar .content-body > .social-links {
+    right: 24px;
+    margin-right: 0;
+  }
+
+  .VPNavBar .version-switch::before,
+  .VPNavBar .menu + .appearance::before,
+  .VPNavBar .menu + .social-links::before,
+  .VPNavBar .appearance + .social-links::before,
+  .VPNavBar .translations + .appearance::before {
+    content: none !important;
+  }
+
+  .VPNavBar .extra {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1279px) {
+  .VPNavBar .menu {
+    display: none !important;
+  }
+
+  .VPNavBar .hamburger {
+    display: flex !important;
+  }
+}
+
+.VPNavBar .DocSearch-Button {
+  margin: 0 4px 0 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 16px;
+  background: transparent;
+  justify-content: center;
+}
+
+.VPNavBar .DocSearch-Button:hover,
+.VPNavBar .DocSearch-Button:focus {
+  background: transparent;
+  box-shadow: none;
+}
+
+.VPNavBar .DocSearch-Button-Placeholder,
+.VPNavBar .DocSearch-Button-Keys {
+  display: none;
+}
+
+.VPNavBar .DocSearch-Search-Icon {
+  width: 16px;
+  height: 16px;
+  color: var(--x-pill-text);
+}
+
+.version-switch .ant-select {
+  width: 88px;
+}
+
+.VPNavBar .version-switch .ant-select-selector {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  height: 40px !important;
+}
+
+.VPNavBar .version-switch .ant-select-selection-item {
+  color: var(--vp-c-text-1);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 38px !important;
+}
+
+.VPNavBar .version-switch .ant-select-arrow {
+  color: var(--vp-c-text-2);
+}
+
+.VPNavBar .version-switch .ant-select-open .ant-select-selector,
+.VPNavBar .version-switch .ant-select-focused .ant-select-selector {
+  border-color: #1677ff !important;
+  border-radius: 8px !important;
+}
+
+.VPSwitchAppearance {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 20px !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.VPNavBar .social-links .VPSocialLink {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--vp-c-text-1);
+}
+
+/* Sidebar: section labels, active pill, version chip. */
+.VPSidebar {
+  padding-top: var(--vp-nav-height);
+}
+
+.VPSidebar .nav {
+  padding-inline-end: 16px;
+  box-sizing: border-box;
+}
+
+.VPSidebar .VPSidebarItem,
+.VPSidebar .VPSidebarItem .item,
+.VPSidebar .VPSidebarItem .item > .link {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.VPSidebar .VPSidebarItem .item > .link {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.VPSidebar .VPSidebarItem .text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 5px 14px 5px 12px;
+}
+
+.x-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.x-tag {
+  flex: none;
+  margin-left: auto;
+  color: #49aa19;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.dark .x-tag {
+  color: #6abe39;
+}
+
+.VPSidebarItem .link {
+  border-radius: 8px;
+}
+
+.VPSidebarItem.is-active > .item > .link {
+  background: var(--x-sidebar-active-bg);
+}
+
+.VPSidebarItem.is-active > .item .text {
+  color: var(--x-pill-active);
+}
+
+.VPSidebarItem.level-0 > .item > .text {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--vp-c-text-2);
+}
+
+/* Component demos sit in a single card: preview, title, description, toolbar. */
+.vp-doc h3:has(+ * > .example),
+.vp-doc h3:has(+ .example) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.vp-doc .example {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background: var(--vp-c-bg);
+  margin: 16px 0 28px;
+  overflow: hidden;
+}
+
+.vp-doc .example .example-showcase {
+  padding: 24px 24px 8px;
+  background: var(--vp-c-bg);
+}
+
+.vp-doc .example .example-meta {
+  padding: 8px 24px 4px;
+}
+
+.vp-doc .example .example-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--vp-c-text-1);
+}
+
+.vp-doc .example .example-desc {
+  margin-top: 4px;
+  color: var(--vp-c-text-2);
+  font-size: 14px;
+}
+
+.vp-doc .example .example-desc p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.vp-doc .example .op-btns {
+  padding: 4px 12px 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.vp-doc table {
+  width: 100%;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.vp-doc th {
+  background: var(--vp-c-bg-soft);
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+.vp-doc td,
+.vp-doc th {
+  padding: 12px 16px;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.doc-meta {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0 20px;
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+}
+
+.doc-meta .row {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.doc-meta .label {
+  width: 42px;
+  flex: none;
+  color: var(--vp-c-text-1);
+}
+
+.doc-meta code {
+  font-size: 13px;
+}
+
+.unsupported {
+  margin: 16px 0;
+  padding: 16px 18px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background: var(--vp-c-bg-soft);
+}
+
+.unsupported a {
+  font-weight: 500;
+}
+
+.VPHome .VPHero,
+.VPHome .VPFeatures {
+  display: none;
+}
+
+.VPHome {
+  margin-top: calc(var(--vp-nav-height) * -1);
+  padding-top: 0;
+  background: #0c0e10;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+body:has(.VPHome) {
+  background: #0c0e10;
+}
+
+body:has(.VPHome) .x-header {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 1;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 999;
+}
+
+body:has(.VPHome) .site-footer {
+  background: #0c0e10;
+  color: rgba(255, 255, 255, 0.65);
+  border-top-color: rgba(255, 255, 255, 0.12);
+}

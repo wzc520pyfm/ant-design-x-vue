@@ -1,4 +1,4 @@
-# XMarkdown 富文本
+# 介绍
 
 流式友好、可扩展的 Markdown 渲染组件。
 
@@ -10,9 +10,9 @@
 
 更细的页面：
 
-- [插件：Latex、HighlightCode、Mermaid、自定义 transform](/component/x-markdown-plugins)
-- [主题 light / dark](/component/x-markdown-themes)
-- [流式语法](/component/x-markdown-streaming)
+- [插件：Latex、HighlightCode、Mermaid、自定义 transform](/x-markdown/plugins)
+- [主题 light / dark](/x-markdown/themes)
+- [流式语法](/x-markdown/streaming)
 
 ## 代码演示
 

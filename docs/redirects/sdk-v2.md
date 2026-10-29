@@ -16,8 +16,8 @@ import { useRouter } from 'vitepress'
 
 const router = useRouter()
 onMounted(() => {
-  router.go("/component/sdk")
+  router.go("/x-sdk/data-flow")
 })
 </script>
 
-正在打开对应文档：[继续访问](/component/sdk)
+正在打开对应文档：[继续访问](/x-sdk/data-flow)

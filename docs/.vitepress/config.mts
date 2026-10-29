@@ -97,9 +97,44 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original',
+    siteTitle: 'Ant Design X <span class="brand-vue">Vue</span>',
     nav,
     sidebar,
-    outline: [2, 3],
+    outline: {
+      label: '本页目录',
+      level: [2, 3],
+    },
+    docFooter: {
+      prev: '上一篇',
+      next: '下一篇',
+    },
+    darkModeSwitchLabel: '主题',
+    lightModeSwitchTitle: '切换到浅色',
+    darkModeSwitchTitle: '切换到深色',
+    sidebarMenuLabel: '菜单',
+    returnToTopLabel: '回到顶部',
+    search: {
+      provider: 'local',
+      options: {
+        translations: {
+          button: {
+            buttonText: '搜索',
+            buttonAriaLabel: '搜索文档',
+          },
+          modal: {
+            displayDetails: '显示详细列表',
+            resetButtonTitle: '清除',
+            backButtonTitle: '关闭',
+            noResultsText: '没有找到结果',
+            footer: {
+              selectText: '选择',
+              navigateText: '切换',
+              closeText: '关闭',
+            },
+          },
+        },
+      },
+    },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/wzc520pyfm/ant-design-x-vue' }
     ]

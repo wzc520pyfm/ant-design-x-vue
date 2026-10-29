@@ -38,9 +38,10 @@ export const V1_SITE_PATHS = [
   '/playground/copilot',
 ] as const
 
-/** Pages published by this 2.x docs build. */
+/** Pages published by this 2.x docs build. Canonical URLs follow the React sections. */
 export const V2_SITE_PATHS = [
   '/',
+  '/component/introduce',
   '/component/overview',
   '/component/bubble',
   '/component/conversations',
@@ -49,38 +50,90 @@ export const V2_SITE_PATHS = [
   '/component/prompts',
   '/component/sender',
   '/component/suggestion',
+  '/component/attachments',
+  '/component/actions',
   '/component/file-card',
   '/component/think',
   '/component/thought-chain',
   '/component/sources',
-  '/component/sdk',
-  '/component/x-sdk-introduce',
-  '/component/x-sdk-chat-provider',
-  '/component/x-sdk-use-x-chat',
-  '/component/x-sdk-use-x-conversations',
-  '/component/x-sdk-x-request',
-  '/component/x-sdk-x-stream',
-  '/component/x-markdown',
-  '/component/x-markdown-plugins',
-  '/component/x-markdown-themes',
-  '/component/x-markdown-streaming',
   '/component/x-provider',
+  '/x-markdown/introduce',
+  '/x-markdown/examples',
+  '/x-markdown/playground',
+  '/x-markdown/themes',
+  '/x-markdown/streaming',
+  '/x-markdown/components',
+  '/x-markdown/chat-enhancement',
+  '/x-markdown/data-display',
+  '/x-markdown/rich-text',
+  '/x-markdown/plugins',
+  '/x-markdown/plugin-latex',
+  '/x-markdown/custom-plugin',
+  '/x-sdk/introduce',
+  '/x-sdk/data-flow',
+  '/x-sdk/use-x-chat',
+  '/x-sdk/use-x-conversations',
+  '/x-sdk/chat-provider',
+  '/x-sdk/chat-provider-openai',
+  '/x-sdk/chat-provider-deepseek',
+  '/x-sdk/chat-provider-custom',
+  '/x-sdk/x-request',
+  '/x-sdk/x-stream',
+  '/design/introduce',
+  '/design/role-design',
+  '/design/authentic-consistent',
+  '/design/smooth-natural',
+  '/design/human-touch',
+  '/design/intention-introduce',
+  '/design/define-intention-type',
+  '/design/provide-intention-expectation',
+  '/design/guide-intention-expression',
+  '/design/conversation-design',
+  '/design/start',
+  '/design/follow-up',
+  '/design/hint',
+  '/design/confirm',
+  '/design/error',
+  '/design/end',
+  '/design/hybrid-ui-design',
+  '/design/wake-up-ai-icon',
+  '/design/wake-up-welcome-message',
+  '/design/expression-user-input',
+  '/design/expression-user-send',
+  '/design/confirm-generation-process',
+  '/design/feedback-result-application',
+  '/design/feedback-result-display',
   '/development/introduce',
+  '/development/model-openai',
+  '/development/model-qwen',
+  '/development/agent-tbox',
+  '/development/use-with-vite',
+  '/development/use-with-nuxt',
   '/development/compatible-style',
+  '/development/common-props',
   '/development/migration-v2',
-  '/development/spec',
+  '/development/faq',
   '/development/release-checklist',
+  '/development/spec',
   '/playground/independent',
   '/playground/copilot',
   '/playground/ultramodern',
   '/playground/agent-tbox',
 ] as const
 
-/** 2.x path, 1.x path. Used when the filename changed between majors. */
+/**
+ * 2.x path, 1.x path. The first 2.x path for a 1.x path is the canonical one
+ * (new section URL). Older `/component/x-sdk-*` paths stay aliased so a
+ * bookmark still leaves for the right 1.x page before the in-site redirect.
+ */
 export const PAGE_ALIASES: ReadonlyArray<readonly [string, string]> = [
+  ['/x-sdk/chat-provider', '/component/use-x-agent'],
   ['/component/x-sdk-chat-provider', '/component/use-x-agent'],
+  ['/x-sdk/use-x-chat', '/component/use-x-chat'],
   ['/component/x-sdk-use-x-chat', '/component/use-x-chat'],
+  ['/x-sdk/x-request', '/component/x-request'],
   ['/component/x-sdk-x-request', '/component/x-request'],
+  ['/x-sdk/x-stream', '/component/x-stream'],
   ['/component/x-sdk-x-stream', '/component/x-stream'],
 ]
 
@@ -101,8 +154,19 @@ export const LEGACY_REDIRECTS: Record<string, string> = {
   '/component/file-card-v2': '/component/file-card',
   '/component/think-v2': '/component/think',
   '/component/sources-v2': '/component/sources',
-  '/component/sdk-v2': '/component/sdk',
-  '/component/x-markdown-v2': '/component/x-markdown',
+  '/component/sdk-v2': '/x-sdk/data-flow',
+  '/component/x-markdown-v2': '/x-markdown/introduce',
+  '/component/sdk': '/x-sdk/data-flow',
+  '/component/x-sdk-introduce': '/x-sdk/introduce',
+  '/component/x-sdk-chat-provider': '/x-sdk/chat-provider',
+  '/component/x-sdk-use-x-chat': '/x-sdk/use-x-chat',
+  '/component/x-sdk-use-x-conversations': '/x-sdk/use-x-conversations',
+  '/component/x-sdk-x-request': '/x-sdk/x-request',
+  '/component/x-sdk-x-stream': '/x-sdk/x-stream',
+  '/component/x-markdown': '/x-markdown/introduce',
+  '/component/x-markdown-plugins': '/x-markdown/plugins',
+  '/component/x-markdown-themes': '/x-markdown/themes',
+  '/component/x-markdown-streaming': '/x-markdown/streaming',
 }
 
 const V1_PATH_SET = new Set<string>(V1_SITE_PATHS)
@@ -187,9 +251,19 @@ function aliasTarget(path: string, target: DocVersionId): string | undefined {
 }
 
 function fallbackPath(path: string, pages: Set<string>): string {
+  const sectionIndex: Array<[string, string]> = [
+    ['/component/', '/component/overview'],
+    ['/development/', '/development/introduce'],
+    ['/playground/', '/playground/independent'],
+    ['/x-sdk/', '/x-sdk/introduce'],
+    ['/x-markdown/', '/x-markdown/introduce'],
+    ['/design/', '/design/introduce'],
+  ]
+  for (const [prefix, index] of sectionIndex) {
+    if (path.startsWith(prefix) && pages.has(index)) return index
+  }
+  // 1.x has no design / markdown / card / skill section. Land on its home.
   if (path.startsWith('/component/') && pages.has('/component/overview')) return '/component/overview'
-  if (path.startsWith('/development/') && pages.has('/development/introduce')) return '/development/introduce'
-  if (path.startsWith('/playground/') && pages.has('/playground/independent')) return '/playground/independent'
   return '/'
 }
 

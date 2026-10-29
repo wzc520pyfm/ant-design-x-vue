@@ -4,12 +4,12 @@
 
 从 1.x 迁过来时先看 [从 v1 到 v2](/development/migration-v2)。下面几页按 React 2.0 的 x-sdk 目录拆开：
 
-- [介绍](/component/x-sdk-introduce)
-- [Chat Provider](/component/x-sdk-chat-provider)
-- [useXChat](/component/x-sdk-use-x-chat)
-- [useXConversations](/component/x-sdk-use-x-conversations)
-- [XRequest](/component/x-sdk-x-request)
-- [XStream](/component/x-sdk-x-stream)
+- [介绍](/x-sdk/introduce)
+- [Chat Provider](/x-sdk/chat-provider)
+- [useXChat](/x-sdk/use-x-chat)
+- [useXConversations](/x-sdk/use-x-conversations)
+- [XRequest](/x-sdk/x-request)
+- [XStream](/x-sdk/x-stream)
 
 ## useXConversations
 

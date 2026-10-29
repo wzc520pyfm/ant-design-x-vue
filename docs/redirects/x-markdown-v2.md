@@ -16,8 +16,8 @@ import { useRouter } from 'vitepress'
 
 const router = useRouter()
 onMounted(() => {
-  router.go("/component/x-markdown")
+  router.go("/x-markdown/introduce")
 })
 </script>
 
-正在打开对应文档：[继续访问](/component/x-markdown)
+正在打开对应文档：[继续访问](/x-markdown/introduce)

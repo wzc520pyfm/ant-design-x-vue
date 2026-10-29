@@ -1,6 +1,8 @@
 # Bubble 对话气泡
 
-用于聊天的气泡组件，v2 版本新增了更多功能特性。
+用于聊天的气泡组件。
+
+<DocMeta name="Bubble" source="bubble" />
 
 ::: warning 注意
 这是 2.x 的 Bubble。1.x 文档在 [Bubble 对话气泡](https://antd-design-x-vue.netlify.app/component/bubble)，也可以用页头的版本切换。
@@ -130,6 +132,8 @@ bubble/markdown
 :::
 
 ### GPT 可视化
+
+Vue 没有内置 GPT-Vis。下面的例子只让 Bubble 渲染一段 Markdown，图表库请看 [GPT-Vis](https://github.com/antvis/GPT-Vis) 或 React 文档。
 
 :::demo-v2 配合可视化组件实现图表渲染。
 
