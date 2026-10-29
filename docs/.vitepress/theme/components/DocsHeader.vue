@@ -212,17 +212,10 @@ onUnmounted(() => {
   right: 0;
   left: auto;
   border-radius: 0;
-  transition:
-    padding 0.2s ease-in-out,
-    margin 0.2s ease-in-out,
-    opacity 0.2s ease-in-out,
-    width 0.2s ease-in-out,
-    height 0.2s ease-in-out,
-    top 0.2s ease-in-out,
-    right 0.2s ease-in-out,
-    border-radius 0.2s ease-in-out,
-    transform 0.2s ease-in-out,
-    gap 0.2s ease-in-out;
+  /* Same transition list as `@ant-design/x@2.0.0` Header/index.tsx.
+     Width, height and transform snap with the mini class; only padding,
+     margin and opacity ease. */
+  transition: padding 0.2s ease-in-out, margin 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 
 .x-header.hidden {
