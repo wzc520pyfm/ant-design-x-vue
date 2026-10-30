@@ -21,7 +21,6 @@ export function resolveActionIcon(icon: unknown): VNodeChild {
     const cloned = cloneVNode(raw);
     cloned.el = null;
     cloned.component = null;
-    cloned.dynamicChildren = null;
     return cloned;
   }
   if (typeof icon !== 'function') return icon as VNodeChild;
