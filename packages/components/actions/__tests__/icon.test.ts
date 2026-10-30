@@ -22,4 +22,21 @@ describe('Actions icon', () => {
     expect(wrapper.findAll('svg').length).toBe(3);
     wrapper.unmount();
   });
+
+  it('mounts one shared icon vnode in every Actions list', () => {
+    const icon = h(CopyOutlined);
+    const items = [{ key: 'copy', label: 'Copy', icon }];
+    const wrapper = mount({
+      setup() {
+        return () => h('div', [h(Actions, { items }), h(Actions, { items })]);
+      },
+    });
+
+    const lists = wrapper.findAll('.ant-actions');
+    expect(lists).toHaveLength(2);
+    for (const list of lists) {
+      expect(list.findAll('svg')).toHaveLength(1);
+    }
+    wrapper.unmount();
+  });
 });

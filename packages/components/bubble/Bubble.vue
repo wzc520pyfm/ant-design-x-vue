@@ -329,6 +329,10 @@ const renderContent = () => {
   );
 
   const isFooterIn = _footerPlacement.value?.includes('inner');
+  const isStringContent = typeof memoedContent.value === 'string';
+  // pre-wrap belongs on the text. An inner footer is a sibling of that text;
+  // putting content-string on the outer box makes the toolbar inherit it.
+  const stringOnContent = isStringContent && (!isFooterIn || isEditing.value);
 
   return (
     <div class={getSlotClassName('body')} style={getSlotStyle('body')}>
@@ -347,7 +351,7 @@ const renderContent = () => {
             [`${prefixCls}-content-${context?.status}`]: context?.status,
             [`${prefixCls}-content-${props.shape}`]: props.variant !== 'borderless',
             [`${prefixCls}-content-editing`]: isEditing.value,
-            [`${prefixCls}-content-string`]: typeof memoedContent.value === 'string',
+            [`${prefixCls}-content-string`]: stringOnContent,
           },
         ]}
       >
@@ -363,7 +367,14 @@ const renderContent = () => {
         ) : (
           <>
             {isFooterIn ? (
-              <div class={`${prefixCls}-content-with-footer`}>{contentNode}</div>
+              <div
+                class={[
+                  `${prefixCls}-content-with-footer`,
+                  isStringContent && `${prefixCls}-content-string`,
+                ]}
+              >
+                {contentNode}
+              </div>
             ) : (
               contentNode
             )}
