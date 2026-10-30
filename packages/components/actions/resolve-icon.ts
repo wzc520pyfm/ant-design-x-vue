@@ -13,9 +13,15 @@ import { cloneVNode, h, isVNode, toRaw, type VNode, type VNodeChild } from 'vue'
  */
 export function resolveActionIcon(icon: unknown): VNodeChild {
   if (isVNode(icon)) {
-    const cloned = cloneVNode(toRaw(icon) as VNode);
+    const raw = toRaw(icon) as VNode;
+    // A fresh vnode is already in the parent's render block. Cloning it leaves
+    // that original unmounted, and unmount then crashes on a null instance.
+    // Only a vnode that has been mounted (shared `actionItems`) needs a copy.
+    if (raw.el == null && raw.component == null) return raw;
+    const cloned = cloneVNode(raw);
     cloned.el = null;
     cloned.component = null;
+    cloned.dynamicChildren = null;
     return cloned;
   }
   if (typeof icon !== 'function') return icon as VNodeChild;
