@@ -89,8 +89,11 @@ const mergedStyle = computed(() => ({
   ...props.style,
 }));
 
+// `onClick` is the menu callback, matching React: it is pulled off the props
+// before pickAttrs. Copying it onto the root makes the same click bubble and
+// invoke the callback again with a MouseEvent, which has no `key`.
 const domProps = computed(() =>
-  pickAttrs({ ...(attrs as object), ...(props as any) }, {
+  pickAttrs(attrs, {
     attr: true,
     aria: true,
     data: true,
@@ -137,7 +140,8 @@ const handleClick = (menuInfo: {
   keyPath: string[];
   domEvent: MouseEvent | KeyboardEvent;
 }) => {
-  props.onClick?.(menuInfo);
+  // `onClick` is a declared prop, so emit already invokes that same function.
+  // Calling it here as well runs the callback twice for one item click.
   emit('click', menuInfo);
 };
 
