@@ -26,14 +26,18 @@ const loading = ref(true);
 const data = ref('');
 const effect = ref<'fade-in' | 'typing'>('fade-in');
 const keepPrefix = ref(false);
+// Reloading the same string does not change `content`, so remount to replay.
+const playback = ref(0);
 
 const loadAll = () => {
   loading.value = false;
+  playback.value += 1;
   data.value = text;
 };
 
 const replaceText = () => {
   loading.value = false;
+  playback.value += 1;
   data.value = text2;
 };
 
@@ -60,6 +64,7 @@ defineRender(() => (
     <Divider />
     <Flex gap="small" align="center">
       <Bubble
+        key={playback.value}
         loading={loading.value}
         content={data.value}
         typing={{ effect: effect.value, interval: 50, step: 3, keepPrefix: keepPrefix.value }}

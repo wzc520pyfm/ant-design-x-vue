@@ -123,8 +123,11 @@ const genBubbleStyle: GenerateStyle<BubbleToken> = (token) => {
           },
         },
 
-        // Typing animation
-        '&-typing:last-child::after': {
+        // The hash class sits on the bubble root. These nodes are descendants, so
+        // the selector must not be `&-typing` / `&-fade-in` — that glues the hash
+        // onto the child and the animation never matches. `:last-child` is also
+        // unreliable here: Vue leaves a comment anchor after the typing node.
+        [`${componentCls}-typing::after`]: {
           content: '"|"',
           fontWeight: 900,
           userSelect: 'none',
@@ -136,12 +139,12 @@ const genBubbleStyle: GenerateStyle<BubbleToken> = (token) => {
           animationTimingFunction: 'linear',
         },
 
-        // Fade-in animation
-        '&-fade-in .fade-in': {
+        [`${componentCls}-fade-in .fade-in`]: {
           display: 'inline',
           animationName: fadeIn,
           animationDuration: '1s',
           animationTimingFunction: 'linear',
+          animationFillMode: 'both',
         },
 
         [`& ${componentCls}-dot`]: {

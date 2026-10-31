@@ -169,14 +169,24 @@ export function useTyping({
   };
 
   watch(
-    content,
-    (newContent) => {
+    [content, () => memoedAnimationCfg.value.effect],
+    ([newContent, effect], previous) => {
+      const effectChanged = !!previous && previous[1] !== effect;
+
       if (!newContent) {
         reset();
         return;
       }
       if (!canUseAnimationApi) {
         setStaticContent(newContent, currentTask.value);
+        return;
+      }
+      // Switching fade-in / typing must replay. Content is often unchanged, and
+      // the finished text would otherwise stay on screen with no new effect.
+      if (effectChanged) {
+        cancelAnimationFrame(raf.value);
+        animating.value = false;
+        executeAnimation(++currentTask.value);
         return;
       }
       if (newContent === renderedData.value) return;
