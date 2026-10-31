@@ -25,16 +25,18 @@ const loading = ref(true);
 const data = ref('');
 const effect = ref<'fade-in' | 'typing'>('fade-in');
 const keepPrefix = ref(false);
+// The same string does not change `content`, so remount to replay it.
+// A different string stays mounted so `keepPrefix` can keep the shared head.
+const playback = ref(0);
 
-const loadAll = () => {
+const loadText = (next: string) => {
   loading.value = false;
-  data.value = text;
+  if (data.value === next) playback.value += 1;
+  data.value = next;
 };
 
-const replaceText = () => {
-  loading.value = false;
-  data.value = text2;
-};
+const loadAll = () => loadText(text);
+const replaceText = () => loadText(text2);
 
 const handleTyping = () => {
   console.log('typing');
@@ -66,6 +68,7 @@ const handleTypingComplete = () => {
     <a-divider />
     <a-flex gap="small" align="center">
       <Bubble
+        :key="playback"
         :loading="loading"
         :content="data"
         :typing="{ effect, interval: 50, step: 3, keepPrefix }"
