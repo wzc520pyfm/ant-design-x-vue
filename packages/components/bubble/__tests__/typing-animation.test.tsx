@@ -163,13 +163,94 @@ describe('Bubble typing and fade-in animation', () => {
 
     content.value = text2;
     await nextTick();
-    expect(bubbleText(wrapper).startsWith(text2.slice(0, 3))).toBe(true);
-    expect(bubbleText(wrapper).length).toBeLessThan(text2.length);
+    expect(bubbleText(wrapper)).toBe(text2.slice(0, 3));
 
     replay.value += 1;
     content.value = text;
     await nextTick();
     expect(bubbleText(wrapper)).toBe(text.slice(0, 3));
+
+    wrapper.unmount();
+  });
+
+  it('keeps the shared prefix when keepPrefix is on and only animates the new tail', async () => {
+    const frames: Array<{ id: number; cb: FrameRequestCallback }> = [];
+    let seq = 0;
+    let now = 1000;
+    vi.spyOn(performance, 'now').mockImplementation(() => now);
+    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
+      const id = ++seq;
+      frames.push({ id, cb });
+      return id;
+    });
+    vi.stubGlobal('cancelAnimationFrame', (id: number) => {
+      const index = frames.findIndex((frame) => frame.id === id);
+      if (index >= 0) frames.splice(index, 1);
+    });
+
+    const content = ref(text);
+    const effect = ref<'fade-in' | 'typing'>('fade-in');
+    const replay = ref(0);
+    const Host = defineComponent({
+      components: { Bubble },
+      setup() {
+        return () => (
+          <Bubble
+            key={replay.value}
+            content={content.value}
+            typing={{ effect: effect.value, interval: 50, step: 3, keepPrefix: true }}
+          />
+        );
+      },
+    });
+
+    const wrapper = mount(Host);
+    await nextTick();
+    for (let i = 0; i < text.length; i += 1) {
+      now += 50;
+      const pending = frames.splice(0, frames.length);
+      if (!pending.length) break;
+      pending.forEach((frame) => frame.cb(now));
+    }
+    await nextTick();
+    expect(bubbleText(wrapper)).toBe(text);
+
+    let shared = '';
+    while (
+      shared.length < text.length &&
+      shared.length < text2.length &&
+      text[shared.length] === text2[shared.length]
+    ) {
+      shared += text[shared.length];
+    }
+    expect(shared.length).toBeGreaterThan(3);
+
+    content.value = text2;
+    await nextTick();
+    const shown = bubbleText(wrapper);
+    expect(shown.startsWith(shared)).toBe(true);
+    expect(shown).toBe(shared + text2.slice(shared.length, shared.length + 3));
+    expect(wrapper.findAll('.fade-in').map((node) => node.text()).join('')).toBe(
+      text2.slice(shared.length, shared.length + 3),
+    );
+
+    effect.value = 'typing';
+    await nextTick();
+    expect(bubbleText(wrapper)).toBe(text2.slice(0, 3));
+    expect(wrapper.find('.ant-bubble-typing').exists()).toBe(true);
+
+    for (let i = 0; i < text2.length; i += 1) {
+      now += 50;
+      const pending = frames.splice(0, frames.length);
+      if (!pending.length) break;
+      pending.forEach((frame) => frame.cb(now));
+    }
+    await nextTick();
+    expect(bubbleText(wrapper)).toBe(text2);
+
+    replay.value += 1;
+    await nextTick();
+    expect(bubbleText(wrapper)).toBe(text2.slice(0, 3));
 
     wrapper.unmount();
   });
