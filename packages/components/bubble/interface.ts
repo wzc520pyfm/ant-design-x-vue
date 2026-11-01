@@ -191,6 +191,10 @@ export interface BubbleContextProps {
 
 export interface BubbleListRef {
   nativeElement: HTMLDivElement;
+  /**
+   * @description 滚动容器 DOM
+   */
+  scrollBoxNativeElement: HTMLDivElement;
   scrollTo: (options: {
     /**
      * @description 数据项唯一标识

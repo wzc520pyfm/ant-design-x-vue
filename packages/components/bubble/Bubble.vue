@@ -112,9 +112,8 @@ const usingInnerAnimation = computed(
  * 3、流式输入 content 的场景下，应当在流式结束时（streaming === false）才执行 onTypingComplete，
  *    保证一次流式传输归属于一个动画周期。
  **/
-// Match React's effect deps. A pre-flush watchEffect also tracks the callback
-// identity, and Bubble.List passes a fresh onTypingComplete that advances the
-// visible count, so the effect re-entered on every parent render.
+// Match React's effect deps. Tracking the callback identity re-fired this
+// effect on every parent render when Bubble.List passed a fresh handler.
 watch(
   () => [memoedContent.value, usingInnerAnimation.value, props.streaming] as const,
   () => {
