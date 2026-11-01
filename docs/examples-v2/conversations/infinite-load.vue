@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 defineOptions({ name: 'AXConversationsInfiniteLoadV2' });
 
-import { ref, onMounted } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { RedoOutlined } from '@ant-design/icons-vue';
 import { Conversations, type ConversationsProps } from 'ant-design-x-vue';
 import { Avatar, Divider, Spin, theme } from 'ant-design-vue';
@@ -14,13 +14,13 @@ const hasMore = ref(true);
 
 const { token } = theme.useToken();
 
-const style = {
+const style = computed(() => ({
   width: '280px',
   height: '600px',
   background: token.value.colorBgContainer,
   borderRadius: `${token.value.borderRadius}px`,
   overflow: 'auto',
-};
+}));
 
 const loadMoreData = () => {
   if (loading.value) return;
@@ -57,7 +57,7 @@ onMounted(() => {
 });
 
 defineRender(() => (
-  <div style={style} onScroll={onScroll}>
+  <div style={style.value} onScroll={onScroll}>
     <Conversations items={data.value} defaultActiveKey="demo1" groupable />
     {loading.value && (
       <div style={{ textAlign: 'center', padding: '8px' }}>

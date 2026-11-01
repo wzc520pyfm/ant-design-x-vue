@@ -28,11 +28,11 @@ const historicalItems = ref<ConversationsProps['items']>([
 const items = computed(() => [...agentItems, ...(historicalItems.value || [])]);
 
 const { token } = theme.useToken();
-const style = {
+const style = computed(() => ({
   width: '256px',
   background: token.value.colorBgContainer,
   borderRadius: `${token.value.borderRadius}px`,
-};
+}));
 
 const newChatClick = () => {
   const next = (historicalItems.value?.length || 0) + 1;
@@ -56,7 +56,7 @@ defineRender(() => (
       creation={{ onClick: newChatClick }}
       items={items.value}
       defaultActiveKey="write"
-      style={style}
+      style={style.value}
       groupable
       shortcutKeys={{
         creation: ['Meta', KeyK],

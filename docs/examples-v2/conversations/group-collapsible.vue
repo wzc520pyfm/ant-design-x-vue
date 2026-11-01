@@ -4,6 +4,7 @@ defineOptions({ name: 'AXConversationsGroupCollapsibleV2' });
 import type { ConversationsProps } from 'ant-design-x-vue';
 import { Conversations } from 'ant-design-x-vue';
 import { theme } from 'ant-design-vue';
+import { computed } from 'vue';
 
 const items: ConversationsProps['items'] = Array.from({ length: 6 }).map((_, index) => ({
   key: `item${index + 1}`,
@@ -26,13 +27,13 @@ const groupable: ConversationsProps['groupable'] = {
 
 const { token } = theme.useToken();
 
-const style = {
+const style = computed(() => ({
   width: '256px',
   background: token.value.colorBgContainer,
   borderRadius: `${token.value.borderRadius}px`,
-};
+}));
 
 defineRender(() => (
-  <Conversations items={items} defaultActiveKey="item1" style={style} groupable={groupable} />
+  <Conversations items={items} defaultActiveKey="item1" style={style.value} groupable={groupable} />
 ));
 </script>

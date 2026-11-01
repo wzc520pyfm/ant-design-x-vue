@@ -9,16 +9,16 @@ import {
 import type { ConversationsProps } from 'ant-design-x-vue';
 import { Conversations } from 'ant-design-x-vue';
 import { Flex, Switch, theme } from 'ant-design-vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const { token } = theme.useToken();
 const deepSearchChecked = ref(false);
 
-const style = {
+const style = computed(() => ({
   width: '256px',
   background: token.value.colorBgContainer,
   borderRadius: `${token.value.borderRadius}px`,
-};
+}));
 
 const items = ref<ConversationsProps['items']>([
   {
@@ -54,6 +54,6 @@ const items = ref<ConversationsProps['items']>([
 ]);
 
 defineRender(() => (
-  <Conversations items={items.value} defaultActiveKey="write" style={style} />
+  <Conversations items={items.value} defaultActiveKey="write" style={style.value} />
 ));
 </script>
