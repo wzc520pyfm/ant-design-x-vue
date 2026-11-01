@@ -252,6 +252,7 @@ bubble/list-scroll
 | 方法 | 说明 | 类型 |
 | --- | --- | --- |
 | nativeElement | 原生 DOM 元素 | HTMLDivElement |
+| scrollBoxNativeElement | 滚动容器 DOM | HTMLDivElement |
 | scrollTo | 滚动到指定位置 | (options: ScrollToOptions) => void |
 
 ### ScrollToOptions
