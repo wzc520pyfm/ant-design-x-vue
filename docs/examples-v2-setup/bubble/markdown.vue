@@ -1,14 +1,24 @@
 <script setup lang="ts">
 defineOptions({ name: 'AXBubbleMarkdownV2Setup' });
 
-import { ref, watchEffect, h, type VNode } from 'vue';
-import { Bubble, type BubbleProps } from 'ant-design-x-vue';
+import { computed, ref, watchEffect } from 'vue';
+import { Bubble } from 'ant-design-x-vue';
+import { XMarkdown } from '@ant-design-x-vue/x-markdown';
+import '@ant-design-x-vue/x-markdown/themes/light.css';
+import '@ant-design-x-vue/x-markdown/themes/dark.css';
+import { theme } from 'ant-design-vue';
+import { isDarkColor } from '../../examples-v2/_shared/playground-shell';
 
 const text = `
 > Render as markdown content to show rich text!
 
 Link: [Ant Design X](https://x.ant.design)
 `.trim();
+
+const { token } = theme.useToken();
+const markdownClass = computed(() => (
+  isDarkColor(token.value.colorBgContainer) ? 'x-markdown-dark' : 'x-markdown-light'
+));
 
 const index = ref(text.length);
 const isServer = import.meta.env.SSR;
@@ -25,18 +35,10 @@ watchEffect((onCleanup) => {
 const rerender = () => {
   index.value = 1;
 };
-
-// 简单的 markdown 渲染
-const renderContent = (content: string): string => {
-  return content
-    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
-    .replace(/\n/g, '<br />');
-};
 </script>
 
 <template>
-  <a-flex vertical :style="{ height: '150px' }" :gap="16">
+  <a-flex vertical :gap="16">
     <a-flex>
       <a-button type="primary" @click="rerender">rerender</a-button>
     </a-flex>
@@ -44,7 +46,10 @@ const renderContent = (content: string): string => {
       <Bubble :content="text.slice(0, index)">
         <template #content="{ content }">
           <a-typography>
-            <div v-html="renderContent(content as string)" />
+            <XMarkdown
+              :class-name="markdownClass"
+              :content="content"
+            />
           </a-typography>
         </template>
       </Bubble>

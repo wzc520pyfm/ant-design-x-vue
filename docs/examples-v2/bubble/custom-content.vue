@@ -19,33 +19,31 @@ const content = ref<ContentType>({
 });
 
 defineRender(() => (
-  <div style={{ height: '100px' }}>
-    <Bubble
-      content={content.value}
-      contentRender={(c) => {
-        return (
-          <Flex gap="middle" align="center">
-            <Image height={50} src={(c as ContentType).imageUrl} />
-            <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{(c as ContentType).text}</span>
-          </Flex>
-        );
-      }}
-      footer={(c) => {
-        return (
-          <Button
-            onClick={() => {
-              content.value = {
-                ...content.value,
-                actionNode: <>🎉 Happy Ant Design X !</>,
-              };
-            }}
-            type="text"
-          >
-            {(c as ContentType)?.actionNode}
-          </Button>
-        );
-      }}
-    />
-  </div>
+  <Bubble
+    content={content.value}
+    contentRender={(c) => {
+      return (
+        <Flex gap="middle" align="center">
+          <Image height={50} src={(c as ContentType).imageUrl} />
+          <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{(c as ContentType).text}</span>
+        </Flex>
+      );
+    }}
+    footer={(c) => {
+      return (
+        <Button
+          onClick={() => {
+            content.value = {
+              ...content.value,
+              actionNode: <>🎉 Happy Ant Design X !</>,
+            };
+          }}
+          type="text"
+        >
+          {(c as ContentType)?.actionNode}
+        </Button>
+      );
+    }}
+  />
 ));
 </script>

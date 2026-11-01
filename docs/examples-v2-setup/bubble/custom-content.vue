@@ -26,19 +26,17 @@ const handleClick = () => {
 </script>
 
 <template>
-  <div :style="{ height: '100px' }">
-    <Bubble :content="content">
-      <template #content="{ content: c }">
-        <a-flex gap="middle" align="center">
-          <a-image :height="50" :src="(c as ContentType).imageUrl" />
-          <span :style="{ fontSize: '18px', fontWeight: 'bold' }">{{ (c as ContentType).text }}</span>
-        </a-flex>
-      </template>
-      <template #footer="{ content: c }">
-        <a-button type="text" @click="handleClick">
-          {{ (c as ContentType)?.actionNode }}
-        </a-button>
-      </template>
-    </Bubble>
-  </div>
+  <Bubble :content="content">
+    <template #content="{ content: c }">
+      <a-flex gap="middle" align="center">
+        <a-image :height="50" :src="(c as ContentType).imageUrl" />
+        <span :style="{ fontSize: '18px', fontWeight: 'bold' }">{{ (c as ContentType).text }}</span>
+      </a-flex>
+    </template>
+    <template #footer="{ content: c }">
+      <a-button type="text" @click="handleClick">
+        {{ (c as ContentType)?.actionNode }}
+      </a-button>
+    </template>
+  </Bubble>
 </template>
