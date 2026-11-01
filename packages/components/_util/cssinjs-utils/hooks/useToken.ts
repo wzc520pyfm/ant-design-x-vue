@@ -1,4 +1,4 @@
-import type { Ref } from 'vue';
+import type { MaybeRef, Ref } from 'vue';
 import type { Theme, TokenType } from '../../cssinjs';
 
 import type { OverrideTokenMap, TokenMap, GlobalToken } from '../interface';
@@ -22,7 +22,12 @@ export interface UseTokenReturn<
   DesignToken extends TokenType,
 > {
   token: Ref<GlobalToken<CompTokenMap, AliasToken>>;
-  realToken?: GlobalToken<CompTokenMap, AliasToken>;
+  /**
+   * Derivative token including component overrides.
+   * Vue does not re-run this hook on theme changes, so this stays a ref.
+   * `genStyleHooks` reads it again whenever styles are regenerated.
+   */
+  realToken?: MaybeRef<GlobalToken<CompTokenMap, AliasToken>>;
   theme?: Ref<Theme<DesignToken, AliasToken>>;
   components?: TokenMapWithTheme<CompTokenMap, DesignToken, AliasToken>;
   hashId?: Ref<string>;

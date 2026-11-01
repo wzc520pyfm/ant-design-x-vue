@@ -5,7 +5,7 @@ import { FieldTimeOutlined } from '@ant-design/icons-vue';
 import type { ConversationsProps } from 'ant-design-x-vue';
 import { Conversations } from 'ant-design-x-vue';
 import { Flex, theme } from 'ant-design-vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const groupName = ['Today', 'Yesterday', 'Historical chats'];
 const items: ConversationsProps['items'] = Array.from({ length: 9 }).map((_, index) => ({
@@ -17,11 +17,11 @@ const items: ConversationsProps['items'] = Array.from({ length: 9 }).map((_, ind
 const expandedKeys = ref(['Yesterday']);
 const { token } = theme.useToken();
 
-const style = {
+const style = computed(() => ({
   width: '256px',
   background: token.value.colorBgContainer,
   borderRadius: `${token.value.borderRadius}px`,
-};
+}));
 
 defineRender(() => {
   const groupable: ConversationsProps['groupable'] = {
@@ -37,7 +37,7 @@ defineRender(() => {
   };
 
   return (
-    <Conversations items={items} defaultActiveKey="item1" style={style} groupable={groupable} />
+    <Conversations items={items} defaultActiveKey="item1" style={style.value} groupable={groupable} />
   );
 });
 </script>

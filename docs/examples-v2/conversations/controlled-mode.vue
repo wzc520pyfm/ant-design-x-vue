@@ -9,7 +9,7 @@ import {
 import type { ConversationsProps } from 'ant-design-x-vue';
 import { Conversations } from 'ant-design-x-vue';
 import { Button, Flex, theme } from 'ant-design-vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const items: ConversationsProps['items'] = [
   {
@@ -37,11 +37,11 @@ const items: ConversationsProps['items'] = [
 const activeKey = ref('write');
 const { token } = theme.useToken();
 
-const style = {
+const style = computed(() => ({
   width: '256px',
   background: token.value.colorBgContainer,
   borderRadius: `${token.value.borderRadius}px`,
-};
+}));
 
 defineRender(() => (
   <Flex vertical gap="small" align="flex-start">
@@ -51,7 +51,7 @@ defineRender(() => (
         activeKey.value = v;
       }}
       items={items}
-      style={style}
+      style={style.value}
     />
     <Flex gap="small">
       <Button onClick={() => { activeKey.value = 'write'; }}>Active First</Button>

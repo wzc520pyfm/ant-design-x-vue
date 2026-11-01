@@ -50,11 +50,11 @@ const items = computed(() => [...agentItems!, ...historicalItems.value!]);
 
 const { token } = theme.useToken();
 
-const style = {
+const style = computed(() => ({
   width: '256px',
   background: token.value.colorBgContainer,
   borderRadius: `${token.value.borderRadius}px`,
-};
+}));
 
 const newChatClick = () => {
   historicalItems.value = [
@@ -77,7 +77,7 @@ defineRender(() => (
     }}
     items={items.value}
     defaultActiveKey="write"
-    style={style}
+    style={style.value}
     groupable
   />
 ));

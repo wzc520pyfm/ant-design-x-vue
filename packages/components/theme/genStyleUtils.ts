@@ -21,7 +21,12 @@ export const { genStyleHooks, genComponentStyleHook, genSubStyleComponent } = ge
   },
   useToken: () => {
     const [theme, realToken, hashId, token, cssVar] = useInternalToken();
-    return { theme, realToken: realToken.value, hashId, token, cssVar };
+    // Do not unwrap `realToken` here. Alias tokens are read from the live
+    // `token` ref, but component tokens (Conversations creation colors, and
+    // the same pattern in Sender / Think / ThoughtChain) are derived from
+    // `realToken` when the style is generated. A one-time snapshot keeps
+    // those colors on the theme that was active at setup.
+    return { theme, realToken, hashId, token, cssVar };
   },
   useCSP: () => {
     const { csp } = useXProviderContext();

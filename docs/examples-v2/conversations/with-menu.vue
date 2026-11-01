@@ -10,6 +10,7 @@ import {
 import type { ConversationsProps } from 'ant-design-x-vue';
 import { Conversations } from 'ant-design-x-vue';
 import { theme } from 'ant-design-vue';
+import { computed } from 'vue';
 
 const items: ConversationsProps['items'] = Array.from({ length: 4 }).map((_, index) => ({
   key: `item${index + 1}`,
@@ -19,11 +20,11 @@ const items: ConversationsProps['items'] = Array.from({ length: 4 }).map((_, ind
 
 const { token } = theme.useToken();
 
-const style = {
+const style = computed(() => ({
   width: '256px',
   background: token.value.colorBgContainer,
   borderRadius: `${token.value.borderRadius}px`,
-};
+}));
 
 const menuConfig: ConversationsProps['menu'] = {
   items: [
@@ -60,6 +61,6 @@ const menuConfig: ConversationsProps['menu'] = {
 };
 
 defineRender(() => (
-  <Conversations defaultActiveKey="item1" menu={menuConfig} items={items} style={style} />
+  <Conversations defaultActiveKey="item1" menu={menuConfig} items={items} style={style.value} />
 ));
 </script>
