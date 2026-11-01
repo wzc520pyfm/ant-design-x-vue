@@ -1,13 +1,10 @@
 <script setup lang="tsx">
 defineOptions({ name: 'AXBubbleMarkdownV2' });
 
-import { computed, ref, watchEffect } from 'vue';
+import { ref, watchEffect, type CSSProperties } from 'vue';
 import { Bubble } from 'ant-design-x-vue';
 import { XMarkdown } from '@ant-design-x-vue/x-markdown';
-import '@ant-design-x-vue/x-markdown/themes/light.css';
-import '@ant-design-x-vue/x-markdown/themes/dark.css';
 import { Button, Flex, theme, Typography } from 'ant-design-vue';
-import { isDarkColor } from '../_shared/playground-shell';
 
 const text = `
 > Render as markdown content to show rich text!
@@ -16,10 +13,6 @@ Link: [Ant Design X](https://x.ant.design)
 `.trim();
 
 const { token } = theme.useToken();
-const markdownClass = computed(() => (
-  isDarkColor(token.value.colorBgContainer) ? 'x-markdown-dark' : 'x-markdown-light'
-));
-
 const index = ref(text.length);
 const isServer = import.meta.env.SSR;
 
@@ -43,8 +36,14 @@ defineRender(() => (
       <Bubble
         content={text.slice(0, index.value)}
         contentRender={(content) => (
-          <Typography>
-            <XMarkdown className={markdownClass.value} content={content as string} />
+          <Typography
+            class="ax-bubble-md"
+            style={{
+              '--ax-link': token.value.colorLink,
+              '--ax-link-hover': token.value.colorLinkHover,
+            } as CSSProperties}
+          >
+            <XMarkdown content={content as string} />
           </Typography>
         )}
       />
@@ -52,3 +51,43 @@ defineRender(() => (
   </Flex>
 ));
 </script>
+
+<style>
+/* Match the React Bubble markdown demo: antd Typography link, no glyph.
+   `.vp-doc a` underlines and recolors anchors, and `.x-markdown-light a::after`
+   appends a superscript ↗. */
+.vp-doc .example-showcase .ax-bubble-md a {
+  color: var(--ax-link, #1677ff);
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.vp-doc .example-showcase .ax-bubble-md a:hover,
+.vp-doc .example-showcase .ax-bubble-md a:active {
+  color: var(--ax-link-hover, var(--ax-link, #1677ff));
+  text-decoration: none;
+}
+
+.vp-doc .example-showcase .ax-bubble-md a::before,
+.vp-doc .example-showcase .ax-bubble-md a::after {
+  content: none !important;
+}
+
+.vp-doc .example-showcase .ax-bubble-md p,
+.vp-doc .example-showcase .ax-bubble-md blockquote > p {
+  margin: 0;
+  line-height: 1.5714285714;
+  font-size: inherit;
+  color: inherit;
+}
+
+.vp-doc .example-showcase .ax-bubble-md blockquote {
+  margin: 1em 0;
+  padding: 0 0 0 0.6em;
+  border: 0;
+  border-inline-start: 4px solid rgba(100, 100, 100, 0.2);
+  background: transparent;
+  color: inherit;
+  opacity: 0.85;
+}
+</style>
