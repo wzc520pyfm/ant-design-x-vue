@@ -1,13 +1,12 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { useEventCallback } from '../_util/hooks/use-event-callback';
 import pickAttrs from '../_util/pick-attrs';
 import { useXProviderContext } from '../x-provider';
 import Bubble from './Bubble.vue';
 import DividerBubble from './Divider.vue';
 import SystemBubble from './System.vue';
 import BubbleContextProvider from './context';
-import useDisplayData from './hooks/useDisplayData';
+import { useCompatibleScroll } from './hooks/useCompatibleScroll';
 import useListData from './hooks/useListData';
 import type {
   BubbleItemType,
@@ -23,7 +22,6 @@ import {
   computed,
   type HTMLAttributes,
   mergeProps,
-  nextTick,
   onWatcherCleanup,
   ref,
   unref,
@@ -36,8 +34,6 @@ import {
 defineOptions({ name: 'AXBubbleList', inheritAttrs: false });
 
 const attrs = useAttrs();
-
-const TOLERANCE = 1;
 
 const props = withDefaults(defineProps<BubbleListProps>(), {
   autoScroll: true,
@@ -55,13 +51,16 @@ const slots = defineSlots<{
   content?(props: { item: BubbleItemType }): VNode | string;
 }>();
 
-const domProps = computed(
-  () =>
-    pickAttrs(mergeProps(props, attrs), {
-      attr: true,
-      aria: true,
-    }) as HTMLAttributes,
-);
+const domProps = computed(() => {
+  // `role` is the React roles map. pickAttrs would copy it onto the host as an
+  // HTML role. `onScroll` is handled by the scroll box, matching React.
+  const merged = mergeProps(props, attrs) as Record<string, unknown>;
+  const { role: _role, roles: _roles, onScroll: _onScroll, ...rest } = merged;
+  return pickAttrs(rest, {
+    attr: true,
+    aria: true,
+  }) as HTMLAttributes;
+});
 
 const items = ref<BubbleItemType[]>(props.items);
 
@@ -84,7 +83,9 @@ watch(resolvedRoles, (next) => {
 // ============================= Refs =============================
 const listRef = ref<HTMLDivElement | null>(null);
 const scrollBoxRef = ref<HTMLDivElement | null>(null);
+const scrollContentRef = ref<HTMLDivElement | null>(null);
 const bubbleRefs = ref<Record<string | number, BubbleRef>>({});
+const { scrollTo: compatibleScrollTo } = useCompatibleScroll(scrollBoxRef, scrollContentRef);
 
 // ============================ Prefix ============================
 const { getPrefixCls } = useXProviderContext();
@@ -107,79 +108,38 @@ watchPostEffect(() => {
 // ============================= Data =============================
 const mergedData = useListData(items as any, roles as any);
 
-const [displayData, onTypingComplete] = useDisplayData(mergedData);
-
-// ============================ Scroll ============================
-// Is current scrollTop at the end. User scroll will make this false.
-const [scrollReachEnd, setScrollReachEnd] = useState(true);
-const [updateCount, setUpdateCount] = useState(0);
-
-const onInternalScroll = (e: Event) => {
-  const target = e.target as HTMLElement;
-
-  setScrollReachEnd(
-    target.scrollHeight - Math.abs(target.scrollTop) - target.clientHeight <= TOLERANCE,
-  );
-
-  props.onScroll?.(e);
-};
-
-// Only scroll when data change and scroll is at end
-watch([updateCount, scrollBoxRef, scrollReachEnd], () => {
-  if (props.autoScroll && unref(scrollBoxRef) && unref(scrollReachEnd)) {
-    nextTick(() => {
-      unref(scrollBoxRef)?.scrollTo({
-        top: unref(scrollBoxRef)!.scrollHeight,
-      });
-    });
-  }
-});
-
-// Always scroll to bottom when data change
-watch(
-  () => unref(displayData).length,
-  () => {
-    if (props.autoScroll) {
-      // New data come, the origin last one is the second last one
-      const lastItemKey = unref(displayData)[unref(displayData).length - 2]?.key;
-      const bubbleInst = unref(bubbleRefs)[lastItemKey!];
-
-      // Auto scroll if last 2 item is visible
-      if (bubbleInst) {
-        const { nativeElement } = bubbleInst;
-        const { top = 0, bottom = 0 } = nativeElement?.getBoundingClientRect() ?? {};
-        const scrollBox = unref(scrollBoxRef);
-        if (scrollBox) {
-          const { top: listTop, bottom: listBottom } = scrollBox.getBoundingClientRect();
-
-          const isVisible = top < listBottom && bottom > listTop;
-          if (isVisible) {
-            setUpdateCount(unref(updateCount) + 1);
-            setScrollReachEnd(true);
-          }
-        }
-      }
-    }
-  },
-);
-
-// =========================== Context ============================
-// When bubble content update, we try to trigger `autoScroll` for sync
-const onBubbleUpdate = useEventCallback<void>(() => {
-  if (props.autoScroll) {
-    setUpdateCount(unref(updateCount) + 1);
-  }
-});
-
 const mergedClassNames = computed(() =>
-  classnames(listPrefixCls, props.rootClassName, hashId.value, cssVarCls, props.classNames.root, {
-    [`${listPrefixCls}-reach-end`]: scrollReachEnd.value,
-  }),
+  classnames(listPrefixCls, props.rootClassName, hashId.value, cssVarCls, props.classNames.root),
 );
+
+function styleToObject(value: unknown): Record<string, unknown> {
+  if (!value) return {};
+  if (typeof value === 'string') {
+    return Object.fromEntries(
+      value
+        .split(';')
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .map((part) => {
+          const index = part.indexOf(':');
+          if (index < 0) return [part, ''];
+          return [part.slice(0, index).trim(), part.slice(index + 1).trim()];
+        }),
+    );
+  }
+  if (Array.isArray(value)) {
+    return Object.assign({}, ...value.map(styleToObject));
+  }
+  if (typeof value === 'object') return value as Record<string, unknown>;
+  return {};
+}
 
 const mergedStyle = computed(() => ({
+  // `style` falls through as an attr because BubbleListProps vue-ignores HTMLAttributes.
+  // Reading only props.style dropped the demo's height and let the scrollport grow.
   ...props.styles.root,
-  ...(props.style as object),
+  ...styleToObject(attrs.style),
+  ...styleToObject(props.style),
 }));
 
 function roleCfgIsFunction(roleCfg: RoleProps | FuncRoleProps): roleCfg is FuncRoleProps {
@@ -233,7 +193,6 @@ const renderBubble = (item: BubbleItemType, roleConfig: RoleProps) => {
     key,
     status,
     extraInfo,
-    onUpdate: onBubbleUpdate,
   }));
 
   if (role === 'divider') {
@@ -285,10 +244,7 @@ const renderBubble = (item: BubbleItemType, roleConfig: RoleProps) => {
         content={slots.content ? slots.content({ item }) : mergedProps.content}
         _key={key}
         typing={initialized.value ? mergedProps.typing : false}
-        onTypingComplete={(content) => {
-          mergedProps.onTypingComplete?.(content);
-          onTypingComplete(key);
-        }}
+        onTypingComplete={mergedProps.onTypingComplete}
       />
     </BubbleContextProvider>
   );
@@ -303,12 +259,17 @@ defineRender(() => {
         })}
         style={props.styles.scroll}
         ref={scrollBoxRef}
-        onScroll={onInternalScroll}
+        onScroll={props.onScroll}
       >
-        {unref(displayData).map((item) => {
-          const roleConfig = getRoleConfig(item);
-          return renderBubble(item, roleConfig);
-        })}
+        <div
+          ref={scrollContentRef}
+          class={`${listPrefixCls}-scroll-content`}
+        >
+          {unref(mergedData).map((item) => {
+            const roleConfig = getRoleConfig(item);
+            return renderBubble(item, roleConfig);
+          })}
+        </div>
       </div>
     </div>,
   );
@@ -316,6 +277,7 @@ defineRender(() => {
 
 defineExpose<BubbleListRef>({
   nativeElement: listRef as any,
+  scrollBoxNativeElement: scrollBoxRef as any,
   scrollTo: ({
     key,
     top,
@@ -335,31 +297,26 @@ defineExpose<BubbleListRef>({
     const { scrollHeight, clientHeight } = scrollBox;
 
     if (typeof offset === 'number') {
-      // Offset scroll
-      scrollBox.scrollTo({
+      compatibleScrollTo({
         top: offset,
         behavior,
       });
     } else if (typeof top === 'number') {
-      scrollBox.scrollTo({
+      compatibleScrollTo({
         top: props.autoScroll ? -scrollHeight + clientHeight + top : top,
         behavior,
       });
     } else if (top === 'bottom') {
       const bottomOffset = props.autoScroll ? 0 : scrollHeight;
-      scrollBox.scrollTo({ top: bottomOffset, behavior });
+      compatibleScrollTo({ top: bottomOffset, behavior });
     } else if (top === 'top') {
       const topOffset = props.autoScroll ? -scrollHeight : 0;
-      scrollBox.scrollTo({ top: topOffset, behavior });
-    } else if (key !== undefined && unref(bubbleRefs)[key]) {
-      // Block current auto scrolling
-      const index = unref(displayData).findIndex((dataItem) => dataItem.key === key);
-      setScrollReachEnd(index === unref(displayData).length - 1);
-
-      // Do native scroll
-      unref(bubbleRefs)[key].nativeElement?.scrollIntoView({
-        behavior,
-        block,
+      compatibleScrollTo({ top: topOffset, behavior });
+    } else if (key !== undefined && unref(bubbleRefs)[key]?.nativeElement) {
+      // `key` 0 is valid. React's `if (key)` check drops it.
+      compatibleScrollTo({
+        intoView: { behavior, block },
+        intoViewDom: unref(bubbleRefs)[key].nativeElement,
       });
     }
   },
