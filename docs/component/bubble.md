@@ -112,9 +112,9 @@ bubble/markdown
 
 ### GPT 可视化
 
-Vue 没有内置 GPT-Vis。下面的例子只让 Bubble 渲染一段 Markdown，图表库请看 [GPT-Vis](https://github.com/antvis/GPT-Vis) 或 React 文档。
+在 `contentRender` 里用 [`@antv/gpt-vis`](https://github.com/antvis/GPT-Vis) 渲染模型输出的图表。`vis` 代码块在浏览器里交给 `new GPTVis({ container }).render()`，组件卸载时调用 `destroy()`，服务端渲染不会创建画布。
 
-:::demo-v2 配合可视化组件实现图表渲染。
+:::demo-v2 用 `@antv/gpt-vis` 在气泡里画出海底捞外卖营收折线。Re-Render 会重新流式输出。
 
 bubble/gpt-vis
 
