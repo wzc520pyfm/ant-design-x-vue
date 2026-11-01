@@ -1,8 +1,10 @@
 <script setup lang="ts">
 defineOptions({ name: 'AXBubbleMarkdownV2Setup' });
 
-import { ref, watchEffect, h, type VNode } from 'vue';
-import { Bubble, type BubbleProps } from 'ant-design-x-vue';
+import { ref, watchEffect } from 'vue';
+import { Bubble } from 'ant-design-x-vue';
+import { XMarkdown } from '@ant-design-x-vue/x-markdown';
+import { theme } from 'ant-design-vue';
 
 const text = `
 > Render as markdown content to show rich text!
@@ -10,6 +12,7 @@ const text = `
 Link: [Ant Design X](https://x.ant.design)
 `.trim();
 
+const { token } = theme.useToken();
 const index = ref(text.length);
 const isServer = import.meta.env.SSR;
 
@@ -25,29 +28,61 @@ watchEffect((onCleanup) => {
 const rerender = () => {
   index.value = 1;
 };
-
-// 简单的 markdown 渲染
-const renderContent = (content: string): string => {
-  return content
-    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
-    .replace(/\n/g, '<br />');
-};
 </script>
 
 <template>
-  <a-flex vertical :style="{ height: '150px' }" :gap="16">
+  <a-flex vertical :gap="16">
     <a-flex>
       <a-button type="primary" @click="rerender">rerender</a-button>
     </a-flex>
     <a-flex>
       <Bubble :content="text.slice(0, index)">
         <template #content="{ content }">
-          <a-typography>
-            <div v-html="renderContent(content as string)" />
+          <a-typography
+            class="ax-bubble-md"
+            :style="{ '--ax-link': token.colorLink, '--ax-link-hover': token.colorLinkHover }"
+          >
+            <XMarkdown :content="content" />
           </a-typography>
         </template>
       </Bubble>
     </a-flex>
   </a-flex>
 </template>
+
+<style>
+.vp-doc .example-showcase .ax-bubble-md a {
+  color: var(--ax-link, #1677ff);
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.vp-doc .example-showcase .ax-bubble-md a:hover,
+.vp-doc .example-showcase .ax-bubble-md a:active {
+  color: var(--ax-link-hover, var(--ax-link, #1677ff));
+  text-decoration: none;
+}
+
+.vp-doc .example-showcase .ax-bubble-md a::before,
+.vp-doc .example-showcase .ax-bubble-md a::after {
+  content: none !important;
+}
+
+.vp-doc .example-showcase .ax-bubble-md p,
+.vp-doc .example-showcase .ax-bubble-md blockquote > p {
+  margin: 0;
+  line-height: 1.5714285714;
+  font-size: inherit;
+  color: inherit;
+}
+
+.vp-doc .example-showcase .ax-bubble-md blockquote {
+  margin: 1em 0;
+  padding: 0 0 0 0.6em;
+  border: 0;
+  border-inline-start: 4px solid rgba(100, 100, 100, 0.2);
+  background: transparent;
+  color: inherit;
+  opacity: 0.85;
+}
+</style>
