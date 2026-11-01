@@ -69,6 +69,13 @@ data
     expect(page).not.toContain('仅支持');
     expect(page).not.toContain('no support');
 
+    const viteConfig = fs.readFileSync(path.join(docsRoot, '.vitepress/config.mts'), 'utf8');
+    expect(viteConfig).toContain("find: /^@antv\\/gpt-vis$/");
+    expect(viteConfig).toContain('shared/gpt-vis-line.ts');
+    const lineEntry = fs.readFileSync(path.join(docsRoot, 'shared/gpt-vis-line.ts'), 'utf8');
+    expect(lineEntry).toContain('@antv/gpt-vis/dist/esm/vis/line/index.js');
+    expect(lineEntry).not.toMatch(/from '@antv\/gpt-vis'/);
+
     for (const file of demoFiles) {
       const source = fs.readFileSync(path.join(docsRoot, file), 'utf8');
       expect(source, file).toContain('new GPTVis');
