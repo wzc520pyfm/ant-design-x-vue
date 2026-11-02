@@ -182,6 +182,9 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
         display: 'flex',
         gap: token.paddingXXS,
         flexDirection: 'column',
+        // Beat VitePress `.vp-doc ul { margin; padding-left }` despite cssinjs `:where(hash)`.
+        margin: 0,
+        padding: 0,
       },
       [`${componentCls}-group-collapsible-list`]: {
         paddingBlockStart: token.paddingXXS,
