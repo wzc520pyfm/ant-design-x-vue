@@ -89,3 +89,10 @@ html:not(.dark) .example-showcase .ant-actions-item .anticon {
 .vp-doc .example-showcase [class*='-sources'] a:hover {
   color: var(--ant-color-link, #1677ff);
 }
+
+/* Conversations is a <ul>/<li> list; VitePress `.vp-doc li + li` adds margin-top
+   that stacks on the component flex gap and diverges from React `@ant-design/x`. */
+.vp-doc .example-showcase .ant-conversations li + li {
+  margin-top: 0;
+}
+
