@@ -120,16 +120,19 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
       [`&${componentCls}-rtl`]: {
         direction: 'rtl',
       },
-      [`& ${componentCls}-divider`]: {
+      [`${componentCls}-divider`]: {
         marginBlock: token.marginXXS,
       },
-      [`& ${componentCls}-item`]: {
+      [`${componentCls}-item`]: {
         display: 'flex',
         minWidth: 0,
         height: token.controlHeightLG,
         minHeight: token.controlHeightLG,
         gap: token.paddingXS,
         padding: `0 ${unit(token.paddingXS)}`,
+        // Override docs/host styles such as VitePress `.vp-doc li + li { margin-top: 8px }`
+        // so item spacing matches React `@ant-design/x` (list gap: paddingXXS only).
+        margin: 0,
         alignItems: 'center',
         borderRadius: token.borderRadiusLG,
         cursor: 'pointer',
@@ -150,7 +153,7 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
           },
         },
         '&:hover, &-active': {
-          [`& ${componentCls}-menu-icon`]: {
+          [`${componentCls}-menu-icon`]: {
             opacity: 0.6,
           },
         },
@@ -158,33 +161,35 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
           opacity: 1,
         },
       },
-      [`& ${componentCls}-content-hidden`]: {
+      [`${componentCls}-content-hidden`]: {
         display: 'none',
       },
-      [`& ${componentCls}-label`]: {
+      [`${componentCls}-label`]: {
         flex: 1,
         minWidth: 0,
+        margin: 0,
+        lineHeight: token.lineHeight,
         color: token.colorText,
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
       },
-      [`& ${componentCls}-menu-icon`]: {
+      [`${componentCls}-menu-icon`]: {
         opacity: 0,
         fontSize: token.fontSizeXL,
       },
-      [`& ${componentCls}-list`]: {
+      [`${componentCls}-list`]: {
         display: 'flex',
         gap: token.paddingXXS,
         flexDirection: 'column',
       },
-      [`& ${componentCls}-group-collapsible-list`]: {
+      [`${componentCls}-group-collapsible-list`]: {
         paddingBlockStart: token.paddingXXS,
         [`& ${componentCls}-item`]: {
           paddingInlineStart: token.paddingXL,
         },
       },
-      [`& ${componentCls}-group-title`]: {
+      [`${componentCls}-group-title`]: {
         display: 'flex',
         alignItems: 'center',
         color: token.colorTextDescription,
@@ -192,7 +197,7 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
         minHeight: token.controlHeightLG,
         padding: `0 ${unit(token.paddingXS)}`,
       },
-      [`& ${componentCls}-group-title-collapsible`]: {
+      [`${componentCls}-group-title-collapsible`]: {
         justifyContent: 'space-between',
         cursor: 'pointer',
         color: token.colorText,
@@ -202,15 +207,15 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
           backgroundColor: token.colorBgTextHover,
         },
       },
-      [`& ${componentCls}-group-collapse-trigger`]: {
+      [`${componentCls}-group-collapse-trigger`]: {
         transition: `all ${token.motionDurationMid} ${token.motionEaseInOut}`,
         transform: 'rotate(0deg)',
         transformOrigin: 'center center',
       },
-      [`& ${componentCls}-group-collapse-trigger-open`]: {
+      [`${componentCls}-group-collapse-trigger-open`]: {
         transform: 'rotate(90deg)',
       },
-      [`& ${componentCls}-group-collapse-trigger-close`]: {
+      [`${componentCls}-group-collapse-trigger-close`]: {
         transform: 'rotate(0deg)',
       },
     },
