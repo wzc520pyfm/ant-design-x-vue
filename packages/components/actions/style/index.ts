@@ -59,50 +59,54 @@ const genActionsStyle: GenerateStyle<ActionsToken> = (token) => {
         display: 'inline-flex',
         flexDirection: 'row',
         alignItems: 'center',
+        // Host flex / block layout can stretch the list to the full demo
+        // width; keep the variant chrome hugging the action group like React.
+        width: 'fit-content',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
         color: token.colorText,
         gap: token.paddingXS,
       },
-      // Simple pager: Vue aligns the previous chevron to the top of a 24px
-      // box, so it sits ~8px above the 1/5 pill and the next chevron.
-      // React keeps prev, pill, and next on one 32px row.
+      // React only narrows the pager chevron: `& ${antCls}-pagination-item-link { width: SM }`.
+      // ant-design-vue's simple Pagination is still a block `<ul>` with
+      // `vertical-align: top` and 24px parts, and docs hosts (VitePress
+      // `.vp-doc ul` / `li + li`) inject margin/padding that inflate the
+      // outlined/filled chrome. Keep the React width, center the row at the
+      // natural SM height, and neutralize host list styles — do not force
+      // controlHeight (32px), which made the variant box tall/empty and the
+      // page input look blocky next to 24px action icons.
       [`${antCls}-pagination${antCls}-pagination-simple`]: {
         display: 'inline-flex',
+        flexDirection: 'row',
         alignItems: 'center',
-        height: token.controlHeight,
-        lineHeight: unit(token.controlHeight),
+        flex: 'none',
+        width: 'fit-content',
+        margin: 0,
+        paddingInlineStart: 0,
+        listStyle: 'none',
         verticalAlign: 'middle',
-        [`${antCls}-pagination-prev, ${antCls}-pagination-next, ${antCls}-pagination-simple-pager`]: {
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: token.controlHeight,
-          minHeight: token.controlHeight,
-          lineHeight: unit(token.controlHeight),
-          verticalAlign: 'middle',
-          marginBlock: 0,
-        },
-        // Nest under prev/next so this beats the simple pager's
-        // `.ant-pagination-simple .ant-pagination-prev .ant-pagination-item-link`
-        // (same class count, often injected later at 24px).
+        [`${antCls}-pagination-prev, ${antCls}-pagination-next, ${antCls}-pagination-simple-pager`]:
+          {
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBlock: 0,
+            marginTop: 0,
+            verticalAlign: 'middle',
+          },
         [`${antCls}-pagination-prev, ${antCls}-pagination-next`]: {
           [`${antCls}-pagination-item-link`]: {
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: token.controlHeight,
-            height: token.controlHeight,
-            lineHeight: unit(token.controlHeight),
+            width: token.controlHeightSM,
             verticalAlign: 'middle',
           },
         },
         [`${antCls}-pagination-simple-pager`]: {
-          height: token.controlHeight,
-          lineHeight: unit(token.controlHeight),
           input: {
-            height: token.controlHeight,
-            lineHeight: unit(token.controlHeight),
-            verticalAlign: 'middle',
             marginBlock: 0,
+            verticalAlign: 'middle',
           },
         },
       },
