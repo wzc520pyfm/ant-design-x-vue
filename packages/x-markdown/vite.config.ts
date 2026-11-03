@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import { resolve } from 'node:path';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
@@ -18,6 +18,10 @@ function externalizeUiPackage() {
 }
 
 export default defineConfig({
+  test: {
+    environment: 'happy-dom',
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+  },
   plugins: [
     externalizeUiPackage(),
     VueMacros({

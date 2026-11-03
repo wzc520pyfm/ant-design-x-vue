@@ -56,7 +56,8 @@ const animationStyle = computed(() => {
     :key="index"
     class="x-markdown-animation-text"
     :style="animationStyle"
-  >{{ chunk }}</span>
+    v-text="chunk"
+  />
 </template>
 
 <style>
