@@ -12,7 +12,7 @@ export interface SourcesItem {
 }
 
 export interface SourcesProps
-  extends Omit<HTMLAttributes, 'title' | 'onClick'> {
+  extends /* @vue-ignore */ Omit<HTMLAttributes, 'title' | 'onClick'> {
   /**
    * @desc 样式类名的前缀。
    * @descEN Prefix for style class names.

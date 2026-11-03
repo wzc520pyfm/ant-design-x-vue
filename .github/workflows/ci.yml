@@ -22,6 +22,7 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install
       - run: pnpm test
+      - run: pnpm test:sdk
       - run: pnpm lint
       - run: pnpm --filter @ant-design-x-vue/x-sdk build
       - run: pnpm --filter @ant-design-x-vue/x-markdown build

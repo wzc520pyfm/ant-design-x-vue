@@ -387,6 +387,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^2.1.1
         version: 2.1.8(vitest@2.1.8(@types/node@22.13.5)(happy-dom@15.11.7)(jsdom@28.1.0)(less@4.2.2)(lightningcss@1.22.1)(sass@1.85.0)(terser@5.39.0))
+      happy-dom:
+        specifier: ^15.7.4
+        version: 15.11.7
       typescript:
         specifier: ~5.8.0
         version: 5.8.2
