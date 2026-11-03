@@ -20,7 +20,7 @@ const style = computed(() => ({
   borderRadius: `${token.value.borderRadius}px`,
 }));
 
-const items = ref<ConversationsProps['items']>([
+const items = computed<ConversationsProps['items']>(() => [
   {
     key: 'write',
     label: 'Help Me Write',
