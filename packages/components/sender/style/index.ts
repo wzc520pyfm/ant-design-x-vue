@@ -22,6 +22,8 @@ export interface ComponentToken {
   switchCheckedHoverBg: string;
   switchUncheckedHoverBg: string;
   colorBorderInput: string;
+  colorBgSkill: string;
+  colorBgSkillHover: string;
 }
 
 export interface SenderToken extends FullToken<'Sender'> {
@@ -130,6 +132,8 @@ export const prepareComponentToken: GetDefaultToken<'Sender'> = (token) => {
   const { colorPrimary, colorFillTertiary, colorBgContainer } = token;
 
   const colorBgSlot = new FastColor(colorPrimary).setA(0.06).toRgbString();
+  const colorBgSkill = new FastColor(colorPrimary).setA(0.08).toRgbString();
+  const colorBgSkillHover = new FastColor(colorPrimary).setA(0.15).toRgbString();
   const colorTextSlot = colorPrimary;
   const colorTextSlotPlaceholder = slotPlaceholderColor(colorPrimary, colorBgContainer);
   const colorBorderSlotHover = new FastColor(colorPrimary).setA(0.1).toRgbString();
@@ -143,6 +147,8 @@ export const prepareComponentToken: GetDefaultToken<'Sender'> = (token) => {
   const boxShadowInput = `0 4px 12px 0 ${new FastColor(colorPrimary).setA(0.1).toRgbString()}`;
   return {
     colorBgSlot,
+    colorBgSkill,
+    colorBgSkillHover,
     colorTextSlot,
     colorTextSlotPlaceholder,
     colorBorderSlotHover,

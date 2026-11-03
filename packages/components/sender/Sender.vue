@@ -64,6 +64,7 @@ const {
   onPasteFile,
   autoSize = { maxRows: 8 },
   slotConfig,
+  skill,
   onFocus,
   onBlur,
   ...rest
@@ -97,7 +98,7 @@ const slots = defineSlots<{
   }): VNode;
 }>();
 
-const isSlotMode = computed(() => Array.isArray(slotConfig));
+const isSlotMode = computed(() => Array.isArray(slotConfig) || !!skill?.value);
 
 // ============================= MISC =============================
 const { direction, getPrefixCls } = useXProviderContext();
@@ -147,20 +148,11 @@ watch(
   },
 );
 
-const triggerValueChange: SenderProps['onChange'] = (nextValue, event, slotConfigData) => {
-  if (slotConfigData) {
-    setInnerValue(nextValue);
-    emit('update:value', nextValue);
-    if (onChange) {
-      onChange(nextValue, event, slotConfigData);
-    }
-    return;
-  }
-
+const triggerValueChange: SenderProps['onChange'] = (nextValue, event, slotConfigData, skillData) => {
   setInnerValue(nextValue);
   emit('update:value', nextValue);
   if (onChange) {
-    onChange(nextValue, event);
+    onChange(nextValue, event, slotConfigData, skillData);
   }
 };
 
@@ -183,10 +175,22 @@ const { speechPermission, triggerSpeech, recording: speechRecording } = useSpeec
 
 // ============================ Events ============================
 const triggerSend = () => {
+  if (!onSubmit || loading) {
+    return;
+  }
+  if (isSlotMode.value) {
+    const inputValue = inputRef.value?.getValue?.() ?? { value: '', config: [], skill: undefined };
+    const message = inputValue.value ?? '';
+    const shouldSend = sendDisabled !== undefined ? !sendDisabled : !!message;
+    if (shouldSend) {
+      onSubmit(message, inputValue.config ?? inputValue.slotConfig, inputValue.skill);
+    }
+    return;
+  }
   const shouldSend = sendDisabled !== undefined
     ? !sendDisabled
     : !!(innerValue.value && !loading);
-  if (shouldSend && onSubmit) {
+  if (shouldSend) {
     onSubmit(innerValue.value);
   }
 };
@@ -254,9 +258,6 @@ const footerNode = computed(() => {
     return slots.footer({ ori: actionNode.value, info: { components: sharedRenderComponents } });
   }
   if (typeof footer === 'function') {
-    if (footer.length <= 1) {
-      return (footer as any)({ components: sharedRenderComponents });
-    }
     return footer(actionNode.value, { components: sharedRenderComponents });
   }
   return footer || null;
@@ -306,6 +307,7 @@ const contextValue = computed<SenderProps>(() => ({
   placeholder,
   onFocus,
   onBlur,
+  skill,
   ...rest,
 }));
 
