@@ -68,6 +68,46 @@ x-markdown/themes
 
 :::
 
+## 自定义标记 tokenizer
+
+:::demo-v2 用 marked `extensions` 把 `%` 标题解析成 heading。
+
+x-markdown/tokenizer
+
+:::
+
+## 标记处理 walkTokens
+
+:::demo-v2 用 `config.walkTokens` 改写或拦截 token。
+
+x-markdown/walk-tokens
+
+:::
+
+## 渲染前处理 renderer
+
+:::demo-v2 自定义 marked `renderer`，再配合 `components` 替换标签。
+
+x-markdown/renderer
+
+:::
+
+## 中文链接处理
+
+:::demo-v2 裸 URL 后紧跟中文或括号时，截断链接并保留后缀文本。
+
+x-markdown/chinese-link
+
+:::
+
+## XSS 防御
+
+:::demo-v2 DOMPurify 会去掉危险脚本、事件属性和 javascript: 链接。
+
+x-markdown/xss
+
+:::
+
 ## 流式语法
 
 :::demo-v2 未闭合的链接、表格等先占位，不按半截 Markdown 解析。
@@ -86,7 +126,7 @@ x-markdown/animation
 
 ## 新标签页打开链接
 
-:::demo-v2 `openLinksInNewTab` 给链接加上 `target="_blank"`。脚本标签会被 DOMPurify 去掉。
+:::demo-v2 `openLinksInNewTab` 给链接加上 `target="_blank"`。
 
 x-markdown/open-links
 
