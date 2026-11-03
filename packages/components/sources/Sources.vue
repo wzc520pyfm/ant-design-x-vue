@@ -134,6 +134,9 @@ defineRender(() =>
           overlayClassName={classnames(prefixCls, hashId.value, cssVarCls)}
           overlayStyle={{ width: typeof popoverOverlayWidth === 'number' ? `${popoverOverlayWidth}px` : popoverOverlayWidth }}
           placement="top"
+          // Same as React Sources: forceRender pre-mounts overlay so first open has no placement hop.
+          // Spread form avoids vue-tsc TS2745 (forceRender is not in ant-design-vue Popover prop types).
+          {...({ forceRender: true } as Record<string, unknown>)}
         >
           <div
             class={classnames(`${prefixCls}-title-wrapper`, classNames.title)}

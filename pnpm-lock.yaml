@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  ant-design-vue@4.2.6:
+    hash: cbvozj7qvyexihevwqq6rkm46m
+    path: patches/ant-design-vue@4.2.6.patch
+
 importers:
 
   .:
@@ -61,7 +66,7 @@ importers:
         version: 2.4.6
       ant-design-vue:
         specifier: ^4.2.6
-        version: 4.2.6(vue@3.5.13(typescript@5.8.2))
+        version: 4.2.6(patch_hash=cbvozj7qvyexihevwqq6rkm46m)(vue@3.5.13(typescript@5.8.2))
       changelogen:
         specifier: ^0.5.7
         version: 0.5.7(magicast@0.3.5)
@@ -197,7 +202,7 @@ importers:
         version: 13.6.0(vue@3.5.13(typescript@5.8.2))
       ant-design-vue:
         specifier: '>=4.0.0'
-        version: 4.2.6(vue@3.5.13(typescript@5.8.2))
+        version: 4.2.6(patch_hash=cbvozj7qvyexihevwqq6rkm46m)(vue@3.5.13(typescript@5.8.2))
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -286,7 +291,7 @@ importers:
         version: 2.4.6
       ant-design-vue:
         specifier: ^4.2.6
-        version: 4.2.6(vue@3.5.13(typescript@5.8.2))
+        version: 4.2.6(patch_hash=cbvozj7qvyexihevwqq6rkm46m)(vue@3.5.13(typescript@5.8.2))
       happy-dom:
         specifier: ^15.7.4
         version: 15.11.7
@@ -356,7 +361,7 @@ importers:
         version: 2.1.8(vitest@2.1.8(@types/node@22.13.5)(happy-dom@15.11.7)(jsdom@28.1.0)(less@4.2.2)(lightningcss@1.22.1)(sass@1.85.0)(terser@5.39.0))
       ant-design-vue:
         specifier: ^4.2.6
-        version: 4.2.6(vue@3.5.13(typescript@5.8.2))
+        version: 4.2.6(patch_hash=cbvozj7qvyexihevwqq6rkm46m)(vue@3.5.13(typescript@5.8.2))
       typescript:
         specifier: ~5.8.0
         version: 5.8.2
@@ -407,7 +412,7 @@ importers:
     dependencies:
       ant-design-vue:
         specifier: ^4.2.6
-        version: 4.2.6(vue@3.5.13(typescript@5.8.2))
+        version: 4.2.6(patch_hash=cbvozj7qvyexihevwqq6rkm46m)(vue@3.5.13(typescript@5.8.2))
       ant-design-x-vue:
         specifier: workspace:*
         version: link:../packages/ant-design-x-vue
@@ -9400,7 +9405,7 @@ snapshots:
 
   ansi-styles@6.2.1: {}
 
-  ant-design-vue@4.2.6(vue@3.5.13(typescript@5.8.2)):
+  ant-design-vue@4.2.6(patch_hash=cbvozj7qvyexihevwqq6rkm46m)(vue@3.5.13(typescript@5.8.2)):
     dependencies:
       '@ant-design/colors': 6.0.0
       '@ant-design/icons-vue': 7.0.1(vue@3.5.13(typescript@5.8.2))

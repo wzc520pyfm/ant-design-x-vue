@@ -1,0 +1,24 @@
+diff --git a/es/vc-trigger/Trigger.js b/es/vc-trigger/Trigger.js
+index 0c8af61c87985af7c06128f3372aa9f91333b590..ca6ba513d50635bc6a93fd7413ffee791c8abd4e 100644
+--- a/es/vc-trigger/Trigger.js
++++ b/es/vc-trigger/Trigger.js
+@@ -669,6 +669,7 @@ export default defineComponent({
+       "key": "portal",
+       "getContainer": getPopupContainer && (() => getPopupContainer(this.getRootDomNode())),
+       "didUpdate": this.handlePortalUpdate,
++      "forceRender": this.$props.forceRender,
+       "visible": this.$data.sPopupVisible
+     }, {
+       default: this.getComponent
+diff --git a/lib/vc-trigger/Trigger.js b/lib/vc-trigger/Trigger.js
+index 4096631c80e32eda2dd63b6211701f816fb652c8..55ec3429396249d3e0b5a402464c6d4393a8d48b 100644
+--- a/lib/vc-trigger/Trigger.js
++++ b/lib/vc-trigger/Trigger.js
+@@ -675,6 +675,7 @@ var _default = exports.default = (0, _vue.defineComponent)({
+       "key": "portal",
+       "getContainer": getPopupContainer && (() => getPopupContainer(this.getRootDomNode())),
+       "didUpdate": this.handlePortalUpdate,
++      "forceRender": this.$props.forceRender,
+       "visible": this.$data.sPopupVisible
+     }, {
+       default: this.getComponent

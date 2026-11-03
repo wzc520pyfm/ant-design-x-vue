@@ -121,5 +121,10 @@
     "vue": "^3.5.10",
     "vue-tsc": "^2.1.6"
   },
-  "packageManager": "pnpm@9.6.0"
+  "packageManager": "pnpm@9.6.0",
+  "pnpm": {
+    "patchedDependencies": {
+      "ant-design-vue@4.2.6": "patches/ant-design-vue@4.2.6.patch"
+    }
+  }
 }
