@@ -46,4 +46,79 @@ x-sdk/x-request/timeout
 
 :::
 
+## API
+
+### XRequestFunction
+
+```ts | pure
+type XRequestFunction<Input = AnyObject, Output = SSEOutput> = (
+  baseURL: string,
+  options?: XRequestOptions<Input, Output>,
+) => XRequestClass<Input, Output>;
+```
+
+| 属性 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| baseURL | API 地址 | string | - | - |
+| options | 请求配置 | XRequestOptions\<Input, Output\> | - | - |
+
+### XRequestOptions
+
+| 属性 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| callbacks | 请求回调 | XRequestCallbacks\<Output\> | - | - |
+| params | 请求参数 | Input | - | - |
+| headers | 额外请求头 | Record\<string, string\> | - | - |
+| timeout | 请求超时（毫秒） | number | - | - |
+| streamTimeout | 流式数据超时（毫秒） | number | - | - |
+| fetch | 自定义 fetch | (baseURL, options) => Promise\<Response\> | - | - |
+| middlewares | 请求前后中间件 | XFetchMiddlewares\<Input, Output\> | - | - |
+| transformStream | 流处理器 | XStreamOptions\<Output\>['transformStream'] \| ((baseURL: string, responseHeaders: Headers) => XStreamOptions\<Output\>['transformStream']) | - | - |
+| manual | 是否手动发请求；为 `true` 时需调用 `run` | boolean | false | - |
+
+### XRequestCallbacks
+
+| 属性 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| onSuccess | 成功回调 | (chunks: Output[], responseHeaders: Headers) => void | - | - |
+| onError | 错误回调 | (error: Error) => void | - | - |
+| onUpdate | 分片更新回调 | (chunk: Output, responseHeaders: Headers) => void | - | - |
+
+### XRequestClass
+
+| 属性 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| abort | 取消请求 | () => void | - | - |
+| run | 手动执行请求（`manual=true` 时生效） | (params?: Input) => void | - | - |
+| isRequesting | 是否正在请求 | boolean | - | - |
+| manual | 是否手动模式 | boolean | - | - |
+
+### setXRequestGlobalOptions
+
+```ts | pure
+type setXRequestGlobalOptions<Input, Output> = (
+  options: XRequestGlobalOptions<Input, Output>,
+) => void;
+```
+
+### XRequestGlobalOptions
+
+```ts | pure
+type XRequestGlobalOptions<Input, Output> = Pick<
+  XRequestOptions<Input, Output>,
+  'headers' | 'timeout' | 'streamTimeout' | 'middlewares' | 'fetch' | 'transformStream' | 'manual'
+>;
+```
+
+### XFetchMiddlewares
+
+```ts | pure
+interface XFetchMiddlewares<Input, Output> {
+  onRequest?: (
+    ...args: [Parameters<typeof fetch>[0], XRequestOptions<Input, Output>]
+  ) => Promise<[Parameters<typeof fetch>[0], XRequestOptions<Input, Output>]>;
+  onResponse?: (response: Response) => Promise<Response>;
+}
+```
+
 1.x 的 `new XRequest({ baseURL, model, dangerouslyApiKey }).create` 现在叫 `XRequestLegacy`，文档在 [XRequest 请求](https://antd-design-x-vue.netlify.app/component/x-request)。
