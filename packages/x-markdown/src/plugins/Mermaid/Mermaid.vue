@@ -47,6 +47,20 @@ enum RenderType {
 let uuidSeq = 0;
 /** Last theme passed to mermaid.initialize — avoid re-init storms across instances. */
 let lastMermaidTheme: string | null = null;
+/**
+ * Mermaid's render/parse path is not re-entrant. Streaming demos (and multiple
+ * diagrams on one page) schedule overlapping async work; without a queue that
+ * yields `firstChild` TypeErrors and overlapping SVG nodes.
+ */
+let mermaidQueue: Promise<void> = Promise.resolve();
+function enqueueMermaid<T>(task: () => Promise<T>): Promise<T> {
+  const run = mermaidQueue.then(task, task);
+  mermaidQueue = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
 
 const { token } = theme.useToken();
 const darkSurface = computed(() => isDarkColor(token.value.colorBgContainer));
@@ -123,14 +137,18 @@ async function renderDiagramInner() {
   const renderId = `mermaid-${instanceId}-${text.length}-${renderSeq++}`;
   const generation = ++renderGeneration;
   try {
-    const isValid = await mermaid.parse(text, { suppressErrors: true });
-    if (!isValid) throw new Error('Invalid Mermaid syntax');
-    const newText = text.replace(/[`\s]+$/g, '');
-    // Drop any leftover node mermaid may have injected under this id.
-    document.getElementById(renderId)?.remove();
-    const { svg } = await mermaid.render(renderId, newText, containerRef.value);
-    if (generation !== renderGeneration || !containerRef.value) return;
-    containerRef.value.innerHTML = svg;
+    await enqueueMermaid(async () => {
+      if (generation !== renderGeneration || !containerRef.value) return;
+      const isValid = await mermaid.parse(text, { suppressErrors: true });
+      if (!isValid) throw new Error('Invalid Mermaid syntax');
+      if (generation !== renderGeneration || !containerRef.value) return;
+      const newText = text.replace(/[`\s]+$/g, '');
+      // Drop any leftover node mermaid may have injected under this id.
+      document.getElementById(renderId)?.remove();
+      const { svg } = await mermaid.render(renderId, newText, containerRef.value);
+      if (generation !== renderGeneration || !containerRef.value) return;
+      containerRef.value.innerHTML = svg;
+    });
   } catch (error) {
     if (generation !== renderGeneration) return;
     console.warn(`Mermaid render failed: ${error}`);
