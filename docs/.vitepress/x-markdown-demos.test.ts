@@ -29,6 +29,9 @@ const DEMO_PATHS = [
   'x-markdown/themes-custom',
   'x-markdown/thought-chain',
   'x-markdown/data-chart',
+  'x-markdown/custom-footnote',
+  'x-markdown/xprovider-locale',
+  'x-markdown/xprovider-theme',
 ];
 
 describe('x-markdown demo-v2 pairs', () => {
