@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -37,5 +37,15 @@ describe('x-markdown demo-v2 pairs', () => {
     const setup = join(docRoot, 'examples-v2-setup', `${rel}.vue`);
     expect(existsSync(v2), `missing ${v2}`).toBe(true);
     expect(existsSync(setup), `missing ${setup}`).toBe(true);
+  });
+
+  it('data-chart demos load GPT-Vis only on the client', () => {
+    for (const dir of ['examples-v2', 'examples-v2-setup'] as const) {
+      const file = join(docRoot, dir, 'x-markdown/data-chart.vue');
+      const source = readFileSync(file, 'utf8');
+      expect(source, file).toContain("import('@antv/gpt-vis')");
+      expect(source, file).not.toMatch(/from ['"].*gpt-vis-line['"]/);
+      expect(source, file).not.toMatch(/from ['"]@antv\/gpt-vis['"]/);
+    }
   });
 });
