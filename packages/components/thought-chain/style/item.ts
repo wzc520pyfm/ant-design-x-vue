@@ -25,6 +25,10 @@ const genThoughtChainItemStyle: GenerateStyle<ThoughtChainToken> = (
     },
     [itemCls]: {
       display: 'inline-flex',
+      // Stay a compact chip: sibling Flex (wrap) rows must wrap the whole chip
+      // instead of compressing it, which would push a long URL description
+      // under the title.
+      flexShrink: 0,
       gap: unit(calc(token.marginXXS).add(1).equal()),
       whiteSpace: 'normal',
       wordBreak: 'break-word',
