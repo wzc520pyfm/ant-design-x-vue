@@ -21,8 +21,34 @@ const {
 
 `addConversation(conversation, 'prepend' | 'append')`。会话对象至少要有 `key`。
 
-:::demo-v2 新建会话并切换当前项。消息存在对应的 key 上，切换不会串台。
+### 基础使用
 
-x-sdk/conversations
+:::demo-v2 用 `useXConversations` 驱动会话列表。
+
+x-sdk/x-conversations/basic
+
+:::
+
+### 会话操作
+
+:::demo-v2 新建、更新、重置，以及菜单删除。
+
+x-sdk/x-conversations/operations
+
+:::
+
+### 多实例
+
+:::demo-v2 两个独立的 `useXConversations` 实例互不影响。
+
+x-sdk/x-conversations/multi-instances
+
+:::
+
+### 配合 useXChat
+
+:::demo-v2 切换会话时消息存在对应 key 上；请求走本地 mock，不依赖外网密钥。
+
+x-sdk/x-conversations/with-x-chat
 
 :::
