@@ -14,11 +14,13 @@ const {
   onClick,
   color,
   variant,
+  icon,
   ...restProps
 } = defineProps<ActionButtonProps>();
 
 const slots = defineSlots<{
-  default(): any;
+  default?(): any;
+  icon?(): any;
 }>();
 
 const context = useActionButtonContextInject();
@@ -32,11 +34,17 @@ const mergedDisabled = computed(() => {
 const prefixCls = computed(() => context.value.prefixCls);
 
 defineRender(() => {
+  // Prefer explicit icon prop (React SpeechButton parity); fall back to
+  // default/icon slots used by SendButton / ClearButton / LoadingButton.
+  const slotIcon = slots.icon?.() ?? slots.default?.();
+  const mergedIcon = icon ?? slotIcon;
+
   return (
     <Button
       type={type}
       {...restProps}
       {...({ color, variant } as object)}
+      icon={mergedIcon}
       onClick={(e) => {
         if (mergedDisabled.value) {
           return;
@@ -50,9 +58,7 @@ defineRender(() => {
       class={classNames(prefixCls.value, {
         [`${prefixCls.value}-disabled`]: mergedDisabled.value,
       })}
-    >
-      {{ icon: () => slots.default?.() }}
-    </Button>
+    />
   );
 });
 </script>

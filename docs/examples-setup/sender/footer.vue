@@ -9,6 +9,7 @@ defineOptions({ name: 'AXSenderFooterSetup' });
 const { token } = theme.useToken();
 const loading = ref<boolean>(false);
 const value = ref<string>('');
+const deepThinking = ref(false);
 
 const iconStyle = {
   fontSize: 18,
@@ -60,7 +61,7 @@ watch(loading, () => {
           />
           <Divider type="vertical" />
           <span style="white-space: nowrap">Deep Thinking</span>
-          <Switch size="small" />
+          <Switch v-model:checked="deepThinking" size="small" />
           <Divider type="vertical" />
           <Button :icon="h(SearchOutlined)">
             Global Search

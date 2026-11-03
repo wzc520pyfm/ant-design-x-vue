@@ -8,27 +8,18 @@ import { useXProviderContext } from '../x-provider';
 import { useSenderContextInject } from './context';
 import useStyle from './style';
 import type { SenderSwitchProps } from './interface';
-import { computed, ref } from 'vue';
+import { computed, ref, toRef } from 'vue';
 
 defineOptions({ name: 'AXSenderSwitch' });
 
-const {
-  className,
-  classNames: classes = {},
-  styles = {},
-  icon,
-  style,
-  onChange,
-  rootClassName,
-  loading,
-  defaultValue,
-  value: customValue,
-  checkedChildren,
-  unCheckedChildren,
-  disabled,
-  prefixCls: customizePrefixCls,
-  ...restProps
-} = defineProps<SenderSwitchProps>();
+// `value` must default to undefined: Vue Boolean props otherwise cast absent → false
+// and break uncontrolled / defaultValue mode.
+const props = withDefaults(defineProps<SenderSwitchProps>(), {
+  value: undefined,
+  defaultValue: undefined,
+  classNames: () => ({}),
+  styles: () => ({}),
+});
 
 const slots = defineSlots<{
   default?(): any;
@@ -39,16 +30,35 @@ const slots = defineSlots<{
 
 const senderContext = useSenderContextInject();
 
-const domProps = computed(() => pickAttrs(restProps, {
-  attr: true,
-  aria: true,
-  data: true,
-}));
+const domProps = computed(() => {
+  const {
+    className: _c,
+    classNames: _cs,
+    styles: _st,
+    icon: _i,
+    style: _s,
+    onChange: _oc,
+    rootClassName: _r,
+    loading: _l,
+    defaultValue: _dv,
+    value: _v,
+    checkedChildren: _cc,
+    unCheckedChildren: _uc,
+    disabled: _d,
+    prefixCls: _p,
+    ...rest
+  } = props;
+  return pickAttrs(rest, {
+    attr: true,
+    aria: true,
+    data: true,
+  });
+});
 
 // ============================ Prefix ============================
 const { direction, getPrefixCls } = useXProviderContext();
 const prefixCls = computed(() =>
-  getPrefixCls('sender', customizePrefixCls || senderContext.value.prefixCls),
+  getPrefixCls('sender', props.prefixCls || senderContext.value.prefixCls),
 );
 const switchCls = computed(() => `${prefixCls.value}-switch`);
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls.value);
@@ -57,13 +67,13 @@ const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls.value);
 const containerRef = ref<HTMLDivElement>();
 
 // ============================ Checked ============================
-const customValueRef = computed(() => customValue);
+const customValueRef = toRef(props, 'value');
 const [mergedChecked, setMergedChecked] = useMergedState<boolean | undefined>(
-  defaultValue,
+  props.defaultValue,
   {
     value: customValueRef,
     onChange: (key) => {
-      onChange?.(key || false);
+      props.onChange?.(key || false);
     },
   },
 );
@@ -73,11 +83,11 @@ const contextConfig = useXComponentConfig('sender');
 
 const mergedCls = computed(() => classnames(
   switchCls.value,
-  className,
-  rootClassName,
+  props.className,
+  props.rootClassName,
   contextConfig.value.classNames?.switch,
   senderContext.value.classNames?.switch,
-  classes.root,
+  props.classNames?.root,
   hashId.value,
   cssVarCls,
   {
@@ -91,16 +101,20 @@ defineExpose({
 });
 
 defineRender(() => {
-  const iconNode = slots.icon?.() ?? icon;
-  const checkedNode = slots.checkedChildren?.() ?? checkedChildren;
-  const uncheckedNode = slots.unCheckedChildren?.() ?? unCheckedChildren;
+  const iconNode = slots.icon?.() ?? props.icon;
+  const checkedNode = slots.checkedChildren?.() ?? props.checkedChildren;
+  const uncheckedNode = slots.unCheckedChildren?.() ?? props.unCheckedChildren;
+  const classes = props.classNames || {};
+  const styles = props.styles || {};
 
+  // ant-design-vue@4 Button ignores variant/color/classNames (antd 5 APIs).
+  // Put `${switchCls}-content` on the real `class` so switch.ts checked styles hit.
   return wrapCSSVar(
     <div
       ref={containerRef}
       class={mergedCls.value}
       style={{
-        ...style,
+        ...props.style,
         ...contextConfig.value.styles?.switch,
         ...senderContext.value.styles?.switch,
         ...styles.root,
@@ -108,22 +122,10 @@ defineRender(() => {
       {...domProps.value}
     >
       <Button
-        {...({
-          disabled,
-          loading,
-          styles: {
-            icon: styles.icon,
-            root: styles.content,
-            content: styles.title,
-          },
-          classNames: {
-            root: classnames(`${switchCls.value}-content`, classes.content),
-            icon: classes.icon,
-            content: classes.title,
-          },
-          variant: 'outlined',
-          color: mergedChecked.value ? 'primary' : 'default',
-        } as any)}
+        disabled={props.disabled}
+        loading={props.loading}
+        class={classnames(`${switchCls.value}-content`, classes.content)}
+        style={styles.content}
         icon={iconNode}
         onClick={() => {
           setMergedChecked(!mergedChecked.value);

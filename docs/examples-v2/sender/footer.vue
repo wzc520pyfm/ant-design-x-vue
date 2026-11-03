@@ -9,6 +9,7 @@ import { ref, watch } from 'vue';
 const { token } = theme.useToken();
 const loading = ref(false);
 const value = ref('');
+const deepThinking = ref(false);
 
 watch(loading, (val) => {
   if (val) {
@@ -37,7 +38,7 @@ defineRender(() => (
             <Button style={iconStyle} type="text" icon={<LinkOutlined />} />
             <Divider type="vertical" />
             <span style={{ whiteSpace: 'nowrap' }}>Deep Thinking</span>
-            <Switch size="small" />
+            <Switch size="small" checked={deepThinking.value} onChange={(checked: boolean) => { deepThinking.value = checked; }} />
             <Divider type="vertical" />
             <Button icon={<SearchOutlined />}>
               Global Search

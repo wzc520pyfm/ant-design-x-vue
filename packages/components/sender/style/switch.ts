@@ -42,6 +42,13 @@ const genSenderSwitchStyle: GenerateStyle<SenderToken> = (token) => {
       },
 
       '&-checked': {
+        // ant-design-vue@4 has no Button color/variant; mirror React primary
+        // outlined checked look on the real .ant-btn (+ content class).
+        [`${antCls}-btn`]: {
+          color: token.colorPrimary,
+          borderColor: token.colorPrimary,
+          background: token.switchCheckedBg,
+        },
         [`${antCls}-btn:not(:disabled):not(${antCls}-btn-disabled):hover`]: {
           background: token.switchCheckedHoverBg,
           borderColor: token.colorPrimary,

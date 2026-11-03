@@ -9,6 +9,7 @@ defineOptions({ name: 'AXSenderFooter' });
 const { token } = theme.useToken();
 const loading = ref<boolean>(false);
 const value = ref<string>('');
+const deepThinking = ref(false);
 
 const iconStyle = {
   fontSize: 18,
@@ -46,7 +47,7 @@ defineRender(() => {
               <Button style={iconStyle} type="text" icon={<LinkOutlined />} />
               <Divider type="vertical" />
               <span style={{ whiteSpace: 'nowrap' }}>Deep Thinking</span>
-              <Switch size="small" />
+              <Switch size="small" checked={deepThinking.value} onChange={(checked: boolean) => { deepThinking.value = checked; }} />
               <Divider type="vertical" />
               <Button icon={<SearchOutlined />}>Global Search</Button>
             </Flex>
