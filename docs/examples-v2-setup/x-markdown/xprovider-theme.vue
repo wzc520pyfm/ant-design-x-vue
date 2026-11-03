@@ -2,7 +2,7 @@
 defineOptions({ name: 'AXXMarkdownXProviderThemeV2Setup' });
 
 import { computed, h, ref } from 'vue';
-import { Card, ColorPicker, Flex, Typography } from 'ant-design-vue';
+import { Card, Flex, Typography } from 'ant-design-vue';
 import { XProvider } from 'ant-design-x-vue';
 import { XMarkdown } from '@ant-design-x-vue/x-markdown';
 import HighlightCode from '@ant-design-x-vue/x-markdown/plugins/HighlightCode';
@@ -37,23 +37,24 @@ const theme = computed(() => ({
   },
 }));
 
-function onColorChange(value: any) {
-  colorBgTitle.value = typeof value === 'string'
-    ? value
-    : value?.toHexString?.() || colorBgTitle.value;
+function onColorChange(e: Event) {
+  colorBgTitle.value = (e.target as HTMLInputElement).value;
 }
 
 const components = { code: Code };
 </script>
 
 <template>
-  <Flex :gap="12" style="margin-bottom: 16px" align="center">
-    <Typography.Text>Header fill (colorFillContent):</Typography.Text>
-    <ColorPicker :value="colorBgTitle" @change="onColorChange" />
-  </Flex>
-  <Card>
-    <XProvider :theme="theme">
-      <XMarkdown :content="content" :components="components" />
-    </XProvider>
-  </Card>
+  <div>
+    <Flex :gap="12" style="margin-bottom: 16px" align="center">
+      <Typography.Text>Header fill (colorFillContent):</Typography.Text>
+      <!-- ant-design-vue@4.2.6 has no ColorPicker export; match x-provider theme demo. -->
+      <input type="color" :value="colorBgTitle" @input="onColorChange" />
+    </Flex>
+    <Card>
+      <XProvider :theme="theme">
+        <XMarkdown :content="content" :components="components" />
+      </XProvider>
+    </Card>
+  </div>
 </template>

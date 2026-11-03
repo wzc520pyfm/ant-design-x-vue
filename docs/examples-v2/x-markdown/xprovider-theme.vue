@@ -2,7 +2,7 @@
 defineOptions({ name: 'AXXMarkdownXProviderThemeV2' });
 
 import { computed, ref } from 'vue';
-import { Card, ColorPicker, Flex, Typography } from 'ant-design-vue';
+import { Card, Flex, Typography } from 'ant-design-vue';
 import { XProvider } from 'ant-design-x-vue';
 import { XMarkdown } from '@ant-design-x-vue/x-markdown';
 import HighlightCode from '@ant-design-x-vue/x-markdown/plugins/HighlightCode';
@@ -41,12 +41,12 @@ defineRender(() => (
   <>
     <Flex gap={12} style={{ marginBottom: '16px' }} align="center">
       <Typography.Text>Header fill (colorFillContent):</Typography.Text>
-      <ColorPicker
+      {/* ant-design-vue@4.2.6 has no ColorPicker export; match x-provider theme demo. */}
+      <input
+        type="color"
         value={colorBgTitle.value}
-        onChange={(value: any) => {
-          colorBgTitle.value = typeof value === 'string'
-            ? value
-            : value?.toHexString?.() || colorBgTitle.value;
+        onInput={(e: Event) => {
+          colorBgTitle.value = (e.target as HTMLInputElement).value;
         }}
       />
     </Flex>
