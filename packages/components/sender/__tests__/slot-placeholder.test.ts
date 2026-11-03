@@ -1,18 +1,33 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { FastColor } from '@ant-design/fast-color';
 import { Sender } from 'ant-design-x-vue';
-import { slotPlaceholderColor } from '../style/slot-placeholder';
 
 describe('slot placeholder color', () => {
-  it('keeps the React 25% primary tint on a light container', () => {
-    expect(slotPlaceholderColor('#1677ff', '#ffffff')).toBe('rgb(197,221,255)');
+  it('keeps React\'s 25% primary alpha for the placeholder token', () => {
+    expect(new FastColor('#1677ff').setA(0.25).toRgbString()).toBe('rgba(22,119,255,0.25)');
   });
 
-  it('mixes the primary toward white on a dark container', () => {
-    const dark = slotPlaceholderColor('#1668dc', '#141414');
-    expect(dark).not.toBe('rgb(21,41,70)');
-    expect(dark).not.toBe('rgb(22,91,190)');
-    expect(dark).toBe('rgb(57,127,225)');
+  it('paints empty slot placeholders with the 25% primary tint', () => {
+    const wrapper = mount(Sender, {
+      props: {
+        slotConfig: [
+          { type: 'text', value: 'Hello ' },
+          { type: 'input', key: 'name', props: { placeholder: 'name' } },
+        ],
+      },
+    });
+
+    const css = Array.from(document.querySelectorAll('style'))
+      .map(node => node.textContent || '')
+      .join('\n');
+
+    // React parity: colorTextSlotPlaceholder = colorPrimary @ 25% alpha,
+    // used by the slot input, slot select and slot-content ::after rules.
+    expect(css).toContain('rgba(22,119,255,0.25)');
+    // The old dark-mode contrast-boosted mix must not come back.
+    expect(css).not.toContain('rgb(57,127,225)');
+    wrapper.unmount();
   });
 });
 
