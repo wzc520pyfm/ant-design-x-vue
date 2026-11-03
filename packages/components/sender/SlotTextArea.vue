@@ -8,8 +8,9 @@ import { useXProviderContext } from '../x-provider';
 import { useSenderContextInject } from './context';
 import useGetState from './hooks/use-get-state';
 import useInputHeight from './hooks/use-input-height';
-import type { EventType, insertPosition, SlotConfigType, SlotTextAreaRef } from './interface';
-import { computed, onMounted, ref, Teleport, watch, type VNode } from 'vue';
+import type { EventType, insertPosition, SkillType, SlotConfigType, SlotTextAreaRef } from './interface';
+import { computed, nextTick, onMounted, ref, Teleport, watch, type VNode } from 'vue';
+import Skill from './components/Skill.vue';
 
 defineOptions({ name: 'AXSenderSlotTextArea' });
 
@@ -38,6 +39,9 @@ const slotDomMap = ref<Map<string, HTMLSpanElement>>(new Map());
 const isCompositionRef = ref(false);
 const keyLockRef = ref(false);
 const lastSelectionRef = ref<Range | null>(null);
+const skillDomRef = ref<HTMLSpanElement | null>(null);
+const skillRef = ref<SkillType | null>(null);
+const skillPlaceholders = ref<VNode | null>(null);
 
 // ============================ State =============================
 const slotConfigComputed = computed(() => slotConfigRef.value);
@@ -50,6 +54,36 @@ const buildSlotSpan = (key: string) => {
   span.setAttribute('contenteditable', 'false');
   span.dataset.slotKey = key;
   span.className = `${prefixCls.value}-slot`;
+  return span;
+};
+
+const buildSkillSpan = (key: string) => {
+  const span = document.createElement('span');
+  span.setAttribute('contenteditable', 'false');
+  span.dataset.skillKey = key;
+  span.dataset.placeholder = senderContext.value.placeholder || '';
+  span.className = `${prefixCls.value}-skill`;
+  return span;
+};
+
+const buildEditSlotSpan = (key: string) => {
+  const span = document.createElement('span');
+  span.setAttribute('contenteditable', 'true');
+  span.dataset.slotKey = key;
+  span.className = classnames(`${prefixCls.value}-slot`, `${prefixCls.value}-slot-content`);
+  return span;
+};
+
+const buildSpaceSpan = (slotKey: string, positions: 'before' | 'after') => {
+  const span = document.createElement('span');
+  span.setAttribute('contenteditable', 'false');
+  span.dataset.slotKey = slotKey;
+  span.dataset.nodeType = 'nbsp';
+  span.className = classnames(
+    `${prefixCls.value}-slot-${positions}`,
+    `${prefixCls.value}-slot-no-width`,
+  );
+  span.textContent = ' ';
   return span;
 };
 
@@ -67,9 +101,19 @@ const getNodeTextValue = (node: Node, currentValues: Record<string, any>): strin
   }
   if (node.nodeType === Node.ELEMENT_NODE) {
     const el = node as HTMLElement;
+    if (el.dataset?.skillKey) {
+      return '';
+    }
+    if (el.dataset?.nodeType === 'nbsp') {
+      return '';
+    }
     const slotKey = el.getAttribute('data-slot-key');
     if (slotKey) {
       const nodeConfig = slotConfigMap.get(slotKey);
+      if (nodeConfig?.type === 'content') {
+        const text = el.textContent || '';
+        return nodeConfig.formatResult?.(text) || text;
+      }
       const slotValue = currentValues[slotKey] || '';
       const tagValue =
         nodeConfig?.type === 'tag' && nodeConfig.props?.value ? nodeConfig.props.value : null;
@@ -84,38 +128,68 @@ const getNodeTextValue = (node: Node, currentValues: Record<string, any>): strin
 const getEditorValue = (): {
   value: string;
   config: (SlotConfigType & { value: string })[];
+  slotConfig: (SlotConfigType & { value: string })[];
+  skill?: SkillType;
 } => {
+  const emptyRes = {
+    value: '',
+    config: [] as (SlotConfigType & { value: string })[],
+    slotConfig: [] as (SlotConfigType & { value: string })[],
+    skill: undefined as SkillType | undefined,
+  };
+  const editableDom = editableRef.value;
+  if (!editableDom) {
+    return emptyRes;
+  }
+  const childNodes = editableDom.childNodes;
+  if (childNodes.length === 0) {
+    editableDom.innerHTML = '';
+    skillDomRef.value = null;
+    return emptyRes;
+  }
+
   const result: string[] = [];
   const currentConfig: (SlotConfigType & { value: string })[] = [];
-  editableRef.value?.childNodes.forEach((node) => {
+  let currentSkill: SkillType | undefined;
+  const hasSkill = !!senderContext.value.skill;
+
+  childNodes.forEach((node) => {
     const textValue = getNodeTextValue(node, getSlotValues());
+    result.push(textValue);
     if (node.nodeType === Node.TEXT_NODE) {
-      result.push(textValue);
-      currentConfig.push({
-        type: 'text',
-        value: textValue,
-      });
+      if (textValue) {
+        currentConfig.push({
+          type: 'text',
+          value: textValue,
+        });
+      }
     } else if (node.nodeType === Node.ELEMENT_NODE) {
       const el = node as HTMLElement;
+      const skillKey = el.dataset?.skillKey;
       const slotKey = el.getAttribute('data-slot-key');
-      if (slotKey) {
+      const nodeType = el.dataset?.nodeType;
+      if (skillKey && hasSkill) {
+        currentSkill = senderContext.value.skill;
+        skillDomRef.value = el as HTMLSpanElement;
+      }
+      if (slotKey && nodeType !== 'nbsp') {
         const nodeConfig = slotConfigMap.get(slotKey);
-        result.push(textValue);
         if (nodeConfig) {
           currentConfig.push({ ...nodeConfig, value: textValue });
         }
       }
     }
   });
-  if (!result.length) {
-    const div = editableRef.value;
-    if (div) {
-      div.innerHTML = '';
-    }
+
+  if (!currentSkill) {
+    skillDomRef.value = null;
   }
+
   return {
     value: result.join(''),
     config: currentConfig,
+    slotConfig: currentConfig,
+    skill: currentSkill,
   };
 };
 
@@ -129,7 +203,7 @@ const updateSlot = (key: string, value: any, e?: EventType) => {
     slotPlaceholders.value = new Map(slotPlaceholders.value);
 
     const newValue = getEditorValue();
-    senderContext.value.onChange?.(newValue.value, e, newValue.config);
+    senderContext.value.onChange?.(newValue.value, e, newValue.config, newValue.skill);
   }
 };
 
@@ -138,6 +212,10 @@ const renderSlot = (node: SlotConfigType, slotSpan: HTMLSpanElement): VNode => {
   const value = getSlotValues()[node.key];
   const renderContent = (): VNode => {
     switch (node.type) {
+      case 'content':
+        slotSpan.innerHTML = value || '';
+        slotSpan.setAttribute('data-placeholder', node.props?.placeholder || '');
+        return null as any;
       case 'input':
         return (
           <Input
@@ -226,17 +304,31 @@ const getSlotListNode = (slotConfig: SlotConfigType[]): SlotNode[] => {
   return slotConfig.reduce((nodeList, config) => {
     if (config.type === 'text') {
       nodeList.push(document.createTextNode(config.value || ''));
+      return nodeList;
     }
     if (config.key) {
       const slotKey = config.key;
-      const slotSpan = buildSlotSpan(slotKey);
-      saveSlotDom(config.key, slotSpan);
-      if (slotSpan) {
-        const reactNode = renderSlot(config, slotSpan);
+      let slotDom: HTMLSpanElement;
+      let nodes: HTMLSpanElement[];
+      if (config.type === 'content') {
+        slotDom = buildEditSlotSpan(slotKey);
+        const before = buildSpaceSpan(slotKey, 'before');
+        const after = buildSpaceSpan(slotKey, 'after');
+        saveSlotDom(`${slotKey}_before`, before);
+        saveSlotDom(slotKey, slotDom);
+        saveSlotDom(`${slotKey}_after`, after);
+        nodes = [before, slotDom, after];
+      } else {
+        slotDom = buildSlotSpan(slotKey);
+        saveSlotDom(slotKey, slotDom);
+        nodes = [slotDom];
+      }
+      const reactNode = renderSlot(config, slotDom);
+      if (reactNode || config.type === 'content') {
         if (reactNode) {
           slotPlaceholders.value.set(slotKey, reactNode);
-          nodeList.push(slotSpan);
         }
+        nodeList.push(...nodes);
       }
     }
     return nodeList;
@@ -296,7 +388,7 @@ const onInternalKeyDown = (e: KeyboardEvent) => {
         keyLockRef.value = true;
         e.preventDefault();
         const result = getEditorValue();
-        senderContext.value.onSubmit?.(result.value, result.config);
+        senderContext.value.onSubmit?.(result.value, result.config, result.skill);
       }
       break;
     case 'shiftEnter':
@@ -304,7 +396,7 @@ const onInternalKeyDown = (e: KeyboardEvent) => {
         keyLockRef.value = true;
         e.preventDefault();
         const result = getEditorValue();
-        senderContext.value.onSubmit?.(result.value, result.config);
+        senderContext.value.onSubmit?.(result.value, result.config, result.skill);
       }
       break;
   }
@@ -375,13 +467,27 @@ const removeSpecificBRs = (element: HTMLDivElement | null | undefined) => {
   }
 };
 
+const syncSkillEmptyState = (newValue: ReturnType<typeof getEditorValue>) => {
+  if (skillDomRef.value) {
+    if (!newValue.value && newValue.config.length === 0 && senderContext.value.placeholder) {
+      skillDomRef.value.setAttribute('contenteditable', 'true');
+      skillDomRef.value.classList.add(`${prefixCls.value}-skill-empty`);
+    } else {
+      skillDomRef.value.setAttribute('contenteditable', 'false');
+      skillDomRef.value.classList.remove(`${prefixCls.value}-skill-empty`);
+    }
+  }
+};
+
 const onInternalInput = () => {
   const newValue = getEditorValue();
   removeSpecificBRs(editableRef.value);
+  syncSkillEmptyState(newValue);
   senderContext.value.onChange?.(
     newValue.value,
     undefined,
     newValue.config,
+    newValue.skill,
   );
 };
 
@@ -514,37 +620,108 @@ const focus = (options?: CombinedFocusOptions) => {
   }
 };
 
+const removeSkill = (isChange = true) => {
+  const editableDom = editableRef.value;
+  if (!editableDom || !skillDomRef.value) return;
+  skillDomRef.value.remove();
+  skillDomRef.value = null;
+  skillRef.value = null;
+  skillPlaceholders.value = null;
+  if (isChange) {
+    onInternalInput();
+  }
+};
+
+const insertSkill = () => {
+  const skill = senderContext.value.skill;
+  if (skill && skillRef.value !== skill) {
+    removeSkill(false);
+    skillRef.value = skill;
+    const skillSpan = buildSkillSpan(skill.value);
+    const reactNode = (
+      <Teleport to={skillSpan}>
+        <Skill
+          removeSkill={() => removeSkill(true)}
+          prefixCls={prefixCls.value}
+          {...skill}
+        />
+      </Teleport>
+    );
+    skillPlaceholders.value = reactNode;
+    const editableDom = editableRef.value;
+    if (!editableDom) return;
+    const range = document.createRange();
+    range.setStart(editableDom, 0);
+    range.insertNode(skillSpan);
+    skillDomRef.value = skillSpan;
+    onInternalInput();
+  }
+};
+
 const clear = () => {
   const div = editableRef.value;
   if (!div) return;
   div.innerHTML = '';
+  skillDomRef.value = null;
+  skillRef.value = null;
+  skillPlaceholders.value = null;
   setSlotValues({});
   onInternalInput();
 };
 
-// ============================ Effects =============================
-watch(() => senderContext.value.slotConfig, (val) => {
-  slotConfigRef.value = [...(val || [])];
-  if (slotConfigRef.value.length === 0) return;
-  if (editableRef.value && slotConfigRef.value) {
-    editableRef.value.innerHTML = '';
-    slotDomMap.value?.clear();
+const renderSlotsAndSkill = () => {
+  const editableDom = editableRef.value;
+  if (!editableDom) return;
+  editableDom.innerHTML = '';
+  slotDomMap.value?.clear();
+  slotPlaceholders.value = new Map();
+  skillDomRef.value = null;
+  skillRef.value = null;
+  skillPlaceholders.value = null;
+
+  if (slotConfigRef.value.length) {
     const slotNodeList = getSlotListNode(slotConfigRef.value);
     slotNodeList.forEach((element) => {
-      editableRef.value?.appendChild(element);
+      editableDom.appendChild(element);
     });
-    senderContext.value.onChange?.(getEditorValue().value, undefined, getEditorValue().config);
   }
-});
+  insertSkill();
+  const result = getEditorValue();
+  senderContext.value.onChange?.(result.value, undefined, result.config, result.skill);
+};
+
+// ============================ Effects =============================
+watch(
+  () => senderContext.value.slotConfig,
+  (val) => {
+    slotConfigRef.value = [...(val || [])];
+    if (!editableRef.value) return;
+    // Allow empty slotConfig when skill-only mode
+    if (!slotConfigRef.value.length && !senderContext.value.skill?.value) {
+      return;
+    }
+    renderSlotsAndSkill();
+  },
+);
+
+watch(
+  () => senderContext.value.skill,
+  () => {
+    if (!editableRef.value) return;
+    if (!senderContext.value.skill) {
+      removeSkill(true);
+      return;
+    }
+    insertSkill();
+  },
+);
 
 onMounted(() => {
-  if (slotConfigRef.value.length && editableRef.value) {
-    slotDomMap.value?.clear();
-    const slotNodeList = getSlotListNode(slotConfigRef.value);
-    slotNodeList.forEach((element) => {
-      editableRef.value?.appendChild(element);
-    });
-  }
+  nextTick(() => {
+    if ((slotConfigRef.value.length || senderContext.value.skill?.value) && editableRef.value) {
+      renderSlotsAndSkill();
+    }
+  });
 });
 
 defineExpose({
@@ -597,6 +774,7 @@ defineRender(() => {
         id={`${prefixCls.value}-slot-placeholders`}
       >
         {Array.from(slotPlaceholders.value.values())}
+        {skillPlaceholders.value}
       </div>
     </>
   );

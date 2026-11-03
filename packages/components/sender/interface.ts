@@ -1,4 +1,4 @@
-import type { ButtonProps, InputProps, TextAreaProps } from "ant-design-vue";
+import type { ButtonProps, InputProps, TextAreaProps, TooltipProps } from "ant-design-vue";
 import { Input } from "ant-design-vue";
 import type { ConfigProviderProps } from "ant-design-vue";
 import type { CSSProperties, VNode } from "vue";
@@ -43,8 +43,30 @@ export type NodeRender = (
 ) => BaseNode;
 
 interface SlotConfigBaseType {
-  type: 'text' | 'input' | 'select' | 'tag' | 'custom';
+  type: 'text' | 'input' | 'select' | 'tag' | 'custom' | 'content';
   formatResult?: (value: any) => string;
+}
+
+export interface SkillType {
+  title?: VNode | string;
+  value: string;
+  toolTip?: TooltipProps;
+  closable?:
+    | boolean
+    | {
+        closeIcon?: VNode | string;
+        onClose?: (e: MouseEvent) => void;
+        disabled?: boolean;
+      };
+}
+
+interface SlotConfigContentType extends SlotConfigBaseType {
+  type: 'content';
+  key: string;
+  props?: {
+    defaultValue?: any;
+    placeholder?: string | undefined;
+  };
 }
 
 interface SlotConfigTextType extends SlotConfigBaseType {
@@ -104,7 +126,8 @@ export type SlotConfigType =
   | SlotConfigInputType
   | SlotConfigSelectType
   | SlotConfigTagType
-  | SlotConfigCustomType;
+  | SlotConfigCustomType
+  | SlotConfigContentType;
 
 export type EventType = Event;
 
@@ -124,11 +147,12 @@ export interface SenderProps {
   submitType?: SubmitType;
   disabled?: boolean;
   slotConfig?: Readonly<SlotConfigType[]>;
-  onSubmit?: (message: string, slotConfig?: SlotConfigType[]) => void;
+  onSubmit?: (message: string, slotConfig?: SlotConfigType[], skill?: SkillType) => void;
   onChange?: (
     value: string,
     event?: EventType,
     slotConfig?: SlotConfigType[],
+    skill?: SkillType,
   ) => void;
   onCancel?: VoidFunction;
   onKeyDown?: KeyboardEventHandler;
@@ -150,6 +174,7 @@ export interface SenderProps {
   /** @deprecated */
   sendDisabled?: boolean;
   autoSize?: AvoidValidation<boolean | { minRows?: number; maxRows?: number }>;
+  skill?: SkillType;
 }
 
 export interface InputFocusOptions extends FocusOptions {
@@ -162,7 +187,7 @@ export type TextAreaRef = {
   blur: () => void;
   insert: (value: string, position?: insertPosition) => void;
   clear: () => void;
-  getValue: () => { value: string; config: any[] };
+  getValue: () => { value: string; config: any[]; slotConfig?: any[]; skill?: SkillType };
 };
 
 export type SlotTextAreaRef = {
@@ -178,6 +203,8 @@ export type SlotTextAreaRef = {
   getValue: () => {
     value: string;
     config: SlotConfigType[];
+    slotConfig?: SlotConfigType[];
+    skill?: SkillType;
   };
 };
 

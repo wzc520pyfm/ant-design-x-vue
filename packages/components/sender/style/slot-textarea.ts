@@ -11,6 +11,8 @@ const genSlotTextAreaStyle: GenerateStyle<SenderToken> = (token) => {
   const slotInputCls = `${componentCls}-slot-input`;
   const slotSelectCls = `${componentCls}-slot-select`;
   const slotTagCls = `${componentCls}-slot-tag`;
+  const skillCls = `${componentCls}-skill`;
+  const slotContentCls = `${componentCls}-slot-content`;
 
   // Nest under componentCls so CSS-in-JS generates descendant selectors
   // instead of compound selectors. The slot span elements are created
@@ -153,6 +155,88 @@ const genSlotTextAreaStyle: GenerateStyle<SenderToken> = (token) => {
         alignItems: 'center',
         position: 'relative',
         cursor: 'default',
+      },
+      [`${slotContentCls}`]: {
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        fontSize: token.fontSize,
+        marginBlock: 1,
+        lineHeight: token.lineHeight,
+        position: 'relative',
+        cursor: 'text',
+        '&:empty': {
+          width: 'fit-content',
+          '&::after': {
+            display: 'inline-block',
+            height: 'inherit',
+            content: 'attr(data-placeholder)',
+            color: token.colorTextSlotPlaceholder,
+          },
+        },
+      },
+      [`${slotCls}-no-width`]: {
+        userSelect: 'none',
+        width: '3px',
+        display: 'inline-block',
+        lineHeight: 'inherit',
+      },
+      [skillCls]: {
+        display: 'inline-block',
+        verticalAlign: 'baseline',
+        alignItems: 'center',
+        marginBlock: 1,
+        height: calc(token.fontSize).mul(token.lineHeight).add(2).equal(),
+        wordBreak: 'break-all',
+        paddingInlineEnd: 0,
+        paddingInlineStart: 0,
+        marginInlineEnd: 0,
+        marginInlineStart: -1,
+        [`&${skillCls}-empty`]: {
+          '&::after': {
+            display: 'inline-block',
+            pointerEvents: 'none',
+            height: 'inherit',
+            content: 'attr(data-placeholder)',
+            color: token.colorTextPlaceholder,
+          },
+        },
+      },
+      [`${skillCls}-wrapper`]: {
+        height: '100%',
+        display: 'inline-flex',
+      },
+      [`${skillCls}-tag`]: {
+        paddingInline: token.paddingXS,
+        height: '100%',
+        backgroundColor: token.colorBgSkill,
+        borderRadius: token.borderRadius,
+        color: token.colorPrimary,
+        alignItems: 'center',
+        fontWeight: 500,
+        display: 'inline-flex',
+        cursor: 'pointer',
+        gap: token.marginXXS,
+        transition: `background-color ${token.motionDurationMid}`,
+        '&:hover': {
+          backgroundColor: token.colorBgSkillHover,
+          [`${skillCls}-close:not(${skillCls}-close-disabled)`]: {
+            color: token.colorPrimaryHover,
+          },
+        },
+      },
+      [`${skillCls}-close`]: {
+        fontSize: token.fontSizeSM,
+        display: 'inline-flex',
+        transition: `color ${token.motionDurationMid}`,
+        color: token.colorPrimary,
+      },
+      [`${skillCls}-close-disabled`]: {
+        cursor: 'not-allowed',
+        color: token.colorTextDisabled,
+      },
+      [`${skillCls}-holder`]: {
+        width: token.marginXS,
+        height: '100%',
       },
     },
   };

@@ -9,6 +9,7 @@ export type {
   ActionsComponents,
   SenderComponents,
   SlotConfigType,
+  SkillType,
   SubmitType,
   SenderSwitchProps,
 } from './interface';
