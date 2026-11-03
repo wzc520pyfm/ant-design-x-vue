@@ -1,5 +1,6 @@
 <script setup lang="tsx">
 import type { RecordingIconProps } from '../../interface';
+import { useAttrs } from 'vue';
 
 const SIZE = 1000;
 const COUNT = 4;
@@ -9,20 +10,25 @@ const RECT_HEIGHT_MIN = 250;
 const RECT_HEIGHT_MAX = 500;
 const DURATION = 0.8;
 
-defineOptions({ name: 'AXSenderRecordingIcon' });
+defineOptions({ name: 'AXSenderRecordingIcon', inheritAttrs: false });
 
 const {
   className
 } = defineProps<RecordingIconProps>();
 
+const attrs = useAttrs();
+
 defineRender(() => {
+  const mergedClass = className ?? (attrs.class as string | undefined);
+
   return (
     <svg
       color="currentColor"
       viewBox={`0 0 ${SIZE} ${SIZE}`}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      class={className}
+      {...attrs}
+      class={mergedClass}
     >
       <title>Speech Recording</title>
 

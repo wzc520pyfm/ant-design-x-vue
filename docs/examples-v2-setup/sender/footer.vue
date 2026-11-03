@@ -10,6 +10,7 @@ import type { ActionsComponents, BaseNode } from 'ant-design-x-vue/es/sender/int
 const { token } = theme.useToken();
 const loading = ref(false);
 const value = ref('');
+const deepThinking = ref(false);
 
 watch(loading, (val) => {
   if (val) {
@@ -35,7 +36,7 @@ const footerRender = (_: any, { components }: { components: ActionsComponents })
         <Button style={iconStyle} type="text" icon={<LinkOutlined />} />
         <Divider type="vertical" />
         <span style={{ whiteSpace: 'nowrap' }}>Deep Thinking</span>
-        <Switch size="small" />
+        <Switch size="small" checked={deepThinking.value} onChange={(checked: boolean) => { deepThinking.value = checked; }} />
         <Divider type="vertical" />
         <Button icon={<SearchOutlined />}>
           Global Search

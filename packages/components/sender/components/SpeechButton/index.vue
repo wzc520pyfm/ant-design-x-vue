@@ -20,7 +20,8 @@ const prefixCls = computed(() => context.value.prefixCls);
 
 const icon = computed(() => {
   if (speechRecording.value) {
-    return <RecordingIcon className={`${prefixCls.value}-recording-icon`} />;
+    // Use `class` so Vue JSX applies the recording-icon size/centering styles.
+    return <RecordingIcon class={`${prefixCls.value}-recording-icon`} />;
   } else if (context.value.onSpeechDisabled) {
     return <AudioMutedOutlined />;
   } else {
@@ -35,10 +36,9 @@ defineRender(() => {
       variant="text"
       disabled={disabled}
       {...restProps}
+      icon={icon.value}
       action="onSpeech"
-    >
-      {icon.value}
-    </ActionButton>
+    />
   );
 });
 </script>

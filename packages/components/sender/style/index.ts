@@ -92,6 +92,10 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
       },
 
       [`${componentCls}-actions-btn`]: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+
         '&-disabled': {
           background: token.colorPrimary,
           opacity: 0.45,
@@ -111,7 +115,10 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
         '&-recording-icon': {
           height: '1.2em',
           width: '1.2em',
-          verticalAlign: 'top',
+          // Center waveform in the speech ActionButton (图二 was left-biased).
+          display: 'block',
+          margin: 'auto',
+          verticalAlign: 'middle',
         },
       },
 
