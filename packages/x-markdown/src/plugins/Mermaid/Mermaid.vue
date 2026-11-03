@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   computed,
-  h,
   onBeforeUnmount,
   onMounted,
   ref,
@@ -275,13 +274,16 @@ async function handleDownload() {
   img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
 }
 
-// Build during render. A cached vnode is reused on the next patch, and a
-// render function stored on `icon` is stringified as text by the icon slot.
+// Pass icon *components* (not h() VNodes). Calling h() while Mermaid's
+// template evaluates `:items` registers those VNodes in Mermaid's block
+// tree; Image↔Code changes the h() count and Vue's patch then crashes with
+// "Cannot read properties of undefined (reading 'el')", leaving Segmented
+// stuck on Code. Actions.resolveActionIcon mounts components itself.
 function buildActionItems() {
   const base: any[] = [
     {
       key: 'copy',
-      icon: h(CopyOutlined),
+      icon: CopyOutlined,
       label: contextLocale.value.copy,
       onItemClick: handleCopyCode,
     },
@@ -290,13 +292,13 @@ function buildActionItems() {
     base.push(
       {
         key: 'zoomIn',
-        icon: h(ZoomInOutlined),
+        icon: ZoomInOutlined,
         label: contextLocale.value.zoomIn,
         onItemClick: handleZoomIn,
       },
       {
         key: 'zoomOut',
-        icon: h(ZoomOutOutlined),
+        icon: ZoomOutOutlined,
         label: contextLocale.value.zoomOut,
         onItemClick: handleZoomOut,
       },
@@ -307,7 +309,7 @@ function buildActionItems() {
       },
       {
         key: 'download',
-        icon: h(DownloadOutlined),
+        icon: DownloadOutlined,
         label: contextLocale.value.download,
         onItemClick: handleDownload,
       },
