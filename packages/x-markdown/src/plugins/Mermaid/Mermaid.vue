@@ -45,15 +45,20 @@ enum RenderType {
 }
 
 let uuidSeq = 0;
+/** Last theme passed to mermaid.initialize — avoid re-init storms across instances. */
+let lastMermaidTheme: string | null = null;
 
 const { token } = theme.useToken();
 const darkSurface = computed(() => isDarkColor(token.value.colorBgContainer));
 
 function syncMermaidTheme() {
+  const nextTheme = darkSurface.value ? 'dark' : 'default';
+  if (lastMermaidTheme === nextTheme) return;
+  lastMermaidTheme = nextTheme;
   mermaid.initialize({
     startOnLoad: false,
     securityLevel: 'strict',
-    theme: darkSurface.value ? 'dark' : 'default',
+    theme: nextTheme,
     fontFamily: 'monospace',
   });
 }
@@ -87,7 +92,10 @@ const position = ref({ x: 0, y: 0 });
 const isDragging = ref(false);
 const lastMousePos = ref({ x: 0, y: 0 });
 const containerRef = shallowRef<HTMLDivElement | null>(null);
-const diagramId = `mermaid-${uuidSeq++}`;
+/** Stable per-instance prefix; render id still changes with content length (React 2.0.0). */
+const instanceId = uuidSeq++;
+let renderSeq = 0;
+let renderGeneration = 0;
 
 const headerStyle = computed(() => ({
   background: token.value.colorFillContent,
@@ -110,13 +118,21 @@ async function renderDiagramInner() {
   const text = props.children;
   if (!text || !containerRef.value || renderType.value === RenderType.Code) return;
   syncMermaidTheme();
+  // Match React 2.0.0: unique id per attempt including children.length so mermaid
+  // does not reuse the previous SVG node (that yields firstChild TypeError / overlap).
+  const renderId = `mermaid-${instanceId}-${text.length}-${renderSeq++}`;
+  const generation = ++renderGeneration;
   try {
     const isValid = await mermaid.parse(text, { suppressErrors: true });
     if (!isValid) throw new Error('Invalid Mermaid syntax');
     const newText = text.replace(/[`\s]+$/g, '');
-    const { svg } = await mermaid.render(diagramId, newText, containerRef.value);
-    if (containerRef.value) containerRef.value.innerHTML = svg;
+    // Drop any leftover node mermaid may have injected under this id.
+    document.getElementById(renderId)?.remove();
+    const { svg } = await mermaid.render(renderId, newText, containerRef.value);
+    if (generation !== renderGeneration || !containerRef.value) return;
+    containerRef.value.innerHTML = svg;
   } catch (error) {
+    if (generation !== renderGeneration) return;
     console.warn(`Mermaid render failed: ${error}`);
   }
 }
