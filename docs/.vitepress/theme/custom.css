@@ -104,3 +104,18 @@ html:not(.dark) .example-showcase .ant-actions-item .anticon {
   padding-left: 0;
 }
 
+/* Actions embeds ant-design-vue Pagination (`ul.ant-pagination`) inside the
+   variant list. VitePress `.vp-doc ul` / `li + li` margins pad and stretch the
+   outlined/filled chrome so the demo looks larger/emptier than React
+   `@ant-design/x`. Neutralize those host list styles inside Actions only. */
+.vp-doc .example-showcase .ant-actions .ant-pagination {
+  margin: 0;
+  padding-left: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.vp-doc .example-showcase .ant-actions .ant-pagination li + li {
+  margin-top: 0;
+}
+
