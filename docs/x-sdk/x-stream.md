@@ -12,9 +12,19 @@ for await (const chunk of XStream({ readableStream })) {
 
 `readableStream` 不是 `ReadableStream` 时抛出 `The options.readableStream must be an instance of ReadableStream.`
 
-:::demo-v2 用内存里的两段 SSE，不发网络请求。
+### 默认协议 - SSE
 
-x-sdk/x-stream
+:::demo-v2 用内存里的 SSE 片段拼出 Hello, world!，不发网络请求。
+
+x-sdk/x-stream/default-protocol
+
+:::
+
+### 自定义协议
+
+:::demo-v2 传入 `transformStream`，按自定义协议（SIP/SDP 文本）逐块读取。
+
+x-sdk/x-stream/custom-protocol
 
 :::
 

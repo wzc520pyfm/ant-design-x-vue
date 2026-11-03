@@ -39,10 +39,38 @@ const { onRequest, messages, isRequesting, abort } = useXChat({
 
 React 的百宝箱示例就是这样接的。浏览器文档里没有 Node 版 Tbox SDK，见 [百宝箱样板间](/playground/agent-tbox)。
 
-## 本地预设
+## 本地预设与示例
+
+文档示例一律用 mock `fetch`，不放真实密钥。
+
+### OpenAI 预设
 
 :::demo-v2 `createOpenAIChatProvider` 加一个 mock fetch。输入一句话就会按 OpenAI SSE 把回复流回来。
 
 x-sdk/preset
+
+:::
+
+### DefaultChatProvider
+
+:::demo-v2 自定义 JSON `fetch`，几乎不改请求和响应形状。
+
+x-sdk/x-chat/custom-request
+
+:::
+
+### OpenAIChatProvider
+
+:::demo-v2 与上面预设同一条本地链路，展示气泡 + Sender。
+
+x-sdk/x-chat/model
+
+:::
+
+### DeepSeekChatProvider
+
+:::demo-v2 额外读取 `reasoning_content`，Think 组件展示思考过程（本地 mock）。
+
+x-sdk/x-chat/deepSeek
 
 :::

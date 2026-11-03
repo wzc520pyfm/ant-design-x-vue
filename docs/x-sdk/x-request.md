@@ -6,9 +6,43 @@
 
 响应按 `content-type` 分流：`text/event-stream` 走 SSE，`application/json` 走 JSON。其它类型抛出不支持的 content-type。还可以传 `timeout`、`streamTimeout`、`middlewares`、`transformStream` 和自定义 `fetch`。
 
-:::demo-v2 按钮触发一次手动请求。fetch 被换成本地 SSE，页面不会访问外网。
+### 基础使用
 
-x-sdk/x-request
+:::demo-v2 按钮触发一次请求。`fetch` 被换成本地 SSE，页面不会访问外网。
+
+x-sdk/x-request/basic
+
+:::
+
+### 自定义入参
+
+:::demo-v2 在 `params` 里附带 `agentId` 等自定义字段，仍然走本地 mock。
+
+x-sdk/x-request/custom-params
+
+:::
+
+### 自定义转换器
+
+:::demo-v2 `transformStream` + NDJSON mock，把原始分片原样送进 `onUpdate`。
+
+x-sdk/x-request/custom-transformer
+
+:::
+
+### 模型接入
+
+:::demo-v2 手动模式 + 输入框，用 mock OpenAI SSE 模拟模型流式回复，可 Abort。
+
+x-sdk/x-request/model
+
+:::
+
+### 超时配置
+
+:::demo-v2 `timeout: 2000`，mock 在 3000ms 才返回，触发 TimeoutError。
+
+x-sdk/x-request/timeout
 
 :::
 
