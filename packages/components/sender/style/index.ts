@@ -1,7 +1,6 @@
 import { unit } from '../../_util/cssinjs';
 import { mergeToken } from '../../_util/cssinjs-utils';
 import { FastColor } from '@ant-design/fast-color';
-import { slotPlaceholderColor } from './slot-placeholder';
 import type {
   FullToken,
   GenerateStyle,
@@ -129,13 +128,13 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
 };
 
 export const prepareComponentToken: GetDefaultToken<'Sender'> = (token) => {
-  const { colorPrimary, colorFillTertiary, colorBgContainer } = token;
+  const { colorPrimary, colorFillTertiary } = token;
 
   const colorBgSlot = new FastColor(colorPrimary).setA(0.06).toRgbString();
   const colorBgSkill = new FastColor(colorPrimary).setA(0.08).toRgbString();
   const colorBgSkillHover = new FastColor(colorPrimary).setA(0.15).toRgbString();
   const colorTextSlot = colorPrimary;
-  const colorTextSlotPlaceholder = slotPlaceholderColor(colorPrimary, colorBgContainer);
+  const colorTextSlotPlaceholder = new FastColor(colorPrimary).setA(0.25).toRgbString();
   const colorBorderSlotHover = new FastColor(colorPrimary).setA(0.1).toRgbString();
   const colorBorderSlot = colorBgSlot;
   const switchCheckedBg = new FastColor(colorPrimary).setA(0.08).toRgbString();
