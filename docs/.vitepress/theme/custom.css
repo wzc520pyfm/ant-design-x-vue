@@ -96,3 +96,11 @@ html:not(.dark) .example-showcase .ant-actions-item .anticon {
   margin-top: 0;
 }
 
+/* Neutralize VitePress `.vp-doc ul { margin: 16px 0; padding-left: 1.25rem }`
+   injected into nested conversation group lists, so group title → first item gap
+   matches React `@ant-design/x`. Descendant only — does not strip root component padding. */
+.vp-doc .example-showcase .ant-conversations ul {
+  margin: 0;
+  padding-left: 0;
+}
+
