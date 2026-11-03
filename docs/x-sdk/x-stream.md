@@ -28,4 +28,24 @@ x-sdk/x-stream/custom-protocol
 
 :::
 
+## API
+
+### XStreamOptions
+
+| 属性 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| readableStream | 二进制可读流 | ReadableStream\<Uint8Array\> | - | - |
+| transformStream | 自定义 TransformStream；不传时使用默认 SSE 转换 | TransformStream\<string, T\> | sseTransformStream | - |
+
+```ts | pure
+type SSEFields = 'data' | 'event' | 'id' | 'retry';
+type SSEOutput = Partial<Record<SSEFields, any>>;
+
+type XReadableStream<R = SSEOutput> = ReadableStream<R> & AsyncGenerator<R>;
+
+function XStream<Output = SSEOutput>(
+  options: XStreamOptions<Output>,
+): XReadableStream<Output>;
+```
+
 1.x 页面仍在 [XStream 流](https://antd-design-x-vue.netlify.app/component/x-stream)。2.0 的调用形式相同，实现来自 `@ant-design-x-vue/x-sdk`。

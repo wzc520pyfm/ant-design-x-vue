@@ -52,3 +52,51 @@ x-sdk/x-conversations/multi-instances
 x-sdk/x-conversations/with-x-chat
 
 :::
+
+## API
+
+### useXConversations
+
+```ts | pure
+type useXConversations = (config?: XConversationConfig) => {
+  conversations: ShallowRef<ConversationData[]>;
+  activeConversationKey: ShallowRef<string>;
+  setActiveConversationKey: (key: string) => boolean;
+  addConversation: (conversation: ConversationData, placement?: 'prepend' | 'append') => boolean;
+  removeConversation: (key: string) => boolean;
+  setConversation: (key: string, conversation: ConversationData) => boolean;
+  getConversation: (key: string) => ConversationData | undefined;
+  setConversations: (conversations: ConversationData[]) => boolean;
+  getMessages: (conversationKey: string) => unknown;
+};
+```
+
+### XConversationConfig
+
+| 属性 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| defaultConversations | 默认会话列表 | ConversationData[] | `[]` | - |
+| defaultActiveConversationKey | 默认当前会话 key | string | `''` | - |
+
+### ConversationData
+
+```ts | pure
+interface ConversationData extends AnyObject {
+  key: string;
+  label?: string;
+}
+```
+
+### Return
+
+| 属性 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| conversations | 会话列表（shallowRef） | ShallowRef\<ConversationData[]\> | - | - |
+| activeConversationKey | 当前会话 key（shallowRef） | ShallowRef\<string\> | - | - |
+| setActiveConversationKey | 切换当前会话 | (key: string) => boolean | - | - |
+| addConversation | 新增会话 | (conversation: ConversationData, placement?: 'prepend' \| 'append') => boolean | - | - |
+| removeConversation | 删除会话 | (key: string) => boolean | - | - |
+| setConversation | 更新单个会话 | (key: string, conversation: ConversationData) => boolean | - | - |
+| getConversation | 按 key 读取会话 | (key: string) => ConversationData \| undefined | - | - |
+| setConversations | 整体替换会话列表 | (conversations: ConversationData[]) => boolean | - | - |
+| getMessages | 按会话 key 读取消息快照 | (conversationKey: string) => unknown | - | - |

@@ -15,9 +15,10 @@
 - 主包导出 2.0 的 `useXChat`、`useXConversations`、`XRequest`、`XStream`，以及 `OpenAIChatProvider`、`DeepSeekChatProvider`、`DefaultChatProvider`、`AbstractChatProvider`。
 - `createOpenAIChatProvider` / `resolvePresetApiKey` 接上 1.x 预设协议：手动 `XRequest` + OpenAI Chat Completions。`useXAgent` 仍只服务 1.x 示例。
 - XMarkdown 页面覆盖插件、Latex、HighlightCode、Mermaid、Think 映射、light/dark 主题、流式未完成语法。
-- SDK 页面覆盖介绍、Provider、useXChat、useXConversations、XRequest、XStream。示例请求都在本地完成。
+- SDK 页面覆盖介绍、Provider、useXChat、useXConversations、XRequest、XStream；API 表对齐 React 2.0.0 深度。
 - 样板间在独立式、助手式之外补了现代感和百宝箱布局。
 - `Bubble.List` 的 `roles`、`FileCard` 列表项 `key`、根节点 `class` 记在迁移文档里。
+- 设计站（RICH 等）已迁到 [设计](/design/introduce)；研发侧入口见 [设计范式](/development/spec)。
 
 ## 有意不同
 
@@ -28,7 +29,6 @@
 ## 未镜像
 
 - 现代感没有调用 DeepSeek，百宝箱没有调用 `tbox-nodejs-sdk`。后者是 Node SDK，文档站是浏览器。
-- RICH 设计长文留在 React 文档，见 [设计范式](/development/spec)。
 - React 的脚手架页（Next、Umi、Rsbuild、CRA）和 React FAQ 不迁。
 - XMarkdown 没有单独的浏览器 `dist/plugins/*.min.js`。用包入口或 `plugins/*` 子路径。
 

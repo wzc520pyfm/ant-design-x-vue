@@ -13,7 +13,7 @@ Attachments 组件用于需要展示一组附件信息集合的场景。
 
 <ClientOnly>
 
-:::demo 基础用法，可以通过 `getDropContainer` 支持拖拽上传。
+:::demo-v2 基础用法，可以通过 `getDropContainer` 支持拖拽上传。
 
 attachments/basic
 
@@ -23,7 +23,7 @@ attachments/basic
 
 ### 占位信息
 
-:::demo 修改占位信息。
+:::demo-v2 修改占位信息。
 
 attachments/placeholder
 
@@ -31,7 +31,7 @@ attachments/placeholder
 
 ### 超出样式
 
-:::demo 控制附件超出区域长度时的展示方式。
+:::demo-v2 控制附件超出区域长度时的展示方式。
 
 attachments/overflow
 
@@ -41,9 +41,21 @@ attachments/overflow
 
 <ClientOnly>
 
-:::demo 配合 Sender.Header 使用，在对话中插入附件。
+:::demo-v2 配合 Sender.Header 使用，在对话中插入附件。
 
 attachments/with-sender
+
+:::
+
+</ClientOnly>
+
+### 按类型选择文件
+
+<ClientOnly>
+
+:::demo-v2 通过 ref 的 `select` 按类型打开文件选择器。
+
+attachments/select-files
 
 :::
 
@@ -53,7 +65,7 @@ attachments/with-sender
 
 <ClientOnly>
 
-:::demo 单独的文件卡片，用于一些展示场景。
+:::demo-v2 单独的文件卡片，用于一些展示场景。
 
 attachments/files
 
@@ -65,7 +77,7 @@ attachments/files
 
 <ClientOnly>
 
-:::demo 自定义文件卡片的图标、图标颜色、文件范围。
+:::demo-v2 自定义文件卡片的图标、图标颜色、文件范围。
 
 attachments/files-custom
 
@@ -75,7 +87,7 @@ attachments/files-custom
 
 ## API
 
-<!-- 通用属性参考：[通用属性](/docs/react/common-props)。 -->
+通用属性参考：[通用属性](/development/common-props)。
 
 ### Attachments Props
 
@@ -83,7 +95,7 @@ attachments/files-custom
 
 | 属性             | 说明                                                                       | 类型                                                               | 默认值 | 版本 |
 | ---------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------ | ------ | ---- |
-| classNames       | 自定义样式类名，[见下](#semantic-dom)                                      | Record<string, string>                                             | -      | -    |
+| classNames       | 自定义样式类名，[见下](#semantic-dom)                                      | Record\<string, string\>                                           | -      | -    |
 | disabled         | 是否禁用                                                                   | boolean                                                            | false  | -    |
 | getDropContainer | 设置拖拽时，可以释放文件的区域                                             | () => HTMLElement                                                  | -      | -    |
 | items            | 附件列表，同 Upload `fileList`                                             | Attachment[]                                                       | -      | -    |
@@ -91,7 +103,7 @@ attachments/files-custom
 | placeholder      | 没有文件时的占位信息                                                       | PlaceholderType \| ((type: 'inline' \| 'drop') => PlaceholderType) | -      | -    |
 | rootClassName    | 根节点的样式类名                                                           | string                                                             | -      | -    |
 | rootStyle        | 根节点的样式对象                                                           | CSSProperties                                                      | -      | -    |
-| styles           | 自定义样式对象，[见下](#semantic-dom)                                      | Record<string, CSSProperties>                                      | -      | -    |
+| styles           | 自定义样式对象，[见下](#semantic-dom)                                      | Record\<string, CSSProperties\>                                    | -      | -    |
 | imageProps       | 图片属性，同 antdv [Image](https://www.antdv.com/components/image-cn) 属性 | ImageProps                                                         | -      | -    |
 
 ```tsx | pure
@@ -110,10 +122,12 @@ interface PlaceholderType {
 
 ### Attachments Expose
 
-| 属性          | 说明             | 类型                 | 版本 |
-| ------------- | ---------------- | -------------------- | ---- |
-| nativeElement | 获取原生节点     | HTMLElement          | -    |
-| upload        | 手工调用上传文件 | (file: File \| File[] \| FileList) => void | -    |
+| 属性              | 说明                         | 类型                                                         | 版本 |
+| ----------------- | ---------------------------- | ------------------------------------------------------------ | ---- |
+| nativeElement     | 获取原生节点                 | HTMLElement                                                  | -    |
+| fileNativeElement | 获取文件上传原生 input 节点  | HTMLInputElement \| null                                     | -    |
+| upload            | 手工调用上传文件             | (file: File \| File[] \| FileList) => void                   | -    |
+| select            | 手工打开文件选择器（可覆盖 accept / multiple） | (options: \{ accept?: string; multiple?: boolean \}) => void | -    |
 
 ### Attachments.FileCard Props
 
