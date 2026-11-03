@@ -15,43 +15,43 @@ const onClick = () => {
 
 <template>
   <a-flex vertical gap="middle">
-    <a-flex gap="small" wrap align="center">
-      <a-typography-text>loading status:</a-typography-text>
+    <a-flex gap="small" wrap="wrap" align="center">
+      <a-typography-text style="flex-shrink: 0; white-space: nowrap">loading status:</a-typography-text>
       <ThoughtChain.Item variant="solid" status="loading" title="Tool Calling" />
       <ThoughtChain.Item variant="outlined" status="loading" title="Tool Calling" />
       <ThoughtChain.Item variant="text" status="loading" title="Tool Calling" />
     </a-flex>
 
-    <a-flex gap="small" wrap align="center">
-      <a-typography-text>success status:</a-typography-text>
+    <a-flex gap="small" wrap="wrap" align="center">
+      <a-typography-text style="flex-shrink: 0; white-space: nowrap">success status:</a-typography-text>
       <ThoughtChain.Item variant="solid" status="success" title="Tool Call Finished" />
       <ThoughtChain.Item variant="outlined" status="success" title="Tool Call Finished" />
       <ThoughtChain.Item variant="text" status="success" title="Tool Call Finished" />
     </a-flex>
 
-    <a-flex gap="small" wrap align="center">
-      <a-typography-text>error status:</a-typography-text>
+    <a-flex gap="small" wrap="wrap" align="center">
+      <a-typography-text style="flex-shrink: 0; white-space: nowrap">error status:</a-typography-text>
       <ThoughtChain.Item variant="solid" status="error" title="Tool Call Error" />
       <ThoughtChain.Item variant="outlined" status="error" title="Tool Call Error" />
       <ThoughtChain.Item variant="text" status="error" title="Tool Call Error" />
     </a-flex>
 
-    <a-flex gap="small" wrap align="center">
-      <a-typography-text>abort status:</a-typography-text>
+    <a-flex gap="small" wrap="wrap" align="center">
+      <a-typography-text style="flex-shrink: 0; white-space: nowrap">abort status:</a-typography-text>
       <ThoughtChain.Item variant="solid" status="abort" title="Agent Response Aborted" />
       <ThoughtChain.Item variant="outlined" status="abort" title="Agent Response Aborted" />
       <ThoughtChain.Item variant="text" status="abort" title="Agent Response Aborted" />
     </a-flex>
 
-    <a-flex gap="small" wrap align="center">
-      <a-typography-text>custom icon:</a-typography-text>
+    <a-flex gap="small" wrap="wrap" align="center">
+      <a-typography-text style="flex-shrink: 0; white-space: nowrap">custom icon:</a-typography-text>
       <ThoughtChain.Item variant="solid" :icon="sunIcon" title="Task Completed" />
       <ThoughtChain.Item variant="outlined" :icon="sunIcon" title="Task Completed" />
       <ThoughtChain.Item variant="text" :icon="sunIcon" title="Task Completed" />
     </a-flex>
 
-    <a-flex gap="small" wrap align="center">
-      <a-typography-text>description & click:</a-typography-text>
+    <a-flex gap="small" wrap="wrap" align="center">
+      <a-typography-text style="flex-shrink: 0; white-space: nowrap">description & click:</a-typography-text>
       <ThoughtChain.Item
         variant="solid"
         :onClick="onClick"
@@ -75,8 +75,8 @@ const onClick = () => {
       />
     </a-flex>
 
-    <a-flex gap="small" wrap align="center">
-      <a-typography-text>blink:</a-typography-text>
+    <a-flex gap="small" wrap="wrap" align="center">
+      <a-typography-text style="flex-shrink: 0; white-space: nowrap">blink:</a-typography-text>
       <ThoughtChain.Item blink variant="solid" :icon="sunIcon" title="Task Completed" />
       <ThoughtChain.Item blink variant="outlined" :icon="sunIcon" title="Task Completed" />
       <ThoughtChain.Item
