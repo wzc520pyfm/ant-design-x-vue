@@ -170,8 +170,8 @@ const markdownSidebar: DefaultTheme.SidebarItem[] = [
     text: '组件',
     items: [
       plain('总览', '/x-markdown/components'),
-      plain('对话 Think · Sources', '/x-markdown/chat-enhancement'),
-      plain('Mermaid', '/x-markdown/data-display'),
+      plain('对话 Think · Sources · ThoughtChain', '/x-markdown/chat-enhancement'),
+      plain('Mermaid · GPT-VIS', '/x-markdown/data-display'),
       plain('高亮 Code', '/x-markdown/rich-text'),
     ],
   },

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   computed,
-  h,
   onBeforeUnmount,
   onMounted,
   ref,
@@ -45,15 +44,34 @@ enum RenderType {
 }
 
 let uuidSeq = 0;
+/** Last theme passed to mermaid.initialize — avoid re-init storms across instances. */
+let lastMermaidTheme: string | null = null;
+/**
+ * Mermaid's render/parse path is not re-entrant. Streaming demos (and multiple
+ * diagrams on one page) schedule overlapping async work; without a queue that
+ * yields `firstChild` TypeErrors and overlapping SVG nodes.
+ */
+let mermaidQueue: Promise<void> = Promise.resolve();
+function enqueueMermaid<T>(task: () => Promise<T>): Promise<T> {
+  const run = mermaidQueue.then(task, task);
+  mermaidQueue = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
 
 const { token } = theme.useToken();
 const darkSurface = computed(() => isDarkColor(token.value.colorBgContainer));
 
 function syncMermaidTheme() {
+  const nextTheme = darkSurface.value ? 'dark' : 'default';
+  if (lastMermaidTheme === nextTheme) return;
+  lastMermaidTheme = nextTheme;
   mermaid.initialize({
     startOnLoad: false,
     securityLevel: 'strict',
-    theme: darkSurface.value ? 'dark' : 'default',
+    theme: nextTheme,
     fontFamily: 'monospace',
   });
 }
@@ -87,7 +105,10 @@ const position = ref({ x: 0, y: 0 });
 const isDragging = ref(false);
 const lastMousePos = ref({ x: 0, y: 0 });
 const containerRef = shallowRef<HTMLDivElement | null>(null);
-const diagramId = `mermaid-${uuidSeq++}`;
+/** Stable per-instance prefix; render id still changes with content length (React 2.0.0). */
+const instanceId = uuidSeq++;
+let renderSeq = 0;
+let renderGeneration = 0;
 
 const headerStyle = computed(() => ({
   background: token.value.colorFillContent,
@@ -110,13 +131,25 @@ async function renderDiagramInner() {
   const text = props.children;
   if (!text || !containerRef.value || renderType.value === RenderType.Code) return;
   syncMermaidTheme();
+  // Match React 2.0.0: unique id per attempt including children.length so mermaid
+  // does not reuse the previous SVG node (that yields firstChild TypeError / overlap).
+  const renderId = `mermaid-${instanceId}-${text.length}-${renderSeq++}`;
+  const generation = ++renderGeneration;
   try {
-    const isValid = await mermaid.parse(text, { suppressErrors: true });
-    if (!isValid) throw new Error('Invalid Mermaid syntax');
-    const newText = text.replace(/[`\s]+$/g, '');
-    const { svg } = await mermaid.render(diagramId, newText, containerRef.value);
-    if (containerRef.value) containerRef.value.innerHTML = svg;
+    await enqueueMermaid(async () => {
+      if (generation !== renderGeneration || !containerRef.value) return;
+      const isValid = await mermaid.parse(text, { suppressErrors: true });
+      if (!isValid) throw new Error('Invalid Mermaid syntax');
+      if (generation !== renderGeneration || !containerRef.value) return;
+      const newText = text.replace(/[`\s]+$/g, '');
+      // Drop any leftover node mermaid may have injected under this id.
+      document.getElementById(renderId)?.remove();
+      const { svg } = await mermaid.render(renderId, newText, containerRef.value);
+      if (generation !== renderGeneration || !containerRef.value) return;
+      containerRef.value.innerHTML = svg;
+    });
   } catch (error) {
+    if (generation !== renderGeneration) return;
     console.warn(`Mermaid render failed: ${error}`);
   }
 }
@@ -241,13 +274,16 @@ async function handleDownload() {
   img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
 }
 
-// Build during render. A cached vnode is reused on the next patch, and a
-// render function stored on `icon` is stringified as text by the icon slot.
+// Pass icon *components* (not h() VNodes). Calling h() while Mermaid's
+// template evaluates `:items` registers those VNodes in Mermaid's block
+// tree; Image↔Code changes the h() count and Vue's patch then crashes with
+// "Cannot read properties of undefined (reading 'el')", leaving Segmented
+// stuck on Code. Actions.resolveActionIcon mounts components itself.
 function buildActionItems() {
   const base: any[] = [
     {
       key: 'copy',
-      icon: h(CopyOutlined),
+      icon: CopyOutlined,
       label: contextLocale.value.copy,
       onItemClick: handleCopyCode,
     },
@@ -256,13 +292,13 @@ function buildActionItems() {
     base.push(
       {
         key: 'zoomIn',
-        icon: h(ZoomInOutlined),
+        icon: ZoomInOutlined,
         label: contextLocale.value.zoomIn,
         onItemClick: handleZoomIn,
       },
       {
         key: 'zoomOut',
-        icon: h(ZoomOutOutlined),
+        icon: ZoomOutOutlined,
         label: contextLocale.value.zoomOut,
         onItemClick: handleZoomOut,
       },
@@ -273,7 +309,7 @@ function buildActionItems() {
       },
       {
         key: 'download',
-        icon: h(DownloadOutlined),
+        icon: DownloadOutlined,
         label: contextLocale.value.download,
         onItemClick: handleDownload,
       },

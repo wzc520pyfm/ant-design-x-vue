@@ -28,6 +28,12 @@ x-markdown/latex
 
 :::
 
+:::demo-v2 流式输出公式时逐步解析。
+
+x-markdown/latex-streaming
+
+:::
+
 ## HighlightCode
 
 围栏代码渲染成 `<code class="language-*">`。用 `components.code` 读 class，再交给 `HighlightCode`。行内代码保持普通 `<code>`。
@@ -44,6 +50,12 @@ x-markdown/highlight
 
 :::
 
+:::demo-v2 流式输出代码块时逐步高亮。
+
+x-markdown/highlight-streaming
+
+:::
+
 ## Mermaid
 
 `components.code` 在语言是 `mermaid` 时换成 `Mermaid`。图表库只在浏览器里初始化，服务端渲染先显示源码。
@@ -54,9 +66,15 @@ x-markdown/mermaid
 
 :::
 
+:::demo-v2 流式输出 Mermaid 围栏时逐步渲染。
+
+x-markdown/mermaid-streaming
+
+:::
+
 ## Think
 
-自定义标签可以映射到对话组件。`think` 交给 `Think`，默认插槽就是标签里的文本。`Sources` 用同样的 `components` 写法。
+自定义标签可以映射到对话组件。`think` 交给 `Think`，默认插槽就是标签里的文本。`Sources` / `ThoughtChain` 用同样的 `components` 写法，见 [对话增强](/x-markdown/chat-enhancement)。
 
 :::demo-v2 把 think 标签渲染成 Think。
 
