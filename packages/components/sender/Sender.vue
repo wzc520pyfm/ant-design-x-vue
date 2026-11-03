@@ -258,9 +258,6 @@ const footerNode = computed(() => {
     return slots.footer({ ori: actionNode.value, info: { components: sharedRenderComponents } });
   }
   if (typeof footer === 'function') {
-    if (footer.length <= 1) {
-      return (footer as any)({ components: sharedRenderComponents });
-    }
     return footer(actionNode.value, { components: sharedRenderComponents });
   }
   return footer || null;

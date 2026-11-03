@@ -319,7 +319,7 @@ defineRender(() => (
       ref={senderRef}
       skill={slotConfigState.value.skill}
       placeholder="Press Enter to send message"
-      footer={(actionNode) => footerCommon(actionNode as VNode, {
+      footer={(actionNode, _info) => footerCommon(actionNode as VNode, {
         agentMenuItems: agentItems,
         fileMenuItems: fileItems,
         onFileClick: (item) => fileItemClick(item),
@@ -354,7 +354,7 @@ defineRender(() => (
       ref={senderZhRef}
       skill={slotConfigState.value.zh_skill}
       placeholder=""
-      footer={(actionNode) => footerCommon(actionNode as VNode, {
+      footer={(actionNode, _info) => footerCommon(actionNode as VNode, {
         agentMenuItems: zhAgentItems,
         fileMenuItems: zhFileItems,
         onFileClick: (item) => fileItemClick(item, 'zh'),

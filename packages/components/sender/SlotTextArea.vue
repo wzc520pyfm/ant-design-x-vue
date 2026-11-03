@@ -61,7 +61,7 @@ const buildSkillSpan = (key: string) => {
   const span = document.createElement('span');
   span.setAttribute('contenteditable', 'false');
   span.dataset.skillKey = key;
-  span.dataset.placeholder = senderContext.value.placeholder || '';
+  span.dataset.placeholder = String(senderContext.value.placeholder ?? '');
   span.className = `${prefixCls.value}-skill`;
   return span;
 };
