@@ -1,6 +1,6 @@
 # 介绍
 
-流式友好、可扩展的 Markdown 渲染组件。
+流式友好、可扩展的 Markdown 渲染组件。对齐 `@ant-design/x-markdown@2.0.0` 的核心能力：公式、代码高亮、Mermaid、流式语法与自定义组件映射。
 
 ## 何时使用
 
@@ -10,9 +10,11 @@
 
 更细的页面：
 
+- [代码示例与完整 API](/x-markdown/examples)
 - [插件：Latex、HighlightCode、Mermaid、自定义 transform](/x-markdown/plugins)
 - [主题 light / dark](/x-markdown/themes)
 - [流式语法](/x-markdown/streaming)
+- [组件映射总览](/x-markdown/components)
 
 ## 代码演示
 
@@ -42,42 +44,60 @@ x-markdown/streaming
 
 ## API
 
+完整表格（含 `children`、`paragraphTag`、`openLinksInNewTab`、`dompurifyConfig`、`rootClassName`、`style` 等）见 [代码示例 · API](/x-markdown/examples)。此处列出常用字段：
+
 ### XMarkdownProps
 
-| 属性       | 说明                                                                                                                              | 类型                        | 默认值 |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ------ |
-| content    | Markdown 内容                                                                                                                     | string                      | -      |
-| streaming  | 流式配置。布尔值表示是否仍在输出；对象支持 `hasNextChunk`、`enableAnimation`、`animationConfig`、`incompleteMarkdownComponentMap` | boolean \| StreamingOption  | -      |
-| components | 将标签名映射为自定义 Vue 组件（如 h1、pre、code、mermaid、think）                                                                 | Record\<string, Component\> | -      |
-| plugins    | 插件列表，在解析前对 content 执行 transform                                                                                       | any[]                       | -      |
-| config     | marked 解析配置                                                                                                                   | MarkedConfig                | -      |
-| className  | 根节点类名                                                                                                                        | string                      | -      |
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| content | Markdown 内容 | `string` | - |
+| children | `content` 的别名 | `string` | - |
+| streaming | 流式配置。布尔值表示是否仍在输出；对象支持 `hasNextChunk`、`enableAnimation`、`animationConfig`、`incompleteMarkdownComponentMap` | `boolean \| StreamingOption` | - |
+| components | 将标签名映射为自定义 Vue 组件（如 h1、pre、code、mermaid、think） | `Record<string, Component>` | - |
+| paragraphTag | 段落 HTML 标签，避免自定义块级组件嵌套非法 | `string` | `'p'` |
+| plugins | 插件列表，在解析前对 content 执行 transform | `any[]` | - |
+| config | marked 解析配置 | `MarkedConfig` | - |
+| openLinksInNewTab | 给所有链接加 `target="_blank"` | `boolean` | `false` |
+| dompurifyConfig | DOMPurify 消毒配置 | `DOMPurify.Config` | - |
+| className | 根节点类名 | `string` | - |
+| rootClassName | `className` 的别名 | `string` | - |
+| style | 根节点内联样式 | `CSSProperties` | - |
+
+### StreamingOption / AnimationConfig
+
+| 字段 | 说明 | 默认 |
+| --- | --- | --- |
+| hasNextChunk | 后面还有 chunk。未闭合语法先不按完整 Markdown 解析 | `false` |
+| enableAnimation | 文本淡入 | `false` |
+| animationConfig.fadeDuration | 淡入时长（毫秒） | `200` |
+| animationConfig.easing | 缓动 | `'ease-in-out'` |
+| incompleteMarkdownComponentMap | 未完成语法要用的组件名（token 为 `link` / `image` / `html` / `emphasis` / `list` / `table`） | `{}` |
 
 ### ComponentProps（自定义组件入参）
 
-| 属性         | 说明                                                                            | 类型                    |
-| ------------ | ------------------------------------------------------------------------------- | ----------------------- |
-| domNode      | 解析后的 DOM 节点信息（name、attribs、children）                                | DOMNode                 |
-| streamStatus | 自定义标签尚未闭合时为 `'loading'`，闭合后为 `'done'`。`code` 读取 `data-state` | `'loading'` \| `'done'` |
-| block        | 仅 `code`：`data-block="true"` 时为块级代码                                     | boolean                 |
-| children     | 子内容（VNode 或文本）                                                          | VNode[] \| string       |
-| 其余         | 标准 HTML 属性及 data-\* 等                                                     | Record\<string, any\>   |
+| 属性 | 说明 | 类型 |
+| --- | --- | --- |
+| domNode | 解析后的 DOM 节点信息（name、attribs、children） | `DOMNode` |
+| streamStatus | 自定义标签尚未闭合时为 `'loading'`，闭合后为 `'done'`。`code` 可读 `data-state` | `'loading' \| 'done'` |
+| block | 仅 `code`：`data-block="true"` 时为块级代码 | `boolean` |
+| children | 子内容（VNode 或文本） | `VNode[] \| string` |
+| 其余 | 标准 HTML 属性及 data-\* 等 | `Record<string, any>` |
 
 ### useStreaming
 
 用于配合流式内容的组合式函数。
 
-| 参数       | 说明                   | 类型           |
-| ---------- | ---------------------- | -------------- |
-| content    | 内容 ref               | Ref\<string\>  |
-| streaming  | 是否流式中 ref（可选） | Ref\<boolean\> |
-| onComplete | 流式结束回调           | () => void     |
+| 参数 | 说明 | 类型 |
+| --- | --- | --- |
+| content | 内容 ref | `Ref<string>` |
+| streaming | 是否流式中 ref（可选） | `Ref<boolean>` |
+| onComplete | 流式结束回调 | `() => void` |
 
-| 返回值           | 说明                                         | 类型                |
-| ---------------- | -------------------------------------------- | ------------------- |
-| displayedContent | 当前展示内容                                 | Ref\<string\>       |
-| status           | 状态：idle \| streaming \| complete \| error | Ref\<StreamStatus\> |
-| isStreaming      | 是否流式中                                   | Ref\<boolean\>      |
+| 返回值 | 说明 | 类型 |
+| --- | --- | --- |
+| displayedContent | 当前展示内容 | `Ref<string>` |
+| status | 状态：idle \| streaming \| complete \| error | `Ref<StreamStatus>` |
+| isStreaming | 是否流式中 | `Ref<boolean>` |
 
 ### 导出
 

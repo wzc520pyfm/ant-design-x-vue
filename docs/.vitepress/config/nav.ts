@@ -181,6 +181,7 @@ const markdownSidebar: DefaultTheme.SidebarItem[] = [
       plain('总览', '/x-markdown/plugins'),
       plain('公式', '/x-markdown/plugin-latex'),
       plain('自定义插件', '/x-markdown/custom-plugin'),
+      plain('主题与文案', '/x-markdown/plugin-theme-locale'),
     ],
   },
 ]

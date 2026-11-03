@@ -69,6 +69,7 @@ export const V2_SITE_PATHS = [
   '/x-markdown/plugins',
   '/x-markdown/plugin-latex',
   '/x-markdown/custom-plugin',
+  '/x-markdown/plugin-theme-locale',
   '/x-sdk/introduce',
   '/x-sdk/data-flow',
   '/x-sdk/use-x-chat',
