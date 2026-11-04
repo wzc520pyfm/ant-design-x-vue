@@ -422,20 +422,19 @@
 
 /*
  * API / Props markdown tables (属性 / 说明 / 类型 / 默认).
- * VitePress defaults use `display: block` + `overflow-x: auto` so wide tables
- * scroll. site-chrome previously set `overflow: hidden` (for radius) and
- * `width: 100%`, which forced columns — especially「默认」with `{ ... }` — to
- * collapse and wrap character-by-character when sidebar + TOC squeezed the
- * main column. Restore scroll and keep cells on one line (React/dumi wraps
- * tables in `.dumi-default-table-content { overflow: auto }` for the same).
+ * Prefer column sizing + vertical wrap over horizontal scroll for technical
+ * docs. VitePress defaults use `display: block` + `overflow-x: auto`; site-
+ * chrome had `overflow: hidden` (radius) which crushed「默认」/「类型」when
+ * sidebar + TOC narrowed the main column. Fixed layout + width shares keep
+ * typical API tables readable without overflow-x as the primary UX.
  */
 .vp-doc table {
-  display: block;
+  display: table;
+  table-layout: fixed;
   width: 100%;
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden; /* clip to radius; wrapping avoids needing overflow-x */
   font-size: 14px;
 }
 
@@ -449,13 +448,40 @@
 .vp-doc th {
   padding: 12px 16px;
   border-top: 1px solid var(--vp-c-divider);
-  white-space: nowrap;
+  vertical-align: top;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
-/* Prefer a readable floor for the last column (默认 / 默认值 / 版本). */
-.vp-doc th:last-child,
-.vp-doc td:last-child {
-  min-width: 7em;
+/* 属性 / 参数 / 字段 — modest share; long camelCase can wrap */
+.vp-doc th:nth-child(1),
+.vp-doc td:nth-child(1) {
+  width: 18%;
+}
+
+/* 说明 — primary flexible column; long prose wraps vertically */
+.vp-doc th:nth-child(2),
+.vp-doc td:nth-child(2) {
+  width: 40%;
+}
+
+/* 类型 — usable share so unions / Partial<...> stay readable */
+.vp-doc th:nth-child(3),
+.vp-doc td:nth-child(3) {
+  width: 24%;
+}
+
+/* 默认 / 默认值 — object literals wrap instead of crushing or forcing scroll */
+.vp-doc th:nth-child(4),
+.vp-doc td:nth-child(4) {
+  width: 18%;
+}
+
+/* Soft-wrap inline code in cells (types / defaults) */
+.vp-doc td code,
+.vp-doc th code {
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .doc-meta {
