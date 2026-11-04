@@ -56,10 +56,14 @@ think/expand
 | title | 自定义状态文本 |
 | icon | 自定义状态图标 |
 
-### Semantic DOM
+## Semantic DOM
 
-| 名称 | 说明 |
-| --- | --- |
-| root | 根节点 |
-| status | 状态区 |
-| content | 内容区 |
+<vp-semantic component="Think"></vp-semantic>
+
+## 主题变量（Design Token）
+
+| Token | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| colorTextBlinkDefault | 默认打字动画颜色 | string | `colorTextDescription` |
+| colorTextBlink | 打字动画颜色 | string | `colorTextBase` |
+

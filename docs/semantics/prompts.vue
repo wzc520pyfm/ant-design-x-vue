@@ -63,6 +63,7 @@ defineRender(() => {
   return (
     <Flex vertical>
       <SemanticPreview semantics={[
+            { name: 'root', desc: '根节点' },
             { name: 'title', desc: '标题容器' },
             { name: 'list', desc: '列表容器' },
             { name: 'item', desc: '列表项' },

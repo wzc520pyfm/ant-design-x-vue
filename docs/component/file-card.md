@@ -135,23 +135,10 @@ type PresetIcons =
 | extension | 扩展内容 | VNode | - | - |
 | overflow | 超出展示方式 | `'scrollX'` \| `'scrollY'` \| `'wrap'` | `'wrap'` | - |
 
-### Semantic DOM
+## Semantic DOM
 
-#### FileCard
+<vp-semantic component="FileCard"></vp-semantic>
 
-支持通过 `classNames` 和 `styles` 自定义语义化 DOM：
+## 主题变量（Design Token）
 
-| 名称 | 说明 |
-| --- | --- |
-| root | 根元素 |
-| file | 文件容器 |
-| icon | 图标 |
-| name | 文件名 |
-| description | 描述 |
-
-#### FileCard.List
-
-| 名称 | 说明 |
-| --- | --- |
-| root | 根元素 |
-| card | 卡片容器 |
+组件暂无自定义 Component Token，可通过全局 Design Token 定制。

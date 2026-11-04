@@ -67,7 +67,13 @@ welcome/background
 | icon | 图标 |
 | extra | 额外内容 |
 
+## Semantic DOM
+
+<vp-semantic component="Welcome"></vp-semantic>
+
 ## 主题变量（Design Token）
+
+组件暂无自定义 Component Token，可通过全局 Design Token 定制。
 
 ## 贡献者
 
