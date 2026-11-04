@@ -496,12 +496,11 @@ html:has(body .VPHome):not(.dark) {
   --vp-c-gutter: #0c0e10;
 }
 
-html:has(body .VPHome):not(.dark) .VPNav,
-html:has(body .VPHome):not(.dark) .VPNavBar,
-html:has(body .VPHome):not(.dark) .VPFooter {
-  background-color: #0c0e10;
-  color: rgba(255, 255, 255, 0.88);
-}
+/* Do not paint a solid slab behind the homepage nav: the header is a
+   transparent/glass layer over the always-dark hero in both themes.
+   Forcing #0c0e10 backgrounds here (e.g. on .VPNav) stacks a black bar
+   on top of the hero when the global toggle is light. White-on-hero
+   text comes from .x-header.on-home instead. */
 
 .VPHome .VPHero,
 .VPHome .VPFeatures {
