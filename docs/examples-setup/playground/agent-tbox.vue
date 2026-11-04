@@ -68,6 +68,16 @@ const cardStyle = {
   borderRadius: '12px',
   border: 'none',
 };
+const hotTopicsStyles = {
+  list: { height: '100%', width: '100%' },
+  item: { ...cardStyle, height: '100%' },
+  subItem: { padding: 0, background: 'transparent', maxWidth: '100%' },
+};
+const designGuideStyles = {
+  list: { height: '100%', width: '100%' },
+  item: { ...cardStyle, height: '100%' },
+  subItem: { background: 'rgba(255,255,255,0.65)', maxWidth: '100%' },
+};
 
 function ask(info: { data: { description?: string } }) {
   chat.send(String(info.data.description || ''));
@@ -91,13 +101,26 @@ function ask(info: { data: { description?: string } }) {
       <a-flex vertical :gap="12" :style="{ ...shell.mainStyle.value, overflow: 'auto' }">
         <template v-if="chat.bubbles.value.length === 0">
           <Welcome
+            root-class-name="ax-tbox-welcome"
             variant="borderless"
+            icon="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp"
             title="你好， 我是 Ant Design X & 百宝箱智能体"
             description="基于 Ant Design 的 AGI 产品界面解决方案。百宝箱 Node SDK 未打进文档页。"
+            :styles="{ icon: { height: '64px' } }"
           />
-          <a-flex :gap="16">
-            <Prompts class="ax-tbox-prompts" :items="hotTopics" :styles="{ item: cardStyle }" :on-item-click="ask" />
-            <Prompts class="ax-tbox-prompts" :items="designGuide" :styles="{ item: cardStyle }" :on-item-click="ask" />
+          <a-flex :gap="16" align="stretch" style="width: 100%">
+            <Prompts
+              class="ax-tbox-prompts"
+              :items="hotTopics"
+              :styles="hotTopicsStyles"
+              :on-item-click="ask"
+            />
+            <Prompts
+              class="ax-tbox-prompts"
+              :items="designGuide"
+              :styles="designGuideStyles"
+              :on-item-click="ask"
+            />
           </a-flex>
         </template>
         <template v-else>
@@ -122,6 +145,26 @@ function ask(info: { data: { description?: string } }) {
 </template>
 
 <style>
+.ax-tbox-welcome .ant-welcome-icon {
+  flex-shrink: 0;
+}
+.ax-tbox-welcome .ant-welcome-icon img {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+}
+.ax-tbox-prompts {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  align-self: stretch;
+}
+.ax-tbox-prompts .ant-prompts {
+  height: 100%;
+}
+.ax-tbox-prompts .ant-prompts-list {
+  height: 100%;
+}
 .ax-tbox-prompts .ant-prompts-label {
   color: rgba(0, 0, 0, 0.88) !important;
 }

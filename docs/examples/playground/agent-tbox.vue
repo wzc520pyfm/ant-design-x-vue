@@ -131,10 +131,12 @@ defineRender(() => (
         {chat.bubbles.value.length === 0 ? (
           <Flex vertical gap={16} align="center" style={{ width: '100%' }}>
             <Welcome
+              className="ax-tbox-welcome"
               variant="borderless"
               icon={welcomeIcon}
               title="你好， 我是 Ant Design X & 百宝箱智能体"
               description="基于 Ant Design 的 AGI 产品界面解决方案，打造更卓越的智能视觉体验。百宝箱 Node SDK 未打进文档页，这里保留同样的欢迎与提示布局。"
+              styles={{ icon: { height: 64 } }}
               extra={(
                 <Space>
                   <Button icon={<ShareAltOutlined />} />
@@ -142,17 +144,25 @@ defineRender(() => (
                 </Space>
               )}
             />
-            <Flex gap={16} style={{ width: '100%' }}>
+            <Flex gap={16} align="stretch" style={{ width: '100%' }}>
               <Prompts
                 class="ax-tbox-prompts"
                 items={[hotTopics]}
-                styles={{ item: cardStyle, subItem: { padding: 0, background: 'transparent', maxWidth: '100%' } }}
+                styles={{
+                  list: { height: '100%', width: '100%' },
+                  item: { ...cardStyle, height: '100%' },
+                  subItem: { padding: 0, background: 'transparent', maxWidth: '100%' },
+                }}
                 onItemClick={(info: { data: { description?: string } }) => chat.send(String(info.data.description || ''))}
               />
               <Prompts
                 class="ax-tbox-prompts"
                 items={[designGuide]}
-                styles={{ item: cardStyle, subItem: { background: 'rgba(255,255,255,0.65)', maxWidth: '100%' } }}
+                styles={{
+                  list: { height: '100%', width: '100%' },
+                  item: { ...cardStyle, height: '100%' },
+                  subItem: { background: 'rgba(255,255,255,0.65)', maxWidth: '100%' },
+                }}
                 onItemClick={(info: { data: { description?: string } }) => chat.send(String(info.data.description || ''))}
               />
             </Flex>
@@ -198,6 +208,26 @@ defineRender(() => (
 </script>
 
 <style>
+.ax-tbox-welcome .ant-welcome-icon {
+  flex-shrink: 0;
+}
+.ax-tbox-welcome .ant-welcome-icon img {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+}
+.ax-tbox-prompts {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  align-self: stretch;
+}
+.ax-tbox-prompts .ant-prompts {
+  height: 100%;
+}
+.ax-tbox-prompts .ant-prompts-list {
+  height: 100%;
+}
 .ax-tbox-prompts .ant-prompts-label {
   color: rgba(0, 0, 0, 0.88) !important;
 }

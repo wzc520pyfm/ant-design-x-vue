@@ -397,6 +397,22 @@ onUnmounted(() => {
   background: rgba(127, 127, 127, 0.12);
 }
 
+
+.x-header.on-home .x-drawer {
+  background: #141618;
+  color: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.x-header.on-home .x-drawer a {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.x-header.on-home .x-drawer a.active,
+.x-header.on-home .x-drawer a:hover {
+  color: #fff;
+}
+
 .x-drawer {
   position: fixed;
   inset: 72px 16px 16px;
