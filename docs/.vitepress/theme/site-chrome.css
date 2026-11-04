@@ -420,11 +420,22 @@
   gap: 4px;
 }
 
+/*
+ * API / Props markdown tables (属性 / 说明 / 类型 / 默认).
+ * VitePress defaults use `display: block` + `overflow-x: auto` so wide tables
+ * scroll. site-chrome previously set `overflow: hidden` (for radius) and
+ * `width: 100%`, which forced columns — especially「默认」with `{ ... }` — to
+ * collapse and wrap character-by-character when sidebar + TOC squeezed the
+ * main column. Restore scroll and keep cells on one line (React/dumi wraps
+ * tables in `.dumi-default-table-content { overflow: auto }` for the same).
+ */
 .vp-doc table {
+  display: block;
   width: 100%;
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   font-size: 14px;
 }
 
@@ -438,6 +449,13 @@
 .vp-doc th {
   padding: 12px 16px;
   border-top: 1px solid var(--vp-c-divider);
+  white-space: nowrap;
+}
+
+/* Prefer a readable floor for the last column (默认 / 默认值 / 版本). */
+.vp-doc th:last-child,
+.vp-doc td:last-child {
+  min-width: 7em;
 }
 
 .doc-meta {
