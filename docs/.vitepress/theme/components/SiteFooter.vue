@@ -1,5 +1,11 @@
+<script setup lang="ts">
+import { useSidebar } from 'vitepress/theme'
+
+const { hasSidebar } = useSidebar()
+</script>
+
 <template>
-  <footer class="site-footer">
+  <footer class="site-footer" :class="{ 'has-sidebar': hasSidebar }">
     <div class="cols">
       <div>
         <strong>Ant Design X Vue</strong>
@@ -28,6 +34,28 @@
   padding: 36px 8vw 48px;
   color: var(--vp-c-text-2);
   background: var(--vp-c-bg);
+}
+
+/*
+ * SiteFooter is slotted into layout-bottom (sibling of fixed .VPSidebar), so it
+ * does not inherit .VPContent.has-sidebar's padding-left. Without an offset the
+ * first footer column sits under the aside (clipped text like 「见。组件 API…」).
+ * Mirror VPContent + VPDoc horizontal inset on docs pages; homepage has no sidebar.
+ */
+@media (min-width: 960px) {
+  .site-footer.has-sidebar {
+    padding-left: calc(var(--vp-sidebar-width) + 32px);
+    padding-right: 32px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .site-footer.has-sidebar {
+    padding-left: calc(
+      (100vw - var(--vp-layout-max-width)) / 2 + var(--vp-sidebar-width) + 32px
+    );
+    padding-right: calc((100vw - var(--vp-layout-max-width)) / 2 + 32px);
+  }
 }
 
 .cols {
