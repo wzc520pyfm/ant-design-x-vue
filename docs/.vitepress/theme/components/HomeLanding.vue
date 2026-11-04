@@ -169,7 +169,7 @@ function titleParts(title: string, label: string) {
             Ant Des<span class="i-letter">I<span class="i-star" /></span>gn X
           </h1>
           <h1 class="name">AI 体验新秩序</h1>
-          <p class="desc">Ant Design 团队匠心呈现 RICH 设计范式，打造卓越 AI 界面解决方案，引领智能新体验。</p>
+          <p class="desc">Ant Design X 的社区 Vue 实现。基于 RICH 设计范式，打造卓越 AI 界面解决方案，引领智能新体验。</p>
           <div class="banner-actions">
             <a class="pill start" href="/component/overview">开始使用</a>
             <a class="pill design" href="/design/introduce">设计语言</a>
@@ -265,7 +265,7 @@ function titleParts(title: string, label: string) {
           <XProvider :theme="darkTheme">
           <div class="cards" data-reveal>
             <a class="card" data-reveal href="/component/welcome">
-              <div class="card-preview">
+              <div class="card-preview welcome-card">
                 <Welcome
                   style="width: 290px"
                   icon="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp"
@@ -719,6 +719,18 @@ function titleParts(title: string, label: string) {
   height: 220px;
   margin-bottom: 12px;
   overflow: hidden;
+}
+
+.card-preview.welcome-card :deep(.ant-welcome-icon) {
+  flex-shrink: 0;
+  height: 64px;
+}
+
+.card-preview.welcome-card :deep(.ant-welcome-icon img) {
+  width: auto;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
 }
 
 .card-preview img,

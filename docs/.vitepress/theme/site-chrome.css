@@ -476,6 +476,33 @@
   font-weight: 500;
 }
 
+
+/* Homepage stays dark regardless of the global light/dark appearance toggle.
+   Component docs pages still follow the toggle via html.dark as usual. */
+html:has(body .VPHome) {
+  color-scheme: dark;
+}
+
+html:has(body .VPHome):not(.dark) {
+  --vp-c-bg: #0c0e10;
+  --vp-c-bg-alt: #0c0e10;
+  --vp-c-bg-elv: #141618;
+  --vp-c-bg-soft: #141618;
+  --vp-c-text-1: rgba(255, 255, 255, 0.88);
+  --vp-c-text-2: rgba(255, 255, 255, 0.72);
+  --vp-c-text-3: rgba(255, 255, 255, 0.55);
+  --vp-c-divider: rgba(255, 255, 255, 0.12);
+  --vp-c-border: rgba(255, 255, 255, 0.12);
+  --vp-c-gutter: #0c0e10;
+}
+
+html:has(body .VPHome):not(.dark) .VPNav,
+html:has(body .VPHome):not(.dark) .VPNavBar,
+html:has(body .VPHome):not(.dark) .VPFooter {
+  background-color: #0c0e10;
+  color: rgba(255, 255, 255, 0.88);
+}
+
 .VPHome .VPHero,
 .VPHome .VPFeatures {
   display: none;
