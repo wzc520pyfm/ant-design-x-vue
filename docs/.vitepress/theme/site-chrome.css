@@ -421,12 +421,17 @@
 }
 
 /*
- * API / Props markdown tables (属性 / 说明 / 类型 / 默认).
+ * API / Props markdown tables (属性 / 说明 / 类型 / 默认值 [/ 版本]).
  * Prefer column sizing + vertical wrap over horizontal scroll for technical
  * docs. VitePress defaults use `display: block` + `overflow-x: auto`; site-
  * chrome had `overflow: hidden` (radius) which crushed「默认」/「类型」when
  * sidebar + TOC narrowed the main column. Fixed layout + width shares keep
  * typical API tables readable without overflow-x as the primary UX.
+ *
+ * Many SDK/component API tables are 5 columns including「版本」. Claiming
+ * 100% width on the first four alone zeroed the version column, so「版本」
+ * stacked character-by-character and ballooned thead height (blank gap under
+ * the header labels). Always reserve a non-zero share for col 5.
  */
 .vp-doc table {
   display: table;
@@ -436,6 +441,7 @@
   border-radius: 8px;
   overflow: hidden; /* clip to radius; wrapping avoids needing overflow-x */
   font-size: 14px;
+  border-collapse: collapse;
 }
 
 .vp-doc th {
@@ -449,39 +455,67 @@
   padding: 12px 16px;
   border-top: 1px solid var(--vp-c-divider);
   vertical-align: top;
+  /* Soft wrap only when needed; avoid word-break:break-word mid-token splits */
   overflow-wrap: break-word;
-  word-break: break-word;
+  word-break: normal;
 }
 
-/* 属性 / 参数 / 字段 — modest share; long camelCase can wrap */
+/*
+ * 属性 / 参数 / 字段 — widen vs description; keep identifiers on one line
+ * (conversationKey must not split as conversationKe / y).
+ */
 .vp-doc th:nth-child(1),
 .vp-doc td:nth-child(1) {
-  width: 18%;
+  width: 22%;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+.vp-doc th:nth-child(1) code,
+.vp-doc td:nth-child(1) code {
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 /* 说明 — primary flexible column; long prose wraps vertically */
 .vp-doc th:nth-child(2),
 .vp-doc td:nth-child(2) {
-  width: 40%;
+  width: 36%;
+  white-space: normal;
 }
 
 /* 类型 — usable share so unions / Partial<...> stay readable */
 .vp-doc th:nth-child(3),
 .vp-doc td:nth-child(3) {
-  width: 24%;
+  width: 22%;
 }
 
 /* 默认 / 默认值 — object literals wrap instead of crushing or forcing scroll */
 .vp-doc th:nth-child(4),
 .vp-doc td:nth-child(4) {
-  width: 18%;
+  width: 12%;
 }
 
-/* Soft-wrap inline code in cells (types / defaults) */
-.vp-doc td code,
-.vp-doc th code {
+/*
+ * 版本 — required non-zero floor on 5-col API tables. nowrap keeps short
+ * headers/values from stacking and inflating thead/row height.
+ */
+.vp-doc th:nth-child(5),
+.vp-doc td:nth-child(5) {
+  width: 8%;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+/* Soft-wrap inline code in type / default cells (not the property column) */
+.vp-doc td:not(:first-child) code,
+.vp-doc th:not(:first-child) code {
   white-space: pre-wrap;
-  word-break: break-word;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 .doc-meta {
