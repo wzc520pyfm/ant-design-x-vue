@@ -134,9 +134,15 @@ actions/fadeIn
 | defaultIcon | 默认状态图标 | VNodeChild | - | - |
 | runningIcon | 运行状态图标 | VNodeChild | - | - |
 
+## Semantic DOM
+
+<vp-semantic component="Actions"></vp-semantic>
+
+> `Actions.Feedback` 另支持语义化结构：`root` / `like` / `liked` / `dislike` / `disliked`。`Actions.Copy` / `Actions.Audio` / `Actions.Item` 当前仅暴露根级样式属性，无额外 semantic slots。
+
 ## 主题变量（Design Token）
 
-<!-- <ComponentTokenTable component="Actions"></ComponentTokenTable> -->
+组件暂无自定义 Component Token，可通过全局 Design Token 定制。
 
 ## 贡献者
 

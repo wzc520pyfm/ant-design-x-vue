@@ -289,13 +289,15 @@ bubble/list-scroll
 
 ## Semantic DOM
 
-- root: 根元素
-- content: 内容区域
-- body: 主体区域
-- header: 头部区域
-- footer: 底部区域
-- avatar: 头像区域
-- extra: 额外内容区域
+<vp-semantic component="Bubble"></vp-semantic>
+
+## 主题变量（Design Token）
+
+| Token | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| typingContent | 打字动画内容 | string | <code>&#124;</code> |
+| typingAnimationDuration | 打字动画持续时间 | string | `0.8s` |
+| typingAnimationName | 打字动画名称 | string | `cursorBlink` |
 
 ## 贡献者
 

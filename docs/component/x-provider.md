@@ -112,6 +112,8 @@ type ShortcutKeys<CustomKey = number | 'number'> =
 
 ## 主题变量（Design Token）
 
+XProvider 本身不提供独立 Component Token；请通过 `theme` 配置全局 Token 与各组件 Component Token。
+
 ## 贡献者
 
 <doc-contributors component-name="x-provider" :max-count="50" :show-view-all="true" />

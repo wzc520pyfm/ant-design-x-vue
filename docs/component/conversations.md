@@ -174,6 +174,10 @@ conversations/infinite-load
 | trigger           | 自定义 menu 触发器 | VNode \| ((conversation: ConversationItemType, info: { originNode: VNode }) => VNode) | -      | -    |
 | getPopupContainer | 菜单渲染父节点     | (triggerNode: HTMLElement) => HTMLElement                                             | -      | -    |
 
+## Semantic DOM
+
+<vp-semantic component="Conversations"></vp-semantic>
+
 ## 主题变量（Design Token）
 
 | Token                | 说明                     | 类型   | 默认值                     |

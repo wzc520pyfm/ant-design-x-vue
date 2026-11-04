@@ -89,4 +89,5 @@ sources/inline
 
 ## 主题变量（Design Token）
 
-<!-- <ComponentTokenTable component="Sources"></ComponentTokenTable> -->
+组件暂无自定义 Component Token，可通过全局 Design Token 定制。
+

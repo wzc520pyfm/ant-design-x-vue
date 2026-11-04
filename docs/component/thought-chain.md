@@ -129,6 +129,12 @@ thought-chain/single-row
 | itemContent | 节点内容 |
 | itemFooter | 节点脚注 |
 
+## Semantic DOM
+
+预览依次展示 `ThoughtChain` 与 `ThoughtChain.Item` 的语义结构。
+
+<vp-semantic component="ThoughtChain"></vp-semantic>
+
 ## 主题变量（Design Token）
 
 | 属性 | 说明 | 类型 | 默认值 |
@@ -141,3 +147,4 @@ thought-chain/single-row
 | iconSize | 图标容器尺寸 | number | fontSize |
 | colorTextBlinkDefault | 默认打字动画颜色 | string | colorTextDescription |
 | colorTextBlink | 打字动画颜色 | string | colorTextBase |
+| itemMotionDescription | 动效描述文本颜色（半透明） | string | `rgba(colorTextDescription, 0.25)` |

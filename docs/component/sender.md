@@ -294,4 +294,19 @@ type SlotConfigType =
 
 ## 主题变量（Design Token）
 
-<!-- <ComponentTokenTable component="Sender"></ComponentTokenTable> -->
+| Token | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| colorBgSlot | 词槽背景颜色 | string | `rgba(colorPrimary, 0.06)` |
+| colorTextSlot | 词槽文本颜色 | string | `colorPrimary` |
+| colorTextSlotPlaceholder | 词槽文本占位符颜色 | string | `rgba(colorPrimary, 0.25)` |
+| colorBorderSlot | 词槽边框颜色 | string | `rgba(colorPrimary, 0.06)` |
+| colorBorderSlotHover | 词槽边框悬浮态颜色 | string | `rgba(colorPrimary, 0.1)` |
+| switchCheckedBg | 开关选中背景颜色 | string | `rgba(colorPrimary, 0.08)` |
+| switchCheckedHoverBg | 开关选中悬浮态背景颜色 | string | `rgba(colorPrimary, 0.1)` |
+| switchUncheckedHoverBg | 开关未选中悬浮态背景颜色 | string | `rgba(colorFillTertiary, 0.04)` |
+| colorBorderInput | 输入框边框颜色 | string | `rgba(colorFillTertiary, 0.1)` |
+| colorBgSkill | 技能背景颜色 | string | `rgba(colorPrimary, 0.08)` |
+| colorBgSkillHover | 技能悬浮态背景颜色 | string | `rgba(colorPrimary, 0.15)` |
+
+> React 文档中的 `colorBgActionsDisabled` / `colorTextActionsDisabled` 尚未在 Vue `Sender` ComponentToken 中暴露，故未收录。
+

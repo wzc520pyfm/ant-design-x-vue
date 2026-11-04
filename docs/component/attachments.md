@@ -146,9 +146,14 @@ type PresetIcons = 'default' | 'excel' | 'image' | 'markdown' | 'pdf' | 'ppt' | 
 
 <vp-semantic component="Attachments"></vp-semantic>
 
+> Vue `Attachments` 的 `classNames` / `styles` 语义键为 `list` / `item` / `placeholder` / `upload`（与 React 2.0 中部分 FileCard 级语义不同，此处仅记录 Vue 实际暴露的 keys）。
+
 ## 主题变量（Design Token）
 
-<!-- <ComponentTokenTable component="Prompts"></ComponentTokenTable> -->
+| Token | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| colorBgPlaceholderHover | 占位区域悬浮背景色 | string | `rgba(colorBgContainer, 0.85)` |
+
 ## 贡献者
 
 <doc-contributors component-name="attachments" :max-count="50" :show-view-all="true" />
