@@ -461,50 +461,54 @@
 }
 
 /*
- * 属性 / 参数 / 字段 — widen vs description; keep identifiers on one line
- * (conversationKey must not split as conversationKe / y).
+ * 属性 / 参数 / 字段 — fixed share acts as max width. Short/medium names
+ * (conversationKey) stay one line when they fit; very long camelCase
+ * (incompleteMarkdownComponentMap) must wrap inside the cell — never
+ * overflow/overlap into 说明. No blanket nowrap.
  */
 .vp-doc th:nth-child(1),
 .vp-doc td:nth-child(1) {
   width: 22%;
-  white-space: nowrap;
-  overflow-wrap: normal;
-  word-break: keep-all;
+  max-width: 22%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  overflow: hidden;
 }
 
 .vp-doc th:nth-child(1) code,
 .vp-doc td:nth-child(1) code {
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
   word-break: normal;
-  overflow-wrap: normal;
 }
 
 /* 说明 — primary flexible column; long prose wraps vertically */
 .vp-doc th:nth-child(2),
 .vp-doc td:nth-child(2) {
-  width: 36%;
+  width: 32%;
   white-space: normal;
 }
 
 /* 类型 — usable share so unions / Partial<...> stay readable */
 .vp-doc th:nth-child(3),
 .vp-doc td:nth-child(3) {
-  width: 22%;
+  width: 20%;
 }
 
-/* 默认 / 默认值 — object literals wrap instead of crushing or forcing scroll */
+/* 默认 / 默认值 — slightly wider; object literals still wrap */
 .vp-doc th:nth-child(4),
 .vp-doc td:nth-child(4) {
-  width: 12%;
+  width: 15%;
 }
 
 /*
- * 版本 — required non-zero floor on 5-col API tables. nowrap keeps short
- * headers/values from stacking and inflating thead/row height.
+ * 版本 — required non-zero floor on 5-col API tables; slightly wider than
+ * prior 8%. nowrap keeps short headers/values from stacking.
  */
 .vp-doc th:nth-child(5),
 .vp-doc td:nth-child(5) {
-  width: 8%;
+  width: 11%;
   white-space: nowrap;
   overflow-wrap: normal;
   word-break: keep-all;
