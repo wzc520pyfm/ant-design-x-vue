@@ -229,6 +229,33 @@ onUnmounted(() => {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
+/* Soft edge highlight matching React Header `background` ::before/::after. */
+.x-header.glass::before,
+.x-header.glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.x-header.glass::before {
+  border: 1px solid;
+  border-image: linear-gradient(100deg, #ffffff53 0%, #ffffff00 100%);
+  border-image-slice: 1 0 0 1;
+  filter: blur(2px);
+}
+
+.x-header.glass::after {
+  padding: 1px;
+  background: linear-gradient(180deg, #ffffff26 0%, #ffffff00 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+}
+
 .x-header.narrow {
   top: 16px;
   width: calc(100% - 48px);
@@ -347,9 +374,16 @@ onUnmounted(() => {
   color: rgba(255, 255, 255, 0.88);
 }
 
+/*
+ * React homepage nav is transparent at the top of the hero (no nested glass
+ * pill). Vue previously painted a second glass pill on .x-nav, which read as
+ * an "inner border" ring over the dark hero. Keep links white; let .x-header.glass
+ * own the pill chrome once scrolled into mini mode.
+ */
 .x-header.on-home .x-nav {
-  background: linear-gradient(117deg, rgba(255, 255, 255, 0.14) 17%, rgba(255, 255, 255, 0.06) 51%);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .x-header.on-home .x-nav.mini {
