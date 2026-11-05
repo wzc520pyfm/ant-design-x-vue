@@ -1,0 +1,96 @@
+{
+  "name": "@ant-design-x-vue/x-markdown",
+  "version": "2.0.0-rc.1",
+  "description": "Markdown component for ant-design-x-vue with streaming support",
+  "keywords": [
+    "AI",
+    "Agent",
+    "Copilot",
+    "ant",
+    "markdown",
+    "framework",
+    "vue"
+  ],
+  "homepage": "https://x-vue.ant.design",
+  "bugs": {
+    "url": "https://github.com/wzc520pyfm/ant-design-x-vue/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wzc520pyfm/ant-design-x-vue"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "wzc520pyfm",
+    "email": "wzc520pyf@163.com",
+    "url": "https://github.com/wzc520pyfm"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./plugins/*": {
+      "types": "./dist/plugins/*.d.ts",
+      "import": "./dist/plugins/*.mjs",
+      "require": "./dist/plugins/*.js"
+    },
+    "./themes/*": "./themes/*"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "plugins",
+    "themes"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "build:watch": "vite build --watch",
+    "test": "vitest run",
+    "test:cov": "vitest --coverage",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "ant-design-x-vue": "2.0.0-rc.1",
+    "@ant-design/icons-vue": "^7.0.1",
+    "classnames": "^2.5.1",
+    "domhandler": "^5.0.3",
+    "dompurify": "^3.2.6",
+    "highlight.js": "^11.10.0",
+    "htmlparser2": "^10.1.0",
+    "katex": "^0.16.22",
+    "lodash.throttle": "^4.1.1",
+    "marked": "^15.0.12",
+    "mermaid": "^11.11.0"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.0.5",
+    "@types/katex": "^0.16.7",
+    "@types/lodash.throttle": "^4.1.9",
+    "@types/node": "^22.10.2",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
+    "@vitest/coverage-v8": "^2.1.1",
+    "ant-design-vue": "^4.2.6",
+    "typescript": "~5.8.0",
+    "unplugin-vue-macros": "^2.14.5",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.0",
+    "vitest": "^2.1.1",
+    "vue": "^3.5.10",
+    "vue-tsc": "^2.1.6"
+  },
+  "peerDependencies": {
+    "ant-design-vue": ">=4.0.0",
+    "vue": ">=3.5.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

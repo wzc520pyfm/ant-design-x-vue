@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CopyOutlined, DeleteOutlined, RedoOutlined, ShareAltOutlined } from '@ant-design/icons-vue';
+import { DeleteOutlined, EditOutlined, RedoOutlined, ShareAltOutlined } from '@ant-design/icons-vue';
 import { message as messageAnt, Modal } from 'ant-design-vue';
 import { Actions, type ActionsProps } from 'ant-design-x-vue';
 import { h } from 'vue';
@@ -15,21 +15,17 @@ const actionItems: ActionsProps['items'] = [
     icon: h(RedoOutlined),
   },
   {
-    key: 'copy',
-    label: 'Copy',
-    icon: h(CopyOutlined),
+    key: 'edit',
+    icon: h(EditOutlined),
+    label: 'Edit',
   },
   {
     key: 'more',
-    children: [
+    subItems: [
       {
         key: 'share',
         label: 'Share',
         icon: h(ShareAltOutlined),
-        children: [
-          { key: 'qq', label: 'QQ' },
-          { key: 'wechat', label: 'WeChat' },
-        ],
       },
       { key: 'import', label: 'Import' },
       {
@@ -56,11 +52,11 @@ const actionItems: ActionsProps['items'] = [
     key: 'clear',
     label: 'Clear',
     icon: h(DeleteOutlined),
+    danger: true,
   },
 ];
 
 const onClick: ActionsProps['onClick'] = ({ keyPath }) => {
-  // Logic for handling click events
   message.success(`you clicked ${keyPath.join(',')}`);
 };
 </script>
@@ -69,4 +65,3 @@ const onClick: ActionsProps['onClick'] = ({ keyPath }) => {
   <context-holder />
   <Actions :items="actionItems" :on-click="onClick" />
 </template>
-

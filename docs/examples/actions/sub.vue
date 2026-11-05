@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { CopyOutlined, DeleteOutlined, RedoOutlined, ShareAltOutlined } from '@ant-design/icons-vue';
+import { DeleteOutlined, EditOutlined, RedoOutlined, ShareAltOutlined } from '@ant-design/icons-vue';
 import { App, Modal } from 'ant-design-vue';
 import { Actions, type ActionsProps } from 'ant-design-x-vue';
 
@@ -15,21 +15,17 @@ const Demo = () => {
       icon: <RedoOutlined />,
     },
     {
-      key: 'copy',
-      label: 'Copy',
-      icon: <CopyOutlined />,
+      key: 'edit',
+      icon: <EditOutlined />,
+      label: 'Edit',
     },
     {
       key: 'more',
-      children: [
+      subItems: [
         {
           key: 'share',
           label: 'Share',
           icon: <ShareAltOutlined />,
-          children: [
-            { key: 'qq', label: 'QQ' },
-            { key: 'wechat', label: 'WeChat' },
-          ],
         },
         { key: 'import', label: 'Import' },
         {
@@ -56,6 +52,7 @@ const Demo = () => {
       key: 'clear',
       label: 'Clear',
       icon: <DeleteOutlined />,
+      danger: true,
     },
   ];
 

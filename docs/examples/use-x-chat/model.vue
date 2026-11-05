@@ -1,7 +1,7 @@
 <script lang="tsx" setup>
 import { UserOutlined } from '@ant-design/icons-vue';
 import { Flex } from 'ant-design-vue';
-import { Bubble, Sender, useXAgent, useXChat } from 'ant-design-x-vue';
+import { Bubble, Sender, useXAgent, useLegacyXChat } from 'ant-design-x-vue';
 import { ref, watch } from 'vue';
 
 defineOptions({ name: 'AXUseXChatModel' });
@@ -49,7 +49,7 @@ const [agent] = useXAgent<YourMessageType>({
 });
 const abortController = ref<AbortController>(null);
 // Chat messages
-const { onRequest, messages } = useXChat({
+const { onRequest, messages } = useLegacyXChat({
   agent: agent.value,
   requestFallback: (_, { error }) => {
     if (error.name === 'AbortError') {

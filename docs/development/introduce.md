@@ -1,4 +1,3 @@
-
 # Ant Design X of Vue
 
 `ant-design-x-vue` 是遵循 Ant Design 设计体系的一个 Vue UI 库，是 `@ant-design/x` 的 Vue 实现，用于构建由 AI 驱动的界面，一键接入智能对话组件与 API 服务。
@@ -98,9 +97,9 @@ export default defineConfig({
   plugins: [
     // add the following plugin
     components({
-      resolvers: [AntDesignXVueResolver()]
-    })
-  ]
+      resolvers: [AntDesignXVueResolver()],
+    }),
+  ],
 });
 ```
 
@@ -116,10 +115,10 @@ module.exports = {
     plugins: [
       // add the following plugin
       Components.default({
-        resolvers: [AntDesignXVueResolver()]
-      })
-    ]
-  }
+        resolvers: [AntDesignXVueResolver()],
+      }),
+    ],
+  },
 };
 ```
 
@@ -131,8 +130,8 @@ module.exports = {
 
 ```html
 <script setup>
-// auto import equals to
-// import { Bubble as AXBubble } from 'ant-design-x-vue';
+  // auto import equals to
+  // import { Bubble as AXBubble } from 'ant-design-x-vue';
 </script>
 
 <template>
@@ -140,16 +139,36 @@ module.exports = {
 </template>
 ```
 
-
-
 ## 🧩 原子组件
 
 我们基于 RICH 交互范式，在不同的交互阶段提供了大量的原子组件，帮助你灵活搭建你的 AI 对话应用：
 
-- 通用: `Bubble` - 消息气泡、`Conversations` - 会话管理
+- 通用: `Bubble` - 消息气泡、`Conversations` - 会话管理、`Notification` - 系统通知
 - 唤醒: `Welcome` - 欢迎、`Prompts` - 提示集
-- 表达: `Sender` - 发送框、`Attachment` - 附件、`Suggestion` - 快捷指令
-- 确认: `ThoughtChain` - 思维链
+- 表达: `Attachments` - 输入附件、`Sender` - 发送框、`Suggestion` - 快捷指令
+- 确认: `Think` - 思考过程、`ThoughtChain` - 思维链、`Sources` - 来源引用
+- 反馈: `Actions` - 操作列表、`FileCard` - 文件卡片
+- 其他: `XProvider` - 全局配置：主题、国际化等
+
+分组与 `@ant-design/x@2.0.0` 一致，总览见 [组件](/component/overview)。
+
+## ⚡️ 对接模型/智能体服务，AI 对话数据流管理
+
+我们通过提供 X SDK（`@ant-design-x-vue/x-sdk`），帮助你开箱即用地对接模型和智能体服务，并提供好用的基础工具。这些符号从 `ant-design-x-vue` 直接导出。升级步骤见 [从 v1 到 v2](/development/migration-v2)。字段和示例在 [X SDK](/x-sdk/introduce)。
+
+- `XRequest`：通用 HTTP 请求 + 流式响应解析
+- `XStream`：基于 Web Streams 的 SSE 流式数据解析
+- `useXChat`：AI 会话状态管理，配合 `ChatProvider` 适配各种模型 API
+- `useXConversations`：会话列表与切换状态管理
+- `XMCPClient`：基于 `XRequest` 实现的 MCP（Model Context Protocol）客户端
+
+## ✨ Markdown 高性能流式渲染引擎
+
+我们提供专为流式内容优化的 X Markdown（`@ant-design-x-vue/x-markdown`）渲染解决方案：
+
+- 流式增量缓冲：自动识别未完成的 markdown token（链接、图片、表格、HTML 等），保证渲染期间不出现"半个语法"。
+- 内置插件：`Latex`（基于 KaTeX）、`HighlightCode`（基于 highlight.js）、`Mermaid`（基于 mermaid）。
+- 主题样式：内置 `themes/light.css`、`themes/dark.css`，可按需引入。
 
 下面是使用原子组件搭建一个最简单的对话框的代码示例:
 
@@ -178,12 +197,12 @@ const messages = [
 </template>
 ```
 
-这里有一个在线示例可供参考：[Example Project](https://stackblitz.com/edit/atgajqmx?file=src%2FDemo.vue)，也推荐fork该示例反馈bug。
+这里有一个在线示例可供参考：[Example Project](https://stackblitz.com/edit/atgajqmx?file=src%2FDemo.vue)，也推荐 fork 该示例反馈 bug。
 
 ::: warning
 
 文档中 tsx 风格的代码示例采用 [`defineRender`](https://vue-macros.dev/zh-CN/macros/define-render.html) 编写，要运行它们，你还需要集成 [`Vue Macros`](https://vue-macros.dev/zh-CN/guide/bundler-integration.html).
 
-Vue模板风格的示例代码在逐步更新中，你可以在左上角将 **风格偏好** 切换至 `setup` 预览。
+Vue 模板风格的示例代码在逐步更新中，你可以在左上角将 **风格偏好** 切换至 `setup` 预览。
 
 :::

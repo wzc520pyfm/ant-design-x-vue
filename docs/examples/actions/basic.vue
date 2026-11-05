@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { CopyOutlined, RedoOutlined } from '@ant-design/icons-vue';
+import { EditOutlined, RedoOutlined } from '@ant-design/icons-vue';
 import { App } from 'ant-design-vue';
 import { Actions, type ActionsProps } from 'ant-design-x-vue';
 
@@ -12,9 +12,9 @@ const actionItems: ActionsProps['items'] = [
     label: 'Retry',
   },
   {
-    key: 'copy',
-    icon: <CopyOutlined />,
-    label: 'Copy',
+    key: 'edit',
+    icon: <EditOutlined />,
+    label: 'Edit',
   },
 ];
 

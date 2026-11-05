@@ -4,6 +4,25 @@
   }
 }
 
+.version-switch {
+  display: flex;
+  align-items: center;
+}
+
+.version-switch .ant-select {
+  width: 84px;
+}
+
+.VPNavScreen .version-switch {
+  margin: 16px 24px 8px;
+}
+
+@media (max-width: 767px) {
+  .VPNavBar .version-switch {
+    display: none;
+  }
+}
+
 .hidden_aside {
   .aside {
     display: none !important;
@@ -37,3 +56,66 @@ html {
 html:hover {
   scrollbar-color: #eaeaea transparent;
 }
+
+/*
+ * Docs SSR extracts the dark cssinjs cache. If an Actions root keeps that
+ * hash on a light page, icons stay `colorText` white (`rgba(255,255,255,0.85)`)
+ * on a white demo. The page chrome is light whenever `<html>` has no `.dark`
+ * class (the appearance boot script only adds it for dark), so force the
+ * light text color over the stale hash. :where() on the cssinjs rule has no
+ * specificity, and this selector wins.
+ */
+html:not(.dark) .example-showcase .ant-actions-item {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+html:not(.dark) .example-showcase .ant-actions-item .anticon {
+  color: inherit;
+}
+
+/* Prevent VitePress styles from interfering with component demos */
+.vp-doc .example-showcase [class*='-sources'] ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.vp-doc .example-showcase [class*='-sources'] a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: inherit;
+}
+
+.vp-doc .example-showcase [class*='-sources'] a:hover {
+  color: var(--ant-color-link, #1677ff);
+}
+
+/* Conversations is a <ul>/<li> list; VitePress `.vp-doc li + li` adds margin-top
+   that stacks on the component flex gap and diverges from React `@ant-design/x`. */
+.vp-doc .example-showcase .ant-conversations li + li {
+  margin-top: 0;
+}
+
+/* Neutralize VitePress `.vp-doc ul { margin: 16px 0; padding-left: 1.25rem }`
+   injected into nested conversation group lists, so group title → first item gap
+   matches React `@ant-design/x`. Descendant only — does not strip root component padding. */
+.vp-doc .example-showcase .ant-conversations ul {
+  margin: 0;
+  padding-left: 0;
+}
+
+/* Actions embeds ant-design-vue Pagination (`ul.ant-pagination`) inside the
+   variant list. VitePress `.vp-doc ul` / `li + li` margins pad and stretch the
+   outlined/filled chrome so the demo looks larger/emptier than React
+   `@ant-design/x`. Neutralize those host list styles inside Actions only. */
+.vp-doc .example-showcase .ant-actions .ant-pagination {
+  margin: 0;
+  padding-left: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.vp-doc .example-showcase .ant-actions .ant-pagination li + li {
+  margin-top: 0;
+}
+

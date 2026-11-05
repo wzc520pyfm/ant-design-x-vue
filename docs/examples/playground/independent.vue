@@ -9,7 +9,7 @@ import {
   Sender,
   Welcome,
   useXAgent,
-  useXChat,
+  useLegacyXChat,
 } from 'ant-design-x-vue';
 import {
   AppstoreAddOutlined,
@@ -154,7 +154,7 @@ const styles = computed(() => {
   return {
     layout: {
       width: '100%',
-      'min-width': '1000px',
+      minWidth: 0,
       height: '722px',
       display: 'flex',
       background: `${token.value.colorBgContainer}`,
@@ -205,7 +205,8 @@ const styles = computed(() => {
     // chat list 样式
     chat: {
       height: '100%',
-      width: '100%',
+      width: 'calc(100% - 280px)',
+      minWidth: 0,
       'box-sizing': 'border-box',
       display: 'flex',
       'flex-direction': 'column',
@@ -224,6 +225,9 @@ const styles = computed(() => {
     },
     placeholder: {
       'padding-top': '32px',
+      width: '100%',
+      boxSizing: 'border-box',
+      paddingInline: `${token.value.paddingLG}px`,
     },
     // sender 样式
     sender: {
@@ -274,7 +278,7 @@ watch(() => agent.value.isRequesting(), () => {
   loading.value = agent.value.isRequesting();
 });
 
-const { onRequest, messages, setMessages } = useXChat({
+const { onRequest, messages, setMessages } = useLegacyXChat({
   agent: agent.value,
   requestFallback: (_, { error }) => {
     if (error.name === 'AbortError') {
@@ -343,7 +347,6 @@ const onSubmit = (val: string) => {
 // ==================== Nodes ====================
 const chatSider = computed(() => (
   <div style={styles.value.sider}>
-    {/* 🌟 Logo */}
     <div style={styles.value.logo}>
       <img
         src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original"
@@ -355,7 +358,6 @@ const chatSider = computed(() => (
       <span style={styles.value.logoTitle}>Ant Design X</span>
     </div>
 
-    {/* 🌟 添加会话 */}
     <Button
       onClick={() => {
         if (loading.value) {
@@ -384,7 +386,6 @@ const chatSider = computed(() => (
       New Conversation
     </Button>
 
-    {/* 🌟 会话管理 */}
     <Conversations
       items={conversations.value}
       style={styles.value.conversations}
@@ -449,7 +450,7 @@ const chatList = computed(() => (
           },
           typing: i.status === 'loading' ? { step: 5, interval: 20, suffix: <>💗</> } : false,
         }))}
-        style={{ height: '100%', paddingInline: 'calc(calc(100% - 700px) /2)' }}
+        style={{ height: '100%', maxWidth: '700px', margin: '0 auto' }}
         roles={{
           assistant: {
             placement: 'start',
@@ -470,7 +471,7 @@ const chatList = computed(() => (
       <Space
         direction="vertical"
         size={16}
-        style={{ paddingInline: 'calc(calc(100% - 700px) /2)', ...styles.value.placeholder }}
+        style={styles.value.placeholder}
       >
         <Welcome
           variant="borderless"
@@ -490,14 +491,15 @@ const chatList = computed(() => (
             styles={{
               list: { height: '100%' },
               item: {
-                flex: 1,
+                flex: '1 1 0',
+                minWidth: 0,
                 backgroundImage: isDark.value
                   ? 'linear-gradient(123deg, #1e2a38 0%, #2b1f3b 100%)'
                   : 'linear-gradient(123deg, #e5f4ff 0%, #efe7ff 100%)',
                 borderRadius: '12px',
                 border: 'none',
               },
-              subItem: { padding: 0, background: 'transparent' },
+              subItem: { padding: 0, background: 'transparent', maxWidth: '100%' },
             }}
             onItemClick={(info) => {
               onSubmit(info.data.description as string);
@@ -508,14 +510,15 @@ const chatList = computed(() => (
             items={[DESIGN_GUIDE]}
             styles={{
               item: {
-                flex: 1,
+                flex: '1 1 0',
+                minWidth: 0,
                 backgroundImage: isDark.value
                   ? 'linear-gradient(123deg, #1e2a38 0%, #2b1f3b 100%)'
                   : 'linear-gradient(123deg, #e5f4ff 0%, #efe7ff 100%)',
                 borderRadius: '12px',
                 border: 'none',
               },
-              subItem: { background: isDark.value ? undefined :'#ffffffa6' },
+              subItem: { background: isDark.value ? undefined : '#ffffffa6', maxWidth: '100%' },
             }}
             onItemClick={(info) => {
               onSubmit(info.data.description as string);
@@ -555,18 +558,18 @@ const senderHeader = computed(() => (
 ));
 const chatSender = computed(() => (
   <>
-    {/* 🌟 提示词 */}
     <Prompts
       items={SENDER_PROMPTS}
+      wrap
       onItemClick={(info) => {
         onSubmit(info.data.description as string);
       }}
       styles={{
-        item: { padding: '6px 12px' },
+        item: { padding: '6px 12px', maxWidth: '100%' },
+        list: { flexWrap: 'wrap' },
       }}
       style={styles.value.senderPrompt}
     />
-    {/* 🌟 输入框 */}
     <Sender
       value={inputValue.value}
       header={senderHeader.value}

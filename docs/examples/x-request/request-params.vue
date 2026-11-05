@@ -1,14 +1,14 @@
 <script lang="tsx" setup>
 import { LoadingOutlined, TagsOutlined } from '@ant-design/icons-vue';
 import { Button, Descriptions, Flex } from 'ant-design-vue';
-import { ThoughtChain, type ThoughtChainItem, XRequest } from 'ant-design-x-vue';
+import { ThoughtChain, type ThoughtChainItem, XRequestLegacy } from 'ant-design-x-vue';
 import { ref } from 'vue';
 
 defineOptions({ name: 'AXXRequestRequestParams' });
 
 const BASE_URL = 'https://api.example.com/agent';
 
-const exampleRequest = XRequest({
+const exampleRequest = XRequestLegacy({
   baseURL: BASE_URL,
 });
 

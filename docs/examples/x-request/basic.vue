@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { LoadingOutlined, TagsOutlined } from '@ant-design/icons-vue';
 import { Button, Descriptions, Flex } from 'ant-design-vue';
-import { ThoughtChain, type ThoughtChainItem, XRequest } from 'ant-design-x-vue';
+import { ThoughtChain, type ThoughtChainItem, XRequestLegacy } from 'ant-design-x-vue';
 import { ref } from 'vue';
 
 defineOptions({ name: 'AXXRequestBasic' });
@@ -14,7 +14,7 @@ const PATH = '/chat';
 const MODEL = 'gpt-3.5-turbo';
 // const API_KEY = '';
 
-const exampleRequest = XRequest({
+const exampleRequest = XRequestLegacy({
   baseURL: BASE_URL + PATH,
   model: MODEL,
 
