@@ -23,60 +23,60 @@ describe('cross-site version switch', () => {
       ),
     ) as { version: string }
     expect(V2_VERSION_LABEL).toBe(pkg.version)
-    expect(V1_DOCS_ORIGIN).toBe('https://antd-design-x-vue.netlify.app')
+    expect(V1_DOCS_ORIGIN).toBe('https://1x-ant-design-x-vue.netlify.app')
     expect(V2_DOCS_ORIGIN).toBe('https://x-vue.ant.design')
   })
 
   it('treats only the 1.x origin as 1.x', () => {
-    expect(currentDocsVersion('https://antd-design-x-vue.netlify.app')).toBe('v1')
-    expect(currentDocsVersion('https://antd-design-x-vue.netlify.app/')).toBe('v1')
+    expect(currentDocsVersion('https://1x-ant-design-x-vue.netlify.app')).toBe('v1')
+    expect(currentDocsVersion('https://1x-ant-design-x-vue.netlify.app/')).toBe('v1')
     expect(currentDocsVersion('http://127.0.0.1:4173')).toBe('v2')
     expect(currentDocsVersion('https://x-vue.ant.design')).toBe('v2')
   })
 
   it('opens the same component on the 1.x site', () => {
     expect(resolveVersionHref('/component/bubble', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/component/bubble',
+      'https://1x-ant-design-x-vue.netlify.app/component/bubble',
     )
     expect(resolveVersionHref('/component/bubble.html', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/component/bubble',
+      'https://1x-ant-design-x-vue.netlify.app/component/bubble',
     )
     expect(resolveVersionHref('/component/sender', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/component/sender',
+      'https://1x-ant-design-x-vue.netlify.app/component/sender',
     )
-    expect(resolveVersionHref('/', 'v1')).toBe('https://antd-design-x-vue.netlify.app/')
+    expect(resolveVersionHref('/', 'v1')).toBe('https://1x-ant-design-x-vue.netlify.app/')
     expect(resolveVersionHref('/playground/independent', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/playground/independent',
+      'https://1x-ant-design-x-vue.netlify.app/playground/independent',
     )
   })
 
   it('follows renamed SDK pages onto the 1.x site', () => {
     expect(resolveVersionHref('/component/x-sdk-use-x-chat', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/component/use-x-chat',
+      'https://1x-ant-design-x-vue.netlify.app/component/use-x-chat',
     )
     expect(resolveVersionHref('/component/x-sdk-x-request', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/component/x-request',
+      'https://1x-ant-design-x-vue.netlify.app/component/x-request',
     )
     expect(resolveVersionHref('/component/x-sdk-x-stream', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/component/x-stream',
+      'https://1x-ant-design-x-vue.netlify.app/component/x-stream',
     )
     expect(resolveVersionHref('/component/x-sdk-chat-provider', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/component/use-x-agent',
+      'https://1x-ant-design-x-vue.netlify.app/component/use-x-agent',
     )
   })
 
   it('falls back to the other site section index', () => {
     expect(resolveVersionHref('/component/notification', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/component/overview',
+      'https://1x-ant-design-x-vue.netlify.app/component/overview',
     )
     expect(resolveVersionHref('/component/file-card', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/component/overview',
+      'https://1x-ant-design-x-vue.netlify.app/component/overview',
     )
     expect(resolveVersionHref('/playground/agent-tbox', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/playground/independent',
+      'https://1x-ant-design-x-vue.netlify.app/playground/independent',
     )
     expect(resolveVersionHref('/development/migration-v2', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/development/introduce',
+      'https://1x-ant-design-x-vue.netlify.app/development/introduce',
     )
   })
 
@@ -88,13 +88,13 @@ describe('cross-site version switch', () => {
       'https://x-vue.ant.design/x-sdk/use-x-chat',
     )
     expect(resolveVersionHref('/x-sdk/use-x-chat', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/component/use-x-chat',
+      'https://1x-ant-design-x-vue.netlify.app/component/use-x-chat',
     )
     expect(resolveVersionHref('/x-markdown/introduce', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/',
+      'https://1x-ant-design-x-vue.netlify.app/',
     )
     expect(resolveVersionHref('/design/role-design', 'v1')).toBe(
-      'https://antd-design-x-vue.netlify.app/',
+      'https://1x-ant-design-x-vue.netlify.app/',
     )
     expect(resolveVersionHref('/component/attachments', 'v2')).toBe(
       'https://x-vue.ant.design/component/attachments',

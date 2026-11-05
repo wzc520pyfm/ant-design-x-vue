@@ -7,7 +7,7 @@ export type DocVersionId = 'v1' | 'v2'
  * 1.x is the pre-2.0 Netlify docs. 2.x is this VitePress site. `x-vue.ant.design`
  * is the package homepage; change `V2_DOCS_ORIGIN` when that host is live.
  */
-export const V1_DOCS_ORIGIN = 'https://antd-design-x-vue.netlify.app'
+export const V1_DOCS_ORIGIN = 'https://1x-ant-design-x-vue.netlify.app'
 export const V2_DOCS_ORIGIN = 'https://x-vue.ant.design'
 
 /** Tracks `packages/ant-design-x-vue` so the header matches the published 2.x line. */
