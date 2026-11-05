@@ -32,6 +32,14 @@ think/expand
 
 :::
 
+### 折叠时销毁内容
+
+:::demo-v2 折叠时是否销毁内容节点。
+
+think/destroyOnHidden
+
+:::
+
 ## API
 
 ### ThinkProps
@@ -47,6 +55,7 @@ think/expand
 | expanded | 是否展开 | `boolean` | - | - |
 | onExpand | 展开事件 | `(expand: boolean) => void` | - | - |
 | blink | 闪动模式 | `boolean` | - | - |
+| destroyOnHidden | 隐藏时是否销毁内容节点 | `boolean` | `true` | - |
 
 ### Slots
 
