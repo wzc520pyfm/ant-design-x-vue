@@ -178,10 +178,10 @@ importers:
   packages/ant-design-x-vue:
     dependencies:
       '@ant-design-x-vue/x-markdown':
-        specifier: 2.0.0
+        specifier: 2.0.0-rc.1
         version: link:../x-markdown
       '@ant-design-x-vue/x-sdk':
-        specifier: 2.0.0
+        specifier: 2.0.0-rc.1
         version: link:../x-sdk
       '@ant-design/fast-color':
         specifier: ^2.0.6
@@ -242,7 +242,7 @@ importers:
   packages/components:
     dependencies:
       '@ant-design-x-vue/x-sdk':
-        specifier: 2.0.0
+        specifier: 2.0.0-rc.1
         version: link:../x-sdk
       '@ant-design/fast-color':
         specifier: ^2.0.6
@@ -303,7 +303,7 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1(vue@3.5.13(typescript@5.8.2))
       ant-design-x-vue:
-        specifier: 2.0.0
+        specifier: 2.0.0-rc.1
         version: link:../ant-design-x-vue
       classnames:
         specifier: ^2.5.1
