@@ -74,7 +74,66 @@ export interface AnimationConfig {
    * @default 'ease-in-out'
    */
   easing?: string;
+  /**
+   * Unit of the fade-in. `chunk` fades each newly arrived piece; `sentence`
+   * merges into the current sentence until a delimiter. Prefer `sentence`
+   * together with `typewriter`.
+   * @default 'chunk'
+   */
+  splitBy?: 'chunk' | 'sentence';
+  /**
+   * Sentence delimiters when `splitBy` is `sentence`.
+   * @default ['。', '！', '？', '.', '!', '?', '\n']
+   */
+  delimiters?: string[];
+  /**
+   * Max characters one fade-in unit holds when `splitBy` is `sentence`.
+   * @default 120
+   */
+  maxSentenceChars?: number;
 }
+
+/**
+ * Typewriter pacing config (align with @ant-design/x-markdown 2.10).
+ */
+export interface TypewriterConfig {
+  /**
+   * Reveal unit. `char` reveals character by character; `sentence` reveals up
+   * to the next delimiter (delimiters inside fenced/inline code do not count;
+   * a newline always does).
+   * @default 'char'
+   */
+  unit?: 'char' | 'sentence';
+  /**
+   * Sentence delimiters.
+   * @default ['。', '！', '？', '.', '!', '?', '\n']
+   */
+  delimiters?: string[];
+  /**
+   * Minimum reveal speed in characters per second.
+   * @default 24
+   */
+  minCps?: number;
+  /**
+   * Maximum reveal speed in characters per second.
+   * @default 3000
+   */
+  maxCps?: number;
+  /**
+   * With `unit: 'char'`, pause after revealing a delimiter (ms).
+   * @default 0
+   */
+  pauseMs?: number;
+  /**
+   * With `unit: 'sentence'`, longest run since the previous delimiter held
+   * back before falling back to character reveal.
+   * @default 120
+   */
+  maxSentenceChars?: number;
+}
+
+/** @deprecated Alias kept for callers that import TypewriterOption */
+export type TypewriterOption = TypewriterConfig;
 
 export enum StreamCacheTokenType {
   Text = 'text',
@@ -84,6 +143,19 @@ export enum StreamCacheTokenType {
   Emphasis = 'emphasis',
   List = 'list',
   Table = 'table',
+  InlineCode = 'inline-code',
+}
+
+export interface TailConfig {
+  /**
+   * Tail content to display.
+   * @default '▋'
+   */
+  content?: string;
+  /**
+   * Custom tail component; takes precedence over `content`.
+   */
+  component?: Component;
 }
 
 export interface StreamingOption {
@@ -92,6 +164,13 @@ export interface StreamingOption {
    * @default false
    */
   hasNextChunk?: boolean;
+  /**
+   * Split the document into sections at headings while streaming so only the
+   * last growing section is re-parsed/rendered per chunk. Pass an object to
+   * tune `minSectionChars` / `keepSectionsOnEnd`.
+   * @default false
+   */
+  incremental?: boolean | { minSectionChars?: number; keepSectionsOnEnd?: boolean };
   /**
    * Enables text fade-in animation for block elements (p, li, h1–h4).
    * @default false
@@ -102,12 +181,31 @@ export interface StreamingOption {
    */
   animationConfig?: AnimationConfig;
   /**
-   * Mapping configuration to convert incomplete Markdown formats to custom
-   * loading components for unclosed links / images during streaming rendering.
+   * Enable tail cursor. `true` uses default `▋`; object customizes content/component.
+   * @default false
+   */
+  tail?: boolean | TailConfig;
+  /**
+   * Mapping of incomplete Markdown tokens to custom loading component names.
    */
   incompleteMarkdownComponentMap?: Partial<
-    Record<Exclude<StreamCacheTokenType, StreamCacheTokenType.Text>, string>
+    Record<
+      Exclude<(typeof StreamCacheTokenType)[keyof typeof StreamCacheTokenType], 'text'>,
+      string
+    >
   >;
+  /**
+   * How unfinished Markdown syntax is shown.
+   * - `placeholder`: hold back or show incompleteMarkdownComponentMap placeholder
+   * - `complete`: show half-written emphasis / inline code / link text / list items as finished text
+   * @default 'placeholder'
+   */
+  incompleteMarkdown?: 'placeholder' | 'complete';
+  /**
+   * Typewriter effect: reveal newly arrived content at a steady pace.
+   * @default false
+   */
+  typewriter?: boolean | TypewriterConfig;
 }
 
 export interface XMarkdownProps {
@@ -122,9 +220,9 @@ export interface XMarkdownProps {
   children?: string;
 
   /**
-   * Whether content is being streamed. Passes `'loading' | 'done'` to custom
-   * components. Accepts a boolean or a StreamingOption object (aligned with
-   * @ant-design/x-markdown).
+   * Streaming configuration. A boolean enables the 2.10 preset:
+   * `true` → `hasNextChunk: true` + `incremental` + `incompleteMarkdown: 'complete'` + `typewriter`;
+   * `false` → stream ended / final render. Pass an object for per-option control.
    */
   streaming?: boolean | StreamingOption;
 

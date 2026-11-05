@@ -1,4 +1,4 @@
-import { Marked, type MarkedExtension, type Tokens } from 'marked';
+import { Marked, type MarkedExtension, type Token, type Tokens } from 'marked';
 import type { Token, Tokens as XTokens } from '../interface';
 
 type ParserOptions = {
@@ -6,6 +6,15 @@ type ParserOptions = {
   paragraphTag?: string;
   openLinksInNewTab?: boolean;
 };
+
+type ParseOptions = {
+  injectTail?: boolean;
+};
+
+/** Symbol to mark tokens for tail injection (avoids property name conflicts). */
+const TAIL_MARKER = Symbol('tailMarker');
+
+type MarkableToken = Token & { [TAIL_MARKER]?: boolean };
 
 export const other = {
   escapeTestNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/,
@@ -51,6 +60,7 @@ export function escapeHtml(html: string, encode?: boolean) {
 export class Parser {
   options: ParserOptions;
   markdownInstance: Marked;
+  private injectTail = false;
 
   constructor(options: ParserOptions = {}) {
     const { markedConfig = {} } = options;
@@ -60,6 +70,7 @@ export class Parser {
     this.configureLinkRenderer();
     this.configureParagraphRenderer();
     this.configureCodeRenderer();
+    this.configureTailInjection();
     // user config at last
     this.markdownInstance.use(markedConfig as MarkedExtension);
   }
@@ -107,11 +118,71 @@ export class Parser {
     this.markdownInstance.use({ renderer });
   }
 
+  private configureTailInjection() {
+    const parser = this;
+    this.markdownInstance.use({
+      hooks: {
+        processAllTokens(tokens) {
+          if (!parser.injectTail) return tokens;
+
+          const lastTextToken = parser.findLastTextToken(tokens as Token[]);
+          if (lastTextToken) {
+            (lastTextToken as MarkableToken)[TAIL_MARKER] = true;
+          }
+          return tokens;
+        },
+      },
+      renderer: {
+        text(this: any, token: Tokens.Text | Tokens.Escape) {
+          const text =
+            'tokens' in token && token.tokens
+              ? this.parser.parseInline(token.tokens)
+              : 'text' in token
+                ? token.text
+                : '';
+
+          if ((token as MarkableToken)[TAIL_MARKER]) {
+            return `${text}<xmd-tail></xmd-tail>`;
+          }
+          return text;
+        },
+      },
+    });
+  }
+
+  private findLastTextToken(tokens: Token[]): Token | null {
+    for (let i = tokens.length - 1; i >= 0; i--) {
+      const token = tokens[i];
+      if (!token) continue;
+      if (token.type === 'text') return token;
+      if ('tokens' in token && Array.isArray((token as any).tokens)) {
+        const nested = this.findLastTextToken((token as any).tokens);
+        if (nested) return nested;
+      }
+      if ('items' in token && Array.isArray((token as any).items)) {
+        for (let j = (token as any).items.length - 1; j >= 0; j--) {
+          const item = (token as any).items[j];
+          if (item?.tokens) {
+            const nested = this.findLastTextToken(item.tokens);
+            if (nested) return nested;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   /**
    * Parse markdown content to HTML string.
+   * Pass `{ injectTail: true }` to append `<xmd-tail></xmd-tail>` after the last text token.
    */
-  parse(content: string): string {
-    return this.markdownInstance.parse(content) as string;
+  parse(content: string, parseOptions?: ParseOptions): string {
+    this.injectTail = parseOptions?.injectTail ?? false;
+    try {
+      return this.markdownInstance.parse(content) as string;
+    } finally {
+      this.injectTail = false;
+    }
   }
 
   /**
