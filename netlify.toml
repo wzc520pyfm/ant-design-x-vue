@@ -10,6 +10,9 @@
 # NODE_VERSION matches .github/workflows/ci.yml.
 
 [build]
+  # Force repo root even when a site UI still has Base directory = docs
+  # (or another 1.x path). Paths below are relative to this base.
+  base = "."
   command = "pnpm docs:build"
   publish = "docs/.vitepress/dist"
 
