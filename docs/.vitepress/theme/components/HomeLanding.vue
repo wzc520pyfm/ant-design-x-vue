@@ -274,7 +274,13 @@ function titleParts(title: string, label: string) {
             </a>
             <a class="card" href="/component/prompts">
               <div class="card-preview">
-                <Prompts class="glass-surface" :items="promptItems" :styles="{ item: { width: '290px', borderRadius: '20px' }, list: { borderRadius: '20px' } }" />
+                <!-- Glass goes on the item like React; `border: none` drops the default
+                     Prompts item border that reads as a light outline in the dark preview. -->
+                <Prompts
+                  :items="promptItems"
+                  :styles="{ item: { width: '290px', borderRadius: '20px', border: 'none' }, list: { borderRadius: '20px' } }"
+                  :classNames="{ item: 'glass-surface' }"
+                />
               </div>
               <h3>用户推荐 <em class="tag-awake">唤醒</em></h3>
               <p>让首次接触AI产品的用户快速理解AI能做什么</p>
@@ -857,9 +863,15 @@ function titleParts(title: string, label: string) {
   overflow: hidden;
 }
 
+.card-preview.welcome-card :deep(.ant-welcome) {
+  /* Match React CustomizationProvider welcome chrome: tighter box + smaller text. */
+  padding: 18px;
+  border-radius: 20px;
+}
+
 .card-preview.welcome-card :deep(.ant-welcome-icon) {
   flex-shrink: 0;
-  height: 64px;
+  height: 56px;
 }
 
 .card-preview.welcome-card :deep(.ant-welcome-icon img) {
@@ -867,6 +879,16 @@ function titleParts(title: string, label: string) {
   height: 100%;
   max-width: none;
   object-fit: contain;
+}
+
+.card-preview.welcome-card :deep(.ant-welcome-title) {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.card-preview.welcome-card :deep(.ant-welcome-description) {
+  font-size: 13px;
+  opacity: 0.65;
 }
 
 .card-preview :deep(.glass-surface),
