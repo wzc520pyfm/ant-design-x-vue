@@ -18,6 +18,11 @@ export interface ComponentToken {
    * @descEN Code block border color
    */
   colorBorderCode: string;
+  /**
+   * @desc 代码字体
+   * @descEN Code font family (ant-design-vue AliasToken has no fontFamilyCode; mirror React seed)
+   */
+  fontFamilyCode: string;
 }
 
 export interface CodeHighlighterToken extends FullToken<'CodeHighlighter'> {}
@@ -117,6 +122,8 @@ export const prepareComponentToken: GetDefaultToken<'CodeHighlighter'> = (token)
   colorBgTitle: token.colorFillContent,
   colorBorderCode: token.colorBorderSecondary,
   colorTextTitle: token.colorText,
+  // ant-design-vue SeedToken lacks fontFamilyCode; keep React @ant-design/x seed parity
+  fontFamilyCode: `'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace`,
 });
 
 export default genStyleHooks(
