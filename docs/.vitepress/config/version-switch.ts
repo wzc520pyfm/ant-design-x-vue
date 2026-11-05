@@ -53,6 +53,7 @@ export const V2_SITE_PATHS = [
   '/component/attachments',
   '/component/actions',
   '/component/file-card',
+  '/component/folder',
   '/component/think',
   '/component/thought-chain',
   '/component/sources',

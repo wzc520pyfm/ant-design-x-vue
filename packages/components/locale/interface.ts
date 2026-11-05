@@ -21,6 +21,12 @@ export interface xLocale {
     editableOk: string;
     editableCancel: string;
   };
+  Folder?: {
+    selectFile: string;
+    loadError: string;
+    noService: string;
+    loadFailed: string;
+  };
 }
 
 export interface xMarkdownLocale {

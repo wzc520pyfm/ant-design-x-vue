@@ -24,6 +24,7 @@ import type { SourcesProps } from '../sources';
 import type { SuggestionProps } from '../suggestion';
 import type { OverrideToken } from '../theme/cssinjs-utils';
 import type { ThinkProps } from '../think';
+import type { FolderProps } from '../folder';
 import type { ThoughtChainProps } from '../thought-chain';
 import type { WelcomeProps } from '../welcome';
 import type { MarkdownComponentsConfig as XMarkdownComponentsConfig } from './XMarkdownComponents';
@@ -81,6 +82,7 @@ export interface XComponentsConfig {
   sender?: ComponentStyleConfig<SenderProps>;
   suggestion?: ComponentStyleConfig<SuggestionProps>;
   think?: ComponentStyleConfig<ThinkProps>;
+  folder?: ComponentStyleConfig<FolderProps>;
   thoughtChain?: ComponentStyleConfig<ThoughtChainProps>;
   attachments?: ComponentStyleConfig<AttachmentsProps>;
   fileCard?: ComponentStyleConfig<FileCardProps>;

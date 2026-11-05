@@ -14,3 +14,4 @@ export * from './actions';
 export * from './file-card';
 export * from './sources';
 export * from './think';
+export * from './folder';

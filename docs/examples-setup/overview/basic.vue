@@ -23,6 +23,7 @@ import {
   BellOutlined,
   LinkOutlined,
   FileOutlined,
+  FolderOutlined,
 } from '@ant-design/icons-vue';
 import { ref, computed } from 'vue';
 import { useData } from 'vitepress';
@@ -144,6 +145,14 @@ const allComponents = [
     content: 'file-card-demo',
   },
   {
+    id: 'folder',
+    category: '反馈组件',
+    title: 'Folder 文件夹',
+    description: '文件树组件，展示层级结构并支持预览与右键菜单',
+    icon: <FolderOutlined style={{ color: '#13c2c2' }} />,
+    content: 'folder-demo',
+  },
+  {
     id: 'x-provider',
     category: '其他',
     title: 'XProvider 全局化配置',
@@ -187,6 +196,7 @@ const getComponentDisplayText = (component: any) => {
     sources: '来源引用',
     actions: '结果操作',
     'file-card': '文件卡片',
+    folder: '文件夹',
     'x-provider': '全局配置管理',
   };
   return textMap[component.id] || component.title;
@@ -217,6 +227,7 @@ const componentRoutes: Record<string, string> = {
   sources: '/component/sources',
   actions: '/component/actions',
   'file-card': '/component/file-card',
+  folder: '/component/folder',
   'x-provider': '/component/x-provider',
 };
 
