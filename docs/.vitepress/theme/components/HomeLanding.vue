@@ -113,8 +113,11 @@ function onForegroundLoad(animation: { addEventListener: Function, loop: boolean
 }
 
 let richPlayed = false
+let richInView = false
 let richAnimation: { play: () => void } | null = null
-// Match React DesignBanner: stay at frame 0 until scrollY > 600, then play().
+let richObserver: IntersectionObserver | null = null
+const richRef = ref<HTMLElement | null>(null)
+// Stay at frame 0 until the RICH block enters the viewport, then play() once.
 function onRichLoad(animation: {
   play: () => void
   goToAndStop: (frame: number, isFrame: boolean) => void
@@ -124,9 +127,26 @@ function onRichLoad(animation: {
   playRich()
 }
 function playRich() {
-  if (richPlayed || !richAnimation || window.scrollY <= 600) return
+  if (richPlayed || !richAnimation || !richInView) return
   richPlayed = true
   richAnimation.play()
+}
+function bindRichTrigger() {
+  if (!richRef.current) return
+  richObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          richInView = true
+          playRich()
+          richObserver?.disconnect()
+          richObserver = null
+        }
+      }
+    },
+    { threshold: 0.2 },
+  )
+  richObserver.observe(richRef.current)
 }
 function bindReveal() {
   const nodes = document.querySelectorAll('.home [data-reveal]')
@@ -138,11 +158,13 @@ function bindReveal() {
   nodes.forEach((node) => io.observe(node))
 }
 onMounted(() => {
-  window.addEventListener('scroll', playRich, { passive: true })
+  bindRichTrigger()
   bindReveal()
-  playRich()
 })
-onUnmounted(() => window.removeEventListener('scroll', playRich))
+onUnmounted(() => {
+  richObserver?.disconnect()
+  richObserver = null
+})
 
 function titleParts(title: string, label: string) {
   const parts = title.split(label)
@@ -179,7 +201,7 @@ function titleParts(title: string, label: string) {
     </section>
 
     <section class="sheet">
-      <a class="block rich" href="/design/introduce">
+      <a ref="richRef" class="block rich" href="/design/introduce">
         <h2>AI 设计范式 - RICH</h2>
         <p class="lead">我们致力于构建 AI 设计理论，并在蚂蚁内部海量 AI 产品中实践、迭代。在此过程中，RICH 设计范式应运而生：角色（Role）、意图（Intention）、会话（Conversation）和混合界面（Hybrid UI）</p>
         <LottieBox
