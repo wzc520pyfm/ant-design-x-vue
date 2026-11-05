@@ -1,3 +1,21 @@
+# Build settings shared by every Netlify site linked to this repo, including
+# the legacy production site `antd-design-x-vue`. UI values for command /
+# publish / NODE_VERSION are overridden by this file (Netlify precedence).
+#
+# Same recipe the green `ant-design-x-vue-next` / `ant-design-x-vue-v2`
+# Deploy Previews already use successfully on branch `next`:
+#   - install: Netlify picks pnpm via root pnpm-lock.yaml + packageManager
+#   - build:   root script `docs:build` → `pnpm run -C docs build` (VitePress)
+#   - publish: VitePress default outDir `docs/.vitepress/dist`
+# NODE_VERSION matches .github/workflows/ci.yml.
+
+[build]
+  command = "pnpm docs:build"
+  publish = "docs/.vitepress/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
 # VitePress publishes one HTML file per page (`/component/bubble.html`).
 # An extensionless URL must serve that file. The catch-all below used to send
 # `/component/bubble` to `/index.html`, so the client hydrated the home page
