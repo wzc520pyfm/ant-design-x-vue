@@ -10,6 +10,7 @@ import throttle from 'lodash.throttle';
 import mermaid, { type MermaidConfig } from 'mermaid';
 import {
   computed,
+  h,
   onBeforeUnmount,
   ref,
   shallowRef,
@@ -71,8 +72,12 @@ let mermaidQueue: Promise<void> = Promise.resolve();
 function enqueueMermaid<T>(task: () => Promise<T>): Promise<T> {
   const run = mermaidQueue.then(task, task);
   mermaidQueue = run.then(
-    () => undefined,
-    () => undefined,
+    () => {
+      /* keep queue queue */
+    },
+    () => {
+      /* swallow rejection so the queue continues */
+    },
   );
   return run;
 }
@@ -349,13 +354,13 @@ function buildActionItems(): ItemType[] {
       items.push(
         {
           key: 'zoomIn',
-          icon: ZoomInOutlined,
+          icon: h(ZoomInOutlined),
           label: contextLocale.value.zoomIn,
           onItemClick: handleZoomIn,
         },
         {
           key: 'zoomOut',
-          icon: ZoomOutOutlined,
+          icon: h(ZoomOutOutlined),
           label: contextLocale.value.zoomOut,
           onItemClick: handleZoomOut,
         },
@@ -374,7 +379,7 @@ function buildActionItems(): ItemType[] {
     if (enableDownload) {
       items.push({
         key: 'download',
-        icon: DownloadOutlined,
+        icon: h(DownloadOutlined),
         label: contextLocale.value.download,
         onItemClick: () => {
           void handleDownload();

@@ -155,7 +155,6 @@ export const LEGACY_REDIRECTS: Record<string, string> = {
   '/component/notification-v2': '/component/notification',
   '/component/file-card-v2': '/component/file-card',
   '/component/think-v2': '/component/think',
-  '/component/mermaid-v2': '/component/mermaid',
   '/component/sources-v2': '/component/sources',
   '/component/sdk-v2': '/x-sdk/data-flow',
   '/component/x-markdown-v2': '/x-markdown/introduce',

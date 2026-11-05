@@ -26,6 +26,12 @@ export interface ComponentToken {
    * @descEN Graph border color
    */
   colorBorderGraph: string;
+
+  /**
+   * @desc 代码字体
+   * @descEN Code font family (ant-design-vue AliasToken has no fontFamilyCode; mirror React seed)
+   */
+  fontFamilyCode: string;
 }
 
 export interface MermaidToken extends FullToken<'Mermaid'> {}
@@ -101,6 +107,8 @@ export const prepareComponentToken: GetDefaultToken<'Mermaid'> = (token) => ({
   colorBorderCode: token.colorBorderSecondary,
   colorBorderGraph: token.colorBorderSecondary,
   colorTextTitle: token.colorText,
+  // ant-design-vue SeedToken lacks fontFamilyCode; keep React @ant-design/x seed parity
+  fontFamilyCode: `'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace`,
 });
 
 export default genStyleHooks<'Mermaid'>(
