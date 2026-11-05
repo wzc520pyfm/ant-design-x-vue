@@ -113,25 +113,20 @@ function onForegroundLoad(animation: { addEventListener: Function, loop: boolean
 }
 
 let richPlayed = false
-let richAnimation: { goToAndPlay: (frame: number, isFrame: boolean) => void } | null = null
+let richAnimation: { play: () => void } | null = null
+// Match React DesignBanner: stay at frame 0 until scrollY > 600, then play().
 function onRichLoad(animation: {
   play: () => void
-  loop: boolean
   goToAndStop: (frame: number, isFrame: boolean) => void
-  goToAndPlay: (frame: number, isFrame: boolean) => void
-  addEventListener: (name: string, cb: () => void) => void
 }) {
   richAnimation = animation
-  animation.goToAndStop(120, true)
-  animation.addEventListener('complete', () => {
-    animation.goToAndStop(120, true)
-  })
+  animation.goToAndStop(0, true)
   playRich()
 }
 function playRich() {
-  if (richPlayed || !richAnimation || window.scrollY <= 480) return
+  if (richPlayed || !richAnimation || window.scrollY <= 600) return
   richPlayed = true
-  richAnimation.goToAndPlay(36, true)
+  richAnimation.play()
 }
 function bindReveal() {
   const nodes = document.querySelectorAll('.home [data-reveal]')
