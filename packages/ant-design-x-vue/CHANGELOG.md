@@ -1,17 +1,15 @@
 # Changelog
 
 
-## v2.0.0-rc.1
+## v2.0.0
 
-First release candidate for the 2.0 line.
+Stable release of the 2.0 line (promoted from `2.0.0-rc.1`).
 
 ### ⚠️ Notes
 
-- Published under the npm dist-tag `rc` (not `latest`).
-- Packages: `ant-design-x-vue@2.0.0-rc.1`, `@ant-design-x-vue/x-sdk@2.0.0-rc.1`, `@ant-design-x-vue/x-markdown@2.0.0-rc.1`.
-- Breaking changes and enhancements for 2.0 are summarized under `v2.0.0` below; this RC is the installable preview of that work.
-
-## v2.0.0
+- Published under the npm dist-tag `latest`.
+- Packages: `ant-design-x-vue@2.0.0`, `@ant-design-x-vue/x-sdk@2.0.0`, `@ant-design-x-vue/x-markdown@2.0.0`.
+- Includes main merges [#472](https://github.com/wzc520pyfm/ant-design-x-vue/pull/472) (`next` → `main`), [#515](https://github.com/wzc520pyfm/ant-design-x-vue/pull/515) (Code of Conduct / Netlify site attribution), and [#516](https://github.com/wzc520pyfm/ant-design-x-vue/pull/516) (V1 docs origin → 1x Netlify site).
 
 ### ⚠️ Breaking changes
 
@@ -23,6 +21,16 @@ First release candidate for the 2.0 line.
 
 - Add `useXConversations` and the Chat Provider set (`OpenAIChatProvider`, `DeepSeekChatProvider`, `DefaultChatProvider`) on the `ant-design-x-vue` entry.
 - Document the v1 to v2 migration and run unit tests in CI for `main` and `next`.
+
+## v2.0.0-rc.1
+
+First release candidate for the 2.0 line.
+
+### ⚠️ Notes
+
+- Published under the npm dist-tag `rc` (not `latest`).
+- Packages: `ant-design-x-vue@2.0.0-rc.1`, `@ant-design-x-vue/x-sdk@2.0.0-rc.1`, `@ant-design-x-vue/x-markdown@2.0.0-rc.1`.
+- Breaking changes and enhancements for 2.0 are summarized under `v2.0.0` above; this RC is the installable preview of that work.
 
 ## v1.6.0
 
