@@ -109,7 +109,7 @@ export interface ConversationsProps {
    * @desc 选中变更回调
    * @descEN Callback for selection change
    */
-  onActiveChange?: (value: string) => void;
+  onActiveChange?: (value: ConversationItemType['key'], item?: ItemType) => void;
 
   /**
    * @desc 会话操作菜单
