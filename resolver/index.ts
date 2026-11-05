@@ -36,6 +36,7 @@ const primitiveNames = new Set<string>([
   'Theme',
   'ThoughtChain',
   'Welcome',
+  'Mermaid',
 ])
 
 function isAntdXVueComponent(name: string) {

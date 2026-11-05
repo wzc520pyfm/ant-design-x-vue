@@ -59,6 +59,7 @@ const componentSidebar: DefaultTheme.SidebarItem[] = [
     items: [
       plain('Actions 操作列表', '/component/actions'),
       plain('FileCard 文件卡片', '/component/file-card'),
+      plain('Mermaid 图表', '/component/mermaid'),
     ],
   },
   {

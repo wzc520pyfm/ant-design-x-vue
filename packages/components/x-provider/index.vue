@@ -27,7 +27,7 @@ interface ResolvedXProviderProps {
   welcome?: XComponentsConfig['welcome'];
   fileCard?: XComponentsConfig['fileCard'];
   think?: XComponentsConfig['think'];
-  mermaid?: MarkdownComponentsConfig['mermaid'];
+  mermaid?: XComponentsConfig['mermaid'] | MarkdownComponentsConfig['mermaid'];
   highlightCode?: MarkdownComponentsConfig['highlightCode'];
   iconPrefixCls?: AntdConfigProviderProps['iconPrefixCls'];
   getTargetContainer?: AntdConfigProviderProps['getTargetContainer'];
