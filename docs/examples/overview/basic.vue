@@ -220,24 +220,71 @@ const componentRoutes: Record<string, string> = {
   'x-provider': '/component/x-provider',
 };
 
-// 静态预览图映射
-const componentImages: Record<string, string> = {
-  bubble: '/images/Bubble.svg',
-  conversations: '/images/Conversations.svg',
-  welcome: '/images/Welcome.svg',
-  prompts: '/images/Prompts.svg',
-  attachments: '/images/Attachments.svg',
-  sender: '/images/Sender.svg',
-  suggestion: '/images/Suggestion.svg',
-  'thought-chain': '/images/ThoughtChain.svg',
-  actions: '/images/Actions.svg',
-  'x-provider': '/images/XProvider.svg',
+// 预览图映射：与 React x.ant.design 保持一致，直接使用 React frontmatter 的
+// cover / coverDark CDN 地址（浅色 + 暗黑），避免本地 SVG 缺失时退化为图标占位。
+const componentImages: Record<string, { cover: string; coverDark?: string }> = {
+  bubble: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*rHIYQIL1X-QAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*uaGhTY1-LL0AAAAAAAAAAAAADgCCAQ/original',
+  },
+  conversations: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*Oj-bTbVXtpQAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*qwdtSKWXeikAAAAAAAAAAAAADgCCAQ/original',
+  },
+  notification: {
+    cover: 'https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*cRmqTY4nKPEAAAAAAAAAAAAADrJ8AQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*W3RmSov-xVMAAAAAAAAAAAAADrJ8AQ/original',
+  },
+  welcome: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*sSjhQ6q2-Z0AAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*-gLqQpan1NAAAAAAAAAAAAAADgCCAQ/original',
+  },
+  prompts: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*UfhXRamlAf0AAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*3CN5RLKP0X4AAAAAAAAAAAAADgCCAQ/original',
+  },
+  attachments: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*5l2oSKBXatAAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*N8QHQJhgfbEAAAAAAAAAAAAADgCCAQ/original',
+  },
+  sender: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*OwTOS6wqFIsAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*cOfrS4fVkOMAAAAAAAAAAAAADgCCAQ/original',
+  },
+  suggestion: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*4vEeSJ2e9xgAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*cahuSJ4VxvoAAAAAAAAAAAAADgCCAQ/original',
+  },
+  think: {
+    cover: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/kXURQYCTEncAAAAAQCAAAAgADtFMAQFr/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/OMCvQZVW3eUAAAAAQCAAAAgADtFMAQFr/original',
+  },
+  'thought-chain': {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*GaspS5T6proAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*siL-Qpl794sAAAAAAAAAAAAADgCCAQ/original',
+  },
+  sources: {
+    cover: 'https://mdn.alipayobjects.com/huamei_b00jk5/afts/img/A*3nEPRYJbNQgAAAAAQFAAAAgAegitAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_b00jk5/afts/img/A*_7mMRrQVcXcAAAAAQEAAAAgAegitAQ/original',
+  },
+  actions: {
+    cover: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/DAQYQqFa5n0AAAAAQFAAAAgADtFMAQFr/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/bcXhRphVOuIAAAAAQFAAAAgADtFMAQFr/original',
+  },
+  'file-card': {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*pJrtTaf-bWAAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*6ySvTqb7XhkAAAAAAAAAAAAADgCCAQ/original',
+  },
+  'x-provider': {
+    cover: 'https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*NVKORa7BCVwAAAAAAAAAAAAADrJ8AQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*YC4ERpGAddoAAAAAAAAAAAAADrJ8AQ/original',
+  },
 };
 
 const getComponentImageSrc = (component: any) => {
-  const base = componentImages[component.id];
-  if (!base) return '';
-  return isDark.value ? base.replace(/\.svg$/, '-dark.svg') : base;
+  const images = componentImages[component.id];
+  if (!images) return '';
+  return (isDark.value && images.coverDark) || images.cover;
 };
 
 // 处理组件点击
@@ -293,8 +340,8 @@ const Demo = () => {
                   <Card size="small" title={component.title} bodyStyle={{ padding: '16px' }} hoverable={true} class="overview-card">
                     <div
                       style={{
-                      
-                        minHeight: '200px',
+                        /* React ComponentOverview uses a fixed 152px centered image box. */
+                        height: '152px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -306,7 +353,11 @@ const Demo = () => {
                           <img
                             src={getComponentImageSrc(component)}
                             alt={component.title}
-                            style={{ maxWidth: '100%', height: '160px', objectFit: 'contain' }}
+                            style={{
+                              maxWidth: '100%',
+                              maxHeight: '152px',
+                              objectFit: 'contain',
+                            }}
                           />
                         ) : (
                           <div style={{ color: '#666' }}>

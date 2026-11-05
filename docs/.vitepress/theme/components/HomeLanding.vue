@@ -113,25 +113,41 @@ function onForegroundLoad(animation: { addEventListener: Function, loop: boolean
 }
 
 let richPlayed = false
-let richAnimation: { goToAndPlay: (frame: number, isFrame: boolean) => void } | null = null
+let richInView = false
+let richAnimation: { play: () => void } | null = null
+let richObserver: IntersectionObserver | null = null
+const richRef = ref<HTMLElement | null>(null)
+// Stay at frame 0 until the RICH block enters the viewport, then play() once.
 function onRichLoad(animation: {
   play: () => void
-  loop: boolean
   goToAndStop: (frame: number, isFrame: boolean) => void
-  goToAndPlay: (frame: number, isFrame: boolean) => void
-  addEventListener: (name: string, cb: () => void) => void
 }) {
   richAnimation = animation
-  animation.goToAndStop(120, true)
-  animation.addEventListener('complete', () => {
-    animation.goToAndStop(120, true)
-  })
+  animation.goToAndStop(0, true)
   playRich()
 }
 function playRich() {
-  if (richPlayed || !richAnimation || window.scrollY <= 480) return
+  if (richPlayed || !richAnimation || !richInView) return
   richPlayed = true
-  richAnimation.goToAndPlay(36, true)
+  richAnimation.play()
+}
+function bindRichTrigger() {
+  const el = richRef.value
+  if (!el) return
+  richObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          richInView = true
+          playRich()
+          richObserver?.disconnect()
+          richObserver = null
+        }
+      }
+    },
+    { threshold: 0.2 },
+  )
+  richObserver.observe(el)
 }
 function bindReveal() {
   const nodes = document.querySelectorAll('.home [data-reveal]')
@@ -143,11 +159,13 @@ function bindReveal() {
   nodes.forEach((node) => io.observe(node))
 }
 onMounted(() => {
-  window.addEventListener('scroll', playRich, { passive: true })
+  bindRichTrigger()
   bindReveal()
-  playRich()
 })
-onUnmounted(() => window.removeEventListener('scroll', playRich))
+onUnmounted(() => {
+  richObserver?.disconnect()
+  richObserver = null
+})
 
 function titleParts(title: string, label: string) {
   const parts = title.split(label)
@@ -184,9 +202,9 @@ function titleParts(title: string, label: string) {
     </section>
 
     <section class="sheet">
-      <a class="block rich" href="/design/introduce">
+      <a ref="richRef" class="block rich" href="/design/introduce">
         <h2>AI 设计范式 - RICH</h2>
-        <p>我们致力于构建 AI 设计理论，并在蚂蚁内部海量 AI 产品中实践、迭代。在此过程中，RICH 设计范式应运而生：角色（Role）、意图（Intention）、会话（Conversation）和混合界面（Hybrid UI）</p>
+        <p class="lead">我们致力于构建 AI 设计理论，并在蚂蚁内部海量 AI 产品中实践、迭代。在此过程中，RICH 设计范式应运而生：角色（Role）、意图（Intention）、会话（Conversation）和混合界面（Hybrid UI）</p>
         <LottieBox
           class="rich-lottie"
           :autoplay="false"
@@ -267,48 +285,55 @@ function titleParts(title: string, label: string) {
             <a class="card" data-reveal href="/component/welcome">
               <div class="card-preview welcome-card">
                 <Welcome
+                  class="glass-surface"
                   style="width: 290px"
                   icon="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp"
                   title="你好, 我是 Ant Design X"
                   description="基于 Ant Design 的 AGI 产品智能解决方案, 创造更美好的智能视界"
                 />
               </div>
-              <h3>欢迎组件 <em>唤醒</em></h3>
+              <h3>欢迎组件 <em class="tag-awake">唤醒</em></h3>
               <p>开箱即用、易于配置、极致体验的通用图表库</p>
             </a>
             <a class="card" href="/component/prompts">
               <div class="card-preview">
-                <Prompts :items="promptItems" />
+                <!-- Glass goes on the item like React; `border: none` drops the default
+                     Prompts item border that reads as a light outline in the dark preview. -->
+                <Prompts
+                  :items="promptItems"
+                  :styles="{ item: { width: '290px', borderRadius: '20px', border: 'none' }, list: { borderRadius: '20px' } }"
+                  :classNames="{ item: 'glass-surface' }"
+                />
               </div>
-              <h3>用户推荐 <em>唤醒</em></h3>
+              <h3>用户推荐 <em class="tag-awake">唤醒</em></h3>
               <p>让首次接触AI产品的用户快速理解AI能做什么</p>
             </a>
             <a class="card" href="/component/suggestion">
               <div class="card-preview">
                 <img alt="" src="https://mdn.alipayobjects.com/huamei_k0vkmw/afts/img/A*-c6EQ7U4-4oAAAAAAAAAAAAADsR-AQ/fmt.avif" />
               </div>
-              <h3>快捷命令 <em>表达</em></h3>
+              <h3>快捷命令 <em class="tag-express">表达</em></h3>
               <p>开箱即用、易于配置、极致体验的通用图表库</p>
             </a>
             <a class="card" href="/component/bubble">
               <div class="card-preview">
-                <img alt="" src="https://mdn.alipayobjects.com/huamei_k0vkmw/afts/img/A*WxlPTYGnviYAAAAAAAAAAAAADsR-AQ/fmt.avif" />
+                <img alt="" src="https://mdn.alipayobjects.com/huamei_k0vkmw/afts/img/A*WxlPTYGnviYAAAAAAAAAAAAADsR-AQ/fmt.avif" width="173" />
               </div>
-              <h3>进度加载 <em>确认</em></h3>
+              <h3>进度加载 <em class="tag-confirm">确认</em></h3>
               <p>开箱即用、易于配置、极致体验的通用图表库</p>
             </a>
             <a class="card" href="/component/actions">
               <div class="card-preview">
-                <Bubble content="Ant Design X 全新升级了什么?" />
+                <Bubble class="glass-surface" content="Ant Design X 全新升级了什么?" />
               </div>
-              <h3>结果操作 <em>反馈</em></h3>
+              <h3>结果操作 <em class="tag-feedback">反馈</em></h3>
               <p>开箱即用、易于配置、极致体验的通用图表库</p>
             </a>
             <a class="card" href="/component/conversations">
               <div class="card-preview">
-                <img alt="" src="https://mdn.alipayobjects.com/huamei_k0vkmw/afts/img/A*7nVeT7Qg-QoAAAAAAAAAAAAADsR-AQ/fmt.avif" />
+                <img alt="" src="https://mdn.alipayobjects.com/huamei_k0vkmw/afts/img/A*7nVeT7Qg-QoAAAAAAAAAAAAADsR-AQ/fmt.avif" width="290" />
               </div>
-              <h3>管理对话 <em>通用</em></h3>
+              <h3>管理对话 <em class="tag-common">通用</em></h3>
               <p>开箱即用、易于配置、极致体验的通用图表库</p>
             </a>
           </div>
@@ -361,6 +386,7 @@ function titleParts(title: string, label: string) {
 .home {
   color: rgba(255, 255, 255, 0.88);
   background: #0c0e10;
+  font-family: AlibabaPuHuiTi, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .banner {
@@ -380,12 +406,14 @@ function titleParts(title: string, label: string) {
   width: 100%;
   height: 100vh;
   filter: blur(50px);
+  background: linear-gradient(135deg, #ffffff26 14%, #ffffff0d 59%);
 }
 
 .banner-inner {
   position: relative;
   width: min(1200px, calc(100vw - 80px));
   height: 100%;
+  max-height: calc(100vh - 160px);
 }
 
 .banner-copy {
@@ -426,6 +454,7 @@ function titleParts(title: string, label: string) {
   content: '';
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   background: radial-gradient(circle, #fe8aff 0%, #fe8aff00 100%);
   filter: blur(12px);
 }
@@ -442,38 +471,85 @@ function titleParts(title: string, label: string) {
 
 .lead {
   max-width: 880px;
-  margin: 0 auto 28px;
+  margin: 0 auto 16px;
+  padding-bottom: 16px;
   text-align: center;
 }
 
 .banner-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 24px;
 }
 
 .pill {
+  position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   height: 56px;
   padding: 0 40px;
+  border: none;
   border-radius: 40px;
   font-size: 18px;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
 }
 
 .pill.start {
   color: #14204c;
   background: linear-gradient(90deg, #c7deff 0%, #ffffffd9 76%);
+  z-index: 0;
+}
+
+.pill.start::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.2s;
+}
+
+.pill.start:hover::after {
+  opacity: 1;
 }
 
 .pill.design,
 .pill.ghost {
-  position: relative;
   color: #fff;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(40px);
+  opacity: 0.95;
+}
+
+.pill.design::after,
+.pill.ghost::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, #ffffff26 0%, #ffffff00 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.pill.ghost {
+  width: max-content;
+  padding: 16px 24px;
+  height: auto;
+  min-height: 48px;
+  font-size: 16px;
 }
 
 .banner-fg {
@@ -481,9 +557,16 @@ function titleParts(title: string, label: string) {
   top: 50%;
   right: 0;
   z-index: 0;
-  width: min(520px, 42vw);
-  height: 420px;
+  width: min(560px, 46vw);
+  /* Avoid fixed height which squashes the Lottie SVG aspect ratio. */
+  height: auto;
+  aspect-ratio: 1 / 0.85;
   transform: translate(40px, -40%);
+}
+
+.banner-fg :deep(svg) {
+  width: 100% !important;
+  height: auto !important;
 }
 
 .sheet {
@@ -522,8 +605,9 @@ function titleParts(title: string, label: string) {
 
 .rich {
   display: block;
-  height: 720px;
-  padding-top: 20px;
+  /* Match React DesignBanner visual weight: title + desc + scaled Lottie. */
+  height: 560px;
+  padding-top: 28px;
   overflow: hidden;
   color: inherit;
   text-decoration: none;
@@ -532,30 +616,43 @@ function titleParts(title: string, label: string) {
 }
 
 .rich h2 {
-  padding-top: 4px;
+  padding-top: 8px;
   line-height: 1.35;
+}
+
+.rich .lead {
+  margin-bottom: 0;
 }
 
 .rich-lottie {
   width: 100%;
-  height: 750px;
-  margin-top: -40px;
+  height: auto;
+  margin-top: 0;
+  transform: translate(0, -20%);
 }
 
 .rich-lottie :deep(svg) {
   width: 100% !important;
   height: auto !important;
+  display: block;
 }
 
 .chain {
   display: flex;
   flex-direction: column;
-  max-width: 720px;
+  width: 100%;
+  max-width: 540px;
 }
 
 .chain-item {
   display: flex;
   gap: 24px;
+}
+
+.chain-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .chain-icon {
@@ -565,10 +662,12 @@ function titleParts(title: string, label: string) {
   justify-content: center;
   width: 40px;
   height: 40px;
+  flex: none;
 }
 
 .chain-icon img {
   position: absolute;
+  width: auto;
   height: 40px;
 }
 
@@ -578,8 +677,16 @@ function titleParts(title: string, label: string) {
 
 .chain-line {
   width: 4px;
-  height: 220px;
+  height: 300px;
   margin: 0 auto;
+}
+
+.chain-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .chain-label {
@@ -593,7 +700,7 @@ function titleParts(title: string, label: string) {
 }
 
 .chain-title {
-  font-size: 38px;
+  font-size: 48px;
   font-weight: 700;
   line-height: 56px;
 }
@@ -606,6 +713,7 @@ function titleParts(title: string, label: string) {
 
 .chain-copy p {
   max-width: 520px;
+  margin: 0;
   color: rgba(255, 255, 255, 0.65);
   font-size: 16px;
   line-height: 32px;
@@ -622,12 +730,15 @@ function titleParts(title: string, label: string) {
   flex-direction: column;
   gap: 16px;
   width: 280px;
+  flex: none;
 }
 
 .scene-tab {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  align-items: flex-start;
   height: 86px;
   padding: 16px;
   border: none;
@@ -636,15 +747,39 @@ function titleParts(title: string, label: string) {
   color: #fff;
   text-align: start;
   cursor: pointer;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .scene-tab.active {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.scene-tab.active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, #ffffff26 0%, #ffffff00 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
 .scene-tab.disabled {
   color: rgba(255, 255, 255, 0.35);
   cursor: not-allowed;
+}
+
+.scene-tab strong {
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
 }
 
 .scene-tab span {
@@ -657,10 +792,14 @@ function titleParts(title: string, label: string) {
   flex: 1;
   align-items: center;
   justify-content: center;
-  min-height: 520px;
+  width: min(100%, 890px);
+  min-height: 600px;
+  height: 600px;
   padding: 24px;
   border-radius: 16px;
+  box-sizing: border-box;
   background: #0c0e10cc url('https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*RxJMSbQRvTUAAAAAAAAAAAAADgCCAQ/fmt.avif') center / cover no-repeat;
+  z-index: 2;
 }
 
 .scene-stage img {
@@ -679,11 +818,13 @@ function titleParts(title: string, label: string) {
   transform: none;
 }
 
-.card:hover,
-.eco a:hover,
+.card,
+.eco a {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 .scene-tab:hover:not(:disabled) {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
 }
 
 .chain-icon img:not(.blur) {
@@ -699,31 +840,61 @@ function titleParts(title: string, label: string) {
 .eco {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 24px;
+  margin-top: 24px;
 }
 
-.card,
-.eco a {
+.card {
+  position: relative;
   display: block;
-  padding: 20px;
+  padding: 24px;
   border-radius: 24px;
-  background: rgba(12, 14, 16, 0.8);
+  background: #0c0e10cc;
   color: inherit;
   text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 2px;
+  background: linear-gradient(180deg, #ffffff20 0%, #ffffff0d 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.card:hover::after,
+.eco a:hover::after {
+  opacity: 1;
 }
 
 .card-preview {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 220px;
+  height: 280px;
   margin-bottom: 12px;
   overflow: hidden;
 }
 
+.card-preview.welcome-card :deep(.ant-welcome) {
+  /* Match React CustomizationProvider welcome chrome: tighter box + smaller text. */
+  padding: 18px;
+  border-radius: 20px;
+}
+
 .card-preview.welcome-card :deep(.ant-welcome-icon) {
   flex-shrink: 0;
-  height: 64px;
+  height: 56px;
 }
 
 .card-preview.welcome-card :deep(.ant-welcome-icon img) {
@@ -733,15 +904,51 @@ function titleParts(title: string, label: string) {
   object-fit: contain;
 }
 
+.card-preview.welcome-card :deep(.ant-welcome-title) {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.card-preview.welcome-card :deep(.ant-welcome-description) {
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+.card-preview :deep(.glass-surface),
+.glass-surface {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffffff26 14%, #ffffff0d 59%) !important;
+}
+
+.card-preview :deep(.glass-surface)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, #ffffff26 0%, #ffffff00 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
 .card-preview img,
 .eco img {
   max-width: 100%;
-  max-height: 200px;
+  max-height: 240px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 
 .eco img.icon {
   width: 48px;
   height: 48px;
+  max-height: none;
 }
 
 .card h3,
@@ -749,39 +956,121 @@ function titleParts(title: string, label: string) {
   display: flex;
   gap: 8px;
   align-items: center;
-  margin: 0 0 6px;
-  font-size: 18px;
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .card em {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-sizing: border-box;
   background: linear-gradient(127deg, #6fb3e2 23%, #6c57ff 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
   font-style: normal;
   font-size: 12px;
+  line-height: 24px;
+}
+
+.card em::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0.1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.card em.tag-awake {
+  background-image: linear-gradient(127deg, #6fb3e2 23%, #6c57ff 100%);
+}
+
+.card em.tag-express {
+  background-image: linear-gradient(127deg, #6dd6f5 23%, #108c44 100%);
+}
+
+.card em.tag-confirm {
+  background-image: linear-gradient(127deg, #ba2cb8 23%, #6c37e8 100%);
+}
+
+.card em.tag-feedback {
+  background-image: linear-gradient(127deg, #f7c348 23%, #f75972 100%);
+}
+
+.card em.tag-common {
+  background-image: linear-gradient(127deg, #d857ff 23%, #8594ff 100%);
 }
 
 .card p,
 .eco span {
   margin: 0;
   color: rgba(255, 255, 255, 0.65);
-  font-size: 14px;
+  font-size: 12px;
+  text-align: start;
+  opacity: 0.95;
 }
 
 .eco a {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-height: 180px;
+  padding: 20px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 1px 6px -1px rgba(0, 0, 0, 0.02),
+    0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.eco a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 2px;
+  background: linear-gradient(180deg, #ffffff20 0%, #ffffff0d 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
 }
 
 @media (max-width: 960px) {
-  .name { font-size: 48px; }
+  .name { font-size: 54px; }
+  .i-letter { transform: scale(0.7); top: 6px; }
   .banner-fg { display: none; }
-  .banner-copy { width: 100%; text-align: center; }
+  .banner-copy {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+  .banner-actions { justify-content: center; }
+  .pill { padding: 0 24px; }
   .cards, .eco, .scenes { grid-template-columns: 1fr; display: grid; }
   .scene-tabs { width: 100%; }
+  .scene-stage { width: 100%; height: auto; min-height: 420px; }
   .chain-title { font-size: 28px; line-height: 1.3; }
+  .block h2, .rich h2 { font-size: 38px; }
+  .rich { height: 420px; }
 }
 </style>
