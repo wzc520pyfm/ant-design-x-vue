@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, useTemplateRef, type VNode, watch } from 'vue';
+import { computed, ref, type VNode, watch } from 'vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import type { Attachment, AttachmentsProps, AttachmentsRef, PlaceholderProps } from './interface';
@@ -51,10 +51,9 @@ const contextClassNames = computed(() => contextConfig.value.classNames);
 const contextStyles = computed(() => contextConfig.value.styles);
 
 // ============================= Ref =============================
-const containerRef = useTemplateRef<HTMLDivElement>('attachments-container');
-// const containerRef = ref<HTMLDivElement>(null);
+const containerRef = ref<HTMLDivElement | null>(null);
 
-const placeholderUploaderRef = useTemplateRef<InstanceType<typeof PlaceholderUploader>>('placeholder-uploader');
+const placeholderUploaderRef = ref<InstanceType<typeof PlaceholderUploader> | null>(null);
 
 // ============================ Style ============================
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
@@ -113,7 +112,7 @@ const getPlaceholderNode = (
         ...styles.placeholder,
         ...props?.style,
       }}
-      ref={type === 'inline' ? 'placeholder-uploader' : undefined}
+      ref={type === 'inline' ? placeholderUploaderRef : undefined}
     />
   );
 };
@@ -200,7 +199,7 @@ defineRender(() => {
             ...style,
           }}
           dir={direction.value || 'ltr'}
-          ref="attachments-container"
+          ref={containerRef}
         >
           <FileList
             prefixCls={prefixCls}

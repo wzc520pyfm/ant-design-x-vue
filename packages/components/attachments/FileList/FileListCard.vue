@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
 import { CloseCircleFilled, FileExcelFilled, FileImageFilled, FileMarkdownFilled, FilePdfFilled, FilePptFilled, FileTextFilled, FileWordFilled, FileZipFilled } from '@ant-design/icons-vue';
-import { computed, onWatcherCleanup, useTemplateRef, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { VNode } from 'vue';
 import AudioIcon from './AudioIcon.vue';
 import VideoIcon from './VideoIcon.vue';
@@ -122,7 +122,7 @@ const cardCls = `${prefixCls.value}-list-card`;
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 
 // ============================= Ref =============================
-const containerRef = useTemplateRef<HTMLDivElement>('file-list-card-container');
+const containerRef = ref<HTMLDivElement | null>(null);
 
 // ============================== Name ==============================
 const nameState = computed(() => {
@@ -190,7 +190,7 @@ const iconState = computed(() => {
 // ========================== ImagePreview ==========================
 const [previewImg, setPreviewImg] = useState<string>();
 
-watch(() => item.originFileObj, () => {
+watch(() => item.originFileObj, (_n, _o, onCleanup) => {
   if (item.originFileObj) {
     let synced = true;
     previewImage(item.originFileObj).then((url) => {
@@ -199,7 +199,7 @@ watch(() => item.originFileObj, () => {
       }
     });
 
-    onWatcherCleanup(() => {
+    onCleanup(() => {
       synced = false;
     });
   }
@@ -279,7 +279,7 @@ defineRender(() => {
         cssVarCls,
       )}
       style={style}
-      ref="file-list-card-container"
+      ref={containerRef}
     >
       {content.value}
       {!disabled.value && onRemove && (
