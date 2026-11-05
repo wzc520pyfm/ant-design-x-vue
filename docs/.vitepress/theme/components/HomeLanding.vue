@@ -132,7 +132,8 @@ function playRich() {
   richAnimation.play()
 }
 function bindRichTrigger() {
-  if (!richRef.current) return
+  const el = richRef.value
+  if (!el) return
   richObserver = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
@@ -146,7 +147,7 @@ function bindRichTrigger() {
     },
     { threshold: 0.2 },
   )
-  richObserver.observe(richRef.current)
+  richObserver.observe(el)
 }
 function bindReveal() {
   const nodes = document.querySelectorAll('.home [data-reveal]')
