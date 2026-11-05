@@ -1,0 +1,24 @@
+{
+  "name": "@ant-design-x-vue/docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "node scripts/build.mjs",
+    "preview": "vitepress preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@ant-design-x-vue/build-utils": "workspace:*",
+    "vitepress": "^1.5.0"
+  },
+  "dependencies": {
+    "@antv/gpt-vis": "^1.3.0",
+    "@vueuse/core": "^13.6.0",
+    "ant-design-x-vue": "workspace:*",
+    "lottie-web": "^5.13.0"
+  }
+}

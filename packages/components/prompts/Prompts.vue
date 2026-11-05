@@ -1,0 +1,178 @@
+<script setup lang="tsx">
+import classnames from 'classnames';
+import useStyle from './style';
+import type { PromptsProps } from './interface';
+import { useXProviderContext } from '../x-provider';
+import useXComponentConfig from '../_util/hooks/use-x-component-config';
+import { computed, ref, Transition, type VNode } from 'vue';
+import { Typography } from 'ant-design-vue';
+import { getTransitionProps } from '../_util/transition';
+import Prompts from '.';
+
+defineOptions({ name: 'AXPrompts' });
+
+const {
+  prefixCls: customizePrefixCls,
+  title,
+  class: className,
+  items,
+  onItemClick,
+  vertical,
+  wrap,
+  rootClassName,
+  styles = {},
+  classNames = {},
+  style,
+  fadeIn,
+  fadeInLeft,
+  ...htmlProps
+} = defineProps<PromptsProps>();
+
+const slots = defineSlots<{
+  title?(): VNode | string;
+}>();
+
+// ============================ PrefixCls ============================
+const { getPrefixCls, direction } = useXProviderContext();
+
+const prefixCls = getPrefixCls('prompts', customizePrefixCls);
+
+// ===================== Component Config =========================
+const contextConfig = useXComponentConfig('prompts');
+
+// ============================ Style ============================
+const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
+
+const mergedCls = computed(() => classnames(
+  prefixCls,
+  contextConfig.value.className,
+  className,
+  rootClassName,
+  classNames.root,
+  hashId.value,
+  cssVarCls,
+  {
+    [`${prefixCls}-rtl`]: direction.value === 'rtl',
+  },
+));
+
+const mergedListCls = computed(() => classnames(
+  `${prefixCls}-list`,
+  contextConfig.value.classNames.list,
+  classNames.list,
+  { [`${prefixCls}-list-wrap`]: wrap },
+  { [`${prefixCls}-list-vertical`]: vertical },
+));
+
+// ============================= Refs =============================
+const containerRef = ref<HTMLDivElement>();
+
+defineExpose({
+  nativeElement: containerRef,
+});
+
+// ============================= Motion =============================
+const rootPrefixCls = getPrefixCls();
+
+const motionName = computed(() =>
+  fadeInLeft || fadeIn ? `${rootPrefixCls}-x-fade${fadeInLeft ? '-left' : ''}` : '',
+);
+
+// ============================ Nodes ============================
+const titleNode = computed(() => {
+  if (slots.title) {
+    return slots.title();
+  }
+  return typeof title === 'function' ? title() : title;
+});
+
+defineRender(() => {
+  const transitionProps = getTransitionProps(motionName.value);
+
+  return wrapCSSVar(
+    <Transition {...transitionProps}>
+      <div
+        {...htmlProps}
+        ref={containerRef}
+        class={mergedCls.value}
+        // @ts-expect-error
+        style={{
+          ...(typeof style === 'object' ? style : {}),
+          ...(typeof contextConfig.value.style === 'object' ? contextConfig.value.style : {}),
+          ...styles.root,
+        }}
+      >
+        {titleNode.value && (
+          <Typography.Title
+            level={5}
+            // @ts-expect-error
+            class={classnames(
+              `${prefixCls}-title`,
+              contextConfig.value.classNames.title,
+              classNames.title,
+            )}
+            style={{ ...contextConfig.value.styles.title, ...styles.title }}
+          >
+            {titleNode.value}
+          </Typography.Title>
+        )}
+        <div class={mergedListCls.value} style={{ ...contextConfig.value.styles.list, ...styles.list }}>
+          {items?.map((info, index) => {
+            const isNest = info.children && info.children.length > 0;
+
+            return (
+              <div
+                key={info.key || `key_${index}`}
+                style={{ ...contextConfig.value.styles.item, ...styles.item }}
+                class={classnames(
+                  `${prefixCls}-item`,
+                  contextConfig.value.classNames.item,
+                  classNames.item,
+                  {
+                    [`${prefixCls}-item-disabled`]: info.disabled,
+                    [`${prefixCls}-item-has-nest`]: isNest,
+                  },
+                )}
+                onClick={() => {
+                  if (!isNest && !info.disabled && onItemClick) {
+                    onItemClick({ data: info });
+                  }
+                }}
+              >
+                {info.icon && <div class={`${prefixCls}-icon`}>{info.icon}</div>}
+                <div
+                  class={classnames(
+                    `${prefixCls}-content`,
+                    contextConfig.value.classNames.itemContent,
+                    classNames.itemContent,
+                  )}
+                  style={{ ...contextConfig.value.styles.itemContent, ...styles.itemContent }}
+                >
+                  {info.label && <h6 class={`${prefixCls}-label`}>{info.label}</h6>}
+                  {info.description && <p class={`${prefixCls}-desc`}>{info.description}</p>}
+                  {isNest && (
+                    <Prompts
+                      class={`${prefixCls}-nested`}
+                      items={info.children}
+                      vertical
+                      onItemClick={onItemClick}
+                      classNames={{
+                        list: classNames.subList,
+                        item: classNames.subItem,
+                      }}
+                      styles={{
+                        list: styles.subList,
+                        item: styles.subItem,
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </Transition>
+  )
+});
+</script>

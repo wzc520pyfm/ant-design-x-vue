@@ -9,6 +9,7 @@ defineOptions({ name: 'AXSenderFooter' });
 const { token } = theme.useToken();
 const loading = ref<boolean>(false);
 const value = ref<string>('');
+const deepThinking = ref(false);
 
 const iconStyle = {
   fontSize: 18,
@@ -38,15 +39,15 @@ defineRender(() => {
       }}
       // autoSize={{ minRows: 2, maxRows: 6 }}
       placeholder="Press Enter to send message"
-      footer={({ components }) => {
+      footer={(_, { components }) => {
         const { SendButton, LoadingButton, SpeechButton } = components;
         return (
           <Flex justify="space-between" align="center">
             <Flex gap="small" align="center">
               <Button style={iconStyle} type="text" icon={<LinkOutlined />} />
               <Divider type="vertical" />
-              Deep Thinking
-              <Switch size="small" />
+              <span style={{ whiteSpace: 'nowrap' }}>Deep Thinking</span>
+              <Switch size="small" checked={deepThinking.value} onChange={(checked: boolean) => { deepThinking.value = checked; }} />
               <Divider type="vertical" />
               <Button icon={<SearchOutlined />}>Global Search</Button>
             </Flex>

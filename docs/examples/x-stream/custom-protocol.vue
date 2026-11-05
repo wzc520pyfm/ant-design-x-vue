@@ -62,7 +62,6 @@ defineRender(() => {
           Mock Custom Protocol - SIP
         </Button>
       </div>
-      {/* -------------- Log -------------- */}
       <div>
         <ThoughtChain
           items={

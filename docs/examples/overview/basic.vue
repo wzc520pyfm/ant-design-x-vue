@@ -18,12 +18,11 @@ import {
   SendOutlined,
   ThunderboltOutlined,
   NodeIndexOutlined,
-  ApiOutlined,
-  SettingOutlined,
   GlobalOutlined,
-  CloudOutlined,
-  RobotOutlined,
   SearchOutlined,
+  BellOutlined,
+  LinkOutlined,
+  FileOutlined,
 } from '@ant-design/icons-vue';
 import { ref, computed } from 'vue';
 import { useData } from 'vitepress';
@@ -55,6 +54,14 @@ const allComponents = [
     description: '管理多个对话会话的组件，支持分组、排序和交互操作',
     icon: <MessageOutlined style={{ color: '#722ed1' }} />,
     content: 'conversations-demo',
+  },
+  {
+    id: 'notification',
+    category: '通用组件',
+    title: 'Notification 系统通知',
+    description: '系统级通知与提醒，用于展示重要状态变化',
+    icon: <BellOutlined style={{ color: '#fa541c' }} />,
+    content: 'notification-demo',
   },
   {
     id: 'welcome',
@@ -97,6 +104,14 @@ const allComponents = [
     content: 'suggestion-demo',
   },
   {
+    id: 'think',
+    category: '确认组件',
+    title: 'Think 思考过程',
+    description: '展示模型深度思考过程的折叠面板',
+    icon: <BulbOutlined style={{ color: '#13c2c2' }} />,
+    content: 'think-demo',
+  },
+  {
     id: 'thought-chain',
     category: '确认组件',
     title: 'ThoughtChain 思维链',
@@ -105,40 +120,32 @@ const allComponents = [
     content: 'thought-chain-demo',
   },
   {
-    id: 'use-x-agent',
-    category: '工具组件',
-    title: 'useXAgent',
-    description: '模型调度的 Vue 组合式函数',
-    icon: <RobotOutlined style={{ color: '#13c2c2' }} />,
-    content: 'use-x-agent-demo',
+    id: 'sources',
+    category: '确认组件',
+    title: 'Sources 来源引用',
+    description: '展示回答引用来源，便于核对依据',
+    icon: <LinkOutlined style={{ color: '#1677ff' }} />,
+    content: 'sources-demo',
   },
   {
-    id: 'use-x-chat',
-    category: '工具组件',
-    title: 'useXChat',
-    description: '聊天数据管理的组合式函数',
-    icon: <MessageOutlined style={{ color: '#52c41a' }} />,
-    content: 'use-x-chat-demo',
+    id: 'actions',
+    category: '反馈组件',
+    title: 'Actions 操作列表',
+    description: '对生成结果进行复制、反馈等快捷操作',
+    icon: <ThunderboltOutlined style={{ color: '#eb2f96' }} />,
+    content: 'actions-demo',
   },
   {
-    id: 'x-stream',
-    category: '工具组件',
-    title: 'XStream',
-    description: '流式数据传输工具',
-    icon: <CloudOutlined style={{ color: '#1890ff' }} />,
-    content: 'x-stream-demo',
-  },
-  {
-    id: 'x-request',
-    category: '工具组件',
-    title: 'XRequest',
-    description: 'AI 服务请求工具',
-    icon: <ApiOutlined style={{ color: '#fa541c' }} />,
-    content: 'x-request-demo',
+    id: 'file-card',
+    category: '反馈组件',
+    title: 'FileCard 文件卡片',
+    description: '展示生成或引用的文件卡片信息',
+    icon: <FileOutlined style={{ color: '#fa8c16' }} />,
+    content: 'file-card-demo',
   },
   {
     id: 'x-provider',
-    category: '工具组件',
+    category: '其他',
     title: 'XProvider 全局化配置',
     description: '全局配置提供者，统一管理应用级别的设置',
     icon: <GlobalOutlined style={{ color: '#722ed1' }} />,
@@ -175,10 +182,11 @@ const getComponentDisplayText = (component: any) => {
   const textMap: Record<string, string> = {
     conversations: '对话管理界面',
     attachments: '文件上传区域',
-    'use-x-agent': 'AI 模型调度',
-    'use-x-chat': '数据管理',
-    'x-stream': '流数据处理',
-    'x-request': '请求处理',
+    notification: '系统通知',
+    think: '思考过程',
+    sources: '来源引用',
+    actions: '结果操作',
+    'file-card': '文件卡片',
     'x-provider': '全局配置管理',
   };
   return textMap[component.id] || component.title;
@@ -198,40 +206,85 @@ const getComponentSubText = (component: any) => {
 const componentRoutes: Record<string, string> = {
   bubble: '/component/bubble',
   conversations: '/component/conversations',
+  notification: '/component/notification',
   welcome: '/component/welcome',
   prompts: '/component/prompts',
   attachments: '/component/attachments',
   sender: '/component/sender',
   suggestion: '/component/suggestion',
+  think: '/component/think',
   'thought-chain': '/component/thought-chain',
-  'use-x-agent': '/component/use-x-agent',
-  'use-x-chat': '/component/use-x-chat',
-  'x-stream': '/component/x-stream',
-  'x-request': '/component/x-request',
+  sources: '/component/sources',
+  actions: '/component/actions',
+  'file-card': '/component/file-card',
   'x-provider': '/component/x-provider',
 };
 
-// 静态预览图映射
-const componentImages: Record<string, string> = {
-  bubble: '/images/Bubble.svg',
-  conversations: '/images/Conversations.svg',
-  welcome: '/images/Welcome.svg',
-  prompts: '/images/Prompts.svg',
-  attachments: '/images/Attachments.svg',
-  sender: '/images/Sender.svg',
-  suggestion: '/images/Suggestion.svg',
-  'thought-chain': '/images/ThoughtChain.svg',
-  'use-x-agent': '/images/useXAgent.svg',
-  'use-x-chat': '/images/useXChat.svg',
-  'x-stream': '/images/XStream.svg',
-  'x-request': '/images/XRequest.svg',
-  'x-provider': '/images/XProvider.svg',
+// 预览图映射：与 React x.ant.design 保持一致，直接使用 React frontmatter 的
+// cover / coverDark CDN 地址（浅色 + 暗黑），避免本地 SVG 缺失时退化为图标占位。
+const componentImages: Record<string, { cover: string; coverDark?: string }> = {
+  bubble: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*rHIYQIL1X-QAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*uaGhTY1-LL0AAAAAAAAAAAAADgCCAQ/original',
+  },
+  conversations: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*Oj-bTbVXtpQAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*qwdtSKWXeikAAAAAAAAAAAAADgCCAQ/original',
+  },
+  notification: {
+    cover: 'https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*cRmqTY4nKPEAAAAAAAAAAAAADrJ8AQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*W3RmSov-xVMAAAAAAAAAAAAADrJ8AQ/original',
+  },
+  welcome: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*sSjhQ6q2-Z0AAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*-gLqQpan1NAAAAAAAAAAAAAADgCCAQ/original',
+  },
+  prompts: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*UfhXRamlAf0AAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*3CN5RLKP0X4AAAAAAAAAAAAADgCCAQ/original',
+  },
+  attachments: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*5l2oSKBXatAAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*N8QHQJhgfbEAAAAAAAAAAAAADgCCAQ/original',
+  },
+  sender: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*OwTOS6wqFIsAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*cOfrS4fVkOMAAAAAAAAAAAAADgCCAQ/original',
+  },
+  suggestion: {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*4vEeSJ2e9xgAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*cahuSJ4VxvoAAAAAAAAAAAAADgCCAQ/original',
+  },
+  think: {
+    cover: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/kXURQYCTEncAAAAAQCAAAAgADtFMAQFr/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/OMCvQZVW3eUAAAAAQCAAAAgADtFMAQFr/original',
+  },
+  'thought-chain': {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*GaspS5T6proAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*siL-Qpl794sAAAAAAAAAAAAADgCCAQ/original',
+  },
+  sources: {
+    cover: 'https://mdn.alipayobjects.com/huamei_b00jk5/afts/img/A*3nEPRYJbNQgAAAAAQFAAAAgAegitAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_b00jk5/afts/img/A*_7mMRrQVcXcAAAAAQEAAAAgAegitAQ/original',
+  },
+  actions: {
+    cover: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/DAQYQqFa5n0AAAAAQFAAAAgADtFMAQFr/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/bcXhRphVOuIAAAAAQFAAAAgADtFMAQFr/original',
+  },
+  'file-card': {
+    cover: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*pJrtTaf-bWAAAAAAAAAAAAAADgCCAQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*6ySvTqb7XhkAAAAAAAAAAAAADgCCAQ/original',
+  },
+  'x-provider': {
+    cover: 'https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*NVKORa7BCVwAAAAAAAAAAAAADrJ8AQ/original',
+    coverDark: 'https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*YC4ERpGAddoAAAAAAAAAAAAADrJ8AQ/original',
+  },
 };
 
 const getComponentImageSrc = (component: any) => {
-  const base = componentImages[component.id];
-  if (!base) return '';
-  return isDark.value ? base.replace(/\.svg$/, '-dark.svg') : base;
+  const images = componentImages[component.id];
+  if (!images) return '';
+  return (isDark.value && images.coverDark) || images.cover;
 };
 
 // 处理组件点击
@@ -247,7 +300,6 @@ const handleComponentClick = (component: any) => {
 const Demo = () => {
   return (
     <div>
-      {/* 搜索框 */}
       <Affix offsetTop={54}>
         <div
           style={{
@@ -269,7 +321,6 @@ const Demo = () => {
         </div>
       </Affix>
 
-      {/* 动态渲染各分类 */}
       {Object.entries(groupedComponents.value).map(([category, components]) => (
         <div key={category}>
           <div
@@ -286,12 +337,11 @@ const Demo = () => {
           <Row gutter={[16, 24]} style={{ marginBottom: '48px' }}>
             {components.map((component) => (
               <Col key={component.id} xs={24} lg={12}>
-                  {/* 组件演示区域 */}
                   <Card size="small" title={component.title} bodyStyle={{ padding: '16px' }} hoverable={true} class="overview-card">
                     <div
                       style={{
-                      
-                        minHeight: '200px',
+                        /* React ComponentOverview uses a fixed 152px centered image box. */
+                        height: '152px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -303,7 +353,11 @@ const Demo = () => {
                           <img
                             src={getComponentImageSrc(component)}
                             alt={component.title}
-                            style={{ maxWidth: '100%', height: '160px', objectFit: 'contain' }}
+                            style={{
+                              maxWidth: '100%',
+                              maxHeight: '152px',
+                              objectFit: 'contain',
+                            }}
                           />
                         ) : (
                           <div style={{ color: '#666' }}>
@@ -329,7 +383,6 @@ const Demo = () => {
         </div>
       ))}
 
-      {/* 无搜索结果 */}
       {Object.keys(groupedComponents.value).length === 0 && (
         <div style={{ textAlign: 'center', padding: '60px 0', color: '#999' }}>
           <SearchOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />

@@ -1,11 +1,6 @@
-
 # Prompts 提示集
 
 用于显示一组与当前上下文相关的预定义的问题或建议。
-
-## 何时使用
-
-Prompts 组件用于显示一组与当前上下文相关的预定义的问题或建议。
 
 ## 代码演示
 
@@ -13,7 +8,7 @@ Prompts 组件用于显示一组与当前上下文相关的预定义的问题或
 
 <ClientOnly>
 
-:::demo 基础用法。
+:::demo-v2 基础用法。
 
 prompts/basic
 
@@ -23,15 +18,23 @@ prompts/basic
 
 ### 不可用状态
 
-:::demo 要将 prompt 标记为禁用，请向 prompt 添加 `disabled` 属性。
+:::demo-v2 要将 prompt 标记为禁用，请向 prompt 添加 `disabled` 属性。
 
 prompts/disabled
 
 :::
 
+### 渐入效果
+
+:::demo-v2 通过 `fadeIn` 和 `fadeInLeft` 属性控制渐入动画效果。
+
+prompts/fadeIn
+
+:::
+
 ### 纵向展示
 
-:::demo 使用 `vertical` 属性，控制 Prompts 展示方向。
+:::demo-v2 使用 `vertical` 属性，控制 Prompts 展示方向。
 
 prompts/flex-vertical
 
@@ -39,7 +42,7 @@ prompts/flex-vertical
 
 ### 可换行
 
-:::demo 使用 `wrap` 属性，控制 Prompts 超出区域长度时是否可以换行。
+:::demo-v2 使用 `wrap` 属性，控制 Prompts 超出区域长度时是否可以换行。
 
 prompts/flex-wrap
 
@@ -47,7 +50,7 @@ prompts/flex-wrap
 
 ### 响应式宽度
 
-:::demo 配合 `wrap` 与 `styles` 固定宽度展示。
+:::demo-v2 配合 `wrap` 与 `styles` 固定宽度展示。
 
 prompts/flex-wrap-fixed
 
@@ -57,7 +60,7 @@ prompts/flex-wrap-fixed
 
 <ClientOnly>
 
-:::demo 嵌套组合。
+:::demo-v2 嵌套组合。
 
 prompts/nest
 
@@ -67,13 +70,13 @@ prompts/nest
 
 ## API
 
-<!-- 通用属性参考：[通用属性](/docs/react/common-props) -->
-
 ### PromptsProps
 
 | 属性 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | classNames | 自定义样式类名，用于各个提示项的不同部分 | Record<SemanticType, string> | - | - |
+| fadeIn | 是否开启渲染渐入 | boolean | `false` | - |
+| fadeInLeft | 是否开启渲染从左到右渐入 | boolean | `false` | - |
 | items | 包含多个提示项的列表 | PromptProps[] | - | - |
 | prefixCls | 样式类名的前缀 | string | - | - |
 | rootClassName | 根节点的样式类名 | string | - | - |
@@ -86,7 +89,7 @@ prompts/nest
 #### SemanticType
 
 ```typescript | pure
-type SemanticType = 'list' | 'item' | 'content' | 'title' | 'subList' | 'subItem';
+type SemanticType = 'root' | 'list' | 'item' | 'itemContent' | 'title' | 'subList' | 'subItem';
 ```
 
 ### Prompts Slots
@@ -94,6 +97,12 @@ type SemanticType = 'list' | 'item' | 'content' | 'title' | 'subList' | 'subItem
 | 插槽名 | 说明 |
 | --- | --- |
 | title | 显示在提示列表顶部的标题 |
+
+### Prompts Ref
+
+| 属性 | 说明 | 类型 |
+| --- | --- | --- |
+| nativeElement | 组件根 DOM 元素 | HTMLDivElement |
 
 ### PromptProps
 
@@ -112,7 +121,5 @@ type SemanticType = 'list' | 'item' | 'content' | 'title' | 'subList' | 'subItem
 
 ## 主题变量（Design Token）
 
-<!-- <ComponentTokenTable component="Prompts"></ComponentTokenTable> -->
-## 贡献者
+组件暂无自定义 Component Token，可通过全局 Design Token 定制。
 
-<doc-contributors component-name="prompts" :max-count="50" :show-view-all="true" />

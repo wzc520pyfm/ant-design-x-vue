@@ -3,11 +3,17 @@ import VueMacros from 'unplugin-vue-macros/vite'
 import path from 'node:path';
 import { fileURLToPath, URL } from 'node:url'
 import { mdPlugin } from './config/plugins'
+import { nav, sidebar } from './config/nav'
+import { legacyRewriteMap } from './config/version-switch'
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { MarkdownTransform } from './plugins/markdown-transform';
+import { prependDocsStyles } from './theme/docs-style';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  postRender(ctx) {
+    return prependDocsStyles(ctx)
+  },
   vite: {
     css: {
       preprocessorOptions: {
@@ -20,7 +26,38 @@ export default defineConfig({
       alias: [
         {
           find: /^ant-design-x-vue$/,
-          replacement: path.resolve(__dirname, '../../src')
+          replacement: path.resolve(__dirname, '../../packages/components')
+        },
+        {
+          find: /^ant-design-x-vue\/(.*)/,
+          replacement: path.resolve(__dirname, '../../packages/components/$1')
+        },
+        {
+          find: /^@ant-design-x-vue\/components$/,
+          replacement: path.resolve(__dirname, '../../packages/components')
+        },
+        {
+          find: /^@ant-design-x-vue\/x-markdown$/,
+          replacement: path.resolve(__dirname, '../../packages/x-markdown/src/index.ts')
+        },
+        {
+          find: /^@ant-design-x-vue\/x-markdown\/themes\/(.*)/,
+          replacement: path.resolve(__dirname, '../../packages/x-markdown/themes/$1')
+        },
+        {
+          find: /^@ant-design-x-vue\/x-markdown\/plugins\/(.*)/,
+          replacement: path.resolve(__dirname, '../../packages/x-markdown/src/plugins/$1/index.ts')
+        },
+        {
+          find: /^@ant-design-x-vue\/x-sdk$/,
+          replacement: path.resolve(__dirname, '../../packages/x-sdk/src/index.ts')
+        },
+        // Exact package entry only. Deep imports such as
+        // `@antv/gpt-vis/dist/esm/vis/line` stay on the published files.
+        // The barrel pulls in G6 and exhausts the Netlify docs heap.
+        {
+          find: /^@antv\/gpt-vis$/,
+          replacement: path.resolve(__dirname, '../shared/gpt-vis-line.ts')
         },
         {
           find: /^.*\/VPHero\.vue$/,
@@ -61,95 +98,50 @@ export default defineConfig({
     ['link', { rel: 'icon', href: '/images/x-logo.svg' }],
   ],
   appearance: 'dark',
+  lang: 'zh-CN',
+  // Old `*-v2` slugs stay reachable on this 2.x site. 1.x lives on another origin.
+  rewrites: legacyRewriteMap(),
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original',
-    nav: [
-      { text: '研发', link: '/development/introduce' },
-      { text: '组件', link: '/component/overview' },
-      { text: '演示', link: '/playground/independent' },
-      {
-        text: '更多',
-        items: [
-          { text: 'Ant Design X of React', link: 'https://x.ant.design/index-cn' },
-          { text: 'Ant Design Vue', link: 'https://www.antdv.com/components/overview-cn' },
-        ]
-      }
-    ],
-    outline: [2, 3],
-
-    sidebar: {
-      '/development': [
-        {
-          text: 'Ant Design X of Vue',
-          link: '/development/introduce'
-        },
-        {
-          text: '样式兼容',
-          link: '/development/compatible-style'
-        },
-      ],
-      '/component/': [
-        {
-          text: '总览',
-          link: '/component/overview'
-        },
-        {
-          text: '通用',
-          items: [
-            { text: 'Bubble 对话气泡框', link: '/component/bubble' },
-            { text: 'Conversations 管理对话', link: '/component/conversations' }
-          ]
-        },
-        {
-          text: '唤醒',
-          items: [
-            { text: 'Welcome 欢迎', link: '/component/welcome' },
-            { text: 'Prompts 提示集', link: '/component/prompts' }
-          ]
-        },
-        {
-          text: '表达',
-          items: [
-            { text: 'Sender 输入框', link: '/component/sender' },
-            { text: 'Attachments 输入附件', link: '/component/attachments' },
-            { text: 'Suggestion 快捷指令', link: '/component/suggestion' }
-          ]
-        },
-        {
-          text: '确认',
-          items: [
-            { text: 'ThoughtChain 思维链', link: '/component/thought-chain' }
-          ]
-        },
-        {
-          text: '反馈',
-          items: [
-            { text: 'Actions 操作列表', link: '/component/actions' }
-          ]
-        },
-        {
-          text: '工具',
-          items: [
-            { text: 'useXAgent 模型调度', link: '/component/use-x-agent' },
-            { text: 'useXChat 数据管理', link: '/component/use-x-chat' },
-            { text: 'XStream 流', link: '/component/x-stream' },
-            { text: 'XRequest 请求', link: '/component/x-request' },
-            { text: 'XProvider 全局化配置', link: '/component/x-provider' }
-          ]
-        },
-      ],
-      '/playground/': [
-        {
-          text: '样板间',
-          items: [
-            { text: '独立式', link: '/playground/independent' },
-            { text: '助手式', link: '/playground/copilot' }
-          ]
-        },
-      ]
+    siteTitle: 'Ant Design X <span class="brand-vue">Vue</span>',
+    nav,
+    sidebar,
+    outline: {
+      label: '本页目录',
+      level: [2, 3],
     },
-
+    docFooter: {
+      prev: '上一篇',
+      next: '下一篇',
+    },
+    darkModeSwitchLabel: '主题',
+    lightModeSwitchTitle: '切换到浅色',
+    darkModeSwitchTitle: '切换到深色',
+    sidebarMenuLabel: '菜单',
+    returnToTopLabel: '回到顶部',
+    search: {
+      provider: 'local',
+      options: {
+        translations: {
+          button: {
+            buttonText: '搜索',
+            buttonAriaLabel: '搜索文档',
+          },
+          modal: {
+            displayDetails: '显示详细列表',
+            resetButtonTitle: '清除',
+            backButtonTitle: '关闭',
+            noResultsText: '没有找到结果',
+            footer: {
+              selectText: '选择',
+              navigateText: '切换',
+              closeText: '关闭',
+            },
+          },
+        },
+      },
+    },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/wzc520pyfm/ant-design-x-vue' }
     ]

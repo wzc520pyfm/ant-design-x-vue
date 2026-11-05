@@ -26,6 +26,7 @@ export interface AntDesignXResolverOptions {
  * set of components that are contained in the package
  */
 const primitiveNames = new Set<string>([
+  'Actions',
   'Attachments',
   'Bubble',
   'Conversations',

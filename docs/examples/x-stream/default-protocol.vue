@@ -44,11 +44,9 @@ defineRender(() => {
   return (
     <Flex gap={8}>
       <div>
-        {/* -------------- Emit -------------- */}
         <Button type="primary" onClick={readStream} style={{ marginBottom: '16px' }}>
           Mock Default Protocol - SSE
         </Button>
-        {/* -------------- Content Concat -------------- */}
         {content.value && <Bubble content={content.value} />}
       </div>
       <div>

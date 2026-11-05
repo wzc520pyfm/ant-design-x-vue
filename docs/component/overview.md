@@ -4,10 +4,12 @@ customClass: hidden_aside
 
 # 总览
 
-`ant-design-x-vue` 是 `@ant-design/x` 的 Vue 实现，是一个专注于 Vue 生态的先进 AI 组件库，旨在简化与人工智能集成的开发过程。我们的库包括高度定制化的 AI 组件，允许开发者轻松地将对话 AI 集成到他们的应用中。除了丰富的 UI 组件，`ant-design-x-vue` 还提供了一揽子 API 解决方案，支持开发者通过令牌认证直接接入现有 AI 服务，无缝衔接与 AI 的对话和交互。无论是建立智能聊天应用、提升用户交互体验还是加快 AI 能力的集成，`ant-design-x-vue` 都是 Vue 开发者进入 AI 世界的理想伙伴。
+`ant-design-x-vue` 是 `@ant-design/x` 的社区 Vue 实现。组件按 RICH 的交互阶段分组，顺序和 React 组件页一致。
 
 :::demo
 
 overview/basic
 
 :::
+
+数据流在 [X SDK](/x-sdk/introduce)，富文本在 [X Markdown](/x-markdown/introduce)。分组与 `@ant-design/x@2.0.0` 的组件导出一致。

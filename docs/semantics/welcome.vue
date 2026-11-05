@@ -7,6 +7,7 @@ import {ShareAltOutlined, EllipsisOutlined} from '@ant-design/icons-vue'
 defineRender(() => {
   return (
     <SemanticPreview semantics={[
+        { name: 'root', desc: '根节点' },
         { name: 'icon', desc: '图标容器' },
         { name: 'title', desc: '标题容器' },
         { name: 'description', desc: '描述容器' },
