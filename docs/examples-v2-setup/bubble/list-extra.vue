@@ -76,7 +76,7 @@ const handleFeedback = (key: string | number) => {
           { key: 'copy', label: 'copy' },
           { key: 'feedback', label: item.extraInfo?.feedback === 'like' ? '👍' : item.extraInfo?.feedback === 'dislike' ? '👎' : '🤔' },
         ]"
-        @click="({ key }: { key: string }) => key === 'feedback' && handleFeedback(item.key)"
+        @click="({ key }) => key === 'feedback' && handleFeedback(item.key)"
       />
     </template>
     <template #loading>
