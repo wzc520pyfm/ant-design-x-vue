@@ -1,6 +1,16 @@
 # Changelog
 
 
+## v2.0.0-rc.1
+
+First release candidate for the 2.0 line.
+
+### ⚠️ Notes
+
+- Published under the npm dist-tag `rc` (not `latest`).
+- Packages: `ant-design-x-vue@2.0.0-rc.1`, `@ant-design-x-vue/x-sdk@2.0.0-rc.1`, `@ant-design-x-vue/x-markdown@2.0.0-rc.1`.
+- Breaking changes and enhancements for 2.0 are summarized under `v2.0.0` below; this RC is the installable preview of that work.
+
 ## v2.0.0
 
 ### ⚠️ Breaking changes

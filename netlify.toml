@@ -18,6 +18,10 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # The VitePress client + SSR bundles sit close to Node's default ~4 GB heap
+  # on Netlify, so builds fail intermittently on unrelated commits. Give the
+  # docs build more headroom (the build container has more RAM than that).
+  NODE_OPTIONS = "--max-old-space-size=6144"
 
 # VitePress publishes one HTML file per page (`/component/bubble.html`).
 # An extensionless URL must serve that file. The catch-all below used to send

@@ -25,6 +25,11 @@ const { hasSidebar } = useSidebar()
         <a href="https://github.com/wzc520pyfm/ant-design-x-vue" target="_blank" rel="noreferrer">GitHub</a>
       </div>
     </div>
+    <p class="netlify-credit">
+      <a href="https://www.netlify.com/" target="_blank" rel="noreferrer">
+        This site is powered by Netlify
+      </a>
+    </p>
   </footer>
 </template>
 
@@ -85,6 +90,23 @@ a {
 }
 
 a:hover {
+  color: var(--vp-c-brand-1, #1677ff);
+}
+
+.netlify-credit {
+  margin: 28px 0 0;
+  max-width: 1120px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.netlify-credit a {
+  display: inline;
+  margin: 0;
+  color: var(--vp-c-text-3);
+}
+
+.netlify-credit a:hover {
   color: var(--vp-c-brand-1, #1677ff);
 }
 
