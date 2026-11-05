@@ -18,6 +18,7 @@ export { StreamCacheTokenType } from './XMarkdown/interface';
 export type {
   AnimationConfig,
   ComponentProps,
+  DefaultStyleTag,
   ComponentStreamStatus,
   DOMNode,
   MarkedConfig,
