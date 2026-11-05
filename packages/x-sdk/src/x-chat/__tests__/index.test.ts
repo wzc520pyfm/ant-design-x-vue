@@ -36,12 +36,15 @@ describe('useXChat', () => {
     vi.useRealTimers();
   });
 
-  function mountChat<
+  async function mountChat<
     ChatMessage extends SimpleType = string,
     ParsedMessage extends SimpleType = string,
     Input = ChatInput,
     Output = string,
-  >(config: XChatConfig<ChatMessage, ParsedMessage, Input, Output>) {
+  >(
+    config: XChatConfig<ChatMessage, ParsedMessage, Input, Output>,
+    options?: { settle?: boolean },
+  ) {
     let api!: ChatApi<ChatMessage, ParsedMessage, Input, Output>;
     const Comp = defineComponent({
       setup() {
@@ -52,6 +55,12 @@ describe('useXChat', () => {
     const app = createApp(Comp);
     app.mount(document.createElement('div'));
     apps.push(app);
+    if (options?.settle !== false) {
+      // ChatMessagesStore initializes defaultMessages asynchronously (React parity).
+      await Promise.resolve();
+      await Promise.resolve();
+      await nextTick();
+    }
     return api;
   }
 
@@ -63,13 +72,13 @@ describe('useXChat', () => {
     return expect.objectContaining(obj);
   }
 
-  it('defaultMessages', () => {
+  it('defaultMessages', async () => {
     const provider = new DefaultChatProvider<string, any, any>({
       request: XRequest('http://localhost:8000/', {
         manual: true,
       }),
     });
-    const chat = mountChat({
+    const chat = await mountChat({
       provider,
       defaultMessages: [
         {
@@ -78,6 +87,9 @@ describe('useXChat', () => {
       ],
     });
 
+    await vi.runAllTimersAsync();
+    await nextTick();
+
     expect(chat.parsedMessages.value).toEqual([
       {
         id: 'default_0',
@@ -85,6 +97,109 @@ describe('useXChat', () => {
         status: 'local',
       },
     ]);
+  });
+
+  it('async defaultMessages exposes isDefaultMessagesRequesting', async () => {
+    vi.useRealTimers();
+    let resolveMessages!: (value: { message: string }[]) => void;
+    const provider = new DefaultChatProvider<string, any, any>({
+      request: XRequest('http://localhost:8000/', {
+        manual: true,
+      }),
+    });
+    const chat = await mountChat({
+      provider,
+      conversationKey: 'async-default',
+      defaultMessages: () =>
+        new Promise((resolve) => {
+          resolveMessages = resolve;
+        }),
+    }, { settle: false });
+
+    expect(chat.isDefaultMessagesRequesting.value).toBe(true);
+    expect(chat.messages.value).toEqual([]);
+
+    resolveMessages([{ message: 'remote-history' }]);
+    await sleep(20);
+    await nextTick();
+
+    expect(chat.isDefaultMessagesRequesting.value).toBe(false);
+    expect(chat.messages.value).toEqual([
+      {
+        id: 'default_0',
+        message: 'remote-history',
+        status: 'local',
+      },
+    ]);
+    chatMessagesStoreHelper.delete('async-default');
+  });
+
+  it('removeMessage is returned from useXChat', async () => {
+    const chat = await mountChat({
+      defaultMessages: [{ message: 'Hello' }],
+      conversationKey: 'remove-message-conv',
+    });
+    await vi.runAllTimersAsync();
+    await nextTick();
+
+    expect(chat.messages.value).toHaveLength(1);
+    expect(chat.removeMessage('default_0')).toBe(true);
+    expect(chat.messages.value).toHaveLength(0);
+    expect(chat.removeMessage('missing')).toBe(false);
+    chatMessagesStoreHelper.delete('remove-message-conv');
+  });
+
+  it('queueRequest should work without provider', async () => {
+    const chat = await mountChat({
+      defaultMessages: [{ message: 'Hello' }],
+    });
+    await vi.runAllTimersAsync();
+    await nextTick();
+
+    expect(() => {
+      chat.queueRequest(
+        'test-conversation',
+        { messages: [{ role: 'user', content: 'Hello' }] } as any,
+        { extraInfo: { id: '1111' } },
+      );
+    }).not.toThrow();
+  });
+
+  it('queueRequest processes queued messages after default messages load', async () => {
+    vi.useRealTimers();
+    const fetchMock = vi.fn(async () =>
+      Promise.resolve(new Response('{"content": "test response"}')),
+    );
+    const provider = new DefaultChatProvider<string, any, any>({
+      request: XRequest('http://localhost:8000/', {
+        manual: true,
+        fetch: fetchMock,
+      }),
+    });
+
+    let resolveDefaults!: (value: { message: string }[]) => void;
+    const chat = await mountChat({
+      provider,
+      conversationKey: 'queued-conversation',
+      defaultMessages: () =>
+        new Promise((resolve) => {
+          resolveDefaults = resolve;
+        }),
+    }, { settle: false });
+
+    expect(chat.isDefaultMessagesRequesting.value).toBe(true);
+    chat.queueRequest('queued-conversation', { query: 'queued message 1' } as any);
+    expect(chat.messages.value).toHaveLength(0);
+
+    resolveDefaults([{ message: 'Hello' }]);
+    await sleep(30);
+    await nextTick();
+    await sleep(30);
+    await nextTick();
+
+    expect(chat.isDefaultMessagesRequesting.value).toBe(false);
+    expect(fetchMock).toHaveBeenCalled();
+    chatMessagesStoreHelper.delete('queued-conversation');
   });
 
   describe('requestPlaceholder', () => {
@@ -98,7 +213,7 @@ describe('useXChat', () => {
           },
         }),
       });
-      const chat = mountChat({ provider, requestPlaceholder: 'bamboo' as any });
+      const chat = await mountChat({ provider, requestPlaceholder: 'bamboo' as any });
       chat.onRequest({ query: 'little' } as any);
       await nextTick();
 
@@ -121,7 +236,7 @@ describe('useXChat', () => {
           },
         }),
       });
-      const chat = mountChat({ provider, requestPlaceholder: requestPlaceholder as any });
+      const chat = await mountChat({ provider, requestPlaceholder: requestPlaceholder as any });
       chat.onRequest({ query: 'little' } as any);
       await nextTick();
 
@@ -150,7 +265,7 @@ describe('useXChat', () => {
           },
         }),
       });
-      const chat = mountChat({ provider, requestFallback: 'bamboo' as any });
+      const chat = await mountChat({ provider, requestFallback: 'bamboo' as any });
       chat.onRequest({ query: 'little' } as any);
       await sleep(50);
       await nextTick();
@@ -171,7 +286,7 @@ describe('useXChat', () => {
         }),
       });
       const requestFallback = vi.fn(async () => 'light');
-      const chat = mountChat({ provider, requestFallback: requestFallback as any });
+      const chat = await mountChat({ provider, requestFallback: requestFallback as any });
       chat.onRequest({ query: 'little' } as any);
       await sleep(50);
       await nextTick();
@@ -203,7 +318,7 @@ describe('useXChat', () => {
           ),
       }),
     });
-    const chat = mountChat({
+    const chat = await mountChat({
       provider,
       parser: (msg) => [`0_${JSON.stringify(msg)}`, `1_${JSON.stringify(msg)}`],
     });
@@ -217,8 +332,8 @@ describe('useXChat', () => {
     ]);
   });
 
-  it('should throw an error if onRequest,onReload,abort is called without an agent', () => {
-    const chat = mountChat({
+  it('should throw an error if onRequest,onReload,abort is called without an agent', async () => {
+    const chat = await mountChat({
       defaultMessages: [{ message: 'Hello' }],
     });
 
@@ -239,7 +354,7 @@ describe('useXChat', () => {
 
   it('should setMessage work successfully', async () => {
     vi.useRealTimers();
-    const chat = mountChat<string, ChatInput, any, any>({
+    const chat = await mountChat<string, ChatInput, any, any>({
       defaultMessages: [{ message: 'Hello' }],
     });
     chat.setMessage('default_0', { message: 'Hello2', extraInfo: { feedback: 'like' } });
@@ -272,7 +387,7 @@ describe('useXChat', () => {
         },
       }),
     });
-    const chat = mountChat({
+    const chat = await mountChat({
       provider,
       requestPlaceholder: 'bamboo placeholder' as any,
     });
@@ -309,11 +424,11 @@ describe('useXChat', () => {
 
   it('should chat messages store(dep conversationKey) work successfully', async () => {
     vi.useRealTimers();
-    mountChat<string, ChatInput, any, any>({
+    await mountChat<string, ChatInput, any, any>({
       defaultMessages: [{ message: 'Hello' }],
       conversationKey: 'conversation-1',
     });
-    await sleep(20);
+    await sleep(30);
     const store = chatMessagesStoreHelper.get('conversation-1');
     expect(store).toBeTruthy();
     expect(store?.getMessages()).toEqual([{ id: 'default_0', message: 'Hello', status: 'local' }]);

@@ -1,4 +1,4 @@
-import { computed, ref, shallowRef, type ShallowRef } from 'vue';
+import { computed, ref, shallowRef, watch, type ShallowRef } from 'vue';
 import type { AnyObject } from '../_util/type';
 import type { ConversationData } from '../x-conversations';
 import type { AbstractXRequestClass } from '../x-request';
@@ -38,7 +38,14 @@ export interface XChatConfig<
 > {
   provider?: AbstractChatProvider<ChatMessage, Input, Output>;
   conversationKey?: ConversationData['key'] | ShallowRef<ConversationData['key'] | undefined>;
-  defaultMessages?: DefaultMessageInfo<ChatMessage>[];
+  defaultMessages?:
+    | DefaultMessageInfo<ChatMessage>[]
+    | ((info: {
+        conversationKey?: ConversationData['key'];
+      }) => Promise<DefaultMessageInfo<ChatMessage>[]>)
+    | ((info?: {
+        conversationKey?: ConversationData['key'];
+      }) => DefaultMessageInfo<ChatMessage>[]);
   /** Convert agent message to bubble usage message type */
   parser?: (message: ChatMessage) => BubbleMessage | BubbleMessage[];
   requestPlaceholder?: ChatMessage | RequestPlaceholderFn<Input, ChatMessage>;
@@ -85,20 +92,39 @@ export default function useXChat<
       ? (conversationKey as ShallowRef<any>)
       : shallowRef(conversationKey);
 
+  // Queue requests until conversation default messages finish loading
+  const messageQueueRef = shallowRef(
+    new Map<
+      string | symbol,
+      Array<{
+        requestParams: Partial<Input>;
+        opts?: { extraInfo: AnyObject };
+      }>
+    >(),
+  );
+
   const {
     messages,
+    isDefaultMessagesRequesting,
+    removeMessage,
     setMessages,
     getMessages,
     setMessage,
-  } = useChatStore<MessageInfo<ChatMessage>>(
-    () =>
-      (defaultMessages || []).map((info, index) => ({
-        id: `default_${index}`,
-        status: 'local' as MessageStatus,
-        ...info,
-      })),
-    conversationKeyRef,
-  );
+  } = useChatStore<MessageInfo<ChatMessage>>(async () => {
+    const originalConversationKey =
+      conversationKey && typeof conversationKey === 'object' && 'value' in (conversationKey as any)
+        ? (conversationKey as ShallowRef<any>).value
+        : (conversationKey as ConversationData['key'] | undefined);
+    const messageList =
+      typeof defaultMessages === 'function'
+        ? await defaultMessages({ conversationKey: originalConversationKey })
+        : defaultMessages;
+    return (messageList || []).map((info, index) => ({
+      id: `default_${index}`,
+      status: 'local' as MessageStatus,
+      ...info,
+    }));
+  }, conversationKeyRef);
 
   const createMessage = (message: ChatMessage, status: MessageStatus, extraInfo?: AnyObject) => {
     const msg: MessageInfo<ChatMessage> = {
@@ -352,6 +378,44 @@ export default function useXChat<
     });
   };
 
+  const processMessageQueue = () => {
+    const key = conversationKeyRef.value as string | symbol | undefined;
+    if (key === undefined || key === null) return;
+    const requestParamsList = messageQueueRef.value.get(key as string | symbol);
+    if (requestParamsList && requestParamsList.length > 0) {
+      const timer = setTimeout(() => {
+        clearTimeout(timer);
+        requestParamsList.forEach(({ requestParams, opts }) => {
+          onRequest(requestParams, opts);
+        });
+        messageQueueRef.value.delete(key as string | symbol);
+      });
+    }
+  };
+
+  watch(
+    isDefaultMessagesRequesting,
+    (requesting) => {
+      if (!requesting) {
+        processMessageQueue();
+      }
+    },
+  );
+
+  const queueRequest = (
+    currentConversationKey: string | symbol,
+    requestParams: Partial<Input>,
+    opts?: { extraInfo: AnyObject },
+  ) => {
+    if (!messageQueueRef.value.has(currentConversationKey)) {
+      messageQueueRef.value.set(currentConversationKey, []);
+    }
+    messageQueueRef.value.get(currentConversationKey)!.push({
+      requestParams,
+      opts,
+    });
+  };
+
   const isRequestingComputed = computed(() => {
     const k = conversationKeyRef.value;
     return k !== undefined && k !== null ? IsRequestingMap.get(k) || false : isRequesting.value;
@@ -359,9 +423,11 @@ export default function useXChat<
 
   return {
     onRequest,
+    isDefaultMessagesRequesting,
     messages,
     parsedMessages,
     setMessages,
+    removeMessage,
     setMessage,
     abort: () => {
       if (!provider) {
@@ -371,6 +437,7 @@ export default function useXChat<
     },
     isRequesting: isRequestingComputed,
     onReload,
+    queueRequest,
   } as const;
 }
 

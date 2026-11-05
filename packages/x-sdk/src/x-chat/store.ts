@@ -1,9 +1,9 @@
 import { shallowRef, watch, type ShallowRef } from 'vue';
 
-type ConversationKey = string | number;
+export type ConversationKey = string | number;
 
 export const chatMessagesStoreHelper = {
-  _chatMessagesStores: new Map<string | number, ChatMessagesStore<any>>(),
+  _chatMessagesStores: new Map<ConversationKey, ChatMessagesStore<any>>(),
   get: (conversationKey: ConversationKey) => {
     return chatMessagesStoreHelper._chatMessagesStores.get(conversationKey);
   },
@@ -23,6 +23,8 @@ export class ChatMessagesStore<T extends { id: number | string }> {
   private messages: T[] = [];
   private listeners: (() => void)[] = [];
   private conversationKey: ConversationKey | undefined;
+  private isDefaultMessagesRequesting = false;
+  private isDestroyed = false;
 
   private emitListeners() {
     this.listeners.forEach((listener) => {
@@ -30,11 +32,35 @@ export class ChatMessagesStore<T extends { id: number | string }> {
     });
   }
 
-  constructor(defaultMessages: T[], conversationKey?: ConversationKey) {
-    this.setMessages(defaultMessages);
+  constructor(
+    defaultMessages: () => Promise<T[]>,
+    conversationKey?: ConversationKey,
+  ) {
+    this.initializeMessages(defaultMessages);
     if (conversationKey !== undefined && conversationKey !== null) {
       this.conversationKey = conversationKey;
       chatMessagesStoreHelper.set(this.conversationKey, this);
+    }
+  }
+
+  private async initializeMessages(defaultMessages: () => Promise<T[]>) {
+    try {
+      this.isDefaultMessagesRequesting = true;
+      this.emitListeners();
+      const messages = await defaultMessages();
+      if (!this.isDestroyed) {
+        this.messages = [...(messages || [])];
+        this.emitListeners();
+      }
+    } catch (error) {
+      console.warn('Failed to initialize messages:', error);
+      if (!this.isDestroyed) {
+        this.messages = [];
+        this.emitListeners();
+      }
+    } finally {
+      this.isDefaultMessagesRequesting = false;
+      this.emitListeners();
     }
   }
 
@@ -52,6 +78,10 @@ export class ChatMessagesStore<T extends { id: number | string }> {
 
   getMessages = () => {
     return this.messages;
+  };
+
+  getIsDefaultMessagesRequesting = () => {
+    return this.isDefaultMessagesRequesting;
   };
 
   getMessage = (id: string | number) => {
@@ -81,7 +111,7 @@ export class ChatMessagesStore<T extends { id: number | string }> {
     return false;
   };
 
-  removeMessage = (id: string) => {
+  removeMessage = (id: string | number) => {
     const index = this.messages.findIndex((item) => item.id === id);
     if (index !== -1) {
       this.messages.splice(index, 1);
@@ -92,7 +122,10 @@ export class ChatMessagesStore<T extends { id: number | string }> {
   };
 
   getSnapshot = () => {
-    return this.messages;
+    return {
+      messages: this.messages,
+      isDefaultMessagesRequesting: this.isDefaultMessagesRequesting,
+    };
   };
 
   subscribe = (callback: () => void) => {
@@ -101,12 +134,16 @@ export class ChatMessagesStore<T extends { id: number | string }> {
       this.listeners = this.listeners.filter((listener) => listener !== callback);
     };
   };
-}
 
-type Getter<T> = () => T;
+  destroy = () => {
+    this.isDestroyed = true;
+    this.listeners = [];
+  };
+}
 
 export interface UseChatStoreReturn<T extends { id: number | string }> {
   messages: ShallowRef<T[]>;
+  isDefaultMessagesRequesting: ShallowRef<boolean>;
   addMessage: ChatMessagesStore<T>['addMessage'];
   removeMessage: ChatMessagesStore<T>['removeMessage'];
   setMessage: ChatMessagesStore<T>['setMessage'];
@@ -119,7 +156,7 @@ export interface UseChatStoreReturn<T extends { id: number | string }> {
  * Vue composable for chat store. Accepts conversationKey as a reactive ref.
  */
 export function useChatStore<T extends { id: number | string }>(
-  defaultValue: T[] | Getter<T[]>,
+  defaultValue: () => Promise<T[]>,
   conversationKey?: ConversationKey | ShallowRef<ConversationKey | undefined>,
 ): UseChatStoreReturn<T> {
   const keyRef: ShallowRef<ConversationKey | undefined> =
@@ -131,21 +168,25 @@ export function useChatStore<T extends { id: number | string }>(
     if (k !== undefined && chatMessagesStoreHelper.get(k)) {
       return chatMessagesStoreHelper.get(k) as ChatMessagesStore<T>;
     }
-    const initial =
-      typeof defaultValue === 'function' ? (defaultValue as Getter<T[]>)() : defaultValue;
-    return new ChatMessagesStore<T>(initial || [], k);
+    return new ChatMessagesStore<T>(defaultValue, k);
   };
 
   const storeRef: ShallowRef<ChatMessagesStore<T>> = shallowRef(createStore(keyRef.value));
   const messages: ShallowRef<T[]> = shallowRef(storeRef.value.getMessages());
+  const isDefaultMessagesRequesting = shallowRef(storeRef.value.getIsDefaultMessagesRequesting());
 
   let unsubscribe: (() => void) | null = null;
 
+  const syncFromStore = () => {
+    messages.value = [...storeRef.value.getMessages()];
+    isDefaultMessagesRequesting.value = storeRef.value.getIsDefaultMessagesRequesting();
+  };
+
   const bindStore = () => {
     if (unsubscribe) unsubscribe();
-    messages.value = storeRef.value.getMessages();
+    syncFromStore();
     unsubscribe = storeRef.value.subscribe(() => {
-      messages.value = [...storeRef.value.getMessages()];
+      syncFromStore();
     });
   };
 
@@ -161,8 +202,9 @@ export function useChatStore<T extends { id: number | string }>(
 
   return {
     messages,
+    isDefaultMessagesRequesting,
     addMessage: (msg: T) => storeRef.value.addMessage(msg),
-    removeMessage: (id: string) => storeRef.value.removeMessage(id),
+    removeMessage: (id: string | number) => storeRef.value.removeMessage(id),
     setMessage: (id, m) => storeRef.value.setMessage(id, m),
     getMessage: (id) => storeRef.value.getMessage(id),
     setMessages: (msgs) => storeRef.value.setMessages(msgs),
