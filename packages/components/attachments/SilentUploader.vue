@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { computed, useTemplateRef } from 'vue';
+import { computed, ref } from 'vue';
 import type { SilentUploaderProps } from './interface';
 import { Upload } from 'ant-design-vue';
 
@@ -7,8 +7,7 @@ defineOptions({ name: 'AXAttachmentsSilentUploader' });
 
 const { children, upload, rootClassName } = defineProps<SilentUploaderProps>();
 
-const uploadRef = useTemplateRef<InstanceType<typeof Upload>>('upload');
-// const uploadRef = ref<InstanceType<typeof Upload>>(null);
+const uploadRef = ref<InstanceType<typeof Upload> | null>(null);
 
 const nativeElement = computed<HTMLElement>(() => uploadRef.value?.$el);
 
@@ -25,7 +24,7 @@ defineRender(() => {
       {...upload}
       showUploadList={false}
       // rootClassName={rootClassName}
-      ref="upload"
+      ref={uploadRef}
     >
       {children}
     </Upload>

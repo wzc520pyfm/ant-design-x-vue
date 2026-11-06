@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, useId } from 'vue';
+import { computed } from 'vue';
+import { useCompatId } from '../_util/vueCompat';
 import pickAttrs from '../_util/pick-attrs';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { useXProviderContext } from '../x-provider';
@@ -28,7 +29,7 @@ const styles = computed(() => thoughtChainContext.value.styles || {});
 
 const { direction } = useXProviderContext();
 
-const id = useId();
+const id = useCompatId();
 
 const key = computed(() => info.key ?? id);
 const { collapsible, icon, blink, title, content, footer, status, description } = info;

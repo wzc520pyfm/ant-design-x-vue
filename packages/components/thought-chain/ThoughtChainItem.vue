@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, ref, useId } from 'vue';
+import { computed, ref } from 'vue';
+import { useCompatId } from '../_util/vueCompat';
 import pickAttrs from '../_util/pick-attrs';
 import { useXProviderContext } from '../x-provider';
 import { THOUGHT_CHAIN_ITEM_STATUS, type ThoughtChainItemProps } from './interface';
@@ -32,7 +33,7 @@ const domProps = computed(() => pickAttrs(restProps, {
   data: true,
 }));
 
-const id = useId();
+const id = useCompatId();
 const itemRef = ref<HTMLElement>();
 
 const { getPrefixCls, direction } = useXProviderContext();

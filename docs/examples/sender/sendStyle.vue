@@ -2,7 +2,7 @@
 import { SendOutlined } from '@ant-design/icons-vue';
 import { type ButtonProps, App, Flex, Tooltip } from 'ant-design-vue';
 import { Sender, theme } from 'ant-design-x-vue';
-import { type CSSProperties, onWatcherCleanup, ref, watch } from 'vue';
+import { type CSSProperties, ref, watch } from 'vue';
 
 defineOptions({ name: 'AXSenderSendStyle' });
 
@@ -14,13 +14,13 @@ const loading = ref(false);
 const Demo = () => {
   const { message } = App.useApp();
 
-  watch(loading, () => {
+  watch(loading, (_n, _o, onCleanup) => {
     if (loading.value) {
       const timer = setTimeout(() => {
         loading.value = false;
       }, 3000);
 
-      onWatcherCleanup(() => {
+      onCleanup(() => {
         clearTimeout(timer);
       })
     }
