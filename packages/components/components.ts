@@ -15,3 +15,4 @@ export * from './code-highlighter';
 export * from './file-card';
 export * from './sources';
 export * from './think';
+export * from './mermaid';

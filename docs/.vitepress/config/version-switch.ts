@@ -54,6 +54,7 @@ export const V2_SITE_PATHS = [
   '/component/actions',
   '/component/file-card',
   '/component/think',
+  '/component/mermaid',
   '/component/thought-chain',
   '/component/sources',
   '/component/code-highlighter',

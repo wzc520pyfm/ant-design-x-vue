@@ -27,6 +27,7 @@ import type { ThinkProps } from '../think';
 import type { ThoughtChainProps } from '../thought-chain';
 import type { WelcomeProps } from '../welcome';
 import type { CodeHighlighterProps } from '../code-highlighter';
+import type { MermaidProps } from '../mermaid';
 import type { MarkdownComponentsConfig as XMarkdownComponentsConfig } from './XMarkdownComponents';
 
 export interface AntdConfigProviderProps {
@@ -88,6 +89,7 @@ export interface XComponentsConfig {
   sources?: ComponentStyleConfig<SourcesProps>;
   welcome?: ComponentStyleConfig<WelcomeProps>;
   codeHighlighter?: ComponentStyleConfig<CodeHighlighterProps>;
+  mermaid?: ComponentStyleConfig<MermaidProps>;
 }
 
 type ComponentsConfig = {
