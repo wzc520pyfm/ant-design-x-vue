@@ -2,6 +2,8 @@
 
 [`@ant-design/x-skill`](https://www.npmjs.com/package/@ant-design/x-skill) 是一套 **框架无关** 的 Agent Skill / CLI（`npx x-skill`），给 Claude Code、Cursor 等 IDE 提供 Ant Design X 的开发指引。Vue 仓库 **不会再移植一份 CLI**——直接安装官方包即可。
 
+> English: [Using X Skill in Vue](/x-skill/introduce.en)
+
 技能正文按 React 写法举例（`@ant-design/x`、`antd`、JSX）。用在 `ant-design-x-vue` 项目里时，按下面的对照替换即可。
 
 ## 安装

@@ -4,7 +4,9 @@
 
 用 A2UI 命令队列驱动动态卡片：`Box` 提供组件注册表和命令，`Card` 按 `id`（surfaceId）渲染。
 
-本页覆盖 v0.9 基础渲染、路径绑定、action context 解析、字段回写 / 校验 hook，以及增量 `updateDataModel` 流式更新。完整 React 演示矩阵（多卡同步、筛选搜索、嵌套交互等）仍在后续切片。
+> English: [Introduction](/x-card/introduce.en)
+
+本页覆盖 v0.9 基础渲染、路径绑定、action context 解析、字段回写 / 校验，以及与 React 2.10 showcase 对齐的多卡同步、筛选搜索、嵌套交互、渐进加载。v0.8 用 `surfaceUpdate` / `dataModelUpdate` / `beginRendering` 的命令形状，也提供基础与 action 示例。
 
 ## 安装
 
@@ -43,6 +45,54 @@ x-card/streaming
 ::::demo-v2 自定义字段用 `useXCardField` 做必填 / 格式校验，并通过 Card 注入的 `onDataChange` 回写 dataModel。
 
 x-card/form-validation
+
+::::
+
+### 多卡同步
+
+::::demo-v2 商品列表与购物车绑定同一 `/cart`。`onAction` 里追加 `updateDataModel`，两张卡片一起刷新——不另造跨 surface 协议。
+
+x-card/multi-card-sync
+
+::::
+
+### 筛选搜索
+
+::::demo-v2 筛选项写入 `/filters`，列表组件通过 path 读取同一份 filters 并本地过滤。
+
+x-card/filter-search
+
+::::
+
+### 嵌套交互
+
+::::demo-v2 文件树点击后把选中项写入 dataModel，详情卡绑定 `/selectedFile`。
+
+x-card/nested-interaction
+
+::::
+
+### 渐进加载动画
+
+::::demo-v2 分批 `updateComponents` 追加商品节点，进度条走 `LoadingIndicator` 的 props；卡片入场动画在组件内部用现有 DOM/CSS 完成。
+
+x-card/progressive
+
+::::
+
+### v0.8 基础渲染
+
+::::demo-v2 `surfaceUpdate` + `dataModelUpdate`（含 `valueString` / `literalString`）+ `beginRendering`。
+
+x-card/v08-basic
+
+::::
+
+### v0.8 Action context
+
+::::demo-v2 v0.8 的 `action.context` 是 `{ key, value: { path } }[]`。输入写入 dataModel，空 context 提交时由 Card 解析。
+
+x-card/v08-action
 
 ::::
 
