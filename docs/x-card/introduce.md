@@ -4,8 +4,6 @@
 
 用 A2UI 命令队列驱动动态卡片：`Box` 提供组件注册表和命令，`Card` 按 `id`（surfaceId）渲染。
 
-> English: [Introduction](/x-card/introduce.en)
-
 本页覆盖 v0.9 基础渲染、路径绑定、action context 解析、字段回写 / 校验，以及与 React 2.10 showcase 对齐的多卡同步、筛选搜索、嵌套交互、渐进加载。v0.8 用 `surfaceUpdate` / `dataModelUpdate` / `beginRendering` 的命令形状，也提供基础与 action 示例。
 
 ## 安装

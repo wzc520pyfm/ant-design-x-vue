@@ -1,7 +1,5 @@
 # Folder 文件夹
 
-> English: [Folder](/component/folder.en)
-
 文件树组件，用于展示层级文件结构。对齐 React `@ant-design/x` Folder（2.4+，含 2.8 右键菜单）。
 
 ## 何时使用

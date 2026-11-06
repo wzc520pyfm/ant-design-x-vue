@@ -47,7 +47,7 @@ const { messages, onRequest } = useXChat({
 </template>
 ```
 
-Stream Markdown with `XMarkdown` from `@ant-design-x-vue/x-markdown`, not React's `@ant-design/x-markdown`. Dynamic cards use `XCard.Box` / `XCard.Card` from `@ant-design-x-vue/x-card` (see [X Card](/x-card/introduce.en)).
+Stream Markdown with `XMarkdown` from `@ant-design-x-vue/x-markdown`, not React's `@ant-design/x-markdown`. Dynamic cards use `XCard.Box` / `XCard.Card` from `@ant-design-x-vue/x-card` (see [X Card](/en/x-card/introduce)).
 
 ## What the bundled skills cover
 

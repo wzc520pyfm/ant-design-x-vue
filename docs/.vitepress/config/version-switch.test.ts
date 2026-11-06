@@ -104,6 +104,19 @@ describe('cross-site version switch', () => {
     )
   })
 
+  it('strips the /en locale prefix when jumping versions', () => {
+    expect(resolveVersionHref('/en/component/bubble', 'v1')).toBe(
+      'https://1x-ant-design-x-vue.netlify.app/component/bubble',
+    )
+    expect(resolveVersionHref('/en/component/bubble', 'v2')).toBe(
+      'https://x-vue.ant.design/en/component/bubble',
+    )
+    expect(resolveVersionHref('/en/', 'v2')).toBe('https://x-vue.ant.design/en/')
+    expect(resolveVersionHref('/en/x-markdown/introduce', 'v1')).toBe(
+      'https://1x-ant-design-x-vue.netlify.app/',
+    )
+  })
+
   it('writes a same-site redirect stub for every legacy 2.x slug', () => {
     const rewrites = legacyRewriteMap()
     expect(Object.keys(rewrites)).toHaveLength(Object.keys(LEGACY_REDIRECTS).length)

@@ -53,9 +53,9 @@ mermaid/with-xmarkdown
 | --- | --- | --- | --- | --- |
 | children | Mermaid source (or default slot) | `string` | - | - |
 | header | Header content; hidden when `null` / `false` | `VNode \| string \| (() => …) \| false \| null` | - | - |
-| classNames | Semantic class names | `Partial<Record<'root' \| 'header' \| 'graph' \| 'code', string>>` | - | - |
-| styles | Semantic styles | `Partial<Record<'root' \| 'header' \| 'graph' \| 'code', CSSProperties>>` | - | - |
-| highlightProps | Highlighter options (code view is `pre` today; takes effect after CodeHighlighter is wired) | `Record<string, unknown>` | - | - |
+| classNames | Semantic class names | `Partial\<Record<'root' \| 'header' \| 'graph' \| 'code', string\>\>` | - | - |
+| styles | Semantic styles | `Partial\<Record<'root' \| 'header' \| 'graph' \| 'code', CSSProperties\>\>` | - | - |
+| highlightProps | Highlighter options (code view is `pre` today; takes effect after CodeHighlighter is wired) | `Record\<string, unknown\>` | - | - |
 | config | `mermaid.initialize` config (keep the reference stable) | `MermaidConfig` | - | - |
 | actions | Toolbar | `{ enableZoom?: boolean; enableDownload?: boolean; enableCopy?: boolean; customActions?: ItemType[] }` | `{ enableZoom: true, enableDownload: true, enableCopy: true }` | - |
 | onRenderTypeChange | View switch callback | `(value: 'image' \| 'code') => void` | - | - |
