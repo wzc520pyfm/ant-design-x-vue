@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
 import type { EventHandler, MouseEventHandler } from 'ant-design-vue/es/_util/EventInterface';
-import type { ConversationItemType } from './interface';
+import type { ConversationItemType, ConversationsProps } from './interface';
 import pickAttrs from '../_util/pick-attrs';
 import { computed } from 'vue';
 import { Dropdown, Menu, Typography } from 'ant-design-vue';
@@ -18,7 +18,7 @@ interface ResolvedConversationsItemProps {
     getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
   };
   active?: boolean;
-  onClick?: (value: string) => void;
+  onClick?: ConversationsProps['onActiveChange'];
   class?: any;
 }
 

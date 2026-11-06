@@ -33,7 +33,7 @@ interface ResolvedConversationsProps {
   items?: ItemType[];
   activeKey?: ActiveKey;
   defaultActiveKey?: ActiveKey;
-  onActiveChange?: (value: string) => void;
+  onActiveChange?: (value: ConversationItemType['key'], item?: ItemType) => void;
   menu?: ConversationMenu | ((value: ConversationItemType) => ConversationMenu);
   styles?: Partial<Record<ConversationsSemanticType, CSSProperties>>;
   classNames?: Partial<Record<ConversationsSemanticType, string>>;
@@ -117,7 +117,10 @@ const onConversationItemClick: ConversationsItemProps['onClick'] = (key) => {
   setMergedActiveKey(key);
 
   if (onActiveChange) {
-    onActiveChange(key!);
+    onActiveChange(
+      key!,
+      items?.find((item) => item.key === key),
+    );
   }
 };
 

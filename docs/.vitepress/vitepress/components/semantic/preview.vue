@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Col, Row, Typography, theme, Tag, Flex } from 'ant-design-vue';
-import { computed, onBeforeUnmount, ref, useTemplateRef, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { XProvider } from 'ant-design-x-vue'
 import { useData } from 'vitepress'
 
@@ -35,7 +35,7 @@ const semanticClassNames = computed(() => {
 
 
 // ======================== Hover =========================
-const containerRef = useTemplateRef('container');
+const containerRef = ref<HTMLElement | null>(null);
 
 let timer: ReturnType<typeof setTimeout> | null = null;
 
@@ -78,7 +78,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="semantic-container" ref="container">
+  <div class="semantic-container" ref="containerRef">
     <Row :style="{minHeight: height}">
       <Col :span="18" class="col-wrap">
         <XProvider :theme="{

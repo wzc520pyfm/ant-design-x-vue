@@ -1,6 +1,6 @@
 # 在 Vite 中使用
 
-适用 Vue 3.5+ 的 Vite 项目。包名是 `ant-design-x-vue`（不要安装 React 的 `@ant-design/x`）。
+适用 Vue 3.3+ 的 Vite 项目。包名是 `ant-design-x-vue`（不要安装 React 的 `@ant-design/x`）。
 
 ## 安装
 

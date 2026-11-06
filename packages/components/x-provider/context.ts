@@ -26,6 +26,7 @@ import type { OverrideToken } from '../theme/cssinjs-utils';
 import type { ThinkProps } from '../think';
 import type { ThoughtChainProps } from '../thought-chain';
 import type { WelcomeProps } from '../welcome';
+import type { CodeHighlighterProps } from '../code-highlighter';
 import type { MermaidProps } from '../mermaid';
 import type { MarkdownComponentsConfig as XMarkdownComponentsConfig } from './XMarkdownComponents';
 
@@ -87,6 +88,7 @@ export interface XComponentsConfig {
   fileCard?: ComponentStyleConfig<FileCardProps>;
   sources?: ComponentStyleConfig<SourcesProps>;
   welcome?: ComponentStyleConfig<WelcomeProps>;
+  codeHighlighter?: ComponentStyleConfig<CodeHighlighterProps>;
   mermaid?: ComponentStyleConfig<MermaidProps>;
 }
 

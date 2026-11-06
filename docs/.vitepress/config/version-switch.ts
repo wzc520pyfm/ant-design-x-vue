@@ -57,6 +57,7 @@ export const V2_SITE_PATHS = [
   '/component/mermaid',
   '/component/thought-chain',
   '/component/sources',
+  '/component/code-highlighter',
   '/component/x-provider',
   '/x-markdown/introduce',
   '/x-markdown/examples',

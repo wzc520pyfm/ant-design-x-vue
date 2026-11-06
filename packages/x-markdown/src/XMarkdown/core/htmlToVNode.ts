@@ -1,7 +1,7 @@
 import type { ChildNode, Document, Element, Text } from 'domhandler';
 import type { Config as DOMPurifyConfig } from 'dompurify';
 import { parseDocument } from 'htmlparser2';
-import { h, markRaw, toRaw, type Component, type VNode } from 'vue';
+import { createTextVNode, h, markRaw, toRaw, type Component, type VNode } from 'vue';
 import AnimationText from '../AnimationText.vue';
 import type {
   ComponentStreamStatus,
@@ -116,6 +116,13 @@ export function buildDomPurifyConfig(
 export interface HtmlToVNodeOptions {
   components?: Record<string, Component>;
   /**
+   * Extra props keyed by tag name, merged into custom components
+   * (align React `componentsProps`).
+   */
+  componentsProps?: {
+    [tagName: string]: Record<string, unknown>;
+  };
+  /**
    * Fallback status used when a custom tag is already closed.
    * Unclosed custom tags are always `'loading'`.
    */
@@ -186,19 +193,30 @@ export function htmlToVNode(
       const status: ComponentStreamStatus = unclosedTags.has(tagName)
         ? 'loading'
         : streamStatus;
-      const classes = [attribs.className, attribs.classname, attribs.class]
+      const extra =
+        options.componentsProps?.[tagName] ||
+        options.componentsProps?.[element.name] ||
+        {};
+      const props: Record<string, any> = {
+        ...attribs,
+        ...(attribs.disabled !== undefined && { disabled: true }),
+        ...(attribs.checked !== undefined && { checked: true }),
+        ...extra,
+        // Internally computed props are applied last so that neither parsed HTML
+        // attributes nor componentsProps can shadow them.
+        domNode,
+        streamStatus: status,
+      };
+
+      // Handle class and className merging (componentsProps class first)
+      const classes = [props.className, props.classname, props.class]
         .filter(Boolean)
         .join(' ')
         .trim();
-      const props: Record<string, any> = {
-        domNode,
-        streamStatus: status,
-        ...attribs,
-        ...(classes ? { class: classes, className: classes } : {}),
-        ...(attribs.disabled !== undefined && { disabled: true }),
-        ...(attribs.checked !== undefined && { checked: true }),
-        children: childNodes.length ? childNodes : undefined,
-      };
+      props.className = classes || '';
+      if (classes) {
+        props.class = classes;
+      }
 
       if (tagName === 'code') {
         const block = (attribs['data-block'] ?? 'false') === 'true';
@@ -206,6 +224,21 @@ export function htmlToVNode(
           attribs['data-state'] === 'loading' ? 'loading' : 'done';
         props.block = block;
         props.streamStatus = codeStreamStatus;
+        const langFromData = attribs?.['data-lang'];
+        const langFromClass =
+          attribs?.class?.match(/(?:^|\s)language-([^\s]+)/)?.[1] ??
+          attribs?.class?.match(/(?:^|\s)lang-([^\s]+)/)?.[1];
+        const lang = langFromData || langFromClass;
+        if (lang) {
+          props.lang = lang;
+        } else {
+          // No language metadata: do not inherit `lang` from componentsProps.
+          delete props.lang;
+        }
+      }
+
+      if (childNodes.length) {
+        props.children = childNodes;
       }
 
       return h(CustomComponent, props, () => childNodes) as VNode;
@@ -215,9 +248,10 @@ export function htmlToVNode(
   }
 
   const children = walk(root.children || []);
-  return children.filter(
-    (child): child is VNode => child !== '' && typeof child === 'object',
-  );
+  // Keep root text nodes (e.g. escapeRawHtml output with no wrapping tags).
+  return children
+    .filter((child) => child !== '' && child != null)
+    .map((child) => (typeof child === 'string' ? createTextVNode(child) : child));
 }
 
 export default htmlToVNode;

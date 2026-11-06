@@ -11,6 +11,7 @@ import type { ComponentToken as FileCardComponentToken } from '../file-card/styl
 import type { ComponentToken as SourcesComponentToken } from '../sources/style';
 import type { ComponentToken as ThinkComponentToken } from '../think/style';
 import type { ComponentToken as WelcomeComponentToken } from '../welcome/style';
+import type { ComponentToken as CodeHighlighterComponentToken } from '../code-highlighter/style';
 import type { ComponentToken as MermaidComponentToken } from '../mermaid/style';
 
 export interface ComponentTokenMap {
@@ -27,5 +28,6 @@ export interface ComponentTokenMap {
   Sources?: SourcesComponentToken;
   Think?: ThinkComponentToken;
   Welcome?: WelcomeComponentToken;
+  CodeHighlighter?: CodeHighlighterComponentToken;
   Mermaid?: MermaidComponentToken;
 }

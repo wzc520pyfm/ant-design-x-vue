@@ -11,6 +11,7 @@ export * from './sender';
 export * from './attachments';
 export * from './thought-chain';
 export * from './actions';
+export * from './code-highlighter';
 export * from './file-card';
 export * from './sources';
 export * from './think';

@@ -1,4 +1,4 @@
-import { onWatcherCleanup, watch, type Ref } from 'vue';
+import { watch, type Ref } from 'vue';
 
 function isReverse(scrollDom: HTMLElement) {
   return getComputedStyle(scrollDom).flexDirection === 'column-reverse';
@@ -65,7 +65,7 @@ export function useCompatibleScroll(
 
   watch(
     [scrollDom, contentDom],
-    ([scrollEl, contentEl]) => {
+    ([scrollEl, contentEl], _prev, onCleanup) => {
       if (!scrollEl || !contentEl) return;
 
       if (!sentinelRef.current) {
@@ -111,7 +111,7 @@ export function useCompatibleScroll(
       resizeObserver.observe(contentEl);
       scrollEl.addEventListener('scroll', handleScroll, { capture: true });
 
-      onWatcherCleanup(() => {
+      onCleanup(() => {
         intersectionObserver.disconnect();
         resizeObserver.disconnect();
         clearTimeout(scrolling.current);
