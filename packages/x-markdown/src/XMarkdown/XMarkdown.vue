@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, h, shallowRef, watch, type CSSProperties, type VNode } from 'vue';
+import { computed, h, shallowRef, watch, type CSSProperties, type Component, type VNode } from 'vue';
 import type { XMarkdownProps } from './interface';
 import { Parser, htmlToVNode, buildDomPurifyConfig } from './core';
 import DOMPurify from 'dompurify';
-import { useStreaming } from './hooks';
+import { useStreaming, useTypewriter } from './hooks';
+import { resolveStreaming, resolveTailContent } from './utils';
 import classnames from 'classnames';
 import { useXProviderContext } from 'ant-design-x-vue';
 
@@ -12,7 +13,7 @@ defineOptions({
 });
 
 const props = withDefaults(defineProps<XMarkdownProps>(), {
-  streaming: false,
+  streaming: undefined,
 });
 
 const { direction: contextDirection, getPrefixCls } = useXProviderContext();
@@ -40,27 +41,69 @@ function applyPlugins(content: string): string {
   return result;
 }
 
-const streamingObject = computed(() => {
-  if (typeof props.streaming === 'object' && props.streaming !== null) {
-    return props.streaming;
-  }
-  return undefined;
-});
+/** Expand boolean preset; objects pass through (align React 2.10). */
+const resolvedStreaming = computed(() => resolveStreaming(props.streaming));
 
-const streamingFlag = computed(() => {
-  if (typeof props.streaming === 'boolean') return props.streaming;
-  return !!streamingObject.value;
-});
+const streamingFlag = computed(() => !!resolvedStreaming.value?.hasNextChunk);
 
 const streamStatus = computed(() => (streamingFlag.value ? 'loading' : 'done'));
 
 const rawContent = computed(() => props.content ?? props.children ?? '');
 
-const { displayedContent: displayContent } = useStreaming({
+const typewriterOption = computed(() => resolvedStreaming.value?.typewriter);
+const typewriterActive = computed(() => !!resolvedStreaming.value?.hasNextChunk);
+
+const pacedContent = useTypewriter({
   content: rawContent,
-  streaming: streamingFlag,
-  streamingOption: streamingObject,
+  typewriter: typewriterOption,
+  active: typewriterActive,
 });
+
+const streamingOptionRef = computed(() => resolvedStreaming.value);
+const componentsRef = computed(() => props.components);
+
+const { displayedContent: displayContent, sections: streamSections } = useStreaming({
+  content: pacedContent,
+  streamingOption: streamingOptionRef as any,
+  components: componentsRef as any,
+});
+
+const tailContent = computed(() => resolveTailContent(resolvedStreaming.value?.tail));
+const TailComponent = computed(() => {
+  const tail = resolvedStreaming.value?.tail;
+  return typeof tail === 'object' && tail ? (tail.component as Component | undefined) : undefined;
+});
+const shouldShowTail = computed(() => !!resolvedStreaming.value?.hasNextChunk && !!tailContent.value);
+
+const mergedComponents = computed(() => {
+  if (!shouldShowTail.value) return props.components || {};
+  const Tail = TailComponent.value;
+  const content = tailContent.value || '▋';
+  return {
+    ...(props.components || {}),
+    'xmd-tail': Tail
+      ? defineTailWrapper(Tail, content)
+      : defineDefaultTail(content),
+  };
+});
+
+function defineDefaultTail(content: string): Component {
+  return {
+    name: 'XmdTail',
+    setup() {
+      return () => h('span', { class: 'xmd-tail' }, content);
+    },
+  };
+}
+
+function defineTailWrapper(Comp: Component, content: string): Component {
+  return {
+    name: 'XmdTailCustom',
+    setup() {
+      return () => h(Comp, { content });
+    },
+  };
+}
 
 const parser = shallowRef<Parser>(
   new Parser({
@@ -81,30 +124,44 @@ watch(
   },
 );
 
-const parsedHtml = computed(() => {
-  const source = displayContent.value ?? rawContent.value;
-  if (!source) return '';
+function renderMarkdownSection(source: string, injectTail: boolean): VNode[] {
+  if (!source) return [];
   const transformed = applyPlugins(source);
-  const raw = parser.value.parse(transformed);
-  if (typeof document === 'undefined') return raw;
-  return DOMPurify.sanitize(
-    raw,
-    buildDomPurifyConfig(props.components, props.dompurifyConfig) as any,
-  ) as unknown as string;
-});
-
-const bodyVNodes = computed((): VNode[] => {
-  const html = parsedHtml.value;
+  const raw = parser.value.parse(transformed, { injectTail });
+  const html =
+    typeof document === 'undefined'
+      ? raw
+      : (DOMPurify.sanitize(
+          raw,
+          buildDomPurifyConfig(mergedComponents.value, props.dompurifyConfig) as any,
+        ) as unknown as string);
   if (!html) return [];
   return htmlToVNode(html, {
-    components: props.components || {},
+    components: mergedComponents.value,
     streamStatus: streamStatus.value,
-    streaming: props.streaming,
+    streaming: resolvedStreaming.value,
   });
+}
+
+const bodyVNodes = computed((): VNode[] => {
+  const sections = streamSections.value;
+  if (sections && sections.length > 0) {
+    const nodes: VNode[] = [];
+    sections.forEach((section, index) => {
+      const injectTail = shouldShowTail.value && index === sections.length - 1;
+      const part = renderMarkdownSection(section, injectTail);
+      // Keyed wrapper keeps finished sections stable across chunk updates.
+      nodes.push(h('div', { key: `xmd-sec-${index}`, class: 'xmd-section', style: { display: 'contents' } }, part));
+    });
+    return nodes;
+  }
+
+  const source = displayContent.value ?? rawContent.value;
+  return renderMarkdownSection(source, shouldShowTail.value);
 });
 
 defineRender(() => {
-  if (!rawContent.value) return null;
+  if (!rawContent.value && !displayContent.value) return null;
   return h(
     'div',
     { class: mergedCls.value, style: mergedStyle.value },
@@ -138,5 +195,15 @@ defineRender(() => {
   margin-top: 24px;
   margin-bottom: 16px;
   font-weight: 600;
+}
+:deep(.xmd-tail) {
+  display: inline;
+  margin-left: 1px;
+  animation: xmd-tail-blink 1s steps(1) infinite;
+}
+@keyframes xmd-tail-blink {
+  50% {
+    opacity: 0;
+  }
 }
 </style>
