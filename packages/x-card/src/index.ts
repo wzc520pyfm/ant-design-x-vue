@@ -13,3 +13,8 @@ export {
 } from './x-card';
 export { default as Card } from './Card';
 export { default as Box } from './Box.vue';
+export {
+  useXCardField,
+  validateFieldValue,
+  type XCardFieldRule,
+} from './hooks/use-x-card-field';
