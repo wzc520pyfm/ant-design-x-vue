@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Select } from 'ant-design-vue'
+import { useDocLocale } from '../use-doc-locale'
 import { onMounted, ref } from 'vue'
 import {
   V1_VERSION_LABEL,
@@ -10,6 +11,8 @@ import {
 } from '../../config/version-switch'
 
 defineOptions({ name: 'VpVersionSwitch' })
+
+const { isEn } = useDocLocale()
 
 const options = [
   { label: V2_VERSION_LABEL, value: 'v2' },
@@ -37,7 +40,7 @@ const onChange = (value: unknown) => {
       :options="options"
       :bordered="false"
       size="large"
-      aria-label="文档版本"
+      :aria-label="isEn ? 'Docs version' : '文档版本'"
       @change="onChange"
     />
   </div>

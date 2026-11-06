@@ -1,3 +1,4 @@
+import { isEnglishPath, stripLocalePrefix, withLocalePrefix } from './locale-path'
 export type DocVersionId = 'v1' | 'v2'
 
 /**
@@ -287,6 +288,8 @@ export function resolveVersionPath(pathname: string, target: DocVersionId): stri
 }
 
 export function resolveVersionHref(pathname: string, target: DocVersionId): string {
-  const path = resolveVersionPath(pathname, target)
-  return `${versionOrigin(target)}${path}`
+  const english = isEnglishPath(pathname)
+  const path = resolveVersionPath(stripLocalePrefix(pathname), target)
+  const localized = target === 'v2' && english ? withLocalePrefix(path, 'en') : path
+  return `${versionOrigin(target)}${localized}`
 }

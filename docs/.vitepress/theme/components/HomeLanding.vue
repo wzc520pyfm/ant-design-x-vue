@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { useDocLocale } from '../use-doc-locale'
 import { theme, Welcome, Prompts, Bubble, XProvider } from 'ant-design-x-vue'
 import LottieBox from './LottieBox.vue'
 import HomeScene from './HomeScene.vue'
 
+const { isEn, lp } = useDocLocale()
 const comma = '\u00A0,\u00A0\u00A0'
-const stages = [
+const stagesZh = [
   {
     label: '唤醒',
     title: `轻松唤醒${comma}即刻吸引`,
@@ -48,7 +50,50 @@ const stages = [
   },
 ]
 
-const scenes = [
+const stagesEn = [
+  {
+    label: 'Wake',
+    title: `Easily Wake${comma}attract instantly`,
+    desc: 'Help first-time users quickly understand what the AI can do, show the range of supported intentions, and lower the cost of getting started',
+    action: 'Start with Wake',
+    href: '/component/welcome',
+    icon: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/f14LTKOFxRsAAAAAQbAAAAgADtFMAQFr/original',
+    start: '#6fb3e2',
+    end: '#6c57ff',
+  },
+  {
+    label: 'Express',
+    title: `Simply Express${comma}get feedback anytime`,
+    desc: 'Show users how to express intent quickly and correctly, reduce misunderstandings, and keep sent content visible',
+    action: 'Start with Express',
+    href: '/component/attachments',
+    icon: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/dGfqSaM9ZxoAAAAAQaAAAAgADtFMAQFr/original',
+    start: '#6dd6f5',
+    end: '#108c44',
+  },
+  {
+    label: 'Confirm',
+    title: `Process Confirm${comma}stay in control`,
+    desc: 'Let users see how the AI is executing a task, ease waiting anxiety, and keep a sense of control',
+    action: 'Start with Confirm',
+    href: '/component/think',
+    icon: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/BQaCTIUU-CkAAAAAQZAAAAgADtFMAQFr/original',
+    start: '#ba2cb8',
+    end: '#6c37e8',
+  },
+  {
+    label: 'Feedback',
+    title: `Result Feedback${comma}easy to trust`,
+    desc: 'Help users clearly see and trust completed AI work, then apply the generated result quickly',
+    action: 'Start with Feedback',
+    href: '/component/actions',
+    icon: 'https://mdn.alipayobjects.com/huamei_lkxviz/afts/img/r-DuSZG-9NIAAAAAQdAAAAgADtFMAQFr/original',
+    start: '#f7c348',
+    end: '#f75972',
+  },
+]
+
+const scenesZh = [
   {
     key: 'independent',
     title: 'Web 独立式',
@@ -77,12 +122,41 @@ const scenes = [
   },
 ]
 
+const scenesEn = [
+  {
+    key: 'independent',
+    title: 'Standalone web app',
+    desc: 'Mostly natural language, almost no GUI operations',
+    href: '/playground/independent',
+    img: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*YVjbTqbc7ngAAAAAAAAAAAAADgCCAQ/fmt.avif',
+  },
+  {
+    key: 'assistant',
+    title: 'Web copilot',
+    desc: 'Natural language and GUI operations used together',
+    href: '/playground/copilot',
+    img: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*kCojRo0SoAAAAAAAAAAAAAAADgCCAQ/fmt.avif',
+  },
+  {
+    key: 'nest',
+    title: 'Embedded web UI',
+    desc: 'GUI first, with occasional AI commands',
+    img: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*krfsT5zBSuUAAAAAAAAAAAAADgCCAQ/fmt.avif',
+  },
+  {
+    key: 'app',
+    title: 'Mobile app',
+    desc: 'In active development, stay tuned',
+    disabled: true,
+  },
+]
+
 const sceneKey = ref('independent')
-const activeScene = computed(() => scenes.find((item) => item.key === sceneKey.value))
+const activeScene = computed(() => scenes.value.find((item) => item.key === sceneKey.value))
 
 const darkTheme = { algorithm: theme.darkAlgorithm, inherit: false }
 
-const promptItems = [
+const promptItemsZh = [
   {
     key: '1',
     label: '🎉 你好, 我是全新 AI 产品创造助手',
@@ -93,6 +167,23 @@ const promptItems = [
     ],
   },
 ]
+
+const promptItemsEn = [
+  {
+    key: '1',
+    label: '🎉 Hello, I am your new AI product creation assistant',
+    description: 'An AGI product solution based on Ant Design, creating a better intelligent experience',
+    children: [
+      { key: '1-1', description: 'What is new in Ant Design X?' },
+      { key: '1-2', description: 'Explore the design paradigm for the AI era!' },
+    ],
+  },
+]
+
+const stages = computed(() => (isEn.value ? stagesEn : stagesZh))
+const scenes = computed(() => (isEn.value ? scenesEn : scenesZh))
+const promptItems = computed(() => (isEn.value ? promptItemsEn : promptItemsZh))
+
 
 let direction = 1
 function onBackgroundLoad(animation: { addEventListener: Function, setDirection: Function, setSpeed: Function, play: Function }) {
@@ -186,11 +277,11 @@ function titleParts(title: string, label: string) {
           <h1 class="name">
             Ant Des<span class="i-letter">I<span class="i-star" /></span>gn X
           </h1>
-          <h1 class="name">AI 体验新秩序</h1>
-          <p class="desc">Ant Design X 的社区 Vue 实现。基于 RICH 设计范式，打造卓越 AI 界面解决方案，引领智能新体验。</p>
+          <h1 class="name">{{ isEn ? 'A new order for AI experiences' : 'AI 体验新秩序' }}</h1>
+          <p class="desc">{{ isEn ? 'The community Vue implementation of Ant Design X. Built on the RICH design paradigm to craft outstanding AI interfaces.' : 'Ant Design X 的社区 Vue 实现。基于 RICH 设计范式，打造卓越 AI 界面解决方案，引领智能新体验。' }}</p>
           <div class="banner-actions">
-            <a class="pill start" href="/component/overview">开始使用</a>
-            <a class="pill design" href="/design/introduce">设计语言</a>
+            <a class="pill start" :href="lp('/component/overview')">{{ isEn ? 'Get started' : '开始使用' }}</a>
+            <a class="pill design" :href="lp('/design/introduce')">{{ isEn ? 'Design language' : '设计语言' }}</a>
           </div>
         </div>
         <LottieBox
@@ -202,9 +293,9 @@ function titleParts(title: string, label: string) {
     </section>
 
     <section class="sheet">
-      <a ref="richRef" class="block rich" href="/design/introduce">
-        <h2>AI 设计范式 - RICH</h2>
-        <p class="lead">我们致力于构建 AI 设计理论，并在蚂蚁内部海量 AI 产品中实践、迭代。在此过程中，RICH 设计范式应运而生：角色（Role）、意图（Intention）、会话（Conversation）和混合界面（Hybrid UI）</p>
+      <a ref="richRef" class="block rich" :href="lp('/design/introduce')">
+        <h2>{{ isEn ? 'AI design paradigm — RICH' : 'AI 设计范式 - RICH' }}</h2>
+        <p class="lead">{{ isEn ? 'We build AI design theory and iterate it across a large number of internal Ant products. The RICH paradigm emerged from that work: Role, Intention, Conversation, and Hybrid UI.' : '我们致力于构建 AI 设计理论，并在蚂蚁内部海量 AI 产品中实践、迭代。在此过程中，RICH 设计范式应运而生：角色（Role）、意图（Intention）、会话（Conversation）和混合界面（Hybrid UI）' }}</p>
         <LottieBox
           class="rich-lottie"
           :autoplay="false"
@@ -216,8 +307,8 @@ function titleParts(title: string, label: string) {
 
     <section class="sheet overlap">
       <div class="block">
-        <h2>AI 界面解决方案</h2>
-        <p class="lead">基于RICH，延续熟悉的 Ant Design 设计语言，全新 AGI 混合界面（Hybrid-UI）解决方案，完美融合 GUI 和自然会话交互。从唤醒到表达，从过程到反馈，合适的组件恰当的呈现在所有的人机互动过程中。</p>
+        <h2>{{ isEn ? 'AI interface solutions' : 'AI 界面解决方案' }}</h2>
+        <p class="lead">{{ isEn ? 'Building on RICH and the familiar Ant Design language, this Hybrid UI solution blends GUI and natural conversation. From wake to express, process to feedback, the right components show up at every step of human-AI interaction.' : '基于RICH，延续熟悉的 Ant Design 设计语言，全新 AGI 混合界面（Hybrid-UI）解决方案，完美融合 GUI 和自然会话交互。从唤醒到表达，从过程到反馈，合适的组件恰当的呈现在所有的人机互动过程中。' }}</p>
         <div class="chain">
           <div
             v-for="(item, index) in stages"
@@ -245,7 +336,7 @@ function titleParts(title: string, label: string) {
                 <span>{{ titleParts(item.title, item.label).after }}</span>
               </div>
               <p>{{ item.desc }}</p>
-              <a class="pill ghost" :href="item.href">{{ item.action }}</a>
+              <a class="pill ghost" :href="lp(item.href)">{{ item.action }}</a>
             </div>
           </div>
         </div>
@@ -254,8 +345,8 @@ function titleParts(title: string, label: string) {
 
     <section class="sheet overlap">
       <div class="block">
-        <h2>试一试 , 多种 AI 场景体验</h2>
-        <p class="lead">提供多场景解决方案 , 帮助用户提高与 AI 协作效率</p>
+        <h2>{{ isEn ? 'Try it — multiple AI scenarios' : '试一试 , 多种 AI 场景体验' }}</h2>
+        <p class="lead">{{ isEn ? 'Scenario solutions that help people collaborate with AI more efficiently' : '提供多场景解决方案 , 帮助用户提高与 AI 协作效率' }}</p>
         <div class="scenes" data-reveal>
           <div class="scene-tabs">
             <button
@@ -278,24 +369,24 @@ function titleParts(title: string, label: string) {
       </div>
 
       <div class="block">
-        <h2>组件丰富 , 选用自如</h2>
-        <p class="lead">Ant Design X 全新 AI 组件 , 大量实用组件满足你的需求 , 灵活定制与拓展</p>
+        <h2>{{ isEn ? 'A rich component set, ready to pick from' : '组件丰富 , 选用自如' }}</h2>
+        <p class="lead">{{ isEn ? 'New Ant Design X AI components — practical building blocks you can customize and extend.' : 'Ant Design X 全新 AI 组件 , 大量实用组件满足你的需求 , 灵活定制与拓展' }}</p>
           <XProvider :theme="darkTheme">
           <div class="cards" data-reveal>
-            <a class="card" data-reveal href="/component/welcome">
+            <a class="card" data-reveal :href="lp('/component/welcome')">
               <div class="card-preview welcome-card">
                 <Welcome
                   class="glass-surface"
                   style="width: 290px"
                   icon="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp"
-                  title="你好, 我是 Ant Design X"
-                  description="基于 Ant Design 的 AGI 产品智能解决方案, 创造更美好的智能视界"
+                  :title="isEn ? 'Hello, I am Ant Design X' : '你好, 我是 Ant Design X'"
+                  :description="isEn ? 'An AGI product solution based on Ant Design, creating a better intelligent experience' : '基于 Ant Design 的 AGI 产品智能解决方案, 创造更美好的智能视界'"
                 />
               </div>
-              <h3>欢迎组件 <em class="tag-awake">唤醒</em></h3>
-              <p>开箱即用、易于配置、极致体验的通用图表库</p>
+              <h3>{{ isEn ? 'Welcome' : '欢迎组件' }} <em class="tag-awake">{{ isEn ? 'Wake' : '唤醒' }}</em></h3>
+              <p>{{ isEn ? 'A ready-to-use welcome surface that is easy to configure' : '开箱即用、易于配置、极致体验的通用图表库' }}</p>
             </a>
-            <a class="card" href="/component/prompts">
+            <a class="card" :href="lp('/component/prompts')">
               <div class="card-preview">
                 <!-- Glass goes on the item like React; `border: none` drops the default
                      Prompts item border that reads as a light outline in the dark preview. -->
@@ -305,36 +396,36 @@ function titleParts(title: string, label: string) {
                   :classNames="{ item: 'glass-surface' }"
                 />
               </div>
-              <h3>用户推荐 <em class="tag-awake">唤醒</em></h3>
-              <p>让首次接触AI产品的用户快速理解AI能做什么</p>
+              <h3>{{ isEn ? 'Suggestions' : '用户推荐' }} <em class="tag-awake">{{ isEn ? 'Wake' : '唤醒' }}</em></h3>
+              <p>{{ isEn ? 'Help first-time users quickly understand what the AI can do' : '让首次接触AI产品的用户快速理解AI能做什么' }}</p>
             </a>
-            <a class="card" href="/component/suggestion">
+            <a class="card" :href="lp('/component/suggestion')">
               <div class="card-preview">
                 <img alt="" src="https://mdn.alipayobjects.com/huamei_k0vkmw/afts/img/A*-c6EQ7U4-4oAAAAAAAAAAAAADsR-AQ/fmt.avif" />
               </div>
-              <h3>快捷命令 <em class="tag-express">表达</em></h3>
-              <p>开箱即用、易于配置、极致体验的通用图表库</p>
+              <h3>{{ isEn ? 'Quick commands' : '快捷命令' }} <em class="tag-express">{{ isEn ? 'Express' : '表达' }}</em></h3>
+              <p>{{ isEn ? 'Help users express intent with shortcuts' : '开箱即用、易于配置、极致体验的通用图表库' }}</p>
             </a>
-            <a class="card" href="/component/bubble">
+            <a class="card" :href="lp('/component/bubble')">
               <div class="card-preview">
                 <img alt="" src="https://mdn.alipayobjects.com/huamei_k0vkmw/afts/img/A*WxlPTYGnviYAAAAAAAAAAAAADsR-AQ/fmt.avif" width="173" />
               </div>
-              <h3>进度加载 <em class="tag-confirm">确认</em></h3>
-              <p>开箱即用、易于配置、极致体验的通用图表库</p>
+              <h3>{{ isEn ? 'Progress' : '进度加载' }} <em class="tag-confirm">{{ isEn ? 'Confirm' : '确认' }}</em></h3>
+              <p>{{ isEn ? 'Show generation progress in the conversation' : '开箱即用、易于配置、极致体验的通用图表库' }}</p>
             </a>
-            <a class="card" href="/component/actions">
+            <a class="card" :href="lp('/component/actions')">
               <div class="card-preview">
-                <Bubble class="glass-surface" content="Ant Design X 全新升级了什么?" />
+                <Bubble class="glass-surface" :content="isEn ? 'What is new in Ant Design X?' : 'Ant Design X 全新升级了什么?'" />
               </div>
-              <h3>结果操作 <em class="tag-feedback">反馈</em></h3>
-              <p>开箱即用、易于配置、极致体验的通用图表库</p>
+              <h3>{{ isEn ? 'Result actions' : '结果操作' }} <em class="tag-feedback">{{ isEn ? 'Feedback' : '反馈' }}</em></h3>
+              <p>{{ isEn ? 'Apply or act on generated results quickly' : '开箱即用、易于配置、极致体验的通用图表库' }}</p>
             </a>
-            <a class="card" href="/component/conversations">
+            <a class="card" :href="lp('/component/conversations')">
               <div class="card-preview">
                 <img alt="" src="https://mdn.alipayobjects.com/huamei_k0vkmw/afts/img/A*7nVeT7Qg-QoAAAAAAAAAAAAADsR-AQ/fmt.avif" width="290" />
               </div>
-              <h3>管理对话 <em class="tag-common">通用</em></h3>
-              <p>开箱即用、易于配置、极致体验的通用图表库</p>
+              <h3>{{ isEn ? 'Conversations' : '管理对话' }} <em class="tag-common">{{ isEn ? 'General' : '通用' }}</em></h3>
+              <p>{{ isEn ? 'Manage conversation history and context' : '开箱即用、易于配置、极致体验的通用图表库' }}</p>
             </a>
           </div>
         </XProvider>
@@ -343,38 +434,38 @@ function titleParts(title: string, label: string) {
 
     <section class="sheet framework">
       <div class="block">
-        <h2>AI 设计语言与研发框架</h2>
-        <p class="lead">配套生态 , 让你快速搭建网站应用</p>
+        <h2>{{ isEn ? 'AI design language and development framework' : 'AI 设计语言与研发框架' }}</h2>
+        <p class="lead">{{ isEn ? 'A supporting ecosystem for building applications quickly' : '配套生态 , 让你快速搭建网站应用' }}</p>
         <div class="eco" data-reveal>
-          <a href="/design/introduce">
+          <a :href="lp('/design/introduce')">
             <img alt="" src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*poTnSZrI7-oAAAAAAAAAAAAADgCCAQ/fmt.webp" />
-            <strong>RICH 设计指南</strong>
-            <span>意图、角色、会话、混合 UI</span>
+            <strong>{{ isEn ? 'RICH design guide' : 'RICH 设计指南' }}</strong>
+            <span>{{ isEn ? 'Intention, Role, Conversation, Hybrid UI' : '意图、角色、会话、混合 UI' }}</span>
           </a>
-          <a href="/design/hybrid-ui-design">
+          <a :href="lp('/design/hybrid-ui-design')">
             <img alt="" src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*Off_QYoo0GIAAAAAAAAAAAAADgCCAQ/fmt.webp" />
-            <strong>组件设计指引</strong>
-            <span>全局样式、设计模式</span>
+            <strong>{{ isEn ? 'Component design guidance' : '组件设计指引' }}</strong>
+            <span>{{ isEn ? 'Global styles and design patterns' : '全局样式、设计模式' }}</span>
           </a>
-          <a href="/component/overview">
+          <a :href="lp('/component/overview')">
             <img alt="" src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*AhrTT6K2vU0AAAAAAAAAAAAADgCCAQ/fmt.webp" />
-            <strong>组件库</strong>
+            <strong>{{ isEn ? 'Component library' : '组件库' }}</strong>
             <span>Ant Design of React / Angular / Vue</span>
           </a>
           <a href="https://ant.design/" target="_blank" rel="noreferrer">
             <img class="icon" alt="" src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*dUzuRJes4pUAAAAAAAAAAAAADgCCAQ/original" />
             <strong>Ant Design</strong>
-            <span>企业级 UI 设计语言和 React 组件库</span>
+            <span>{{ isEn ? 'Enterprise UI language and React component library' : '企业级 UI 设计语言和 React 组件库' }}</span>
           </a>
           <a href="https://mobile.ant.design/" target="_blank" rel="noreferrer">
             <img class="icon" alt="" src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*rzh3RoWC9zAAAAAAAAAAAAAADgCCAQ/original" />
             <strong>Ant Design Mobile</strong>
-            <span>Ant Design移动端 UI 组件库</span>
+            <span>{{ isEn ? 'Ant Design mobile UI components' : 'Ant Design移动端 UI 组件库' }}</span>
           </a>
           <a href="https://antv.vision/" target="_blank" rel="noreferrer">
             <img class="icon" alt="" src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*9MFyQ77L6E4AAAAAAAAAAAAADgCCAQ/fmt.webp" />
             <strong>AntV</strong>
-            <span>全新一代数据可视化解决方案</span>
+            <span>{{ isEn ? 'Next-generation data visualization' : '全新一代数据可视化解决方案' }}</span>
           </a>
         </div>
       </div>

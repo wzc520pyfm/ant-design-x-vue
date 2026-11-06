@@ -1,7 +1,5 @@
 # CodeHighlighter 代码高亮
 
-> English: [CodeHighlighter](/component/code-highlighter.en)
-
 用于高亮代码格式。对齐 React `@ant-design/x` CodeHighlighter。
 
 > 独立组件。Markdown 插件 [`HighlightCode`](/x-markdown/plugins) 仍保留，二者用途不同（插件 ≠ 本组件）。

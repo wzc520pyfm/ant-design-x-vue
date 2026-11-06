@@ -2,7 +2,7 @@
 
 Highlight formatted code. Aligned with React `@ant-design/x` CodeHighlighter.
 
-> Standalone component. The Markdown plugin [`HighlightCode`](/x-markdown/plugins) is still available; the two serve different purposes (plugin ≠ this component).
+> Standalone component. The Markdown plugin [`HighlightCode`](/en/x-markdown/plugins) is still available; the two serve different purposes (plugin ≠ this component).
 
 > 中文：[CodeHighlighter 代码高亮](/component/code-highlighter)
 
@@ -48,8 +48,8 @@ code-highlighter/with-xmarkdown
 | header | Header content; hidden when `false` / `null` | `VNode \| string \| (() => VNode \| string \| false \| null) \| false \| null` | - | - |
 | highlightProps | Extra options for the highlighter (`showLineNumbers` / `startingLineNumber` / `codeTagProps`, …) | `CodeHighlighterHighlightProps` | - | - |
 | prismLightMode | Prism light mode (lazy-load by `lang`) | `boolean` | `true` | - |
-| classNames | Semantic class names | `Partial<Record<SemanticType, string>>` | - | - |
-| styles | Semantic styles | `Partial<Record<SemanticType, CSSProperties>>` | - | - |
+| classNames | Semantic class names | `Partial\<Record\<SemanticType, string\>\>` | - | - |
+| styles | Semantic styles | `Partial\<Record\<SemanticType, CSSProperties\>\>` | - | - |
 | prefixCls | Class prefix | `string` | - | - |
 | rootClassName | Extra class on the root | `string` | - | - |
 

@@ -82,11 +82,11 @@ folder/preview-render
 | onFolderClick | Folder click | (folderPath: string) => void | - | - |
 | directoryTitle | Tree title; `false` hides it | false \| VNode \| string \| (() => VNode \| string \| null) | - | - |
 | previewTitle | Preview title | false \| VNode \| string \| (({ title, path, content }) => VNode \| string \| null) | - | - |
-| directoryIcons | Custom icons; `false` hides them | false \| Record<'directory' \| string, VNode \| string \| (() => ...)> | - | - |
+| directoryIcons | Custom icons; `false` hides them | false \| Record<'directory' \| string, VNode \| string \| (() => ...)\> | - | - |
 | contextMenu | Global context menu, overridable per node | MenuProps\['items'\] \| ((node, key) => MenuProps\['items'\]) | - | - |
 | onRightClick | Right-click callback | (info: { event, node }) => void | - | - |
-| classNames | Semantic class names | Record<SemanticType, string> | - | - |
-| styles | Semantic styles | Record<SemanticType, CSSProperties> | - | - |
+| classNames | Semantic class names | Record\<SemanticType, string\> | - | - |
+| styles | Semantic styles | Record\<SemanticType, CSSProperties\> | - | - |
 
 SemanticType: `root` \| `directoryTree` \| `directoryTitle` \| `filePreview` \| `previewTitle` \| `previewRender`
 

@@ -103,7 +103,7 @@ x-card/v08-action
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
 | commands | A2UI command queue | `(XAgentCommand_v0_9 \| XAgentCommand_v0_8)[]` | `[]` |
-| components | Implementation map; names must be capitalized | `Record<string, Component>` | - |
+| components | Implementation map; names must be capitalized | `Record\<string, Component\>` | - |
 | onAction | Fired when a card triggers an action | `(payload: ActionPayload) => void` | - |
 
 ### XCard.Card

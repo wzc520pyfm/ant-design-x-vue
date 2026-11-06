@@ -62,11 +62,8 @@ const componentSidebar: DefaultTheme.SidebarItem[] = [
       plain('Actions 操作列表', '/component/actions'),
       plain('FileCard 文件卡片', '/component/file-card'),
       plain('CodeHighlighter 代码高亮', '/component/code-highlighter'),
-      plain('CodeHighlighter (EN)', '/component/code-highlighter.en'),
       plain('Mermaid 图表', '/component/mermaid'),
-      plain('Mermaid (EN)', '/component/mermaid.en'),
       plain('Folder 文件夹', '/component/folder'),
-      plain('Folder (EN)', '/component/folder.en'),
     ],
   },
   {
@@ -236,12 +233,10 @@ const playgroundSidebar: DefaultTheme.SidebarItem[] = [
 
 const cardSidebar: DefaultTheme.SidebarItem[] = [
   plain('介绍', '/x-card/introduce'),
-  plain('Introduction (EN)', '/x-card/introduce.en'),
 ]
 
 const skillSidebar: DefaultTheme.SidebarItem[] = [
   plain('在 Vue 里使用 X Skill', '/x-skill/introduce'),
-  plain('Using X Skill in Vue (EN)', '/x-skill/introduce.en'),
 ]
 
 export const sidebar: DefaultTheme.Sidebar = {

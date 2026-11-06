@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core'
 import { onMounted, ref } from 'vue'
+import { useDocLocale } from '../use-doc-locale'
 
 defineOptions({ name: 'VpPreferenceSwitch' })
 
+const { isEn } = useDocLocale()
 const preferLocal = useStorage('antdx-docs-preference', 'tsx')
 const mode = ref<'tsx' | 'setup'>('tsx')
 
@@ -23,8 +25,8 @@ onMounted(() => {
 
 <template>
   <div class="prefer">
-    <span class="prefer-label">风格偏好</span>
-    <div class="prefer-seg" role="group" aria-label="风格偏好">
+    <span class="prefer-label">{{ isEn ? 'Style preference' : '风格偏好' }}</span>
+    <div class="prefer-seg" role="group" :aria-label="isEn ? 'Style preference' : '风格偏好'">
       <button type="button" :class="{ on: mode === 'tsx' }" @click="apply('tsx')">tsx</button>
       <button type="button" :class="{ on: mode === 'setup' }" @click="apply('setup')">setup</button>
     </div>
