@@ -6,6 +6,7 @@ import pickAttrs from '../_util/pick-attrs';
 import { computed } from 'vue';
 import { Dropdown, Menu, Typography } from 'ant-design-vue';
 import { EllipsisOutlined } from '@ant-design/icons-vue';
+import useMobile from '../_util/hooks/use-mobile';
 
 defineOptions({ name: 'AXConversationsItem' });
 
@@ -32,6 +33,8 @@ const {
   menu,
   ...restProps
 } = defineProps<ResolvedConversationsItemProps>();
+
+const isMobile = useMobile();
 
 const domProps = computed(() => pickAttrs(restProps, {
   aria: true,
@@ -72,7 +75,12 @@ const getPopupContainer = computed(() => dropdownMenu.value?.getPopupContainer);
 
 const renderMenuTrigger = (conversation: ConversationItemType) => {
   const originTriggerNode = (
-    <EllipsisOutlined onClick={stopPropagation} class={`${prefixCls}-menu-icon`} />
+    <EllipsisOutlined
+      onClick={stopPropagation}
+      class={classnames(`${prefixCls}-menu-icon`, {
+        [`${prefixCls}-menu-icon-mobile`]: isMobile.value,
+      })}
+    />
   );
   if (trigger.value) {
     return typeof trigger.value === 'function'

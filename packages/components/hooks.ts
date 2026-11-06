@@ -1,3 +1,4 @@
+export { default as useMobile } from './_util/hooks/use-mobile';
 export * from './notification';
 export * from './use-x-agent';
 

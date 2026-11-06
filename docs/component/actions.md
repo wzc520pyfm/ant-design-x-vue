@@ -69,6 +69,17 @@ actions/fadeIn
 
 </ClientOnly>
 
+
+移动端行为：内部使用 `useMobile` 做 SSR 安全的设备检测。在移动设备上，操作项和 `Actions.Feedback` 不再渲染 Tooltip（避免点击穿透），带子菜单的项默认以 `click` 触发（仍可通过 `triggerSubMenuAction` 覆盖）。
+
+`useMobile` 也可直接从 `ant-design-x-vue` 引入：
+
+```ts | pure
+import { useMobile } from 'ant-design-x-vue';
+
+const isMobile = useMobile(); // Ref<boolean>，服务端与首屏为 false，挂载后更新
+```
+
 ## API
 
 通用属性参考：[通用属性](/development/common-props)。
@@ -102,7 +113,7 @@ actions/fadeIn
 | onItemClick | 点击自定义操作按钮时的回调 | (info?: [ItemType](#itemtype)) => void | - | - |
 | danger | 语法糖，设置危险样式 | boolean | false | - |
 | subItems | 子操作项 | Omit\<ItemType, 'subItems' \| 'triggerSubMenuAction' \| 'actionRender'\>[] | - | - |
-| triggerSubMenuAction | 触发子菜单的操作 | `hover` \| `click` | `hover` | - |
+| triggerSubMenuAction | 触发子菜单的操作。未指定时桌面端为 `hover`，移动端为 `click` | `hover` \| `click` | 桌面 `hover` / 移动 `click` | - |
 | actionRender | 自定义渲染操作项内容 | ((item: [ItemType](#itemtype)) => VNodeChild) \| VNodeChild | - | - |
 
 ### Actions.Feedback
