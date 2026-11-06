@@ -1,37 +1,61 @@
 import { computed, defineComponent, h, inject, markRaw, ref, toRaw, unref, watch, type PropType, type VNode } from 'vue';
+import { extractDataUpdatesV08, resolvePropsV08, applyDataModelUpdateV08, type ActionConfigV08 } from './Card.v0.8';
+import { extractDataUpdatesV09, resolvePropsV09, applyDataModelUpdateV09, type ActionConfigV09 } from './Card.v0.9';
 import { boxContextKey } from './context';
 import { createComponentTransformer, type ComponentTree } from './format/components';
-import { applyDataModelUpdateV09 } from './resolve-v09';
-import { getValueByPath, isPathValue, setValueByPath, validateComponentAgainstCatalog } from './utils';
+import { getValueByPath, isPathObject, setValueByPath, validateComponentAgainstCatalog } from './utils';
 import type { ActionPayload } from './types/box';
 
 export interface CardProps {
   id: string;
 }
 
-function resolveValue(val: any, dataModel: Record<string, any>): any {
-  if (isPathValue(val)) return getValueByPath(dataModel, val);
-  if (Array.isArray(val)) return val.map((item) => resolveValue(item, dataModel));
-  if (val && typeof val === 'object') {
-    const next: Record<string, any> = {};
-    for (const [k, v] of Object.entries(val)) {
-      next[k] = k === 'context' && val.event ? v : resolveValue(v, dataModel);
-    }
-    return next;
-  }
-  return val;
-}
+type ActionConfig = ActionConfigV08 | ActionConfigV09;
 
-function resolveProps(props: Record<string, any>, dataModel: Record<string, any>) {
-  const resolved: Record<string, any> = {};
-  for (const [key, val] of Object.entries(props)) {
-    if (key === 'action') {
-      resolved[key] = val;
-    } else {
-      resolved[key] = resolveValue(val, dataModel);
+/**
+ * Resolve path refs in action context to dataModel values.
+ * v0.9: action.event.context = { key: { path, label? } }
+ * v0.8: action.context = [{ key, value: { path } }]
+ * componentContext wins over values resolved from config.
+ */
+function resolveActionContextPathRefs(
+  actionConfig: any,
+  componentContext: Record<string, any>,
+  dataModel: Record<string, any>,
+): Record<string, any> {
+  if (!actionConfig) return componentContext;
+
+  const v09Context = actionConfig?.event?.context;
+  if (v09Context && typeof v09Context === 'object' && !Array.isArray(v09Context)) {
+    const resolvedFromConfig: Record<string, any> = {};
+    for (const [key, val] of Object.entries(v09Context)) {
+      if (isPathObject(val)) {
+        const actualValue = getValueByPath(dataModel, (val as { path: string }).path);
+        const { path, ...rest } = val as { path: string; [key: string]: any };
+        resolvedFromConfig[key] = { ...rest, value: actualValue };
+      } else {
+        resolvedFromConfig[key] = val;
+      }
     }
+    return { ...resolvedFromConfig, ...componentContext };
   }
-  return resolved;
+
+  const v08Context = actionConfig?.context;
+  if (Array.isArray(v08Context)) {
+    const resolvedFromConfig: Record<string, any> = {};
+    for (const item of v08Context) {
+      const { key, value: val } = item as { key: string; value: any };
+      if (key === undefined) continue;
+      if (isPathObject(val)) {
+        resolvedFromConfig[key] = { value: getValueByPath(dataModel, (val as { path: string }).path) };
+      } else {
+        resolvedFromConfig[key] = val;
+      }
+    }
+    return { ...resolvedFromConfig, ...componentContext };
+  }
+
+  return componentContext;
 }
 
 const NodeRenderer = defineComponent({
@@ -42,6 +66,7 @@ const NodeRenderer = defineComponent({
     components: { type: Object as PropType<Record<string, any>>, default: () => ({}) },
     dataModel: { type: Object as PropType<Record<string, any>>, default: () => ({}) },
     catalog: { type: Object as PropType<any>, default: undefined },
+    commandVersion: { type: String as PropType<'v0.8' | 'v0.9'>, default: 'v0.8' },
     onAction: { type: Function as PropType<(name: string, context: Record<string, any>, actionConfig?: any) => void> },
     onDataChange: { type: Function as PropType<(path: string, value: any) => void> },
   },
@@ -63,7 +88,16 @@ const NodeRenderer = defineComponent({
         return null;
       }
 
-      const resolvedProps = resolveProps(node.props || {}, props.dataModel);
+      const resolvedProps =
+        props.commandVersion === 'v0.9'
+          ? resolvePropsV09(node.props || {}, props.dataModel)
+          : resolvePropsV08(node.props || {}, props.dataModel);
+
+      resolvedProps.onAction = (name: string, context: Record<string, any> = {}) => {
+        props.onAction?.(name, context, resolvedProps.action);
+      };
+      resolvedProps.onDataChange = props.onDataChange;
+
       const children = (node.children || []).map((childId) =>
         h(NodeRenderer, {
           key: childId,
@@ -72,22 +106,14 @@ const NodeRenderer = defineComponent({
           components: props.components,
           dataModel: props.dataModel,
           catalog: props.catalog,
+          commandVersion: props.commandVersion,
           onAction: props.onAction,
           onDataChange: props.onDataChange,
         }),
       );
 
       const Component = markRaw(toRaw(raw));
-      return h(
-        Component,
-        {
-          ...resolvedProps,
-          onAction: (name: string, context: Record<string, any> = {}) => {
-            props.onAction?.(name, context, resolvedProps.action);
-          },
-        },
-        { default: () => children },
-      );
+      return h(Component, resolvedProps, { default: () => children });
     };
   },
 });
@@ -105,6 +131,9 @@ const Card = defineComponent({
     const rootNode = ref<ComponentTree | null>(null);
     const dataModel = ref<Record<string, any>>({});
     const hasRendered = ref(false);
+    const commandVersion = ref<'v0.8' | 'v0.9'>('v0.8');
+    const pendingRootId = ref<string | null>(null);
+    const renderedRootId = ref('root');
 
     const processCommands = () => {
       const ctx = box.value;
@@ -124,11 +153,13 @@ const Card = defineComponent({
 
       let nextDataModel = dataModel.value;
       let nextRoot = rootNode.value;
+      let nextVersion = commandVersion.value;
       let dataChanged = false;
       let rootChanged = false;
 
       for (const cmd of myCommands) {
         if ('version' in cmd && (cmd as any).version === 'v0.9') {
+          nextVersion = 'v0.9';
           if ('createSurface' in cmd && !hasRendered.value) {
             nextRoot = null;
             nextDataModel = {};
@@ -139,6 +170,7 @@ const Card = defineComponent({
             const nodeTree = transformer.transform((cmd as any).updateComponents.components, 'v0.9');
             if (nodeTree) {
               nextRoot = nodeTree;
+              renderedRootId.value = 'root';
               hasRendered.value = true;
               rootChanged = true;
             }
@@ -152,6 +184,7 @@ const Card = defineComponent({
             nextRoot = null;
             nextDataModel = {};
             hasRendered.value = false;
+            pendingRootId.value = null;
             rootChanged = true;
             dataChanged = true;
             transformer.reset();
@@ -159,39 +192,58 @@ const Card = defineComponent({
           continue;
         }
 
+        nextVersion = 'v0.8';
+
         if ('surfaceUpdate' in cmd) {
-          const nodeTree = transformer.transform((cmd as any).surfaceUpdate.components, 'v0.8');
+          transformer.transform((cmd as any).surfaceUpdate.components, 'v0.8');
           if (hasRendered.value) {
             const cached = transformer.getById('root');
             if (cached) {
               nextRoot = cached;
+              renderedRootId.value = 'root';
               rootChanged = true;
             }
-          } else if (nodeTree) {
-            nextRoot = nodeTree;
-            hasRendered.value = true;
-            rootChanged = true;
           }
+          if (pendingRootId.value) {
+            const pending = transformer.getById(pendingRootId.value);
+            if (pending) {
+              nextRoot = pending;
+              renderedRootId.value = pendingRootId.value || 'root';
+              hasRendered.value = true;
+              pendingRootId.value = null;
+              rootChanged = true;
+            }
+          }
+        }
+        if ('dataModelUpdate' in cmd) {
+          nextDataModel = applyDataModelUpdateV08(nextDataModel, (cmd as any).dataModelUpdate.contents);
+          dataChanged = true;
         }
         if ('beginRendering' in cmd) {
           const { root } = (cmd as any).beginRendering;
           const nodeTree = transformer.getById(root);
           if (nodeTree) {
             nextRoot = nodeTree;
+            renderedRootId.value = root;
             hasRendered.value = true;
+            pendingRootId.value = null;
             rootChanged = true;
+          } else {
+            pendingRootId.value = root;
           }
         }
         if ('deleteSurface' in cmd) {
           nextRoot = null;
           nextDataModel = {};
           hasRendered.value = false;
+          pendingRootId.value = null;
           rootChanged = true;
           dataChanged = true;
           transformer.reset();
         }
       }
 
+      if (nextVersion !== commandVersion.value) commandVersion.value = nextVersion;
       if (rootChanged) rootNode.value = nextRoot;
       if (dataChanged) dataModel.value = nextDataModel;
     };
@@ -209,18 +261,23 @@ const Card = defineComponent({
       return catalogId ? ctx.catalogMap.get(catalogId) : undefined;
     });
 
-    const handleAction = (name: string, context: Record<string, any>, actionConfig?: any) => {
+    const handleAction = (name: string, context: Record<string, any>, actionConfig?: ActionConfig) => {
+      const dataUpdates =
+        commandVersion.value === 'v0.9'
+          ? extractDataUpdatesV09(actionConfig, context)
+          : extractDataUpdatesV08(actionConfig, context);
+
       let next = dataModel.value;
-      const eventContext = actionConfig?.event?.context;
-      if (eventContext && typeof eventContext === 'object' && !Array.isArray(eventContext)) {
-        for (const [key, val] of Object.entries(eventContext)) {
-          if (val && typeof val === 'object' && typeof (val as any).path === 'string' && context[key] !== undefined) {
-            next = setValueByPath(next, (val as any).path, context[key]);
-          }
-        }
+      if (dataUpdates.length > 0) {
+        next = dataUpdates.reduce((prev, { path, value }) => setValueByPath(prev, path, value), next);
         dataModel.value = next;
       }
-      const payload: ActionPayload = { name, surfaceId: props.id, context };
+
+      const payload: ActionPayload = {
+        name,
+        surfaceId: props.id,
+        context: resolveActionContextPathRefs(actionConfig, context, next),
+      };
       box.value?.onAction?.(payload);
     };
 
@@ -231,11 +288,12 @@ const Card = defineComponent({
     return () => {
       if (!rootNode.value) return null as unknown as VNode;
       return h(NodeRenderer, {
-        nodeId: 'root',
+        nodeId: renderedRootId.value,
         transformer,
         components: box.value?.components || {},
         dataModel: dataModel.value,
         catalog: catalog.value,
+        commandVersion: commandVersion.value,
         onAction: handleAction,
         onDataChange: handleDataChange,
       });
