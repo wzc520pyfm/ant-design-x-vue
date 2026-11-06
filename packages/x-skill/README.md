@@ -2,9 +2,38 @@
 
 Agent skill texts for **ant-design-x-vue**. These files teach Cursor, Claude Code, and similar IDEs how to write Vue SFCs against this repo’s packages — not React JSX against `@ant-design/x`.
 
-This folder is **skill content only**. It is **not** published to npm as `@ant-design-x-vue/x-skill`. There is no CLI fork of `npx x-skill` here.
+Package: `@ant-design-x-vue/x-skill@2.0.0`. The npm publish is deferred until the 2.0 line lands on `main` (see issue #536). Until then, run the CLI from this repository.
 
-中文说明见 [README.zh-CN.md](./README.zh-CN.md)。
+中文说明见 [README.zh-CN.md](./README.zh-CN.md).
+
+## Install
+
+```bash
+# After publish
+npm i -g @ant-design-x-vue/x-skill
+npx @ant-design-x-vue/x-skill
+# or, after a global install
+x-skill-vue
+```
+
+From this monorepo (before publish):
+
+```bash
+node packages/x-skill/bin/cli.js
+```
+
+Common flags: `--cursor`, `--claude`, `--global`, `--lang zh|en`, `--force`, `--help`, `--version`.
+
+The CLI copies `skills/` or `skills-zh/` into `.cursor/skills` and/or `.claude/skills`. It does not depend on figlet and does not install the React `@ant-design/x-skill` package.
+
+### Manual copy
+
+```bash
+mkdir -p .cursor/skills
+cp -R packages/x-skill/skills-zh/* .cursor/skills/   # or skills/* for English
+```
+
+User-level: `~/.cursor/skills/` or `~/.claude/skills/`.
 
 ## Packages the skills teach
 
@@ -26,36 +55,7 @@ This folder is **skill content only**. It is **not** published to npm as `@ant-d
 | `x-card` | A2UI v0.9 / v0.8, `XCard.Box` / `XCard.Card` |
 | `x-components` | Vue UI components (`Bubble`, `Sender`, `Folder`, …) |
 
-English texts live in `skills/`. Chinese texts live in `skills-zh/` (preferred for agents working in this repo).
-
-## Install into an editor
-
-Copy one locale of the skill folders (not this README) into the editor’s skill directory.
-
-### Cursor
-
-Project-level:
-
-```bash
-mkdir -p .cursor/skills
-cp -R packages/x-skill/skills-zh/* .cursor/skills/   # or skills/* for English
-```
-
-User-level: copy into `~/.cursor/skills/` the same way.
-
-### Claude Code
-
-```bash
-mkdir -p .claude/skills
-cp -R packages/x-skill/skills-zh/* .claude/skills/
-# or: cp -R packages/x-skill/skills-zh/* ~/.claude/skills/
-```
-
-Each skill is a folder that contains `SKILL.md` (and optional `reference/`). After copying, ask the agent to follow the Vue skills rather than React `@ant-design/x-skill`.
-
-### Fallback
-
-The upstream React CLI (`npx x-skill` / `@ant-design/x-skill`) still installs React-oriented skill files (`@ant-design/x`, JSX). Do not use those as the primary path in a Vue project.
+English texts live in `skills/`. Chinese texts live in `skills-zh/`.
 
 ## Vue rules the skills insist on
 
@@ -68,4 +68,4 @@ The upstream React CLI (`npx x-skill` / `@ant-design/x-skill`) still installs Re
 
 ## Docs
 
-Site pages: [Using X Skill in Vue](https://x-vue.ant.design/x-skill/introduce) and the English counterpart under `/en/x-skill/introduce`.
+Site pages: [Introduction](https://x-vue.ant.design/x-skill/introduce), [Prompt Templates](https://x-vue.ant.design/x-skill/prompt), and [Skills List](https://x-vue.ant.design/x-skill/skills). English counterparts live under `/en/x-skill/`.
