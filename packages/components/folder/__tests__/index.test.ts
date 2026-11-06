@@ -63,8 +63,10 @@ describe('Folder', () => {
     const wrapper = mount(Folder, {
       props: { treeData: mockTreeData, directoryTreeWith: 300 },
     });
-    const tree = wrapper.find('.ant-folder-directory-tree');
-    expect((tree.element as HTMLElement).style.width).toBe('300px');
+    const pane = wrapper.find('.ant-folder-splitter-start');
+    expect(pane.exists()).toBe(true);
+    expect((pane.element as HTMLElement).style.width).toBe('300px');
+    expect(wrapper.find('.ant-folder-splitter-bar').exists()).toBe(true);
   });
 
   it('renders custom emptyRender', () => {

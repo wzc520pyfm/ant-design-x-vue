@@ -1,5 +1,4 @@
 <script setup lang="tsx">
-import { Flex } from 'ant-design-vue';
 import type { Key } from 'ant-design-vue/es/vc-tree/interface';
 import classnames from 'classnames';
 import { computed, ref, watch, type CSSProperties } from 'vue';
@@ -11,6 +10,7 @@ import enUS from '../locale/en_US';
 import { useXProviderContext } from '../x-provider';
 import DirectoryTree from './DirectoryTree.vue';
 import FilePreview from './FilePreview.vue';
+import Splitter from './Splitter.vue';
 import type {
   FolderProps,
   FolderRef,
@@ -272,14 +272,6 @@ const handleExpand = (keys: Key[]) => {
   props.onExpandedPathsChange?.(newPaths);
 };
 
-const directoryWidthStyle = computed(() => {
-  const width = props.directoryTreeWith;
-  return {
-    width: typeof width === 'number' ? `${width}px` : width,
-    flex: 'none',
-  } as CSSProperties;
-});
-
 defineRender(() => {
   return wrapCSSVar(
     <div
@@ -288,7 +280,14 @@ defineRender(() => {
       class={mergedCls.value}
       style={mergedStyle.value}
     >
-      <Flex class={`${prefixCls.value}-container`}>
+      <div class={`${prefixCls.value}-container`}>
+        <Splitter
+          prefixCls={prefixCls.value}
+          defaultSize={props.directoryTreeWith}
+          rtl={direction.value === 'rtl'}
+        >
+          {{
+            start: () => (
         <div
           class={classnames(
             `${prefixCls.value}-directory-tree`,
@@ -297,7 +296,6 @@ defineRender(() => {
           style={{
             ...contextConfig.value.styles?.directoryTree,
             ...props.styles?.directoryTree,
-            ...directoryWidthStyle.value,
           }}
         >
           <DirectoryTree
@@ -320,6 +318,8 @@ defineRender(() => {
             onRightClick={props.onRightClick}
           />
         </div>
+            ),
+            end: () => (
         <FilePreview
           emptyRender={props.emptyRender}
           prefixCls={props.prefixCls}
@@ -338,7 +338,10 @@ defineRender(() => {
               : undefined;
           }}
         />
-      </Flex>
+            ),
+          }}
+        </Splitter>
+      </div>
     </div>,
   );
 });
