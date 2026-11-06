@@ -70,7 +70,7 @@ export interface FolderProps {
   defaultSelectedFile?: string[];
   onSelectedFileChange?: (file: FolderSelectedFileInfo) => void;
 
-  /** Directory tree panel width (fixed; ant-design-vue has no Splitter yet). */
+  /** Directory tree panel initial width. The divider can be dragged to resize. */
   directoryTreeWith?: number | string;
 
   emptyRender?: AvoidValidation<false | VNode | string | (() => VNode | string | null)>;

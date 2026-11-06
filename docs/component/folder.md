@@ -6,12 +6,13 @@
 
 - 展示文件/文件夹层级结构
 - 需要文件选择、展开收起、预览与右键菜单
+- 需要在目录树与预览区之间拖拽调整宽度
 
 ## 代码演示
 
 ### 基础用法
 
-::::demo-v2 展示文件树与内联内容预览。
+::::demo-v2 展示文件树与内联内容预览。目录树与预览区之间可拖拽分隔条调整宽度。
 
 folder/basic
 
@@ -68,7 +69,7 @@ folder/preview-render
 | selectedFile | 选中的文件路径（受控） | string[] | - | - |
 | defaultSelectedFile | 默认选中的文件路径 | string[] | `[]` | - |
 | onSelectedFileChange | 文件选择变化时的回调 | (file: { path: string[]; title?: FolderTreeData\['title'\]; content?: string }) => void | - | - |
-| directoryTreeWith | 目录树宽度（固定宽度；当前 ant-design-vue 无 Splitter，暂不支持拖拽调宽） | number \| string | `278` | - |
+| directoryTreeWith | 目录树初始宽度（可拖拽分隔条调整） | number \| string | `278` | - |
 | emptyRender | 空状态展示，设为 `false` 时不展示 | false \| VNode \| string \| (() => VNode \| string \| null) | - | - |
 | previewRender | 自定义文件预览内容 | VNode \| string \| ((file, info) => VNode \| string \| null) | - | - |
 | expandedPaths | 展开的节点路径（受控） | string[] | - | - |
@@ -134,5 +135,5 @@ folder
 
 ## 已知差异 / 后续
 
-- **Splitter 拖拽调宽**：React 使用 antd `Splitter`；ant-design-vue@4.2 尚未提供，当前以 `directoryTreeWith` 固定宽度布局。待上游支持后对齐。
+- **Splitter 拖拽调宽**：React 使用 antd `Splitter`；本实现提供内部轻量水平 Splitter（非公开 API），用于目录树 / 预览区拖拽调宽。`directoryTreeWith` 作为初始宽度。
 - **默认语法高亮**：React 默认使用 `react-syntax-highlighter`；本实现默认以 `<pre><code>` 展示，可通过 `previewRender`（或后续接入 `CodeHighlighter`）自定义高亮。

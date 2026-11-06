@@ -8,12 +8,13 @@ A file tree for hierarchical file structures. Aligned with React `@ant-design/x`
 
 - Show file / folder hierarchies
 - Need selection, expand/collapse, preview, and a context menu
+- Need to drag-resize the tree and preview panes
 
 ## Examples
 
 ### Basic
 
-::::demo-v2 File tree with inline content preview.
+::::demo-v2 File tree with inline content preview. Drag the divider between the tree and preview to resize.
 
 folder/basic
 
@@ -70,7 +71,7 @@ folder/preview-render
 | selectedFile | Selected file path (controlled) | string[] | - | - |
 | defaultSelectedFile | Default selected file path | string[] | `[]` | - |
 | onSelectedFileChange | Selection change | (file: { path: string[]; title?: FolderTreeData\['title'\]; content?: string }) => void | - | - |
-| directoryTreeWith | Directory tree width (fixed; ant-design-vue has no Splitter yet, so no drag resize) | number \| string | `278` | - |
+| directoryTreeWith | Initial directory tree width (drag the divider to resize) | number \| string | `278` | - |
 | emptyRender | Empty state; `false` hides it | false \| VNode \| string \| (() => VNode \| string \| null) | - | - |
 | previewRender | Custom preview | VNode \| string \| ((file, info) => VNode \| string \| null) | - | - |
 | expandedPaths | Expanded paths (controlled) | string[] | - | - |
@@ -136,5 +137,5 @@ folder
 
 ## Known gaps / follow-ups
 
-- **Splitter drag resize**: React uses antd `Splitter`. ant-design-vue@4.2 does not provide it yet, so width is fixed via `directoryTreeWith`. Align when upstream lands.
+- **Splitter drag resize**: React uses antd `Splitter`. This port ships an internal lightweight horizontal Splitter (not a public export) so the tree / preview panes can be drag-resized. `directoryTreeWith` is the initial width.
 - **Default syntax highlight**: React defaults to `react-syntax-highlighter`. This port renders `<pre><code>` by default; customize highlighting with `previewRender` (or wire `CodeHighlighter` later).
