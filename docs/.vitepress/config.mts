@@ -52,6 +52,10 @@ export default defineConfig({
           find: /^@ant-design-x-vue\/x-sdk$/,
           replacement: path.resolve(__dirname, '../../packages/x-sdk/src/index.ts')
         },
+        {
+          find: /^@ant-design-x-vue\/x-card$/,
+          replacement: path.resolve(__dirname, '../../packages/x-card/src/index.ts')
+        },
         // Exact package entry only. Deep imports such as
         // `@antv/gpt-vis/dist/esm/vis/line` stay on the published files.
         // The barrel pulls in G6 and exhausts the Netlify docs heap.

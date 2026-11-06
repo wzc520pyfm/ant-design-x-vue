@@ -17,6 +17,7 @@ export const nav: DefaultTheme.NavItem[] = [
   link('组件', '/component/overview', '/component/'),
   link('X Markdown', '/x-markdown/introduce', '/x-markdown/'),
   link('X SDK', '/x-sdk/introduce', '/x-sdk/'),
+  link('X Card', '/x-card/introduce', '/x-card/'),
   link('演示', '/playground/ultramodern', '/playground/'),
 ]
 
@@ -229,12 +230,17 @@ const playgroundSidebar: DefaultTheme.SidebarItem[] = [
   },
 ]
 
+const cardSidebar: DefaultTheme.SidebarItem[] = [
+  plain('介绍', '/x-card/introduce'),
+]
+
 export const sidebar: DefaultTheme.Sidebar = {
   '/design/': designSidebar,
   '/development/': developmentSidebar,
   '/component/': componentSidebar,
   '/x-markdown/': markdownSidebar,
   '/x-sdk/': sdkSidebar,
+  '/x-card/': cardSidebar,
   '/playground/': playgroundSidebar,
 }
 
