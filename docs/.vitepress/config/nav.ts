@@ -18,6 +18,7 @@ export const nav: DefaultTheme.NavItem[] = [
   link('X Markdown', '/x-markdown/introduce', '/x-markdown/'),
   link('X SDK', '/x-sdk/introduce', '/x-sdk/'),
   link('X Card', '/x-card/introduce', '/x-card/'),
+  link('X Skill', '/x-skill/introduce', '/x-skill/'),
   link('演示', '/playground/ultramodern', '/playground/'),
 ]
 
@@ -234,6 +235,10 @@ const cardSidebar: DefaultTheme.SidebarItem[] = [
   plain('介绍', '/x-card/introduce'),
 ]
 
+const skillSidebar: DefaultTheme.SidebarItem[] = [
+  plain('在 Vue 里使用 X Skill', '/x-skill/introduce'),
+]
+
 export const sidebar: DefaultTheme.Sidebar = {
   '/design/': designSidebar,
   '/development/': developmentSidebar,
@@ -241,6 +246,7 @@ export const sidebar: DefaultTheme.Sidebar = {
   '/x-markdown/': markdownSidebar,
   '/x-sdk/': sdkSidebar,
   '/x-card/': cardSidebar,
+  '/x-skill/': skillSidebar,
   '/playground/': playgroundSidebar,
 }
 
