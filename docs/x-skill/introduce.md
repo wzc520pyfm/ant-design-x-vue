@@ -25,7 +25,7 @@ npx x-skill
 | `@ant-design/x-markdown` | `@ant-design-x-vue/x-markdown` |
 | `@ant-design/x-card` | `@ant-design-x-vue/x-card` |
 | `className` / `style` JSX | `class` / `:style` 模板或 `h()` |
-| `XProvider theme={{ zeroRuntime: true }}` | 见下方说明：Vue 侧当前不移植该开关 |
+| `XProvider` + React `theme.zeroRuntime` | 见下方说明：Vue 侧当前不移植该开关 |
 
 ## 一段最小对话
 

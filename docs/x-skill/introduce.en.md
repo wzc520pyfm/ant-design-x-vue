@@ -25,7 +25,7 @@ You can also add it to the Claude Code plugin marketplace, or copy skill files i
 | `@ant-design/x-markdown` | `@ant-design-x-vue/x-markdown` |
 | `@ant-design/x-card` | `@ant-design-x-vue/x-card` |
 | `className` / `style` JSX | `class` / `:style` in templates, or `h()` |
-| `XProvider theme={{ zeroRuntime: true }}` | Not ported on the Vue side (see note below) |
+| `XProvider` + React `theme.zeroRuntime` | Not ported on the Vue side (see note below) |
 
 ## A minimal conversation
 
