@@ -21,6 +21,12 @@ const localeValues: Required<xLocale & xMarkdownLocale> = {
     editableOk: '确认',
     editableCancel: '取消',
   },
+  Folder: {
+    selectFile: '请选择一个文件',
+    loadError: '文件加载失败',
+    noService: '未配置文件内容服务',
+    loadFailed: '加载文件失败',
+  },
   Mermaid: {
     copySuccess: '复制成功',
     copy: '复制代码',

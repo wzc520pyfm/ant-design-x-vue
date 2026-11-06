@@ -27,6 +27,7 @@ interface ResolvedXProviderProps {
   welcome?: XComponentsConfig['welcome'];
   fileCard?: XComponentsConfig['fileCard'];
   think?: XComponentsConfig['think'];
+  folder?: XComponentsConfig['folder'];
   codeHighlighter?: XComponentsConfig['codeHighlighter'];
   mermaid?: XComponentsConfig['mermaid'] | MarkdownComponentsConfig['mermaid'];
   highlightCode?: MarkdownComponentsConfig['highlightCode'];
@@ -67,6 +68,7 @@ const {
   welcome,
   fileCard,
   think,
+  folder,
   codeHighlighter,
   mermaid,
   highlightCode,
@@ -88,6 +90,7 @@ const xProviderProps = computed(() => ({
   thoughtChain,
   fileCard,
   think,
+  folder,
   codeHighlighter,
   mermaid,
   highlightCode,

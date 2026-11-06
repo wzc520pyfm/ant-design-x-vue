@@ -16,3 +16,4 @@ export * from './file-card';
 export * from './sources';
 export * from './think';
 export * from './mermaid';
+export * from './folder';

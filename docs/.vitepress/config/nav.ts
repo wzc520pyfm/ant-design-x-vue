@@ -61,6 +61,7 @@ const componentSidebar: DefaultTheme.SidebarItem[] = [
       plain('FileCard 文件卡片', '/component/file-card'),
       plain('CodeHighlighter 代码高亮', '/component/code-highlighter'),
       plain('Mermaid 图表', '/component/mermaid'),
+      plain('Folder 文件夹', '/component/folder'),
     ],
   },
   {

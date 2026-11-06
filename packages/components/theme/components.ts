@@ -10,6 +10,7 @@ import type { ComponentToken as TransitionCollapseComponentToken } from '../tran
 import type { ComponentToken as FileCardComponentToken } from '../file-card/style';
 import type { ComponentToken as SourcesComponentToken } from '../sources/style';
 import type { ComponentToken as ThinkComponentToken } from '../think/style';
+import type { ComponentToken as FolderComponentToken } from '../folder/style';
 import type { ComponentToken as WelcomeComponentToken } from '../welcome/style';
 import type { ComponentToken as CodeHighlighterComponentToken } from '../code-highlighter/style';
 import type { ComponentToken as MermaidComponentToken } from '../mermaid/style';
@@ -27,6 +28,7 @@ export interface ComponentTokenMap {
   ThoughtChain?: ThoughtChainComponentToken;
   Sources?: SourcesComponentToken;
   Think?: ThinkComponentToken;
+  Folder?: FolderComponentToken;
   Welcome?: WelcomeComponentToken;
   CodeHighlighter?: CodeHighlighterComponentToken;
   Mermaid?: MermaidComponentToken;
