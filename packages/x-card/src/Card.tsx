@@ -69,6 +69,7 @@ const NodeRenderer = defineComponent({
     commandVersion: { type: String as PropType<'v0.8' | 'v0.9'>, default: 'v0.8' },
     onAction: { type: Function as PropType<(name: string, context: Record<string, any>, actionConfig?: any) => void> },
     onDataChange: { type: Function as PropType<(path: string, value: any) => void> },
+    treeEpoch: { type: Number, default: 0 },
   },
   setup(props) {
     return () => {
@@ -109,6 +110,7 @@ const NodeRenderer = defineComponent({
           commandVersion: props.commandVersion,
           onAction: props.onAction,
           onDataChange: props.onDataChange,
+          treeEpoch: props.treeEpoch,
         }),
       );
 
@@ -129,6 +131,7 @@ const Card = defineComponent({
 
     const transformer = createComponentTransformer();
     const rootNode = ref<ComponentTree | null>(null);
+    const treeEpoch = ref(0);
     const dataModel = ref<Record<string, any>>({});
     const hasRendered = ref(false);
     const commandVersion = ref<'v0.8' | 'v0.9'>('v0.8');
@@ -244,7 +247,11 @@ const Card = defineComponent({
       }
 
       if (nextVersion !== commandVersion.value) commandVersion.value = nextVersion;
-      if (rootChanged) rootNode.value = nextRoot;
+      if (rootChanged) {
+        rootNode.value = nextRoot;
+        // transformer mutates in place; bump a prop so NodeRenderer re-reads the tree
+        treeEpoch.value += 1;
+      }
       if (dataChanged) dataModel.value = nextDataModel;
     };
 
@@ -296,6 +303,7 @@ const Card = defineComponent({
         commandVersion: commandVersion.value,
         onAction: handleAction,
         onDataChange: handleDataChange,
+        treeEpoch: treeEpoch.value,
       });
     };
   },

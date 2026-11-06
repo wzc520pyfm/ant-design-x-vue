@@ -1,5 +1,7 @@
 # Mermaid 图表
 
+> English: [Mermaid](/component/mermaid.en)
+
 用于渲染 Mermaid 图表。对齐 React `@ant-design/x` Mermaid（2.10）。
 
 > 独立组件。Markdown 插件 [`Mermaid`](/x-markdown/data-display) 仍保留，二者用途不同（插件 ≠ 本组件）。
