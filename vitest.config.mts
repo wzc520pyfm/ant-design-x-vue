@@ -19,6 +19,7 @@ export default defineConfig({
       '@ant-design-x-vue/components': resolve(__dirname, 'packages/components'),
       '@ant-design-x-vue/x-sdk': resolve(__dirname, 'packages/x-sdk/src/index.ts'),
       '@ant-design-x-vue/x-markdown': resolve(__dirname, 'packages/x-markdown/src/index.ts'),
+      '@ant-design-x-vue/x-card': resolve(__dirname, 'packages/x-card/src/index.ts'),
     },
   },
   test: {
@@ -27,6 +28,7 @@ export default defineConfig({
       'packages/components/**/*.test.{ts,tsx}',
       'packages/x-markdown/**/*.test.{ts,tsx}',
       'packages/x-sdk/**/*.test.{ts,tsx}',
+      'packages/x-card/**/*.test.{ts,tsx}',
       'docs/.vitepress/**/*.test.ts',
     ],
     coverage: {
