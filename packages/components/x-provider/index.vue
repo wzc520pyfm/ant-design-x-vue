@@ -28,7 +28,8 @@ interface ResolvedXProviderProps {
   fileCard?: XComponentsConfig['fileCard'];
   think?: XComponentsConfig['think'];
   folder?: XComponentsConfig['folder'];
-  mermaid?: MarkdownComponentsConfig['mermaid'];
+  codeHighlighter?: XComponentsConfig['codeHighlighter'];
+  mermaid?: XComponentsConfig['mermaid'] | MarkdownComponentsConfig['mermaid'];
   highlightCode?: MarkdownComponentsConfig['highlightCode'];
   iconPrefixCls?: AntdConfigProviderProps['iconPrefixCls'];
   getTargetContainer?: AntdConfigProviderProps['getTargetContainer'];
@@ -68,6 +69,7 @@ const {
   fileCard,
   think,
   folder,
+  codeHighlighter,
   mermaid,
   highlightCode,
   ...antdConfProps
@@ -89,6 +91,7 @@ const xProviderProps = computed(() => ({
   fileCard,
   think,
   folder,
+  codeHighlighter,
   mermaid,
   highlightCode,
   welcome,

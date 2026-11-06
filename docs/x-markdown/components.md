@@ -53,6 +53,26 @@ h(XMarkdown, { components: { h1: Heading } });
 
 把 `components` 对象放在 `setup` 里一次创建，或用 `computed` / 常量，避免父组件每次更新都换新对象，导致子树不必要地重渲染。
 
+### 3. 用 componentsProps 传业务数据
+
+自定义组件常常需要业务数据（主题、回调等）。若用内联函数包一层再塞 props，每次渲染都会产生新组件引用，流式场景下会反复卸载重建。用 `componentsProps` 按标签名传额外 props，并保持 `components` 引用稳定：
+
+```ts
+const components = { 'custom-chart': CustomChart };
+const componentsProps = computed(() => ({
+  'custom-chart': { theme: theme.value, onSelect },
+}));
+
+h(XMarkdown, { components, componentsProps: componentsProps.value, content });
+```
+
+合并规则（对齐 React `@ant-design/x-markdown@2.10`）：
+
+- 同名属性以 `componentsProps` 为准（例如覆盖 HTML 上的 `title`）
+- `className` / `class` 会拼接，`componentsProps` 的类名在前
+- 内部计算的 `domNode`、`streamStatus`、`children`（以及 `code` 的 `lang`、`block`）不可覆盖
+
+
 ## 流式渲染与 streamStatus
 
 XMarkdown 会把 `streamStatus` 传给自定义组件，表示该标签是否已经闭合，便于做 loading UI。

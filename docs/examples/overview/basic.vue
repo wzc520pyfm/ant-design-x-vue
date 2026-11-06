@@ -145,6 +145,14 @@ const allComponents = [
     content: 'file-card-demo',
   },
   {
+    id: 'code-highlighter',
+    category: '反馈组件',
+    title: 'CodeHighlighter 代码高亮',
+    description: '展示带语法高亮的代码片段，支持复制与自定义头部',
+    icon: <FileOutlined style={{ color: '#13c2c2' }} />,
+    content: 'code-highlighter-demo',
+  },
+  {
     id: 'folder',
     category: '反馈组件',
     title: 'Folder 文件夹',

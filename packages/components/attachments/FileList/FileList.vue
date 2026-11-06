@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, nextTick, onWatcherCleanup, ref, useTemplateRef, watch, watchEffect, TransitionGroup } from 'vue';
+import { computed, nextTick, ref, watch, watchEffect, TransitionGroup } from 'vue';
 import { Button } from 'ant-design-vue';
 import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons-vue';
 import type { FileListProps } from '../interface';
@@ -28,17 +28,17 @@ const {
   imageProps,
 } = defineProps<FileListProps>();
 const listCls = computed(() => `${prefixCls}-list`);
-const containerRef = useTemplateRef<HTMLDivElement>('file-list-container');
+const containerRef = ref<HTMLDivElement | null>(null);
 
 const [firstMount, setFirstMount] = useState(false);
 
 // has disabled
 const attachmentContext = useAttachmentContextInject();
 
-watchEffect(() => {
+watchEffect((onCleanup) => {
   setFirstMount(true);
 
-  onWatcherCleanup(() => {
+  onCleanup(() => {
     setFirstMount(false);
   })
 });
@@ -140,7 +140,7 @@ defineRender(() => {
         },
         listClassName,
       )}
-      ref="file-list-container"
+      ref={containerRef}
       onScroll={checkPing}
       style={listStyle}
     >

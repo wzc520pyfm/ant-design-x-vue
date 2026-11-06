@@ -13,7 +13,10 @@ function externalizeRuntime(id: string) {
     id === '@ant-design-x-vue/x-sdk' ||
     id.startsWith('@ant-design-x-vue/x-sdk/') ||
     id === '@ant-design-x-vue/x-markdown' ||
-    id.startsWith('@ant-design-x-vue/x-markdown/')
+    id.startsWith('@ant-design-x-vue/x-markdown/') ||
+    id === 'mermaid' ||
+    id.startsWith('mermaid/') ||
+    id === 'lodash.throttle'
   );
 }
 
@@ -25,7 +28,10 @@ function runtimeExternalPlugin() {
         id === '@ant-design-x-vue/x-sdk' ||
         id.startsWith('@ant-design-x-vue/x-sdk/') ||
         id === '@ant-design-x-vue/x-markdown' ||
-        id.startsWith('@ant-design-x-vue/x-markdown/')
+        id.startsWith('@ant-design-x-vue/x-markdown/') ||
+        id === 'mermaid' ||
+        id.startsWith('mermaid/') ||
+        id === 'lodash.throttle'
       ) {
         return { id, external: true };
       }

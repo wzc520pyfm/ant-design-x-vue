@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, useId } from 'vue';
+import { computed } from 'vue';
+import { useCompatId } from '../_util/vueCompat';
 import pickAttrs from '../_util/pick-attrs';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { useXProviderContext } from '../x-provider';
@@ -28,22 +29,41 @@ const styles = computed(() => thoughtChainContext.value.styles || {});
 
 const { direction } = useXProviderContext();
 
-const id = useId();
+const id = useCompatId();
 
 const key = computed(() => info.key ?? id);
-const { collapsible, icon, blink, title, content, footer, status, description } = info;
+const collapsible = computed(() => info.collapsible);
+const icon = computed(() => info.icon);
+const blink = computed(() => info.blink);
+const title = computed(() => info.title);
+const content = computed(() => info.content);
+const footer = computed(() => info.footer);
+const status = computed(() => info.status);
+const description = computed(() => info.description);
+const destroyOnHidden = computed(() => info.destroyOnHidden !== false);
 
 const nodeCls = computed(() => `${prefixCls.value}-node`);
 
 const contentOpen = computed(() => expandedKeys.value?.includes(key.value));
 
+const contentVisible = computed(() => (collapsible.value ? contentOpen.value : true));
+
 const iconNode = computed(() => {
   const defaultIcon = <div class={classnames(`${nodeCls.value}-index-icon`)}>{index + 1}</div>;
-  if (icon === false) return null;
-  return icon || defaultIcon;
+  if (icon.value === false) return null;
+  return icon.value || defaultIcon;
 });
 
 defineRender(() => {
+  const contentInner = (
+    <div
+      class={classnames(`${nodeCls.value}-content-box`, classNames.value.itemContent)}
+      style={styles.value.itemContent}
+    >
+      {content.value}
+    </div>
+  );
+
   return (
     <div
       {...domProps.value}
@@ -58,7 +78,7 @@ defineRender(() => {
           style={styles.value.itemIcon}
           prefixCls={prefixCls.value}
           icon={iconNode.value}
-          status={status}
+          status={status.value}
         />
       )}
       <div class={classnames(`${nodeCls.value}-box`)}>
@@ -68,14 +88,14 @@ defineRender(() => {
         >
           <div
             class={classnames(`${nodeCls.value}-title`, {
-              [`${nodeCls.value}-collapsible`]: collapsible,
-              [`${prefixCls.value}-motion-blink`]: blink,
+              [`${nodeCls.value}-collapsible`]: collapsible.value,
+              [`${prefixCls.value}-motion-blink`]: blink.value,
             })}
-            onClick={collapsible ? () => onItemExpand.value?.(key.value) : undefined}
+            onClick={collapsible.value ? () => onItemExpand.value?.(key.value) : undefined}
           >
-            {title}
-            {collapsible &&
-              content &&
+            {title.value}
+            {collapsible.value &&
+              content.value &&
               (direction.value === 'rtl' ? (
                 <LeftOutlined
                   class={`${nodeCls.value}-collapse-icon`}
@@ -88,29 +108,30 @@ defineRender(() => {
                 />
               ))}
           </div>
-          {description && <div class={`${nodeCls.value}-description`}>{description}</div>}
+          {description.value && <div class={`${nodeCls.value}-description`}>{description.value}</div>}
         </div>
-        {content && (
+        {content.value && (
           <TransitionCollapse prefixCls={prefixCls.value}>
-            <div
-              v-show={collapsible ? contentOpen.value : true}
-              class={classnames(`${nodeCls.value}-content`)}
-            >
+            {destroyOnHidden.value ? (
+              contentVisible.value ? (
+                <div class={classnames(`${nodeCls.value}-content`)}>{contentInner}</div>
+              ) : null
+            ) : (
               <div
-                class={classnames(`${nodeCls.value}-content-box`, classNames.value.itemContent)}
-                style={styles.value.itemContent}
+                v-show={contentVisible.value}
+                class={classnames(`${nodeCls.value}-content`)}
               >
-                {content}
+                {contentInner}
               </div>
-            </div>
+            )}
           </TransitionCollapse>
         )}
-        {footer && (
+        {footer.value && (
           <div
             class={classnames(`${nodeCls.value}-footer`, classNames.value.itemFooter)}
             style={styles.value.itemFooter}
           >
-            {footer}
+            {footer.value}
           </div>
         )}
       </div>

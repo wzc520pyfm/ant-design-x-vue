@@ -537,3 +537,199 @@ describe('extensions', () => {
     expect(wrapper.text()).toContain('bar');
   });
 });
+
+describe('XMarkdown extra props (React 2.10 parity)', () => {
+  describe('disableDefaultStyles', () => {
+    it('should not add any disable class by default', () => {
+      const wrapper = mount(XMarkdown, { props: { content: '- Item' } });
+      const root = wrapper.find('.x-markdown');
+      expect(root.exists()).toBe(true);
+      expect(root.classes().join(' ')).not.toMatch(/x-md-disable/);
+    });
+
+    it('should add x-md-disable-all when disableDefaultStyles is true', () => {
+      const wrapper = mount(XMarkdown, {
+        props: { content: '- Item', disableDefaultStyles: true },
+      });
+      expect(wrapper.find('.x-markdown').classes()).toContain('x-md-disable-all');
+    });
+
+    it('should add per-tag disable classes when an array is provided', () => {
+      const wrapper = mount(XMarkdown, {
+        props: { content: '- Item', disableDefaultStyles: ['ul', 'ol', 'li'] },
+      });
+      const classes = wrapper.find('.x-markdown').classes();
+      expect(classes).toContain('x-md-disable-ul');
+      expect(classes).toContain('x-md-disable-ol');
+      expect(classes).toContain('x-md-disable-li');
+      expect(classes).not.toContain('x-md-disable-all');
+      expect(classes).not.toContain('x-md-disable-code');
+    });
+
+    it('should not add any disable class when an empty array is provided', () => {
+      const wrapper = mount(XMarkdown, {
+        props: { content: '- Item', disableDefaultStyles: [] },
+      });
+      expect(wrapper.find('.x-markdown').classes().join(' ')).not.toMatch(/x-md-disable/);
+    });
+
+    it('should keep working alongside rootClassName and className', () => {
+      const wrapper = mount(XMarkdown, {
+        props: {
+          content: '- Item',
+          disableDefaultStyles: ['ul'],
+          rootClassName: 'root-cls',
+          className: 'custom-cls',
+        },
+      });
+      const classes = wrapper.find('.x-markdown').classes();
+      expect(classes).toContain('x-md-disable-ul');
+      expect(classes).toContain('root-cls');
+      expect(classes).toContain('custom-cls');
+    });
+  });
+
+  describe('escapeRawHtml', () => {
+    it('should render block raw HTML as escaped text when escapeRawHtml is true', () => {
+      const wrapper = mount(XMarkdown, {
+        props: { content: '<div>hello</div>', escapeRawHtml: true },
+      });
+      const root = wrapper.find('.x-markdown');
+      expect(root.exists()).toBe(true);
+      // Escaped markup should appear as visible text, not a real element tree.
+      expect(root.find('div').exists()).toBe(false);
+      expect(root.text()).toContain('<div>hello</div>');
+    });
+
+    it('should render block raw HTML as real HTML when escapeRawHtml is false (default)', () => {
+      const wrapper = mount(XMarkdown, {
+        props: { content: '<div>hello</div>' },
+      });
+      expect(wrapper.find('.x-markdown div').exists()).toBe(true);
+      expect(wrapper.find('.x-markdown div').text()).toContain('hello');
+    });
+
+    it('should escape script tag when escapeRawHtml is true', () => {
+      const wrapper = mount(XMarkdown, {
+        props: { content: '<script>alert(1)</script>', escapeRawHtml: true },
+      });
+      const root = wrapper.find('.x-markdown');
+      expect(root.find('script').exists()).toBe(false);
+      expect(root.text()).toContain('<script>');
+    });
+  });
+
+  describe('componentsProps', () => {
+    it('passes extra props to the matching custom component', () => {
+      let received: Record<string, unknown> | undefined;
+      const Chart = defineComponent({
+        name: 'CustomChart',
+        inheritAttrs: false,
+        setup(_, { attrs }) {
+          received = { ...attrs };
+          return () => h('span', String(attrs.theme));
+        },
+      });
+      const onSelect = vi.fn();
+      const wrapper = mount(XMarkdown, {
+        props: {
+          content: '<custom-chart data-id="1"></custom-chart>',
+          components: { 'custom-chart': Chart },
+          componentsProps: { 'custom-chart': { theme: 'dark', onSelect } },
+        },
+      });
+      expect(wrapper.find('span').text()).toBe('dark');
+      expect(received?.theme).toBe('dark');
+      expect(received?.onSelect).toBe(onSelect);
+      expect(received?.['data-id']).toBe('1');
+      expect(received?.streamStatus).toBe('done');
+    });
+
+    it('extra props take precedence over parsed HTML attributes', () => {
+      let receivedTitle: unknown;
+      const Widget = defineComponent({
+        name: 'MyWidget',
+        inheritAttrs: false,
+        setup(_, { attrs }) {
+          receivedTitle = attrs.title;
+          return () => h('span', 'widget');
+        },
+      });
+      mount(XMarkdown, {
+        props: {
+          content: '<my-widget title="from-html"></my-widget>',
+          components: { 'my-widget': Widget },
+          componentsProps: { 'my-widget': { title: 'from-props' } },
+        },
+      });
+      expect(receivedTitle).toBe('from-props');
+    });
+
+    it('cannot shadow internally computed props', () => {
+      let widgetProps: Record<string, unknown> | undefined;
+      let codeProps: Record<string, unknown> | undefined;
+      const Widget = defineComponent({
+        name: 'MyWidget',
+        inheritAttrs: false,
+        setup(_, { attrs }) {
+          widgetProps = { ...attrs };
+          return () => h('span', 'widget');
+        },
+      });
+      const Code = defineComponent({
+        name: 'CodeComp',
+        inheritAttrs: false,
+        setup(_, { attrs }) {
+          codeProps = { ...attrs };
+          return () => h('span', 'code');
+        },
+      });
+
+      mount(XMarkdown, {
+        props: {
+          content: '<my-widget>text</my-widget>',
+          components: { 'my-widget': Widget },
+          componentsProps: {
+            'my-widget': { streamStatus: 'spoofed', domNode: 'spoofed', children: 'spoofed' },
+          },
+        },
+      });
+      expect(widgetProps?.streamStatus).toBe('done');
+      expect(widgetProps?.domNode).not.toBe('spoofed');
+      expect(widgetProps?.children).not.toBe('spoofed');
+
+      mount(XMarkdown, {
+        props: {
+          content: '```js\nconst a = 1;\n```',
+          components: { code: Code },
+          componentsProps: {
+            code: { lang: 'spoofed', block: 'spoofed', streamStatus: 'spoofed' },
+          },
+        },
+      });
+      expect(codeProps?.lang).toBe('js');
+      expect(codeProps?.block).toBe(true);
+      expect(codeProps?.streamStatus).toBe('done');
+    });
+
+    it('merges className from componentsProps with the parsed class attribute', () => {
+      let widgetProps: Record<string, unknown> | undefined;
+      const Widget = defineComponent({
+        name: 'MyWidget',
+        inheritAttrs: false,
+        setup(_, { attrs }) {
+          widgetProps = { ...attrs };
+          return () => h('span', 'widget');
+        },
+      });
+      mount(XMarkdown, {
+        props: {
+          content: '<my-widget class="from-html"></my-widget>',
+          components: { 'my-widget': Widget },
+          componentsProps: { 'my-widget': { className: 'from-props' } },
+        },
+      });
+      expect(widgetProps?.className).toBe('from-props from-html');
+    });
+  });
+});

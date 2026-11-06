@@ -2,7 +2,7 @@
 import { CloudUploadOutlined, LinkOutlined } from '@ant-design/icons-vue';
 import { App, Button, Flex, Switch } from 'ant-design-vue';
 import { Sender, Attachments } from 'ant-design-x-vue';
-import { ref, computed, useTemplateRef } from 'vue';
+import { ref, computed } from 'vue';
 
 defineOptions({ name: 'AXAttachmentBasic' });
 
@@ -11,7 +11,7 @@ const Demo = () => {
 
   const fullScreenDrop = ref(false);
   const customContent = ref(true);
-  const divRef = useTemplateRef<HTMLDivElement>('basic-container');
+  const divRef = ref<HTMLDivElement | null>(null);
 
   const triggerFullScreenDrop = (v: boolean) => {
     fullScreenDrop.value = v
@@ -36,7 +36,7 @@ const Demo = () => {
     />));
 
   return (
-    <div ref="basic-container">
+    <div ref={divRef}>
       <Flex vertical gap="middle" align="flex-start">
         <Sender prefix={attachmentsNode.value} />
         <Switch
