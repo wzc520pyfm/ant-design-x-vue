@@ -1,64 +1,85 @@
 # 在 Vue 里使用 X Skill
 
-[`@ant-design/x-skill`](https://www.npmjs.com/package/@ant-design/x-skill) 是一套 **框架无关** 的 Agent Skill / CLI（`npx x-skill`），给 Claude Code、Cursor 等 IDE 提供 Ant Design X 的开发指引。Vue 仓库 **不会再移植一份 CLI**——直接安装官方包即可。
+本仓库提供 **Vue 专用** Agent Skill 文本，路径在 [`packages/x-skill`](https://github.com/wzc520pyfm/ant-design-x-vue/tree/dev/packages/x-skill)。正文按 `ant-design-x-vue`、`<script setup lang="ts">` 和模板编写，Agent 会按 Vue API 出码，而不是按 React 的 `@ant-design/x` + JSX。
 
-技能正文按 React 写法举例（`@ant-design/x`、`antd`、JSX）。用在 `ant-design-x-vue` 项目里时，按下面的对照替换即可。
+这些文件是给 Cursor / Claude Code 等 IDE 读的说明，**不是**运行时组件。当前 **尚未** 发布 npm 包 `@ant-design-x-vue/x-skill`，也没有再做一份 `npx x-skill` CLI。
 
-## 安装
+## 安装（主路径）
+
+把 skill 目录拷到编辑器的 skills 路径。中文（推荐）用 `skills-zh/`，英文用 `skills/`。
+
+### Cursor
 
 ```bash
-npm i -g @ant-design/x-skill
-npx x-skill
+# 在 ant-design-x-vue 仓库根目录
+mkdir -p .cursor/skills
+cp -R packages/x-skill/skills-zh/* .cursor/skills/
 ```
 
-也可以按官方 README 把它加到 Claude Code 插件市场，或把 skill 文件拷到 `~/.claude/skills` / 项目 `.claude/skills`、`.cursor/skills`。
+用户级：拷到 `~/.cursor/skills/`。
 
-## 包名对照
+### Claude Code
 
-| 技能里写的（React） | Vue 项目请改成 |
+```bash
+mkdir -p .claude/skills
+cp -R packages/x-skill/skills-zh/* .claude/skills/
+# 或：cp -R packages/x-skill/skills-zh/* ~/.claude/skills/
+```
+
+每个 skill 是一个含 `SKILL.md`（以及可选 `reference/`）的文件夹。装好后让 Agent 使用这些 Vue skill。
+
+## 自带技能
+
+| Skill | 内容 |
 | --- | --- |
-| `@ant-design/x` | `ant-design-x-vue` |
-| `antd` / `antd@6` | `ant-design-vue` |
-| `@ant-design/x-sdk` | `@ant-design-x-vue/x-sdk` |
-| `@ant-design/x-markdown` | `@ant-design-x-vue/x-markdown` |
-| `@ant-design/x-card` | `@ant-design-x-vue/x-card` |
-| `className` / `style` JSX | `class` / `:style` 模板或 `h()` |
-| `XProvider` + React `theme.zeroRuntime` | 见下方说明：Vue 侧当前不移植该开关 |
+| `use-x-chat` | `useXChat` / `useXConversations`，以及 `Bubble.List` 的消息映射 |
+| `x-chat-provider` | 内置与自定义 `AbstractChatProvider` |
+| `x-request` | `XRequest`（实例上的 `run` / `abort`，Provider 必须 `manual: true`） |
+| `x-markdown` | `XMarkdown` 流式渲染、插件、组件映射 |
+| `x-card` | A2UI 与 `XCard.Box` / `XCard.Card` |
+| `x-components` | `Bubble`、`Sender`、`Folder` 等 UI 组件 |
 
 ## 一段最小对话
-
-技能里的 `use-x-chat` / Sender / Bubble 例子，对应到 Vue 大致是：
 
 ```vue
 <script setup lang="ts">
 import { Bubble, Sender } from 'ant-design-x-vue'
 import { useXChat } from '@ant-design-x-vue/x-sdk'
 
-const { messages, onRequest } = useXChat({
-  // 与 React 对齐的 request / defaultMessages 写法
+const { messages, onRequest, isRequesting, abort } = useXChat({
+  provider, // 见 x-chat-provider；XRequest 必须 manual: true
 })
+
+const bubbleRoles = {
+  user: { placement: 'end' as const },
+  assistant: { placement: 'start' as const },
+}
 </script>
 
 <template>
-  <Bubble.List :items="messages" />
-  <Sender @submit="onRequest" />
+  <Bubble.List
+    :roles="bubbleRoles"
+    :items="messages.map(({ id, message, status }) => ({
+      key: id,
+      role: message.role,
+      content: message.content,
+      loading: status === 'loading',
+    }))"
+  />
+  <Sender :loading="isRequesting" @submit="(v: string) => onRequest({ query: v })" @cancel="abort" />
 </template>
 ```
 
-Markdown 流式渲染用 `@ant-design-x-vue/x-markdown` 的 `XMarkdown`，不要再用 React 的 `@ant-design/x-markdown`。动态卡片用 `@ant-design-x-vue/x-card` 的 `XCard.Box` / `XCard.Card`（见 [X Card](/x-card/introduce)）。
+注意：
 
-## 自带技能覆盖什么
+- `messages` 是 `Ref<MessageInfo[]>`，正文在 `msg.message` 上，**不能**原样传给 `Bubble.List`
+- Vue 规范字段是 **`roles`**（`role` 仅为对齐 React；同时传入时 `roles` 优先）
+- Markdown 用 `@ant-design-x-vue/x-markdown` 的 `XMarkdown`
+- 动态卡片用 `@ant-design-x-vue/x-card` 的 `XCard.Box` / `XCard.Card`（见 [X Card](/x-card/introduce)）
+- `XProvider` 存在，但没有 React 的 `theme.zeroRuntime`
 
-官方包目前主要包括：
+更完整的约定写在 skill 正文里，也见仓库 [packages/x-skill/README.md](https://github.com/wzc520pyfm/ant-design-x-vue/blob/dev/packages/x-skill/README.md)。
 
-- `use-x-chat`：会话 SDK
-- `x-chat-provider`：请求数据流
-- `x-request`：请求封装
-- `x-markdown`：流式 Markdown / 插件 / 主题
-- 以及 x-card 等相关 skill 文件
+## 备选：React 官方 CLI
 
-这些都是 **给 Agent 读的说明**，不是运行时 Vue 组件。装好 skill 后，在本仓库里让 Agent 按上表替换包名即可。
-
-## 为什么没有 `@ant-design-x-vue/x-skill`
-
-React 的 `@ant-design/x-skill` 本身不是 UI 包。再维护一份 Vue CLI 只会分叉安装命令和 skill 文件。等上游 skill 开始区分框架、或 Vue 出现独有组件约定时，再考虑补充 Vue 专用 skill 文本。
+[`@ant-design/x-skill`](https://www.npmjs.com/package/@ant-design/x-skill)（`npx x-skill`）仍然可用，但 skill 正文是 React 示例（`@ant-design/x`、`antd`、JSX）。**Vue 项目请不要把它当作主路径**——Agent 会继续吐 React 包名。只有在你明确要对照上游 React 规则时，才把它当备选，并自行改写成 Vue。
