@@ -105,6 +105,9 @@ conversations/infinite-load
 
 </ClientOnly>
 
+
+移动端行为：内部使用 `useMobile` 检测设备。移动端会话操作菜单图标会始终显示（加上 `ant-conversations-menu-icon-mobile`），不再依赖 hover。
+
 ## API
 
 ### ConversationsProps

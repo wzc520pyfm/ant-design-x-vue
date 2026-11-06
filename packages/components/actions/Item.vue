@@ -5,6 +5,7 @@ import ActionsMenu from './ActionsMenu.vue';
 import { useActionsContextInject } from './context';
 import type { ActionsProps, ItemType } from './interface';
 import { resolveActionIcon } from './resolve-icon';
+import useMobile from '../_util/hooks/use-mobile';
 
 defineOptions({ name: 'AXActionsInternalItem' });
 
@@ -22,6 +23,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const ctx = useActionsContextInject();
+const isMobile = useMobile();
 
 const renderActionRender = (item: ItemType) => {
   const ar = item.actionRender;
@@ -70,9 +72,13 @@ defineRender(() => {
         });
       }}
     >
-      <Tooltip title={item.label}>
+      {isMobile.value ? (
         <div class={`${ctx.prefixCls}-icon`}>{resolveActionIcon(item.icon)}</div>
-      </Tooltip>
+      ) : (
+        <Tooltip title={item.label}>
+          <div class={`${ctx.prefixCls}-icon`}>{resolveActionIcon(item.icon)}</div>
+        </Tooltip>
+      )}
     </div>
   );
 });

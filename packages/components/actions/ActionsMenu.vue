@@ -6,6 +6,7 @@ import { computed, h } from 'vue';
 import { useActionsContextInject } from './context';
 import type { ItemType, ActionsProps } from './interface';
 import { resolveActionIcon } from './resolve-icon';
+import useMobile from '../_util/hooks/use-mobile';
 
 defineOptions({ name: 'AXActionsMenu' });
 
@@ -23,6 +24,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const ctx = useActionsContextInject();
+const isMobile = useMobile();
 
 const findItem = (keyPath: string[], items: ItemType[] = []): ItemType | null => {
   const keyToFind = keyPath[0];
@@ -39,7 +41,9 @@ const findItem = (keyPath: string[], items: ItemType[] = []): ItemType | null =>
 };
 
 const subItems = computed(() => (props.item.subItems ?? []) as ItemType[]);
-const triggerSubMenuAction = computed(() => props.item.triggerSubMenuAction ?? 'hover');
+const triggerSubMenuAction = computed(
+  () => props.item.triggerSubMenuAction ?? (isMobile.value ? 'click' : 'hover'),
+);
 
 const handleMenuClick = (payload: {
   key: string;
