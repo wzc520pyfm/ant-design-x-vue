@@ -208,6 +208,19 @@ export interface StreamingOption {
   typewriter?: boolean | TypewriterConfig;
 }
 
+export type DefaultStyleTag =
+  | 'p'
+  | 'ul'
+  | 'ol'
+  | 'li'
+  | 'pre'
+  | 'code'
+  | 'table'
+  | 'th'
+  | 'td'
+  | 'img'
+  | 'hr';
+
 export interface XMarkdownProps {
   /**
    * Markdown content to render.
@@ -278,4 +291,38 @@ export interface XMarkdownProps {
    * DOMPurify sanitize configuration.
    */
   dompurifyConfig?: DOMPurifyConfig;
+
+  /**
+   * Extra props passed to custom components in `components` by tag name.
+   * Keeps component references stable and avoids remounts from inline wrappers.
+   */
+  componentsProps?: {
+    [tagName: string]: Record<string, unknown>;
+  };
+
+  /**
+   * Protect blank-line paragraph breaks inside custom tags.
+   * @default false
+   */
+  protectCustomTagNewlines?: boolean;
+
+  /**
+   * Disable block-level Markdown parsing inside custom tags (lists, headings,
+   * blockquotes). Inline Markdown still works.
+   * @default false
+   */
+  disableCustomTagBlockMarkdown?: boolean;
+
+  /**
+   * Escape raw HTML in Markdown as plain text (do not parse as real HTML).
+   * @default false
+   */
+  escapeRawHtml?: boolean;
+
+  /**
+   * Disable built-in default styles for tags. Pass `true` to disable all, or
+   * an array to disable specific tags (e.g. `['ul', 'ol', 'li']`).
+   * @default false
+   */
+  disableDefaultStyles?: boolean | DefaultStyleTag[];
 }

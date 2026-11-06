@@ -20,8 +20,23 @@ const { direction: contextDirection, getPrefixCls } = useXProviderContext();
 
 const prefixCls = computed(() => getPrefixCls('x-markdown', props.prefixCls));
 
+const disableStyleCls = computed(() => {
+  const value = props.disableDefaultStyles;
+  if (value === true) return 'x-md-disable-all';
+  if (Array.isArray(value)) {
+    return value.map((tag) => `x-md-disable-${tag}`);
+  }
+  return undefined;
+});
+
 const mergedCls = computed(() =>
-  classnames(prefixCls.value, 'x-markdown', props.rootClassName, props.className),
+  classnames(
+    prefixCls.value,
+    'x-markdown',
+    disableStyleCls.value,
+    props.rootClassName,
+    props.className,
+  ),
 );
 
 const mergedStyle = computed<CSSProperties>(() => ({
@@ -90,6 +105,7 @@ const mergedComponents = computed(() => {
 function defineDefaultTail(content: string): Component {
   return {
     name: 'XmdTail',
+    inheritAttrs: false,
     setup() {
       return () => h('span', { class: 'xmd-tail' }, content);
     },
@@ -99,28 +115,39 @@ function defineDefaultTail(content: string): Component {
 function defineTailWrapper(Comp: Component, content: string): Component {
   return {
     name: 'XmdTailCustom',
+    inheritAttrs: false,
     setup() {
       return () => h(Comp, { content });
     },
   };
 }
 
-const parser = shallowRef<Parser>(
-  new Parser({
+function createParser() {
+  return new Parser({
     markedConfig: props.config as any,
     paragraphTag: props.paragraphTag,
     openLinksInNewTab: props.openLinksInNewTab,
-  }),
-);
+    components: props.components,
+    protectCustomTagNewlines: props.protectCustomTagNewlines,
+    disableCustomTagBlockMarkdown: props.disableCustomTagBlockMarkdown,
+    escapeRawHtml: props.escapeRawHtml,
+  });
+}
+
+const parser = shallowRef<Parser>(createParser());
 
 watch(
-  () => [props.config, props.paragraphTag, props.openLinksInNewTab],
+  () => [
+    props.config,
+    props.paragraphTag,
+    props.openLinksInNewTab,
+    props.components,
+    props.protectCustomTagNewlines,
+    props.disableCustomTagBlockMarkdown,
+    props.escapeRawHtml,
+  ],
   () => {
-    parser.value = new Parser({
-      markedConfig: props.config as any,
-      paragraphTag: props.paragraphTag,
-      openLinksInNewTab: props.openLinksInNewTab,
-    });
+    parser.value = createParser();
   },
 );
 
@@ -138,6 +165,7 @@ function renderMarkdownSection(source: string, injectTail: boolean): VNode[] {
   if (!html) return [];
   return htmlToVNode(html, {
     components: mergedComponents.value,
+    componentsProps: props.componentsProps,
     streamStatus: streamStatus.value,
     streaming: resolvedStreaming.value,
   });
@@ -171,27 +199,31 @@ defineRender(() => {
 </script>
 
 <style scoped>
-:deep(.x-markdown) {
+/*
+ * Default tag styles are gated behind `:not(.x-md-disable-all):not(.x-md-disable-<tag>)`
+ * so `disableDefaultStyles` can opt out (align React @ant-design/x-markdown).
+ */
+.x-markdown {
   line-height: 1.6;
 }
-:deep(.x-markdown) pre {
+.x-markdown:not(.x-md-disable-all):not(.x-md-disable-pre) pre {
   background-color: #f5f5f5;
   padding: 16px;
   border-radius: 4px;
   overflow-x: auto;
 }
-:deep(.x-markdown) code {
+.x-markdown:not(.x-md-disable-all):not(.x-md-disable-code) code {
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 }
-:deep(.x-markdown) p {
+.x-markdown:not(.x-md-disable-all):not(.x-md-disable-p) p {
   margin: 0 0 16px;
 }
-:deep(.x-markdown) h1,
-:deep(.x-markdown) h2,
-:deep(.x-markdown) h3,
-:deep(.x-markdown) h4,
-:deep(.x-markdown) h5,
-:deep(.x-markdown) h6 {
+.x-markdown h1,
+.x-markdown h2,
+.x-markdown h3,
+.x-markdown h4,
+.x-markdown h5,
+.x-markdown h6 {
   margin-top: 24px;
   margin-bottom: 16px;
   font-weight: 600;
