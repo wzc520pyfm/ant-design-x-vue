@@ -2,32 +2,39 @@
 
 面向 **ant-design-x-vue** 的 Agent Skill 文本。给 Cursor、Claude Code 等 IDE 用，教它们按 Vue SFC 和本仓库的包名写代码，而不是按 React 的 `@ant-design/x` + JSX 出码。
 
-本目录只放 **skill 内容**，**尚未**以 `@ant-design-x-vue/x-skill` 发布到 npm，也没有再做一份 `npx x-skill` CLI。
+包名：`@ant-design-x-vue/x-skill@2.0.0`。npm 发布会等到 2.0 合入 `main`（见 #536）后再进行；发布前可在本仓库直接跑 CLI。
 
-## 安装到编辑器
+## 安装
 
-把某一语言的 skill 目录拷到编辑器的 skills 路径即可。
+```bash
+# 发布后
+npm i -g @ant-design-x-vue/x-skill
+npx @ant-design-x-vue/x-skill
+# 或全局安装后
+x-skill-vue
+```
 
-### Cursor
+发布前：
+
+```bash
+node packages/x-skill/bin/cli.js
+```
+
+常用参数：`--cursor`、`--claude`、`--global`、`--lang zh|en`、`--force`、`--help`、`--version`。
+
+CLI 会把 `skills/` 或 `skills-zh/` 复制到 `.cursor/skills` 和/或 `.claude/skills`，不依赖 figlet，也不会去装 React 的 `@ant-design/x-skill`。
+
+### 手动拷贝
 
 ```bash
 mkdir -p .cursor/skills
 cp -R packages/x-skill/skills-zh/* .cursor/skills/
 ```
 
-用户级：拷到 `~/.cursor/skills/`。
+用户级：`~/.cursor/skills/` 或 `~/.claude/skills/`。
 
-### Claude Code
-
-```bash
-mkdir -p .claude/skills
-cp -R packages/x-skill/skills-zh/* .claude/skills/
-```
-
-每个 skill 是含 `SKILL.md`（以及可选 `reference/`）的文件夹。装好后让 Agent 读这些 Vue skill，不要再去读 React 官方 `@ant-design/x-skill`。
-
-英文正文在 `skills/`，中文正文在 `skills-zh/`（本仓库更推荐中文）。
+英文正文在 `skills/`，中文正文在 `skills-zh/`。
 
 ## 与 React 官方 CLI 的关系
 
-`npx x-skill` / `@ant-design/x-skill` 仍是 React 示例（`@ant-design/x`、JSX）。Vue 项目请以本目录为**主路径**，官方 CLI 仅作备选。
+`npx x-skill` / `@ant-design/x-skill` 仍是 React 示例（`@ant-design/x`、JSX）。Vue 项目请以本包为**主路径**。

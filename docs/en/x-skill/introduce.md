@@ -1,16 +1,87 @@
-# Using X Skill in Vue
+# Introduction
 
-> 中文：[在 Vue 里使用 X Skill](/x-skill/introduce)
+> 中文：[介绍](/x-skill/introduce)
 
-This repo ships **Vue-native** Agent skill texts in [`packages/x-skill`](https://github.com/wzc520pyfm/ant-design-x-vue/tree/dev/packages/x-skill). They teach Cursor, Claude Code, and similar IDEs to generate `<script setup>` + templates against `ant-design-x-vue` — not React JSX against `@ant-design/x`.
+`@ant-design-x-vue/x-skill` is an intelligent skill library for Ant Design X Vue. The texts teach Cursor, Claude Code, and similar IDEs to generate `<script setup>` + templates against `ant-design-x-vue` — not React JSX against `@ant-design/x`.
 
-These files are **instructions for agents**, not runtime components. `@ant-design-x-vue/x-skill` is **not published** to npm, and this repo does not fork the `npx x-skill` CLI.
+These files are **instructions for agents**, not runtime components.
 
-## Install (primary path)
+## Use cases
 
-Copy a locale into your editor’s skills directory. Use `skills-zh/` for Chinese or `skills/` for English.
+- **New project setup**: Quickly scaffold an Ant Design X Vue app
+- **Feature development**: Get best practices and code examples for component usage
+- **Problem troubleshooting**: Diagnose and resolve common development issues
+- **Performance optimization**: Get practical advice on performance tuning
 
-### Cursor
+## Core advantages
+
+- **Intelligent development**: Code generation and suggestions based on Vue best practices
+- **Efficiency**: Less repetitive work, faster project delivery
+- **Quality**: Follow Ant Design X Vue conventions
+- **Coverage**: Conversation UI, data requests, state management, and more
+
+## Included skills
+
+See the [Skills List](/en/x-skill/skills). Prompt examples live on [Prompt Templates](/en/x-skill/prompt).
+
+## Quick start
+
+### Method 1: One-click installation (recommended)
+
+Works with mainstream AI IDEs such as Claude Code and Cursor. The package name is `@ant-design-x-vue/x-skill` (version `2.0.0`, aligned with the other 2.x packages in this repo). **npm publish is deferred until [#536](https://github.com/wzc520pyfm/ant-design-x-vue/issues/536) lands on `main`**. Until then, run the CLI from this repository.
+
+#### Basic installation
+
+```bash
+# Install the skill library globally (after publish)
+npm i -g @ant-design-x-vue/x-skill
+
+# Copy skills into the current project's .cursor/skills and .claude/skills
+npx @ant-design-x-vue/x-skill
+
+# After a global install you can also run
+x-skill-vue
+```
+
+Before publish, from the repository root:
+
+```bash
+node packages/x-skill/bin/cli.js
+# or
+pnpm --filter @ant-design-x-vue/x-skill exec x-skill-vue
+```
+
+#### Options
+
+```bash
+# Help
+npx @ant-design-x-vue/x-skill --help
+
+# Installer version
+npx @ant-design-x-vue/x-skill --version
+
+# Cursor only / Claude Code only
+npx @ant-design-x-vue/x-skill --cursor
+npx @ant-design-x-vue/x-skill --claude
+
+# User-level install (~/.cursor/skills, ~/.claude/skills)
+npx @ant-design-x-vue/x-skill --global
+
+# Language (default: skills-zh when LANG starts with zh, otherwise skills)
+npx @ant-design-x-vue/x-skill --lang zh
+npx @ant-design-x-vue/x-skill --lang en
+
+# Overwrite existing skill folders with the same name
+npx @ant-design-x-vue/x-skill --force
+```
+
+The CLI copies folders from `skills/` or `skills-zh/` into the target directories. It does **not** install React `@ant-design/x-skill`, and it has no figlet banner or interactive version picker.
+
+### Method 2: Manual installation
+
+Use this when you want to customize the copy. Prefer `skills-zh/` for Chinese or `skills/` for English.
+
+#### Cursor
 
 ```bash
 mkdir -p .cursor/skills
@@ -19,7 +90,7 @@ cp -R packages/x-skill/skills/* .cursor/skills/
 
 User-level: copy into `~/.cursor/skills/`.
 
-### Claude Code
+#### Claude Code
 
 ```bash
 mkdir -p .claude/skills
@@ -28,17 +99,6 @@ cp -R packages/x-skill/skills/* .claude/skills/
 ```
 
 Each skill is a folder with `SKILL.md` and optional `reference/` files.
-
-## Bundled skills
-
-| Skill | Covers |
-| --- | --- |
-| `use-x-chat` | `useXChat` / `useXConversations`, and mapping into `Bubble.List` |
-| `x-chat-provider` | Built-in and custom `AbstractChatProvider` |
-| `x-request` | `XRequest` (instance `run` / `abort`; Providers need `manual: true`) |
-| `x-markdown` | `XMarkdown` streaming, plugins, component maps |
-| `x-card` | A2UI with `XCard.Box` / `XCard.Card` |
-| `x-components` | UI components such as `Bubble`, `Sender`, `Folder` |
 
 ## A minimal conversation
 

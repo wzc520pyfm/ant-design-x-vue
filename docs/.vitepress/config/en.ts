@@ -230,10 +230,14 @@ const playgroundSidebar: DefaultTheme.SidebarItem[] = [
 
 const cardSidebar: DefaultTheme.SidebarItem[] = [
   plain('Introduction', '/x-card/introduce'),
+  plain('A2UI v0.8', '/x-card/a2ui-v-0-8'),
+  plain('A2UI v0.9', '/x-card/a2ui-v-0-9'),
 ]
 
 const skillSidebar: DefaultTheme.SidebarItem[] = [
-  plain('Using X Skill in Vue', '/x-skill/introduce'),
+  plain('Introduction', '/x-skill/introduce'),
+  plain('Prompt Templates', '/x-skill/prompt'),
+  plain('Skills List', '/x-skill/skills'),
 ]
 
 export const sidebar: DefaultTheme.Sidebar = {
