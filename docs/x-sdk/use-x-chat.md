@@ -11,7 +11,10 @@ const {
   parsedMessages,
   setMessages,
   setMessage,
+  removeMessage,
   isRequesting,
+  isDefaultMessagesRequesting,
+  queueRequest,
 } = useXChat({
   provider,
   conversationKey: activeConversationKey,
@@ -82,7 +85,14 @@ type useXChat<
   parsedMessages: ComputedRef<MessageInfo<ParsedMessage>[]>;
   setMessages: (...args: Parameters<UseChatStoreReturn['setMessages']>) => void;
   setMessage: (...args: Parameters<UseChatStoreReturn['setMessage']>) => void;
+  removeMessage: (id: string | number) => boolean;
   isRequesting: ComputedRef<boolean>;
+  isDefaultMessagesRequesting: Ref<boolean>;
+  queueRequest: (
+    conversationKey: string | symbol,
+    requestParams: Partial<Input>,
+    opts?: { extraInfo: AnyObject },
+  ) => void;
 };
 ```
 
@@ -92,7 +102,7 @@ type useXChat<
 | --- | --- | --- | --- | --- |
 | provider | 数据提供者，将不同结构的数据与请求转换为 useXChat 可消费的格式。内置 `DefaultChatProvider`、`OpenAIChatProvider`，也可继承 `AbstractChatProvider` 自行实现。见 [Chat Provider](/x-sdk/chat-provider) | AbstractChatProvider\<ChatMessage, Input, Output\> | - | - |
 | conversationKey | 会话 key；可与 `useXConversations` 的 `activeConversationKey` 对齐，使每个会话独立消息 | ConversationData['key'] \| ShallowRef\<ConversationData['key'] \| undefined\> | - | - |
-| defaultMessages | 默认展示消息 | { message: ChatMessage; status?: MessageStatus; id?: string \| number; extraInfo?: AnyObject }[] | - | - |
+| defaultMessages | 默认展示消息；支持数组、同步函数或返回 Promise 的异步函数（用于拉取远程历史） | DefaultMessageInfo\<ChatMessage\>[] \| ((info: { conversationKey?: string }) => DefaultMessageInfo\<ChatMessage\>[] \| Promise\<DefaultMessageInfo\<ChatMessage\>[]\>) | - | - |
 | parser | 将 ChatMessage 转为 ParsedMessage；未设置时直接消费 ChatMessage。支持一对多 | (message: ChatMessage) => ParsedMessage \| ParsedMessage[] | - | - |
 | requestFallback | 请求失败时的兜底消息；未提供则不展示兜底 | ChatMessage \| ((requestParams: Partial\<Input\>, info: { error: Error; messages: ChatMessage[]; messageInfo: MessageInfo\<ChatMessage\> }) => ChatMessage \| Promise\<ChatMessage\>) | - | - |
 | requestPlaceholder | 请求中的占位消息；未提供则不展示占位 | ChatMessage \| ((requestParams: Partial\<Input\>, info: { messages: ChatMessage[] }) => ChatMessage) | - | - |
@@ -103,12 +113,15 @@ type useXChat<
 | --- | --- | --- | --- | --- |
 | abort | 取消请求 | () => void | - | - |
 | isRequesting | 是否正在请求（computed） | ComputedRef\<boolean\> | - | - |
+| isDefaultMessagesRequesting | 默认消息列表是否在请求中（异步 `defaultMessages`） | Ref\<boolean\> | false | - |
 | messages | 当前管理的消息列表 | Ref\<MessageInfo\<ChatMessage\>[]\> | - | - |
 | parsedMessages | 经过 `parser` 转换后的列表 | ComputedRef\<MessageInfo\<ParsedMessage\>[]\> | - | - |
 | onReload | 按消息 id 重放，向后端发请求并用返回数据更新该消息 | (id: string \| number, requestParams: Partial\<Input\>, opts?: { extraInfo: AnyObject }) => void | - | - |
 | onRequest | 追加消息并触发请求 | (requestParams: Partial\<Input\>, opts?: { extraInfo: AnyObject }) => void | - | - |
 | setMessages | 直接修改消息列表，不触发请求 | (messages \| updater) => void | - | - |
 | setMessage | 直接修改单条消息，不触发请求 | (id, info \| updater) => void | - | - |
+| removeMessage | 删除单条消息，不触发请求 | (id: string \| number) => boolean | - | - |
+| queueRequest | 将请求加入队列，等待当前会话 `defaultMessages` 初始化完成后再发送 | (conversationKey: string \| symbol, requestParams: Partial\<Input\>, opts?: { extraInfo: AnyObject }) => void | - | - |
 
 #### MessageInfo
 
