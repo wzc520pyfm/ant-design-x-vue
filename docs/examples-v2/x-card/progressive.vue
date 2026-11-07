@@ -1,165 +1,215 @@
 <script setup lang="ts">
-import { defineComponent, h, onMounted, onUnmounted, ref } from 'vue';
-import { registerCatalog, XCard, type XAgentCommand_v0_9 } from '@ant-design-x-vue/x-card';
+import { onMounted, onUnmounted, ref } from 'vue';
+import {
+  registerCatalog,
+  XCard,
+  type XAgentCommand_v0_9,
+} from '@ant-design-x-vue/x-card';
+import {
+  ALL_PROGRESS_PRODUCTS,
+  CATALOGS,
+  LoadingIndicator,
+  ProductCard,
+  ProductContainer,
+  PROGRESS_PRODUCT_BATCHES,
+  type Product,
+} from './_shared';
 
-type Product = { id: number; name: string; price: number; tag?: string };
+registerCatalog(CATALOGS.progressive);
 
-const batches: Product[][] = [
-  [{ id: 1, name: '无线耳机', price: 299, tag: 'Hot' }, { id: 2, name: '机械键盘', price: 459 }],
-  [{ id: 3, name: '智能手表', price: 1299, tag: 'New' }, { id: 4, name: '充电宝', price: 99 }],
-  [{ id: 5, name: '降噪耳机', price: 899, tag: '推荐' }, { id: 6, name: '无线充', price: 149 }],
-];
+const WELCOME_TEXT =
+  '🎉 Welcome to the progressive product showcase!\n\nProduct data will be loaded in batches, 2 products at a time. You can observe how components are displayed progressively.';
+const COMPLETE_TEXT = '✅ All products loaded! Total 8 products loaded.';
 
-registerCatalog({
-  $id: 'local://progressive',
-  catalogId: 'local://progressive',
-  components: {
-    Shell: { type: 'object' },
-    LoadingIndicator: { type: 'object' },
-    ProductCard: { type: 'object' },
-    ProductContainer: { type: 'object' },
+const commands = ref<XAgentCommand_v0_9[]>([]);
+const headerText = ref('');
+const footerText = ref('');
+let headerTimer: number | undefined;
+let footerTimer: number | undefined;
+let batchTimer: number | undefined;
+
+const append = (...next: XAgentCommand_v0_9[]) => {
+  commands.value = [...commands.value, ...next];
+};
+
+const createLoadingCommands = (progress: number, loading: boolean): XAgentCommand_v0_9[] => [
+  {
+    version: 'v0.9',
+    createSurface: {
+      surfaceId: 'loading-indicator',
+      catalogId: 'local://coffee_booking_catalog.json',
+    },
   },
-});
-
-const Shell = defineComponent({
-  name: 'Shell',
-  setup(_, { slots }) {
-    return () => h('div', { style: { display: 'grid', gap: '12px' } }, slots.default?.());
-  },
-});
-
-const LoadingIndicator = defineComponent({
-  name: 'LoadingIndicator',
-  props: { progress: { type: Number, default: 0 }, total: { type: Number, default: 6 }, loading: { type: Boolean, default: false } },
-  setup(props) {
-    return () =>
-      h('div', { style: { padding: '10px 12px', border: '1px solid #eee', borderRadius: '10px' } }, [
-        h('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '6px' } }, [
-          h('span', props.loading ? '正在加载商品…' : '加载完成'),
-          h('span', { style: { color: '#999' } }, `${props.progress}/${props.total}`),
-        ]),
-        h('div', { style: { height: '6px', background: '#f0f0f0', borderRadius: '999px' } }, [
-          h('div', {
-            style: {
-              width: `${Math.round((props.progress / props.total) * 100)}%`,
-              height: '100%',
-              borderRadius: '999px',
-              background: props.loading ? '#1677ff' : '#52c41a',
-              transition: 'width 0.3s ease',
-            },
-          }),
-        ]),
-      ]);
-  },
-});
-
-const ProductCard = defineComponent({
-  name: 'ProductCard',
-  props: {
-    name: { type: String, default: '' },
-    price: { type: Number, default: 0 },
-    tag: { type: String, default: '' },
-    index: { type: Number, default: 0 },
-  },
-  setup(props) {
-    const visible = ref(false);
-    let timer: number | undefined;
-    onMounted(() => {
-      timer = window.setTimeout(() => {
-        visible.value = true;
-      }, props.index * 120);
-    });
-    onUnmounted(() => {
-      if (timer) window.clearTimeout(timer);
-    });
-    return () =>
-      h(
-        'div',
-        {
-          style: {
-            border: '1px solid #f0f0f0',
-            borderRadius: '12px',
-            padding: '12px',
-            opacity: visible.value ? 1 : 0,
-            transform: visible.value ? 'translateY(0)' : 'translateY(12px)',
-            transition: 'all 0.35s ease',
-          },
-        },
-        [
-          h('div', [h('strong', props.name), props.tag ? h('span', { style: { marginLeft: '8px', color: '#d46b08' } }, props.tag) : null]),
-          h('div', { style: { color: '#ff4d4f', fontWeight: 600, marginTop: '6px' } }, `¥${props.price}`),
-        ],
-      );
-  },
-});
-
-const ProductContainer = defineComponent({
-  name: 'ProductContainer',
-  setup(_, { slots }) {
-    return () =>
-      h('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '12px' } }, slots.default?.());
-  },
-});
-
-const commands = ref<XAgentCommand_v0_9[]>([
-  { version: 'v0.9', createSurface: { surfaceId: 'progressive', catalogId: 'local://progressive' } },
   {
     version: 'v0.9',
     updateComponents: {
-      surfaceId: 'progressive',
+      surfaceId: 'loading-indicator',
       components: [
-        { id: 'root', component: 'Shell', children: ['progress', 'list'] },
-        { id: 'progress', component: 'LoadingIndicator', progress: 0, total: 6, loading: true },
-        { id: 'list', component: 'ProductContainer', children: [] },
+        {
+          id: 'root',
+          component: 'LoadingIndicator',
+          progress,
+          total: ALL_PROGRESS_PRODUCTS.length,
+          loading,
+        },
       ],
     },
   },
-]);
+];
 
-let timer: number | undefined;
-onMounted(() => {
-  const loaded: Product[] = [];
-  let batch = 0;
-  timer = window.setInterval(() => {
-    if (batch >= batches.length) {
-      window.clearInterval(timer);
-      return;
-    }
-    loaded.push(...batches[batch]);
-    batch += 1;
-    const done = batch >= batches.length;
-    commands.value = [
-      ...commands.value,
+const updateLoading = (progress: number, loading: boolean): XAgentCommand_v0_9 => ({
+  version: 'v0.9',
+  updateComponents: {
+    surfaceId: 'loading-indicator',
+    components: [
       {
-        version: 'v0.9',
-        updateComponents: {
-          surfaceId: 'progressive',
-          components: [
-            { id: 'root', component: 'Shell', children: ['progress', 'list'] },
-            { id: 'progress', component: 'LoadingIndicator', progress: loaded.length, total: 6, loading: !done },
-            ...loaded.map((product, index) => ({
-              id: `product-${product.id}`,
-              component: 'ProductCard',
-              name: product.name,
-              price: product.price,
-              tag: product.tag,
-              index,
-            })),
-            { id: 'list', component: 'ProductContainer', children: loaded.map((product) => `product-${product.id}`) },
-          ],
-        },
+        id: 'root',
+        component: 'LoadingIndicator',
+        progress,
+        total: ALL_PROGRESS_PRODUCTS.length,
+        loading,
       },
-    ];
-  }, 700);
+    ],
+  },
 });
 
+const updateProducts = (products: Product[]): XAgentCommand_v0_9 => ({
+  version: 'v0.9',
+  updateComponents: {
+    surfaceId: 'progressive-demo',
+    components: [
+      ...products.map((product, index) => ({
+        id: `product-${product.id}`,
+        component: 'ProductCard',
+        name: product.name,
+        price: product.price,
+        category: product.category,
+        stock: product.stock,
+        tag: product.tag,
+        index,
+      })),
+      {
+        id: 'root',
+        component: 'ProductContainer',
+        children: products.map((product) => `product-${product.id}`),
+      },
+    ],
+  },
+});
+
+const streamFooter = () => {
+  if (footerTimer) window.clearInterval(footerTimer);
+  footerText.value = '';
+  let index = 0;
+  footerTimer = window.setInterval(() => {
+    index = Math.min(index + 2, COMPLETE_TEXT.length);
+    footerText.value = COMPLETE_TEXT.slice(0, index);
+    if (index >= COMPLETE_TEXT.length && footerTimer) window.clearInterval(footerTimer);
+  }, 28);
+};
+
+const startBatches = () => {
+  let batchIndex = 0;
+  const loaded: Product[] = [];
+
+  const loadNext = () => {
+    if (batchIndex >= PROGRESS_PRODUCT_BATCHES.length) {
+      append(updateLoading(ALL_PROGRESS_PRODUCTS.length, false));
+      streamFooter();
+      return;
+    }
+
+    loaded.push(...PROGRESS_PRODUCT_BATCHES[batchIndex]);
+    append(updateLoading(loaded.length, batchIndex < PROGRESS_PRODUCT_BATCHES.length - 1));
+    batchTimer = window.setTimeout(() => {
+      append(updateProducts([...loaded]));
+      batchIndex += 1;
+      batchTimer = window.setTimeout(loadNext, 550);
+    }, 50);
+  };
+
+  loadNext();
+};
+
+const startFlow = () => {
+  if (headerTimer) window.clearInterval(headerTimer);
+  headerText.value = '';
+  let index = 0;
+  headerTimer = window.setInterval(() => {
+    index = Math.min(index + 3, WELCOME_TEXT.length);
+    headerText.value = WELCOME_TEXT.slice(0, index);
+    if (index >= WELCOME_TEXT.length) {
+      if (headerTimer) window.clearInterval(headerTimer);
+      append(
+        ...createLoadingCommands(0, true),
+        {
+          version: 'v0.9',
+          createSurface: {
+            surfaceId: 'progressive-demo',
+            catalogId: 'local://coffee_booking_catalog.json',
+          },
+        },
+      );
+      startBatches();
+    }
+  }, 32);
+};
+
+const reload = () => {
+  if (batchTimer) window.clearTimeout(batchTimer);
+  if (footerTimer) window.clearInterval(footerTimer);
+  footerText.value = '';
+  append(
+    { version: 'v0.9', deleteSurface: { surfaceId: 'loading-indicator' } },
+    { version: 'v0.9', deleteSurface: { surfaceId: 'progressive-demo' } },
+    ...createLoadingCommands(0, true),
+    {
+      version: 'v0.9',
+      createSurface: {
+        surfaceId: 'progressive-demo',
+        catalogId: 'local://coffee_booking_catalog.json',
+      },
+    },
+  );
+  startBatches();
+};
+
+onMounted(startFlow);
 onUnmounted(() => {
-  if (timer) window.clearInterval(timer);
+  if (headerTimer) window.clearInterval(headerTimer);
+  if (footerTimer) window.clearInterval(footerTimer);
+  if (batchTimer) window.clearTimeout(batchTimer);
 });
 </script>
 
 <template>
-  <XCard.Box :commands="commands" :components="{ Shell, LoadingIndicator, ProductCard, ProductContainer }">
-    <XCard.Card id="progressive" />
-  </XCard.Box>
+  <div>
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px">
+      <button
+        type="button"
+        style="padding: 7px 13px; border: 0; border-radius: 7px; background: #1677ff; color: #fff; cursor: pointer"
+        @click="reload"
+      >
+        Reload
+      </button>
+      <span style="color: #8c8c8c; font-size: 13px">每批 2 个商品，通过 updateComponents 渐进追加</span>
+    </div>
+
+    <div style="white-space: pre-wrap; line-height: 1.7; font-size: 14px; color: #595959">{{ headerText }}</div>
+
+    <XCard.Box
+      :commands="commands"
+      :components="{ ProductCard, ProductContainer, LoadingIndicator }"
+    >
+      <XCard.Card id="loading-indicator" />
+      <XCard.Card id="progressive-demo" />
+    </XCard.Box>
+
+    <div
+      v-if="footerText"
+      style="white-space: pre-wrap; line-height: 1.7; font-size: 14px; color: #52c41a; margin-top: 10px"
+    >
+      {{ footerText }}
+    </div>
+  </div>
 </template>

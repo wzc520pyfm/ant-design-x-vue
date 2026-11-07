@@ -1,127 +1,164 @@
 <script setup lang="ts">
-import { defineComponent, h, ref } from 'vue';
-import { registerCatalog, useXCardField, XCard, type ActionPayload } from '@ant-design-x-vue/x-card';
+import { onMounted, onUnmounted, ref } from 'vue';
+import {
+  registerCatalog,
+  XCard,
+  type ActionPayload,
+  type XAgentCommand_v0_9,
+} from '@ant-design-x-vue/x-card';
+import { CATALOGS, RegistrationForm, SuccessCard } from './_shared';
 
-registerCatalog({
-  $id: 'local://form-validation',
-  catalogId: 'local://form-validation',
-  components: {
-    Column: { type: 'object' },
-    EmailField: { type: 'object' },
-    Submit: { type: 'object' },
-  },
-});
+registerCatalog(CATALOGS.form);
 
-const Column = defineComponent({
-  name: 'Column',
-  setup(_, { slots }) {
-    return () => h('form', { style: { display: 'grid', gap: '12px', maxWidth: '360px' }, onSubmit: (e: Event) => e.preventDefault() }, slots.default?.());
-  },
-});
+const HEADER_TEXT =
+  'Welcome to register! 🎉\n\nPlease fill in your information to create an account. We will verify your information step by step.';
 
-const EmailField = defineComponent({
-  name: 'EmailField',
-  props: {
-    onDataChange: { type: Function, default: undefined },
-  },
-  setup(props) {
-    const field = useXCardField({
-      path: '/form/email',
-      onDataChange: props.onDataChange,
-      rules: [
-        { required: true, message: '请填写邮箱' },
-        { pattern: /.+@.+\..+/, message: '邮箱格式不正确' },
-      ],
-    });
-    return () =>
-      h('label', { style: { display: 'grid', gap: '4px', fontSize: '14px' } }, [
-        '邮箱',
-        h('input', {
-          value: field.value.value,
-          style: { padding: '6px 8px', border: '1px solid #d9d9d9', borderRadius: '6px' },
-          onInput: (e: Event) => field.setValue((e.target as HTMLInputElement).value),
-        }),
-        field.error.value
-          ? h('span', { style: { color: '#ff4d4f', fontSize: '12px' } }, field.error.value)
-          : null,
-      ]);
-  },
-});
+const commands = ref<XAgentCommand_v0_9[]>([]);
+const headerText = ref('');
+const notice = ref('');
+let textTimer: number | undefined;
+let resultTimer: number | undefined;
 
-const lastAction = ref<ActionPayload | null>(null);
-const blocked = ref(false);
-
-const Submit = defineComponent({
-  name: 'Submit',
-  props: {
-    action: { type: Object, default: undefined },
-    onAction: { type: Function, default: undefined },
-  },
-  setup(props) {
-    return () =>
-      h(
-        'button',
-        {
-          type: 'button',
-          style: {
-            padding: '8px 12px',
-            border: 0,
-            borderRadius: '6px',
-            background: '#1677ff',
-            color: '#fff',
-            cursor: 'pointer',
-          },
-          onClick: () => props.onAction?.(props.action?.event?.name || 'submit', {}),
-        },
-        '提交',
-      );
-  },
-});
-
-const handleAction = (payload: ActionPayload) => {
-  const email = payload.context.email;
-  const value = email && typeof email === 'object' ? email.value : email;
-  if (!value || !/.+@.+\..+/.test(String(value))) {
-    blocked.value = true;
-    return;
-  }
-  blocked.value = false;
-  lastAction.value = payload;
+const append = (...next: XAgentCommand_v0_9[]) => {
+  commands.value = [...commands.value, ...next];
 };
 
-const commands = [
-  { version: 'v0.9' as const, createSurface: { surfaceId: 'form', catalogId: 'local://form-validation' } },
+const createRegistrationCommands = (): XAgentCommand_v0_9[] => [
   {
-    version: 'v0.9' as const,
+    version: 'v0.9',
+    createSurface: {
+      surfaceId: 'registration',
+      catalogId: 'local://form_validation_catalog.json',
+    },
+  },
+  {
+    version: 'v0.9',
     updateComponents: {
-      surfaceId: 'form',
+      surfaceId: 'registration',
       components: [
-        { id: 'root', component: 'Column', children: ['email', 'go'] },
-        { id: 'email', component: 'EmailField' },
         {
-          id: 'go',
-          component: 'Submit',
+          id: 'root',
+          component: 'RegistrationForm',
+          step: 0,
+          status: { path: '/registration/status' },
+          errorMessage: { path: '/registration/errorMessage' },
           action: {
             event: {
-              name: 'submit',
-              context: { email: { path: '/form/email', label: '邮箱' } },
+              name: 'submit_step',
+              context: { formData: { path: '/registration/formData' } },
             },
           },
         },
       ],
     },
   },
+  {
+    version: 'v0.9',
+    updateDataModel: {
+      surfaceId: 'registration',
+      path: '/registration',
+      value: { status: '', errorMessage: '' },
+    },
+  },
 ];
+
+const createResultCommands = (formData: any): XAgentCommand_v0_9[] => [
+  {
+    version: 'v0.9',
+    createSurface: {
+      surfaceId: 'result',
+      catalogId: 'local://form_validation_catalog.json',
+    },
+  },
+  {
+    version: 'v0.9',
+    updateComponents: {
+      surfaceId: 'result',
+      components: [
+        {
+          id: 'root',
+          component: 'SuccessCard',
+          username: formData?.username,
+          email: formData?.email,
+          accountType: formData?.accountType ?? 'personal',
+        },
+      ],
+    },
+  },
+];
+
+const startHeader = () => {
+  if (textTimer) window.clearInterval(textTimer);
+  headerText.value = '';
+  let index = 0;
+  textTimer = window.setInterval(() => {
+    index = Math.min(index + 3, HEADER_TEXT.length);
+    headerText.value = HEADER_TEXT.slice(0, index);
+    if (index >= HEADER_TEXT.length) {
+      if (textTimer) window.clearInterval(textTimer);
+      append(...createRegistrationCommands());
+    }
+  }, 32);
+};
+
+const handleAction = (payload: ActionPayload) => {
+  if (payload.name !== 'submit_step') return;
+  const formData = (payload.context as Record<string, any>)?.formData;
+  if (!formData) return;
+
+  if (!formData.submit) {
+    notice.value = `Step ${formData.step} completed`;
+    return;
+  }
+
+  notice.value = 'Registration successful!';
+  append({ version: 'v0.9', deleteSurface: { surfaceId: 'registration' } });
+  if (resultTimer) window.clearTimeout(resultTimer);
+  resultTimer = window.setTimeout(() => {
+    append(...createResultCommands(formData.values));
+  }, 300);
+};
+
+const reload = () => {
+  if (resultTimer) window.clearTimeout(resultTimer);
+  notice.value = '';
+  append(
+    { version: 'v0.9', deleteSurface: { surfaceId: 'registration' } },
+    { version: 'v0.9', deleteSurface: { surfaceId: 'result' } },
+    ...createRegistrationCommands(),
+  );
+};
+
+onMounted(startHeader);
+onUnmounted(() => {
+  if (textTimer) window.clearInterval(textTimer);
+  if (resultTimer) window.clearTimeout(resultTimer);
+});
 </script>
 
 <template>
   <div>
-    <XCard.Box :commands="commands" :components="{ Column, EmailField, Submit }" :on-action="handleAction">
-      <XCard.Card id="form" />
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px">
+      <button
+        type="button"
+        style="padding: 7px 13px; border: 0; border-radius: 7px; background: #1677ff; color: #fff; cursor: pointer"
+        @click="reload"
+      >
+        Reload
+      </button>
+      <span style="color: #8c8c8c; font-size: 13px">逐步校验信息，最后生成注册结果卡片</span>
+    </div>
+
+    <div style="white-space: pre-wrap; line-height: 1.7; font-size: 14px; color: #595959">{{ headerText }}</div>
+    <p v-if="notice" style="margin: 10px 0; color: #1677ff; font-size: 13px">{{ notice }}</p>
+
+    <XCard.Box
+      :commands="commands"
+      :components="{ RegistrationForm, SuccessCard }"
+      :on-action="handleAction"
+    >
+      <XCard.Card id="registration" />
+      <XCard.Card id="result" />
     </XCard.Box>
-    <p v-if="blocked" style="color: #ff4d4f; margin-top: 12px">请先通过字段校验再提交。</p>
-    <pre v-if="lastAction" style="margin-top: 16px; padding: 12px; background: #f6f6f6; border-radius: 8px">{{
-      JSON.stringify(lastAction, null, 2)
-    }}</pre>
   </div>
 </template>

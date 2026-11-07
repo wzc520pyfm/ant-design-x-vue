@@ -1,115 +1,164 @@
 <script setup lang="ts">
-import { defineComponent, h, ref } from 'vue';
-import { XCard, type ActionPayload, type XAgentCommand_v0_8 } from '@ant-design-x-vue/x-card';
+import { onMounted, ref } from 'vue';
+import {
+  XCard,
+  type ActionPayload,
+  type XAgentCommand_v0_8,
+} from '@ant-design-x-vue/x-card';
+import { FormCard, FormInput, SubmitButton, Title } from './_shared';
 
-const Column = defineComponent({
-  name: 'Column',
-  setup(_, { slots }) {
-    return () => h('div', { style: { display: 'grid', gap: '10px', maxWidth: '360px' } }, slots.default?.());
-  },
-});
+const commands = ref<XAgentCommand_v0_8[]>([]);
+const logs = ref<string[]>([]);
+const resolvedTip = ref('');
 
-const Field = defineComponent({
-  name: 'Field',
-  props: {
-    label: { type: String, default: '' },
-    action: { type: Object, default: undefined },
-    onAction: { type: Function, default: undefined },
-  },
-  setup(props) {
-    return () =>
-      h('label', { style: { display: 'grid', gap: '4px' } }, [
-        props.label,
-        h('input', {
-          style: { padding: '6px 8px', border: '1px solid #d9d9d9', borderRadius: '6px' },
-          onInput: (e: Event) => {
-            const value = (e.target as HTMLInputElement).value;
-            const context: Record<string, any> = {};
-            const items = Array.isArray(props.action?.context) ? props.action.context : [];
-            items.forEach((item: { key: string }) => {
-              context[item.key] = value;
-            });
-            props.onAction?.(props.action?.name || 'change', context);
-          },
-        }),
-      ]);
-  },
-});
+const append = (...next: XAgentCommand_v0_8[]) => {
+  commands.value = [...commands.value, ...next];
+};
 
-const Submit = defineComponent({
-  name: 'Submit',
-  props: {
-    text: { type: String, default: '提交' },
-    action: { type: Object, default: undefined },
-    onAction: { type: Function, default: undefined },
-  },
-  setup(props) {
-    return () =>
-      h(
-        'button',
-        {
-          type: 'button',
-          style: { padding: '8px 12px', border: 0, borderRadius: '6px', background: '#1677ff', color: '#fff' },
-          onClick: () => props.onAction?.(props.action?.name || 'submit', {}),
-        },
-        props.text,
-      );
-  },
-});
-
-const Preview = defineComponent({
-  name: 'Preview',
-  props: { text: { type: String, default: '' } },
-  setup(props) {
-    return () => h('p', { style: { margin: 0, color: '#1677ff' } }, props.text || '输入后点提交，Card 会按 v0.8 context path 回填');
-  },
-});
-
-const lastAction = ref<ActionPayload | null>(null);
-
-const commands: XAgentCommand_v0_8[] = [
+const createFormCommands = (): XAgentCommand_v0_8[] => [
   {
     surfaceUpdate: {
-      surfaceId: 'v08-form',
+      surfaceId: 'form',
       components: [
-        { id: 'root', component: { Column: { children: ['name', 'go', 'preview'] } } },
         {
-          id: 'name',
+          id: 'title',
           component: {
-            Field: {
-              label: { literalString: '昵称' },
-              action: { name: 'field-change', context: [{ key: 'nickname', value: { path: '/form/nickname' } }] },
+            Title: {
+              text: { literalString: '用户注册表单' },
+              variant: { literalString: 'h2' },
             },
           },
         },
         {
-          id: 'go',
+          id: 'username-input',
           component: {
-            Submit: {
-              text: { literalString: '提交（空 context）' },
-              action: { name: 'submit', context: [{ key: 'nickname', value: { path: '/form/nickname' } }] },
+            FormInput: {
+              label: { literalString: '用户名' },
+              action: {
+                name: 'agent:send_context_text',
+                context: [{ key: 'username', value: { path: '/form/username' } }],
+              },
             },
           },
         },
-        { id: 'preview', component: { Preview: { text: { path: '/form/nickname' } } } },
+        {
+          id: 'email-input',
+          component: {
+            FormInput: {
+              label: { literalString: '邮箱' },
+              action: {
+                name: 'agent:send_context_text',
+                context: [{ key: 'email', value: { path: '/form/email' } }],
+              },
+            },
+          },
+        },
+        {
+          id: 'submit-btn',
+          component: {
+            SubmitButton: {
+              text: { literalString: '提交表单' },
+              action: {
+                name: 'agent:send_context_text',
+                context: [
+                  { key: 'username', value: { path: '/form/username' } },
+                  { key: 'email', value: { path: '/form/email' } },
+                ],
+              },
+            },
+          },
+        },
+        {
+          id: 'root',
+          component: {
+            FormCard: {
+              children: {
+                explicitList: ['title', 'username-input', 'email-input', 'submit-btn'],
+              },
+            },
+          },
+        },
       ],
     },
   },
-  { beginRendering: { surfaceId: 'v08-form', root: 'root' } },
+  {
+    dataModelUpdate: {
+      surfaceId: 'form',
+      contents: [
+        {
+          key: 'form',
+          valueMap: [
+            { key: 'username', valueString: '' },
+            { key: 'email', valueString: '' },
+          ],
+        },
+      ],
+    },
+  },
+  { beginRendering: { surfaceId: 'form', root: 'root' } },
 ];
 
 const handleAction = (payload: ActionPayload) => {
-  lastAction.value = payload;
+  const log = `[${payload.name}]\n${JSON.stringify(payload.context, null, 2)}`;
+  logs.value = [log, ...logs.value].slice(0, 4);
+  resolvedTip.value = Object.values(payload.context || {}).some(
+    (value) => value && typeof value === 'object' && 'value' in value,
+  )
+    ? 'Path 引用已自动解析为实际值'
+    : '';
 };
+
+const reset = () => {
+  logs.value = [];
+  resolvedTip.value = '';
+  append(
+    { deleteSurface: { surfaceId: 'form' } },
+    ...createFormCommands(),
+  );
+};
+
+onMounted(() => append(...createFormCommands()));
 </script>
 
 <template>
   <div>
-    <XCard.Box :commands="commands" :components="{ Column, Field, Submit, Preview }" :on-action="handleAction">
-      <XCard.Card id="v08-form" />
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px">
+      <button
+        type="button"
+        style="padding: 7px 13px; border: 0; border-radius: 7px; background: #fff; border: 1px solid #d9d9d9; cursor: pointer"
+        @click="reset"
+      >
+        重置
+      </button>
+      <span style="color: #8c8c8c; font-size: 13px">
+        v0.8 数组格式 action.context，由 Card 解析 { path } 引用
+      </span>
+    </div>
+
+    <XCard.Box
+      :commands="commands"
+      :components="{ FormCard, Title, FormInput, SubmitButton }"
+      :on-action="handleAction"
+    >
+      <XCard.Card id="form" />
     </XCard.Box>
-    <pre v-if="lastAction" style="margin-top: 16px; padding: 12px; background: #f6f6f6; border-radius: 8px">{{
-      JSON.stringify(lastAction, null, 2)
-    }}</pre>
+
+    <p v-if="resolvedTip" style="margin: 12px 0 0; color: #52c41a; font-size: 13px">
+      {{ resolvedTip }}
+    </p>
+    <div style="margin-top: 16px">
+      <strong style="font-size: 13px">onAction 回调日志（path 引用已解析）：</strong>
+      <div
+        v-if="logs.length"
+        style="margin-top: 8px; max-height: 220px; overflow: auto; border: 1px solid #f0f0f0; border-radius: 8px"
+      >
+        <pre
+          v-for="(log, index) in logs"
+          :key="index"
+          style="margin: 0; padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 12px; white-space: pre-wrap"
+        >{{ log }}</pre>
+      </div>
+      <p v-else style="color: #8c8c8c; font-size: 13px">暂无日志，请填写表单后提交</p>
+    </div>
   </div>
 </template>

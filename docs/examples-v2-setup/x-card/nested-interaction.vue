@@ -1,164 +1,130 @@
 <script setup lang="ts">
-import { defineComponent, h, ref } from 'vue';
-import { registerCatalog, XCard, type ActionPayload, type XAgentCommand_v0_9 } from '@ant-design-x-vue/x-card';
+import { onMounted, ref } from 'vue';
+import {
+  registerCatalog,
+  XCard,
+  type ActionPayload,
+  type XAgentCommand_v0_9,
+} from '@ant-design-x-vue/x-card';
+import {
+  AccordionPanel,
+  CATALOGS,
+  FileDetailCard,
+  FileTree,
+  MainContainer,
+  PANEL_DATA,
+  TextBlock,
+} from './_shared';
 
-type FileNode = { key: string; name: string; type: 'file' | 'folder'; description?: string; children?: FileNode[] };
-type FileDetail = { name: string; path: string; description: string };
+registerCatalog(CATALOGS.nested);
 
-const tree: FileNode[] = [
+const HEADER_TEXT =
+  'Welcome to Project File Browser! Browse the project structure below. Click on files to view details, expand folders to explore nested contents.';
+
+const commands = ref<XAgentCommand_v0_9[]>([]);
+
+const append = (...next: XAgentCommand_v0_9[]) => {
+  commands.value = [...commands.value, ...next];
+};
+
+const createBrowserCommands = (): XAgentCommand_v0_9[] => [
   {
-    key: 'src',
-    name: 'src',
-    type: 'folder',
-    children: [
-      { key: 'src/App.vue', name: 'App.vue', type: 'file', description: '应用入口组件' },
-      { key: 'src/hooks/useTheme.ts', name: 'useTheme.ts', type: 'file', description: '主题 hook' },
-    ],
+    version: 'v0.9',
+    createSurface: {
+      surfaceId: 'browser',
+      catalogId: 'local://nested_interaction_catalog.json',
+    },
   },
-  { key: 'package.json', name: 'package.json', type: 'file', description: '依赖与脚本' },
-];
-
-registerCatalog({
-  $id: 'local://nested',
-  catalogId: 'local://nested',
-  components: {
-    Shell: { type: 'object' },
-    FileTree: { type: 'object' },
-    FileDetailCard: { type: 'object' },
-  },
-});
-
-const Shell = defineComponent({
-  name: 'Shell',
-  setup(_, { slots }) {
-    return () => h('div', { style: { display: 'grid', gridTemplateColumns: '240px 1fr', gap: '16px' } }, slots.default?.());
-  },
-});
-
-const TreeNode = defineComponent({
-  name: 'TreeNode',
-  props: {
-    node: { type: Object, required: true },
-    selectedKey: { type: String, default: '' },
-    onFileClick: { type: Function, default: undefined },
-  },
-  setup(props) {
-    const expanded = ref(props.node.type === 'folder');
-    return () => {
-      const node = props.node as FileNode;
-      return h('div', [
-        h(
-          'button',
-          {
-            type: 'button',
-            style: {
-              display: 'block',
-              width: '100%',
-              textAlign: 'left',
-              border: 0,
-              background: props.selectedKey === node.key ? '#e6f4ff' : 'transparent',
-              padding: '4px 6px',
-              cursor: 'pointer',
-            },
-            onClick: () => {
-              if (node.type === 'folder') expanded.value = !expanded.value;
-              else props.onFileClick?.(node);
-            },
-          },
-          `${node.type === 'folder' ? (expanded.value ? '📂' : '📁') : '📄'} ${node.name}`,
-        ),
-        expanded.value && node.children
-          ? h(
-              'div',
-              { style: { paddingLeft: '14px' } },
-              node.children.map((child) =>
-                h(TreeNode, { key: child.key, node: child, selectedKey: props.selectedKey, onFileClick: props.onFileClick }),
-              ),
-            )
-          : null,
-      ]);
-    };
-  },
-});
-
-const FileTree = defineComponent({
-  name: 'FileTree',
-  props: {
-    files: { type: Array, default: () => [] },
-    selectedFile: { type: Object, default: undefined },
-    action: { type: Object, default: undefined },
-    onAction: { type: Function, default: undefined },
-  },
-  setup(props) {
-    return () =>
-      h(
-        'div',
-        { style: { border: '1px solid #eee', borderRadius: '12px', padding: '8px' } },
-        (props.files as FileNode[]).map((node) =>
-          h(TreeNode, {
-            key: node.key,
-            node,
-            selectedKey: (props.selectedFile as FileDetail | undefined)?.path,
-            onFileClick: (file: FileNode) => {
-              props.onAction?.(props.action?.event?.name || 'select_file', {
-                selectedFile: { name: file.name, path: file.key, description: file.description || '' },
-              });
-            },
-          }),
-        ),
-      );
-  },
-});
-
-const FileDetailCard = defineComponent({
-  name: 'FileDetailCard',
-  props: { file: { type: Object, default: undefined } },
-  setup(props) {
-    return () => {
-      const file = props.file as FileDetail | undefined;
-      if (!file) return h('p', { style: { color: '#999' } }, '点击文件查看详情');
-      return h('div', { style: { border: '1px solid #eee', borderRadius: '12px', padding: '12px' } }, [
-        h('h4', { style: { margin: '0 0 8px' } }, file.name),
-        h('code', file.path),
-        h('p', { style: { margin: '8px 0 0' } }, file.description),
-      ]);
-    };
-  },
-});
-
-const commands = ref<XAgentCommand_v0_9[]>([
-  { version: 'v0.9', createSurface: { surfaceId: 'browser', catalogId: 'local://nested' } },
   {
     version: 'v0.9',
     updateComponents: {
       surfaceId: 'browser',
       components: [
-        { id: 'root', component: 'Shell', children: ['tree', 'detail'] },
+        { id: 'title', component: 'Text', text: 'Project File Browser', variant: 'h1' },
         {
-          id: 'tree',
+          id: 'file-tree',
           component: 'FileTree',
-          files: { path: '/files' },
-          selectedFile: { path: '/selectedFile' },
-          action: { event: { name: 'select_file', context: { selectedFile: { path: '/selectedFile' } } } },
+          selectedFile: { path: '/browser/selectedFile' },
+          action: {
+            event: {
+              name: 'select_file',
+              context: { selectedFile: { path: '/browser/selectedFile' } },
+            },
+          },
         },
-        { id: 'detail', component: 'FileDetailCard', file: { path: '/selectedFile' } },
+        { id: 'file-detail', component: 'FileDetailCard', file: { path: '/browser/selectedFile' } },
+        { id: 'accordion-section', component: 'AccordionPanel', panels: { path: '/browser/panels' } },
+        {
+          id: 'root',
+          component: 'MainContainer',
+          children: ['title', 'file-tree', 'file-detail', 'accordion-section'],
+        },
       ],
     },
   },
-  { version: 'v0.9', updateDataModel: { surfaceId: 'browser', path: '/', value: { files: tree } } },
-]);
+  {
+    version: 'v0.9',
+    updateDataModel: {
+      surfaceId: 'browser',
+      path: '/browser',
+      value: { panels: PANEL_DATA },
+    },
+  },
+];
 
 const handleAction = (payload: ActionPayload) => {
   if (payload.name !== 'select_file') return;
-  commands.value = [
-    ...commands.value,
-    { version: 'v0.9', updateDataModel: { surfaceId: 'browser', path: '/selectedFile', value: payload.context.selectedFile } },
-  ];
+  const selectedFile = (payload.context as Record<string, any>)?.selectedFile;
+  if (!selectedFile) return;
+  append({
+    version: 'v0.9',
+    updateDataModel: {
+      surfaceId: 'browser',
+      path: '/browser/selectedFile',
+      value: selectedFile,
+    },
+  });
 };
+
+const reload = () => {
+  append(
+    { version: 'v0.9', deleteSurface: { surfaceId: 'browser' } },
+    ...createBrowserCommands(),
+  );
+};
+
+onMounted(() => append(...createBrowserCommands()));
 </script>
 
 <template>
-  <XCard.Box :commands="commands" :components="{ Shell, FileTree, FileDetailCard }" :on-action="handleAction">
-    <XCard.Card id="browser" />
-  </XCard.Box>
+  <div>
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px">
+      <button
+        type="button"
+        style="padding: 7px 13px; border: 0; border-radius: 7px; background: #1677ff; color: #fff; cursor: pointer"
+        @click="reload"
+      >
+        Reload
+      </button>
+      <span style="color: #8c8c8c; font-size: 13px">展开目录、选择文件，详情与手风琴面板共享 dataModel</span>
+    </div>
+
+    <div style="white-space: pre-wrap; line-height: 1.7; font-size: 14px; color: #595959; margin-bottom: 10px">
+      {{ HEADER_TEXT }}
+    </div>
+
+    <XCard.Box
+      :commands="commands"
+      :components="{
+        Text: TextBlock,
+        FileTree,
+        FileDetailCard,
+        AccordionPanel,
+        MainContainer,
+      }"
+      :on-action="handleAction"
+    >
+      <XCard.Card id="browser" />
+    </XCard.Box>
+  </div>
 </template>
