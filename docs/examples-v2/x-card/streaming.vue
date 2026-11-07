@@ -32,8 +32,10 @@ Generating personalized recommendations for you...`;
 
 const commands = ref<XAgentCommand_v0_9[]>([]);
 const introText = ref('');
+const sessionKey = ref(0);
 let textTimer: number | undefined;
 let progressTimer: number | undefined;
+let reloadTimer: number | undefined;
 
 const append = (...next: XAgentCommand_v0_9[]) => {
   commands.value = [...commands.value, ...next];
@@ -156,18 +158,23 @@ const startIntro = () => {
 };
 
 const reload = () => {
+  if (textTimer) window.clearInterval(textTimer);
   if (progressTimer) window.clearInterval(progressTimer);
-  append(
-    { version: 'v0.9', deleteSurface: { surfaceId: 'recommendation' } },
-    ...createSurfaceCommands(),
-  );
-  startProgress();
+  if (reloadTimer) window.clearTimeout(reloadTimer);
+  introText.value = '';
+  append({ version: 'v0.9', deleteSurface: { surfaceId: 'recommendation' } });
+  reloadTimer = window.setTimeout(() => {
+    commands.value = [];
+    sessionKey.value += 1;
+    startIntro();
+  }, 50);
 };
 
 onMounted(startIntro);
 onUnmounted(() => {
   if (textTimer) window.clearInterval(textTimer);
   if (progressTimer) window.clearInterval(progressTimer);
+  if (reloadTimer) window.clearTimeout(reloadTimer);
 });
 </script>
 
@@ -187,6 +194,7 @@ onUnmounted(() => {
     <div style="white-space: pre-wrap; line-height: 1.7; font-size: 14px; color: #595959">{{ introText }}</div>
 
     <XCard.Box
+      :key="sessionKey"
       :commands="commands"
       :components="{
         Text: TextBlock,

@@ -16,8 +16,10 @@ const HEADER_TEXT =
 const commands = ref<XAgentCommand_v0_9[]>([]);
 const headerText = ref('');
 const notice = ref('');
+const sessionKey = ref(0);
 let textTimer: number | undefined;
 let resultTimer: number | undefined;
+let reloadTimer: number | undefined;
 
 const append = (...next: XAgentCommand_v0_9[]) => {
   commands.value = [...commands.value, ...next];
@@ -120,19 +122,27 @@ const handleAction = (payload: ActionPayload) => {
 };
 
 const reload = () => {
+  if (textTimer) window.clearInterval(textTimer);
   if (resultTimer) window.clearTimeout(resultTimer);
+  if (reloadTimer) window.clearTimeout(reloadTimer);
   notice.value = '';
+  headerText.value = '';
   append(
     { version: 'v0.9', deleteSurface: { surfaceId: 'registration' } },
     { version: 'v0.9', deleteSurface: { surfaceId: 'result' } },
-    ...createRegistrationCommands(),
   );
+  reloadTimer = window.setTimeout(() => {
+    commands.value = [];
+    sessionKey.value += 1;
+    startHeader();
+  }, 50);
 };
 
 onMounted(startHeader);
 onUnmounted(() => {
   if (textTimer) window.clearInterval(textTimer);
   if (resultTimer) window.clearTimeout(resultTimer);
+  if (reloadTimer) window.clearTimeout(reloadTimer);
 });
 </script>
 
@@ -153,6 +163,7 @@ onUnmounted(() => {
     <p v-if="notice" style="margin: 10px 0; color: #1677ff; font-size: 13px">{{ notice }}</p>
 
     <XCard.Box
+      :key="sessionKey"
       :commands="commands"
       :components="{ RegistrationForm, SuccessCard }"
       :on-action="handleAction"

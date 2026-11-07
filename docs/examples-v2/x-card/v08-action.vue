@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import {
   XCard,
   type ActionPayload,
@@ -10,6 +10,8 @@ import { FormCard, FormInput, SubmitButton, Title } from './_shared';
 const commands = ref<XAgentCommand_v0_8[]>([]);
 const logs = ref<string[]>([]);
 const resolvedTip = ref('');
+const sessionKey = ref(0);
+let reloadTimer: number | undefined;
 
 const append = (...next: XAgentCommand_v0_8[]) => {
   commands.value = [...commands.value, ...next];
@@ -109,15 +111,21 @@ const handleAction = (payload: ActionPayload) => {
 };
 
 const reset = () => {
+  if (reloadTimer) window.clearTimeout(reloadTimer);
   logs.value = [];
   resolvedTip.value = '';
-  append(
-    { deleteSurface: { surfaceId: 'form' } },
-    ...createFormCommands(),
-  );
+  append({ deleteSurface: { surfaceId: 'form' } });
+  reloadTimer = window.setTimeout(() => {
+    commands.value = [];
+    sessionKey.value += 1;
+    append(...createFormCommands());
+  }, 50);
 };
 
 onMounted(() => append(...createFormCommands()));
+onUnmounted(() => {
+  if (reloadTimer) window.clearTimeout(reloadTimer);
+});
 </script>
 
 <template>
@@ -136,6 +144,7 @@ onMounted(() => append(...createFormCommands()));
     </div>
 
     <XCard.Box
+      :key="sessionKey"
       :commands="commands"
       :components="{ FormCard, Title, FormInput, SubmitButton }"
       :on-action="handleAction"

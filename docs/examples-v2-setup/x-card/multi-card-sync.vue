@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import {
   registerCatalog,
   XCard,
@@ -26,6 +26,8 @@ const HEADER_TEXT =
 
 const commands = ref<XAgentCommand_v0_9[]>([]);
 const cart = ref<CartItem[]>([]);
+const sessionKey = ref(0);
+let reloadTimer: number | undefined;
 
 const append = (...next: XAgentCommand_v0_9[]) => {
   commands.value = [...commands.value, ...next];
@@ -183,15 +185,23 @@ const handleAction = (payload: ActionPayload) => {
 };
 
 const reload = () => {
+  if (reloadTimer) window.clearTimeout(reloadTimer);
   cart.value = [];
   append(
     { version: 'v0.9', deleteSurface: { surfaceId: 'shop' } },
     { version: 'v0.9', deleteSurface: { surfaceId: 'checkout-success' } },
-    ...createShopCommands(),
   );
+  reloadTimer = window.setTimeout(() => {
+    commands.value = [];
+    sessionKey.value += 1;
+    append(...createShopCommands());
+  }, 50);
 };
 
 onMounted(() => append(...createShopCommands()));
+onUnmounted(() => {
+  if (reloadTimer) window.clearTimeout(reloadTimer);
+});
 </script>
 
 <template>
@@ -212,6 +222,7 @@ onMounted(() => append(...createShopCommands()));
     </div>
 
     <XCard.Box
+      :key="sessionKey"
       :commands="commands"
       :components="{
         ProductListCard,

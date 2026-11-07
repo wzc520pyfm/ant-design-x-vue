@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import {
   XCard,
   type ActionPayload,
@@ -18,6 +18,8 @@ const HEADER_TEXT =
   'Welcome to Project File Browser! Browse the project structure below. Click on files to view details, expand folders to explore nested contents.';
 
 const commands = ref<XAgentCommand_v0_8[]>([]);
+const sessionKey = ref(0);
+let reloadTimer: number | undefined;
 
 const append = (...next: XAgentCommand_v0_8[]) => {
   commands.value = [...commands.value, ...next];
@@ -112,13 +114,19 @@ const handleAction = (payload: ActionPayload) => {
 };
 
 const reload = () => {
-  append(
-    { deleteSurface: { surfaceId: 'browser' } },
-    ...createBrowserCommands(),
-  );
+  if (reloadTimer) window.clearTimeout(reloadTimer);
+  append({ deleteSurface: { surfaceId: 'browser' } });
+  reloadTimer = window.setTimeout(() => {
+    commands.value = [];
+    sessionKey.value += 1;
+    append(...createBrowserCommands());
+  }, 50);
 };
 
 onMounted(() => append(...createBrowserCommands()));
+onUnmounted(() => {
+  if (reloadTimer) window.clearTimeout(reloadTimer);
+});
 </script>
 
 <template>
@@ -139,6 +147,7 @@ onMounted(() => append(...createBrowserCommands()));
     </div>
 
     <XCard.Box
+      :key="sessionKey"
       :commands="commands"
       :components="{
         Text: TextBlock,

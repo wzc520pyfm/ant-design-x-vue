@@ -20,9 +20,11 @@ const COMPLETE_TEXT = '✅ All products loaded! Total 8 products loaded.';
 const commands = ref<XAgentCommand_v0_8[]>([]);
 const headerText = ref('');
 const footerText = ref('');
+const sessionKey = ref(0);
 let headerTimer: number | undefined;
 let footerTimer: number | undefined;
 let batchTimer: number | undefined;
+let reloadTimer: number | undefined;
 
 const append = (...next: XAgentCommand_v0_8[]) => {
   commands.value = [...commands.value, ...next];
@@ -147,15 +149,21 @@ const startHeader = () => {
 };
 
 const reload = () => {
+  if (headerTimer) window.clearInterval(headerTimer);
   if (batchTimer) window.clearTimeout(batchTimer);
   if (footerTimer) window.clearInterval(footerTimer);
+  if (reloadTimer) window.clearTimeout(reloadTimer);
   footerText.value = '';
+  headerText.value = '';
   append(
     { deleteSurface: { surfaceId: 'loading-indicator' } },
     { deleteSurface: { surfaceId: 'progressive-demo' } },
-    ...createInitialCommands(),
   );
-  startBatches();
+  reloadTimer = window.setTimeout(() => {
+    commands.value = [];
+    sessionKey.value += 1;
+    startHeader();
+  }, 50);
 };
 
 onMounted(startHeader);
@@ -163,6 +171,7 @@ onUnmounted(() => {
   if (headerTimer) window.clearInterval(headerTimer);
   if (footerTimer) window.clearInterval(footerTimer);
   if (batchTimer) window.clearTimeout(batchTimer);
+  if (reloadTimer) window.clearTimeout(reloadTimer);
 });
 </script>
 
@@ -182,6 +191,7 @@ onUnmounted(() => {
     <div style="white-space: pre-wrap; line-height: 1.7; font-size: 14px; color: #595959">{{ headerText }}</div>
 
     <XCard.Box
+      :key="sessionKey"
       :commands="commands"
       :components="{ ProductCard, ProductContainer, LoadingIndicator }"
     >
