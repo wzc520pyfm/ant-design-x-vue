@@ -1,117 +1,76 @@
 <script setup lang="ts">
-import { defineComponent, h, ref } from 'vue';
-import { registerCatalog, XCard, type ActionPayload } from '@ant-design-x-vue/x-card';
+import { onMounted, ref } from 'vue';
+import {
+  registerCatalog,
+  XCard,
+  type ActionPayload,
+  type XAgentCommand_v0_9,
+} from '@ant-design-x-vue/x-card';
+import {
+  CATALOGS,
+  FormCard,
+  FormInput,
+  SubmitButton,
+  Title,
+} from './_shared';
 
-registerCatalog({
-  $id: 'local://action-context',
-  catalogId: 'local://action-context',
-  components: {
-    Column: { type: 'object' },
-    Field: { type: 'object', properties: { label: { type: 'string' }, action: { type: 'object' } } },
-    Submit: { type: 'object', properties: { text: { type: 'string' }, action: { type: 'object' } } },
-  },
-});
+registerCatalog(CATALOGS.action);
 
-const Column = defineComponent({
-  name: 'Column',
-  setup(_, { slots }) {
-    return () => h('div', { style: { display: 'grid', gap: '12px', maxWidth: '360px' } }, slots.default?.());
-  },
-});
+const commands = ref<XAgentCommand_v0_9[]>([]);
+const logs = ref<string[]>([]);
+const resolvedTip = ref('');
 
-const Field = defineComponent({
-  name: 'Field',
-  props: {
-    label: { type: String, default: '' },
-    action: { type: Object, default: undefined },
-    onAction: { type: Function, default: undefined },
-  },
-  setup(props) {
-    return () =>
-      h('label', { style: { display: 'grid', gap: '4px', fontSize: '14px' } }, [
-        props.label,
-        h('input', {
-          style: { padding: '6px 8px', border: '1px solid #d9d9d9', borderRadius: '6px' },
-          onInput: (e: Event) => {
-            const value = (e.target as HTMLInputElement).value;
-            const context: Record<string, any> = {};
-            Object.keys(props.action?.event?.context || {}).forEach((key) => {
-              context[key] = value;
-            });
-            props.onAction?.(props.action?.event?.name || 'change', context);
-          },
-        }),
-      ]);
-  },
-});
+const append = (...next: XAgentCommand_v0_9[]) => {
+  commands.value = [...commands.value, ...next];
+};
 
-const Submit = defineComponent({
-  name: 'Submit',
-  props: {
-    text: { type: String, default: '提交' },
-    action: { type: Object, default: undefined },
-    onAction: { type: Function, default: undefined },
-  },
-  setup(props) {
-    return () =>
-      h(
-        'button',
-        {
-          type: 'button',
-          style: {
-            padding: '8px 12px',
-            border: 0,
-            borderRadius: '6px',
-            background: '#1677ff',
-            color: '#fff',
-            cursor: 'pointer',
-          },
-          onClick: () => props.onAction?.(props.action?.event?.name || 'submit', {}),
-        },
-        props.text,
-      );
-  },
-});
-
-const lastAction = ref<ActionPayload | null>(null);
-
-const commands = [
-  { version: 'v0.9' as const, createSurface: { surfaceId: 'form', catalogId: 'local://action-context' } },
+const createFormCommands = (): XAgentCommand_v0_9[] => [
   {
-    version: 'v0.9' as const,
+    version: 'v0.9',
+    createSurface: {
+      surfaceId: 'form',
+      catalogId: 'local://action_resolve_catalog',
+    },
+  },
+  {
+    version: 'v0.9',
     updateComponents: {
       surfaceId: 'form',
       components: [
-        { id: 'root', component: 'Column', children: ['username', 'email', 'go'] },
+        { id: 'title', component: 'Title', text: '用户注册表单', variant: 'h2' },
         {
-          id: 'username',
-          component: 'Field',
+          id: 'username-input',
+          component: 'FormInput',
           label: '用户名',
           action: {
             event: {
-              name: 'field-change',
-              context: { username: { path: '/form/username', label: '用户名' } },
+              name: 'agent:send_context_text',
+              context: {
+                username: { path: '/form/username', label: '用户名' },
+              },
             },
           },
         },
         {
-          id: 'email',
-          component: 'Field',
+          id: 'email-input',
+          component: 'FormInput',
           label: '邮箱',
           action: {
             event: {
-              name: 'field-change',
-              context: { email: { path: '/form/email', label: '邮箱' } },
+              name: 'agent:send_context_text',
+              context: {
+                email: { path: '/form/email', label: '邮箱' },
+              },
             },
           },
         },
         {
-          id: 'go',
-          component: 'Submit',
-          text: '提交（空 context，由 Card 解析 path）',
+          id: 'submit-btn',
+          component: 'SubmitButton',
+          text: '提交表单',
           action: {
             event: {
-              name: 'submit',
+              name: 'agent:send_context_text',
               context: {
                 username: { path: '/form/username', label: '用户名' },
                 email: { path: '/form/email', label: '邮箱' },
@@ -119,19 +78,83 @@ const commands = [
             },
           },
         },
+        {
+          id: 'root',
+          component: 'FormCard',
+          children: ['title', 'username-input', 'email-input', 'submit-btn'],
+        },
       ],
     },
   },
+  {
+    version: 'v0.9',
+    updateDataModel: {
+      surfaceId: 'form',
+      path: '/form',
+      value: { username: '', email: '' },
+    },
+  },
 ];
+
+const handleAction = (payload: ActionPayload) => {
+  const log = `[${payload.name}]\n${JSON.stringify(payload.context, null, 2)}`;
+  logs.value = [log, ...logs.value].slice(0, 4);
+  resolvedTip.value = Object.values(payload.context || {}).some(
+    (value) => value && typeof value === 'object' && 'value' in value,
+  )
+    ? 'Path 引用已自动解析为实际值'
+    : '';
+};
+
+const reset = () => {
+  logs.value = [];
+  resolvedTip.value = '';
+  append(
+    { version: 'v0.9', deleteSurface: { surfaceId: 'form' } },
+    ...createFormCommands(),
+  );
+};
+
+onMounted(() => append(...createFormCommands()));
 </script>
 
 <template>
   <div>
-    <XCard.Box :commands="commands" :components="{ Column, Field, Submit }" :on-action="(p) => (lastAction = p)">
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px">
+      <button
+        type="button"
+        style="padding: 7px 13px; border: 0; border-radius: 7px; background: #fff; border: 1px solid #d9d9d9; cursor: pointer"
+        @click="reset"
+      >
+        重置
+      </button>
+      <span style="color: #8c8c8c; font-size: 13px">填写表单后点击提交，观察 onAction 回调中 context 的变化</span>
+    </div>
+
+    <XCard.Box
+      :commands="commands"
+      :components="{ FormCard, Title, FormInput, SubmitButton }"
+      :on-action="handleAction"
+    >
       <XCard.Card id="form" />
     </XCard.Box>
-    <pre v-if="lastAction" style="margin-top: 16px; padding: 12px; background: #f6f6f6; border-radius: 8px">{{
-      JSON.stringify(lastAction, null, 2)
-    }}</pre>
+
+    <p v-if="resolvedTip" style="margin: 12px 0 0; color: #52c41a; font-size: 13px">
+      {{ resolvedTip }}
+    </p>
+    <div style="margin-top: 16px">
+      <strong style="font-size: 13px">onAction 回调日志（path 引用已解析）：</strong>
+      <div
+        v-if="logs.length"
+        style="margin-top: 8px; max-height: 220px; overflow: auto; border: 1px solid #f0f0f0; border-radius: 8px"
+      >
+        <pre
+          v-for="(log, index) in logs"
+          :key="index"
+          style="margin: 0; padding: 10px 12px; border-bottom: 1px solid #f5f5f5; font-size: 12px; white-space: pre-wrap"
+        >{{ log }}</pre>
+      </div>
+      <p v-else style="color: #8c8c8c; font-size: 13px">暂无日志，请填写表单后提交</p>
+    </div>
   </div>
 </template>

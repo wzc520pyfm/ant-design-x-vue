@@ -1,96 +1,202 @@
 <script setup lang="ts">
-import { defineComponent, h, onMounted, onUnmounted, ref } from 'vue';
-import { registerCatalog, XCard, type XAgentCommand_v0_9 } from '@ant-design-x-vue/x-card';
+import { onMounted, onUnmounted, ref } from 'vue';
+import {
+  registerCatalog,
+  XCard,
+  type XAgentCommand_v0_9,
+} from '@ant-design-x-vue/x-card';
+import {
+  CATALOGS,
+  LoadingProgress,
+  RESTAURANT_DATA,
+  RestaurantCard,
+  RestaurantList,
+  StreamContainer,
+  TextBlock,
+  type RestaurantItem,
+} from './_shared';
 
-registerCatalog({
-  $id: 'local://streaming',
-  catalogId: 'local://streaming',
-  components: {
-    Column: { type: 'object' },
-    Text: { type: 'object', properties: { text: { type: 'string' } } },
-    List: { type: 'object', properties: { items: { type: 'array' } } },
+registerCatalog(CATALOGS.streaming);
+
+const INTRO_TEXT = `Hello! I'm your food recommendation assistant 🍽️
+
+Based on your location and preferences, I'm selecting the best restaurants nearby for you...
+
+Here are my recommendation criteria:
+
+1. **Distance First**: Prioritizing restaurants within 15 minutes walking distance
+2. **Quality Guaranteed**: Selecting only restaurants with ratings above 4.5
+3. **Diverse Cuisines**: Covering Chinese, Japanese, Western, and more
+
+Generating personalized recommendations for you...`;
+
+const commands = ref<XAgentCommand_v0_9[]>([]);
+const introText = ref('');
+let textTimer: number | undefined;
+let progressTimer: number | undefined;
+
+const append = (...next: XAgentCommand_v0_9[]) => {
+  commands.value = [...commands.value, ...next];
+};
+
+const createSurfaceCommands = (): XAgentCommand_v0_9[] => [
+  {
+    version: 'v0.9',
+    createSurface: {
+      surfaceId: 'recommendation',
+      catalogId: 'local://restaurant_streaming_catalog.json',
+    },
   },
-});
-
-const Column = defineComponent({
-  name: 'Column',
-  setup(_, { slots }) {
-    return () => h('div', { style: { display: 'grid', gap: '8px' } }, slots.default?.());
-  },
-});
-
-const Text = defineComponent({
-  name: 'Text',
-  props: { text: { type: String, default: '' } },
-  setup(props) {
-    return () => h('p', { style: { margin: 0, minHeight: '1.5em' } }, props.text);
-  },
-});
-
-const List = defineComponent({
-  name: 'List',
-  props: { items: { type: Array, default: () => [] } },
-  setup(props) {
-    return () =>
-      h(
-        'ul',
-        { style: { margin: 0, paddingLeft: '20px' } },
-        (props.items as string[]).map((item) => h('li', { key: item }, item)),
-      );
-  },
-});
-
-const fullText = '正在为你检索咖啡馆：先看评分，再看步行距离，最后给出推荐。';
-const fullItems = ['蓝瓶 · 4.8 · 120m', '看见咖啡 · 4.6 · 240m', '角落咖啡 · 4.5 · 380m'];
-
-const commands = ref<XAgentCommand_v0_9[]>([
-  { version: 'v0.9', createSurface: { surfaceId: 'stream', catalogId: 'local://streaming' } },
   {
     version: 'v0.9',
     updateComponents: {
-      surfaceId: 'stream',
+      surfaceId: 'recommendation',
       components: [
-        { id: 'root', component: 'Column', children: ['intro', 'places'] },
-        { id: 'intro', component: 'Text', text: { path: '/intro' } },
-        { id: 'places', component: 'List', items: { path: '/items' } },
+        { id: 'title', component: 'Text', text: 'AI Food Recommendations', variant: 'h1' },
+        {
+          id: 'progress',
+          component: 'LoadingProgress',
+          percent: { path: '/progress' },
+          status: { path: '/progressStatus' },
+        },
+        {
+          id: 'restaurant-list',
+          component: 'RestaurantList',
+          restaurants: { path: '/restaurants' },
+          loadingProgress: { path: '/progress' },
+          isStreaming: { path: '/isStreaming' },
+        },
+        {
+          id: 'root',
+          component: 'Container',
+          children: ['title', 'progress', 'restaurant-list'],
+        },
       ],
     },
   },
-  { version: 'v0.9', updateDataModel: { surfaceId: 'stream', path: '/intro', value: '' } },
-  { version: 'v0.9', updateDataModel: { surfaceId: 'stream', path: '/items', value: [] } },
-]);
+  {
+    version: 'v0.9',
+    updateDataModel: {
+      surfaceId: 'recommendation',
+      path: '/',
+      value: {
+        progress: 0,
+        progressStatus: 'active',
+        restaurants: [] as RestaurantItem[],
+        isStreaming: true,
+      },
+    },
+  },
+];
 
-let timer: number | undefined;
-onMounted(() => {
-  let i = 0;
-  timer = window.setInterval(() => {
-    i += 1;
-    const next: XAgentCommand_v0_9[] = [];
-    if (i <= fullText.length) {
-      next.push({
+const startProgress = () => {
+  let progress = 0;
+  let visibleCount = 0;
+  if (progressTimer) window.clearInterval(progressTimer);
+  progressTimer = window.setInterval(() => {
+    progress = Math.min(100, progress + 5);
+    const nextVisible = Math.ceil((progress / 100) * RESTAURANT_DATA.length);
+    if (nextVisible !== visibleCount) {
+      visibleCount = nextVisible;
+      append({
         version: 'v0.9',
-        updateDataModel: { surfaceId: 'stream', path: '/intro', value: fullText.slice(0, i) },
+        updateDataModel: {
+          surfaceId: 'recommendation',
+          path: '/restaurants',
+          value: RESTAURANT_DATA.slice(0, visibleCount),
+        },
       });
     }
-    const itemCount = Math.min(fullItems.length, Math.floor(i / 12));
-    next.push({
+    append({
       version: 'v0.9',
-      updateDataModel: { surfaceId: 'stream', path: '/items', value: fullItems.slice(0, itemCount) },
+      updateDataModel: {
+        surfaceId: 'recommendation',
+        path: '/progress',
+        value: progress,
+      },
     });
-    commands.value = [...commands.value, ...next];
-    if (i >= fullText.length && itemCount >= fullItems.length) {
-      window.clearInterval(timer);
-    }
-  }, 40);
-});
 
+    if (progress >= 100) {
+      if (progressTimer) window.clearInterval(progressTimer);
+      append(
+        {
+          version: 'v0.9',
+          updateDataModel: {
+            surfaceId: 'recommendation',
+            path: '/isStreaming',
+            value: false,
+          },
+        },
+        {
+          version: 'v0.9',
+          updateDataModel: {
+            surfaceId: 'recommendation',
+            path: '/progressStatus',
+            value: 'success',
+          },
+        },
+      );
+    }
+  }, 85);
+};
+
+const startIntro = () => {
+  if (textTimer) window.clearInterval(textTimer);
+  introText.value = '';
+  let index = 0;
+  textTimer = window.setInterval(() => {
+    index = Math.min(index + 3, INTRO_TEXT.length);
+    introText.value = INTRO_TEXT.slice(0, index);
+    if (index >= INTRO_TEXT.length) {
+      if (textTimer) window.clearInterval(textTimer);
+      append(...createSurfaceCommands());
+      startProgress();
+    }
+  }, 24);
+};
+
+const reload = () => {
+  if (progressTimer) window.clearInterval(progressTimer);
+  append(
+    { version: 'v0.9', deleteSurface: { surfaceId: 'recommendation' } },
+    ...createSurfaceCommands(),
+  );
+  startProgress();
+};
+
+onMounted(startIntro);
 onUnmounted(() => {
-  if (timer) window.clearInterval(timer);
+  if (textTimer) window.clearInterval(textTimer);
+  if (progressTimer) window.clearInterval(progressTimer);
 });
 </script>
 
 <template>
-  <XCard.Box :commands="commands" :components="{ Column, Text, List }">
-    <XCard.Card id="stream" />
-  </XCard.Box>
+  <div>
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px">
+      <button
+        type="button"
+        style="padding: 7px 13px; border: 0; border-radius: 7px; background: #1677ff; color: #fff; cursor: pointer"
+        @click="reload"
+      >
+        Recommend Again
+      </button>
+      <span style="color: #8c8c8c; font-size: 13px">文本流式输出后，推荐卡片按进度逐步出现</span>
+    </div>
+
+    <div style="white-space: pre-wrap; line-height: 1.7; font-size: 14px; color: #595959">{{ introText }}</div>
+
+    <XCard.Box
+      :commands="commands"
+      :components="{
+        Text: TextBlock,
+        LoadingProgress,
+        RestaurantCard,
+        RestaurantList,
+        Container: StreamContainer,
+      }"
+    >
+      <XCard.Card id="recommendation" />
+    </XCard.Box>
+  </div>
 </template>

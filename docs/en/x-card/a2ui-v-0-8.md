@@ -4,19 +4,67 @@
 
 v0.8 is the compatibility protocol: commands have no `version` field, and the first update implicitly creates a Surface. Prefer [A2UI v0.9](/en/x-card/a2ui-v-0-9) for new work.
 
-Vue currently ships two v0.8 demos (basic render and action context). The fuller React 2.10 showcase set (progressive loading, streaming, multi-card sync, and so on) is implemented here with v0.9 commands — see [A2UI v0.9](/en/x-card/a2ui-v-0-9).
+The eight demos below mirror the React `@ant-design/x-card` 2.10 v0.8 showcase set: coffee booking, progressive loading, streaming recommendations, file browser, multi-card cart, filter search, multi-step registration, and action-context resolution. Each scenario uses native v0.8 commands (`surfaceUpdate` / `dataModelUpdate` / `beginRendering`).
 
 ## Examples
 
-### Basic render
+### Basic usage
 
-::::demo-v2 `surfaceUpdate` + `dataModelUpdate` (`valueString` / `literalString`) + `beginRendering`.
+::::demo-v2 Coffee booking: choose a date and coffee, then confirm the order. Commands run in `surfaceUpdate` → `dataModelUpdate` → `beginRendering` order; on success the booking Surface is deleted and a result card is rendered.
 
 x-card/v08-basic
 
 ::::
 
-### Action context
+### Progressive
+
+::::demo-v2 Two coordinated Surfaces: `loading-indicator` shows progress while the product Surface appends two products per batch through repeated `surfaceUpdate` calls.
+
+x-card/v08-progressive
+
+::::
+
+### Streaming
+
+::::demo-v2 Food recommendations. Intro text streams first, then `dataModelUpdate` writes progress and restaurant lists incrementally so cards appear as progress advances.
+
+x-card/v08-streaming
+
+::::
+
+### Nested interaction
+
+::::demo-v2 File tree, file detail, and accordion panels. Selecting a file writes `selectedFile` into the dataModel; the detail card follows the same path, while panel data is stored as JSON strings in `valueMap`.
+
+x-card/v08-nested-interaction
+
+::::
+
+### Multi-card sync
+
+::::demo-v2 Product list, cart, and order summary share `/cart`. Add, quantity changes, removal, and checkout all update the dataModel, then switch to a success Surface.
+
+x-card/v08-multi-card-sync
+
+::::
+
+### Filter search
+
+::::demo-v2 Keyword, categories, price range, and minimum rating are written to `/filters`. The panel and result list read the same data and refresh after a short delay.
+
+x-card/v08-filter-search
+
+::::
+
+### Form validation
+
+::::demo-v2 Multi-step registration: basic info → security → result. Fields validate locally and write `formData` through the action context; the registration Surface is replaced by the result card.
+
+x-card/v08-form-validation
+
+::::
+
+### Action context resolve
 
 ::::demo-v2 v0.8 `action.context` is `{ key, value: { path } }[]`. Input writes the dataModel; an empty-context submit is resolved by Card.
 
