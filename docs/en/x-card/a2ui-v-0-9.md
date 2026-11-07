@@ -4,45 +4,45 @@
 
 v0.9 is the recommended protocol: every command carries `version: 'v0.9'` and uses explicit `createSurface` / `updateComponents` / `updateDataModel` / `deleteSurface`. See the [Introduction](/en/x-card/introduce) for the protocol overview.
 
-The demos below all use v0.9 commands. They cover the same showcase names as React `@ant-design/x-card` 2.10 (basic, progressive, streaming, nested interaction, multi-card sync, filter search, form validation, action-context resolve). Vue does not ship a second v0.8 command variant of each showcase.
+The eight demos below use v0.9 commands and mirror the interaction scenarios, data, and state transitions of React `@ant-design/x-card` 2.10. They keep the Vue XCard API (`:on-action`, `useXCardField`, `registerCatalog`) instead of copying React's Bubble + XMarkdown marketing shell.
 
 ## Examples
 
-### Basic
+### Basic usage
 
-::::demo-v2 Register a local catalog and render a Text card with v0.9 commands.
+::::demo-v2 Coffee booking: register a local catalog, choose a date and coffee, then confirm. Success deletes the booking Surface and creates a result card with the coffee, date, and price.
 
 x-card/basic
 
 ::::
 
-### Action context resolve
+### Progressive
 
-::::demo-v2 Typing writes into the dataModel. A submit button may send an empty context; Card resolves `{ path }` entries in `action.event.context`.
+::::demo-v2 After the welcome text streams in, eight products load in four batches. A `loading-indicator` Surface tracks progress while repeated `updateComponents` calls expand the product Surface.
 
-x-card/action-context
+x-card/progressive
 
 ::::
 
-### Streaming / incremental JSON
+### Streaming
 
-::::demo-v2 Append `updateDataModel` commands to stream incomplete text and lists into the same surface.
+::::demo-v2 AI food recommendations: intro text streams first, then progress and four restaurants are written into the dataModel. Completion turns streaming off and shows the final summary.
 
 x-card/streaming
 
 ::::
 
-### Form field validation
+### Nested interaction
 
-::::demo-v2 Custom fields use `useXCardField` for required / format checks and write back through the injected `onDataChange`.
+::::demo-v2 File tree, file detail, and accordion panels share one Surface. Selecting a file writes `/browser/selectedFile`; details and the selected state update together, and panel content is read from `/browser/panels`.
 
-x-card/form-validation
+x-card/nested-interaction
 
 ::::
 
 ### Multi-card sync
 
-::::demo-v2 The product list and cart bind the same `/cart`. `onAction` appends `updateDataModel` so both cards refresh — no extra cross-surface protocol.
+::::demo-v2 A three-column product list, cart, and order summary share `/cart`. Add, quantity changes, removal, discounts, shipping, and checkout are all supported; checkout swaps in a success card.
 
 x-card/multi-card-sync
 
@@ -50,25 +50,25 @@ x-card/multi-card-sync
 
 ### Filter search
 
-::::demo-v2 Filters are written to `/filters`. The list reads that path and filters locally.
+::::demo-v2 Ten products support keyword, multi-category, price-range, and minimum-rating filters. Filters are written to `/filters`; the result list refreshes from the same data after 300ms.
 
 x-card/filter-search
 
 ::::
 
-### Nested interaction
+### Form validation
 
-::::demo-v2 Clicking a file writes the selection into the dataModel. The detail card binds `/selectedFile`.
+::::demo-v2 Multi-step registration: basic info → security → result. Fields use `useXCardField` and write through the injected `onDataChange`; final submission replaces the Surface with a success card.
 
-x-card/nested-interaction
+x-card/form-validation
 
 ::::
 
-### Progressive loading
+### Action context resolve
 
-::::demo-v2 Batched `updateComponents` appends product nodes. The progress bar is a `LoadingIndicator` driven by props; enter animation stays inside the card with CSS.
+::::demo-v2 Typing writes into the dataModel. A submit button may send an empty context; Card resolves `{ path }` entries in `action.event.context`. The log keeps the latest four callbacks so the resolved values are visible.
 
-x-card/progressive
+x-card/action-context
 
 ::::
 

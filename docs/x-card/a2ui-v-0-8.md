@@ -2,19 +2,67 @@
 
 v0.8 是兼容协议：命令没有 `version` 字段，首次更新时会隐式创建 Surface。新项目请使用 [A2UI v0.9](/x-card/a2ui-v-0-9)。
 
-Vue 目前为 v0.8 提供了基础渲染与 action context 两个演示。React 2.10 上那一组更完整的 showcase（渐进加载、流式、多卡同步等）在本仓库里按 v0.9 命令实现，见 [A2UI v0.9](/x-card/a2ui-v-0-9)。
+下面八个演示与 React `@ant-design/x-card` 2.10 的 v0.8 showcase 对齐：咖啡预订、渐进加载、流式推荐、文件浏览器、多卡片购物车、筛选搜索、分步表单和 action context 解析。每个场景都使用原生 v0.8 命令（`surfaceUpdate` / `dataModelUpdate` / `beginRendering`），而不是复用 v0.9 的组件树。
 
 ## 代码演示
 
-### 基础渲染
+### 基础用法
 
-::::demo-v2 `surfaceUpdate` + `dataModelUpdate`（含 `valueString` / `literalString`）+ `beginRendering`。
+::::demo-v2 咖啡预订场景：选择日期与咖啡后确认订单。命令按 `surfaceUpdate` → `dataModelUpdate` → `beginRendering` 顺序执行，成功后再删除预订 Surface 并渲染结果卡片。
 
 x-card/v08-basic
 
 ::::
 
-### Action context
+### 渐进式
+
+::::demo-v2 两个 Surface 协同：`loading-indicator` 展示进度，商品 Surface 每批追加 2 个商品。后续 `surfaceUpdate` 会替换已缓存的组件树。
+
+x-card/v08-progressive
+
+::::
+
+### 流式渲染
+
+::::demo-v2 食物推荐场景。介绍文本先流式输出，随后用 `dataModelUpdate` 逐步写入进度和餐厅列表，推荐卡片随进度出现并完成收尾。
+
+x-card/v08-streaming
+
+::::
+
+### 嵌套交互
+
+::::demo-v2 文件树 + 文件详情 + 手风琴面板。点击文件后把 `selectedFile` 写回 dataModel，详情卡通过 path 绑定同步刷新；面板数据用 `valueMap` 以 JSON 字符串存储。
+
+x-card/v08-nested-interaction
+
+::::
+
+### 多卡片同步
+
+::::demo-v2 商品列表、购物车和订单摘要共享 `/cart`。加入购物车、修改数量、删除和结算都通过 `dataModelUpdate` 驱动三张卡片同步，结算后切换到成功 Surface。
+
+x-card/v08-multi-card-sync
+
+::::
+
+### 筛选搜索
+
+::::demo-v2 搜索词、分类、价格区间和最低评分共同写入 `/filters`。筛选面板与结果列表读取同一份数据，结果在短暂延迟后刷新。
+
+x-card/v08-filter-search
+
+::::
+
+### 表单验证
+
+::::demo-v2 分步注册表单：基本信息 → 安全设置 → 提交结果。字段在本地校验后通过 `action.context` 的 `formData` 路径写回，最终 Surface 被结果卡片替换。
+
+x-card/v08-form-validation
+
+::::
+
+### Action context 解析
 
 ::::demo-v2 v0.8 的 `action.context` 是 `{ key, value: { path } }[]`。输入写入 dataModel，空 context 提交时由 Card 解析。
 
