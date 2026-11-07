@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import {
   registerCatalog,
   XCard,
@@ -20,6 +20,8 @@ const HEADER_TEXT =
   'Welcome to Product Search! 🔍\n\nFind the perfect product by filtering by category, price, and rating. Results will update in real-time as you adjust filters.';
 
 const commands = ref<XAgentCommand_v0_9[]>([]);
+const sessionKey = ref(0);
+let reloadTimer: number | undefined;
 
 const append = (...next: XAgentCommand_v0_9[]) => {
   commands.value = [...commands.value, ...next];
@@ -99,13 +101,19 @@ const handleAction = (payload: ActionPayload) => {
 };
 
 const reload = () => {
-  append(
-    { version: 'v0.9', deleteSurface: { surfaceId: 'filter' } },
-    ...createFilterCommands(),
-  );
+  if (reloadTimer) window.clearTimeout(reloadTimer);
+  append({ version: 'v0.9', deleteSurface: { surfaceId: 'filter' } });
+  reloadTimer = window.setTimeout(() => {
+    commands.value = [];
+    sessionKey.value += 1;
+    append(...createFilterCommands());
+  }, 50);
 };
 
 onMounted(() => append(...createFilterCommands()));
+onUnmounted(() => {
+  if (reloadTimer) window.clearTimeout(reloadTimer);
+});
 </script>
 
 <template>
@@ -126,6 +134,7 @@ onMounted(() => append(...createFilterCommands()));
     </div>
 
     <XCard.Box
+      :key="sessionKey"
       :commands="commands"
       :components="{
         FilterPanel,

@@ -22,7 +22,9 @@ const ORDER_CONFIRMATION =
 const commands = ref<XAgentCommand_v0_8[]>([]);
 const headerText = ref('');
 const confirmation = ref('');
+const sessionKey = ref(0);
 let textTimer: number | undefined;
+let reloadTimer: number | undefined;
 
 const append = (...next: XAgentCommand_v0_8[]) => {
   commands.value = [...commands.value, ...next];
@@ -179,17 +181,25 @@ const handleAction = (payload: ActionPayload) => {
 };
 
 const reload = () => {
+  if (textTimer) window.clearInterval(textTimer);
+  if (reloadTimer) window.clearTimeout(reloadTimer);
   confirmation.value = '';
+  headerText.value = '';
   append(
     { deleteSurface: { surfaceId: 'booking' } },
     { deleteSurface: { surfaceId: 'result' } },
-    ...createBookingCommands(),
   );
+  reloadTimer = window.setTimeout(() => {
+    commands.value = [];
+    sessionKey.value += 1;
+    startHeader();
+  }, 50);
 };
 
 onMounted(startHeader);
 onUnmounted(() => {
   if (textTimer) window.clearInterval(textTimer);
+  if (reloadTimer) window.clearTimeout(reloadTimer);
 });
 </script>
 
@@ -210,6 +220,7 @@ onUnmounted(() => {
     <p v-if="confirmation" style="margin: 10px 0; color: #52c41a; font-weight: 600">{{ confirmation }}</p>
 
     <XCard.Box
+      :key="sessionKey"
       :commands="commands"
       :components="{ Text: TextBlock, DateTimeInput, BookForm, ActionButton, CoffeeList, CoffeeResultCard }"
       :on-action="handleAction"
