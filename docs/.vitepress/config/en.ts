@@ -241,12 +241,12 @@ const skillSidebar: DefaultTheme.SidebarItem[] = [
 ]
 
 export const sidebar: DefaultTheme.Sidebar = {
-  '/design/': designSidebar,
-  '/development/': developmentSidebar,
-  '/component/': componentSidebar,
-  '/x-markdown/': markdownSidebar,
-  '/x-sdk/': sdkSidebar,
-  '/x-card/': cardSidebar,
-  '/x-skill/': skillSidebar,
-  '/playground/': playgroundSidebar,
+  '/en/design/': { base: '/en', items: designSidebar },
+  '/en/development/': { base: '/en', items: developmentSidebar },
+  '/en/component/': { base: '/en', items: componentSidebar },
+  '/en/x-markdown/': { base: '/en', items: markdownSidebar },
+  '/en/x-sdk/': { base: '/en', items: sdkSidebar },
+  '/en/x-card/': { base: '/en', items: cardSidebar },
+  '/en/x-skill/': { base: '/en', items: skillSidebar },
+  '/en/playground/': { base: '/en', items: playgroundSidebar },
 }
