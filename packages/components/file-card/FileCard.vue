@@ -16,7 +16,7 @@ import {
 import { Image } from 'ant-design-vue';
 import type { ImageProps } from 'ant-design-vue';
 import classnames from 'classnames';
-import { computed, useAttrs, useTemplateRef } from 'vue';
+import { computed, ref, useAttrs } from 'vue';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import pickAttrs from '../_util/pick-attrs';
 import { useXProviderContext } from '../x-provider';
@@ -39,7 +39,7 @@ const props = withDefaults(defineProps<FileCardProps>(), {
 });
 
 const attrs = useAttrs();
-const rootRef = useTemplateRef<HTMLDivElement>('rootRef');
+const rootRef = ref<HTMLDivElement | null>(null);
 
 defineExpose({ nativeElement: rootRef });
 
@@ -202,7 +202,7 @@ defineRender(() => {
   return wrapCSSVar(
     <div
       {...domProps.value}
-      ref="rootRef"
+      ref={rootRef}
       class={mergedCls.value}
       style={{
         ...contextConfig.value.style,

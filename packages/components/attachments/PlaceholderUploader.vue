@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import type { PlaceholderConfig, PlaceholderProps } from './interface';
 import { useAttachmentContextInject } from './context';
 import useState from '../_util/hooks/use-state';
-import { computed, isVNode, useTemplateRef } from 'vue';
+import { computed, isVNode, ref } from 'vue';
 import { Flex, Typography, Upload } from 'ant-design-vue';
 
 defineOptions({ name: 'AXAttachmentsPlaceholderUploader' });
@@ -20,7 +20,7 @@ const placeholderCls = `${prefixCls}-placeholder`;
 
 const placeholderConfig = computed(() => (placeholder || {}) as PlaceholderConfig);
 
-const uploadDraggerRef = useTemplateRef<InstanceType<typeof Upload.Dragger>>('upload-dragger');
+const uploadDraggerRef = ref<InstanceType<typeof Upload.Dragger> | null>(null);
 
 // has disabled
 const attachmentContext = useAttachmentContextInject();
@@ -102,7 +102,7 @@ defineRender(() => {
       <Upload.Dragger
         {...upload}
         showUploadList={false}
-        ref="upload-dragger"
+        ref={uploadDraggerRef}
         style={{ padding: 0, border: 0, background: 'transparent' }}
       >
         {node.value}

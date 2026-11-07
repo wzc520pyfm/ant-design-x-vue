@@ -22,7 +22,6 @@ import {
   computed,
   type HTMLAttributes,
   mergeProps,
-  onWatcherCleanup,
   ref,
   unref,
   useAttrs,
@@ -98,9 +97,9 @@ const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
 // ============================ Typing ============================
 const [initialized, setInitialized] = useState(false);
 
-watchPostEffect(() => {
+watchPostEffect((onCleanup) => {
   setInitialized(true);
-  onWatcherCleanup(() => {
+  onCleanup(() => {
     setInitialized(false);
   });
 });

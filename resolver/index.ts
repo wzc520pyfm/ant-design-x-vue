@@ -30,12 +30,18 @@ const primitiveNames = new Set<string>([
   'Attachments',
   'Bubble',
   'Conversations',
+  'FileCard',
+  'Folder',
   'Prompts',
   'Sender',
+  'Sources',
   'Suggestion',
   'Theme',
+  'Think',
   'ThoughtChain',
   'Welcome',
+  'CodeHighlighter',
+  'Mermaid',
 ])
 
 function isAntdXVueComponent(name: string) {

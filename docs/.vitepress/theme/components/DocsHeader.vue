@@ -1,30 +1,48 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useData, useRoute } from 'vitepress'
+import type { DefaultTheme } from 'vitepress/theme'
 import VersionSwitch from './VersionSwitch.vue'
-
-const items = [
-  { key: 'design', text: '设计', href: '/design/introduce', base: '/design' },
-  { key: 'development', text: '研发', href: '/development/introduce', base: '/development' },
-  { key: 'components', text: '组件', href: '/component/overview', base: '/component' },
-  { key: 'markdown', text: 'X Markdown', href: '/x-markdown/introduce', base: '/x-markdown' },
-  { key: 'sdk', text: 'X SDK', href: '/x-sdk/introduce', base: '/x-sdk' },
-  { key: 'playground', text: '演示', href: '/playground/ultramodern', base: '/playground' },
-]
+import { useDocLocale } from '../use-doc-locale'
+import { stripLocalePrefix } from '../../config/locale-path'
 
 const route = useRoute()
-const { isDark } = useData()
+const { isDark, theme } = useData()
+const { isEn, lp, otherPath } = useDocLocale()
+
+const items = computed(() => {
+  const nav = (theme.value.nav || []) as DefaultTheme.NavItem[]
+  return nav.flatMap((item) => {
+    if (!('link' in item) || !item.link) return []
+    const href = String(item.link)
+    const logical = stripLocalePrefix(href)
+    const base = logical.split('/').slice(0, 2).join('/') || logical
+    return [{
+      key: base.replace(/^\//, '') || 'home',
+      text: item.text,
+      href: lp(logical),
+      base,
+    }]
+  })
+})
+
+const homeHref = computed(() => lp('/'))
+const switchHref = computed(() => otherPath(route.path))
+const switchLabel = computed(() => (isEn.value ? '简体中文' : 'English'))
 
 const scrollY = ref(0)
 const direction = ref<'up' | 'down' | ''>('')
 const menuOpen = ref(false)
 const narrow = ref(false)
 
-const onHome = computed(() => route.path === '/' || route.path === '/index.html')
+const onHome = computed(() => {
+  const path = route.path.replace(/\.html$/, '')
+  return path === '/' || path === '/en' || path === '/en/'
+})
 
 const activeKey = computed(() => {
-  const path = route.path
-  return items.find((item) => path === item.base || path.startsWith(`${item.base}/`))?.key
+  const path = stripLocalePrefix(route.path)
+  return items.value.find((item) => path === item.base || path.startsWith(`${item.base}/`))?.key
 })
 
 const isMini = computed(() => {
@@ -117,7 +135,7 @@ onUnmounted(() => {
       narrow,
     }"
   >
-    <a class="x-logo" href="/" aria-label="Ant Design X Vue">
+    <a class="x-logo" :href="homeHref" aria-label="Ant Design X Vue">
       <img
         src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original"
         alt=""
@@ -132,14 +150,14 @@ onUnmounted(() => {
       v-if="narrow"
       type="button"
       class="x-icon-btn"
-      aria-label="打开菜单"
+      :aria-label="isEn ? 'Open menu' : '打开菜单'"
       @click="menuOpen = !menuOpen"
     >
       <span v-if="menuOpen">✕</span>
       <span v-else>☰</span>
     </button>
 
-    <nav v-if="!narrow" class="x-nav" :class="{ mini: isMini }" aria-label="主导航">
+    <nav v-if="!narrow" class="x-nav" :class="{ mini: isMini }" :aria-label="isEn ? 'Main navigation' : '主导航'">
       <a
         v-for="item in items"
         :key="item.key"
@@ -150,11 +168,12 @@ onUnmounted(() => {
 
     <div v-if="!narrow && !actionsHidden" class="x-actions">
       <VersionSwitch />
+      <a class="x-icon-btn x-lang" :href="switchHref" :title="switchLabel" :aria-label="switchLabel">{{ isEn ? '中文' : 'EN' }}</a>
       <button
         type="button"
         class="x-icon-btn"
-        :aria-label="isDark ? '切换到浅色' : '切换到深色'"
-        :title="isDark ? '切换到浅色' : '切换到深色'"
+        :aria-label="isDark ? (isEn ? 'Switch to light theme' : '切换到浅色') : (isEn ? 'Switch to dark theme' : '切换到深色')"
+        :title="isDark ? (isEn ? 'Switch to light theme' : '切换到浅色') : (isEn ? 'Switch to dark theme' : '切换到深色')"
         @click="toggleTheme"
       >
         <svg class="theme-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
@@ -187,8 +206,9 @@ onUnmounted(() => {
       </nav>
       <div class="x-actions">
         <VersionSwitch />
-        <button type="button" class="x-icon-btn" aria-label="切换主题" @click="toggleTheme">
-          {{ isDark ? '浅色' : '深色' }}
+        <a class="x-icon-btn x-lang" :href="switchHref" :title="switchLabel" :aria-label="switchLabel" @click="menuOpen = false">{{ isEn ? '中文' : 'EN' }}</a>
+        <button type="button" class="x-icon-btn" :aria-label="isEn ? 'Toggle theme' : '切换主题'" @click="toggleTheme">
+          {{ isDark ? (isEn ? 'Light' : '浅色') : (isEn ? 'Dark' : '深色') }}
         </button>
         <a class="x-icon-btn" href="https://github.com/wzc520pyfm/ant-design-x-vue" target="_blank" rel="noreferrer">GitHub</a>
       </div>
@@ -468,5 +488,12 @@ onUnmounted(() => {
 
 .x-drawer .x-actions {
   justify-content: center;
+}
+
+.x-lang {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
 }
 </style>

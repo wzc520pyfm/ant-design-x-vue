@@ -1,6 +1,6 @@
 # 在 Nuxt 中使用
 
-适用 Nuxt 3 / Nuxt 4 + Vue 3.5+。仓库 Roadmap 里的独立 `nuxt-module` 仍在规划中；1.x 起社区通用做法是通过 `unplugin-vue-components` 的 Nuxt / Vite 集成，配合 `AntDesignXVueResolver` 做按需自动导入（与 [介绍](/development/introduce) / [在 Vite 中使用](/development/use-with-vite) 同一套解析器）。
+适用 Nuxt 3 / Nuxt 4 + Vue 3.3+。仓库 Roadmap 里的独立 `nuxt-module` 仍在规划中；1.x 起社区通用做法是通过 `unplugin-vue-components` 的 Nuxt / Vite 集成，配合 `AntDesignXVueResolver` 做按需自动导入（与 [介绍](/development/introduce) / [在 Vite 中使用](/development/use-with-vite) 同一套解析器）。
 
 不要把 React 的 Next.js 指南当成 Vue 步骤。React 对照页：https://x.ant.design/docs/react/use-with-next-cn 。
 
@@ -85,6 +85,6 @@ export default defineNuxtConfig({
 
 ## 注意
 
-- 需要先有可运行的 Vue 3.5+ Nuxt 应用；SSR 下若遇到样式闪烁，可在客户端插件里包裹 `XProvider`，或按 ant-design-vue 的 Nuxt 实践处理样式注入。
+- 需要先有可运行的 Vue 3.3+ Nuxt 应用；SSR 下若遇到样式闪烁，可在客户端插件里包裹 `XProvider`，或按 ant-design-vue 的 Nuxt 实践处理样式注入。
 - 独立官方 Nuxt Module 尚未发布；上述 Resolver 方式与 1.x 文档/示例保持一致，后续 Module 落地后会在本页补充迁移说明。
 - ant-design-vue 本身可选用 [`@ant-design-vue/nuxt`](https://www.npmjs.com/package/@ant-design-vue/nuxt)；它不替代 `ant-design-x-vue` 的 Resolver，两者可并存。

@@ -44,7 +44,7 @@ x-markdown/streaming
 
 ## API
 
-完整表格（含 `children`、`paragraphTag`、`openLinksInNewTab`、`dompurifyConfig`、`rootClassName`、`style` 等）见 [代码示例 · API](/x-markdown/examples)。此处列出常用字段：
+完整表格（含 `children`、`paragraphTag`、`openLinksInNewTab`、`dompurifyConfig`、`componentsProps`、`escapeRawHtml`、`disableDefaultStyles`、`protectCustomTagNewlines`、`disableCustomTagBlockMarkdown`、`rootClassName`、`style` 等）见 [代码示例 · API](/x-markdown/examples)。此处列出常用字段：
 
 ### XMarkdownProps
 

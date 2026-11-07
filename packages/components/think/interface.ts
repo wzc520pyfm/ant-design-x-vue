@@ -16,4 +16,10 @@ export interface ThinkProps {
   expanded?: boolean;
   onExpand?: (expand: boolean) => void;
   blink?: boolean;
+  /**
+   * @desc 隐藏时是否销毁内容节点
+   * @descEN Whether to destroy content node when hidden
+   * @default true
+   */
+  destroyOnHidden?: boolean;
 }

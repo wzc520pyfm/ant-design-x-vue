@@ -68,6 +68,9 @@ prompts/nest
 
 </ClientOnly>
 
+
+无障碍：当传入 `onItemClick` 时，可点击的提示项会渲染为原生 `button`，可用 Tab 聚焦，并通过 Enter / Space 激活；`disabled` 项会带上 `disabled` 属性。嵌套父项和未传入 `onItemClick` 的列表仍渲染为 `div`，避免出现无效按钮。
+
 ## API
 
 ### PromptsProps
@@ -84,7 +87,7 @@ prompts/nest
 | title | 显示在提示列表顶部的标题 | VNode \| string \| (() => VNode \| string) | - | - |
 | vertical | 设置为 `true` 时, 提示列表将垂直排列 | boolean | `false` | - |
 | wrap | 设置为 `true` 时, 提示列表将自动换行 | boolean | `false` | - |
-| onItemClick | 提示项被点击时的回调函数 | (info: { data: PromptProps }) => void | - | - |
+| onItemClick | 提示项被点击时的回调函数。传入后可点击项渲染为 `button`，支持键盘激活 | (info: { data: PromptProps }) => void | - | - |
 
 #### SemanticType
 

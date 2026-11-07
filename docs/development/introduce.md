@@ -21,7 +21,7 @@
 ## 安装
 
 > [!IMPORTANT]
-> 确保你的 vue 版本大于 3.5
+> 确保你的 vue 版本大于等于 3.3
 
 ### 使用 npm 或 yarn 或 pnpm 或 bun 安装
 

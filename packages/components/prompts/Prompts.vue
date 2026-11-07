@@ -119,26 +119,9 @@ defineRender(() => {
         <div class={mergedListCls.value} style={{ ...contextConfig.value.styles.list, ...styles.list }}>
           {items?.map((info, index) => {
             const isNest = info.children && info.children.length > 0;
-
-            return (
-              <div
-                key={info.key || `key_${index}`}
-                style={{ ...contextConfig.value.styles.item, ...styles.item }}
-                class={classnames(
-                  `${prefixCls}-item`,
-                  contextConfig.value.classNames.item,
-                  classNames.item,
-                  {
-                    [`${prefixCls}-item-disabled`]: info.disabled,
-                    [`${prefixCls}-item-has-nest`]: isNest,
-                  },
-                )}
-                onClick={() => {
-                  if (!isNest && !info.disabled && onItemClick) {
-                    onItemClick({ data: info });
-                  }
-                }}
-              >
+            const isInteractive = !isNest && !!onItemClick;
+            const itemInner = (
+              <>
                 {info.icon && <div class={`${prefixCls}-icon`}>{info.icon}</div>}
                 <div
                   class={classnames(
@@ -167,6 +150,38 @@ defineRender(() => {
                     />
                   )}
                 </div>
+              </>
+            );
+            const itemCls = classnames(
+              `${prefixCls}-item`,
+              contextConfig.value.classNames.item,
+              classNames.item,
+              {
+                [`${prefixCls}-item-disabled`]: info.disabled,
+                [`${prefixCls}-item-has-nest`]: isNest,
+              },
+            );
+            const itemStyle = { ...contextConfig.value.styles.item, ...styles.item };
+            const itemKey = info.key || `key_${index}`;
+
+            if (isInteractive) {
+              return (
+                <button
+                  key={itemKey}
+                  type="button"
+                  disabled={info.disabled}
+                  style={itemStyle}
+                  class={itemCls}
+                  onClick={() => onItemClick({ data: info })}
+                >
+                  {itemInner}
+                </button>
+              );
+            }
+
+            return (
+              <div key={itemKey} style={itemStyle} class={itemCls}>
+                {itemInner}
               </div>
             );
           })}

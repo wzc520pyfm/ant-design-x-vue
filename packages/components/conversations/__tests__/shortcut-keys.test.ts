@@ -63,7 +63,13 @@ describe('Conversations shortcut keys', () => {
     keydown(document, { keyCode: KeyCode.THREE, altKey: true });
     await wrapper.vm.$nextTick();
 
-    expect(onActiveChange).toHaveBeenCalledWith('demo4');
+    expect(onActiveChange).toHaveBeenCalledWith(
+      'demo4',
+      expect.objectContaining({
+        key: 'demo4',
+        label: 'In Docker, use Ollama and initialize',
+      }),
+    );
     expect(wrapper.find('.ant-conversations-item-active').text()).toContain(
       'Ollama',
     );
@@ -90,7 +96,13 @@ describe('Conversations shortcut keys', () => {
     keydown(document, { keyCode: KeyCode.THREE, altKey: true });
     await wrapper.vm.$nextTick();
 
-    expect(onActiveChange).toHaveBeenCalledWith('demo4');
+    expect(onActiveChange).toHaveBeenCalledWith(
+      'demo4',
+      expect.objectContaining({
+        key: 'demo4',
+        label: 'In Docker, use Ollama and initialize',
+      }),
+    );
   });
 
   it('warns when the same shortcut is configured twice', () => {
@@ -188,6 +200,12 @@ describe('Conversations shortcut keys', () => {
     const wrapper = track(mount(Host));
     keydown(document, { keyCode: KeyCode.ONE, altKey: true });
     await wrapper.vm.$nextTick();
-    expect(onActiveChange).toHaveBeenCalledWith('demo1');
+    expect(onActiveChange).toHaveBeenCalledWith(
+      'demo1',
+      expect.objectContaining({
+        key: 'demo1',
+        label: 'What is Ant Design X ?',
+      }),
+    );
   });
 });

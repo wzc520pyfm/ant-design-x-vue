@@ -50,6 +50,14 @@ thought-chain/controlled-collapsible
 
 :::
 
+### 折叠时销毁内容
+
+:::demo-v2 折叠时是否销毁内容节点。
+
+thought-chain/destroyOnHidden
+
+:::
+
 ### 客制化
 
 :::demo-v2 `items` 属性支持灵活的客制化配置，包括自定义图标、脚注、Think 组件嵌套等。支持 `line="dashed"` 虚线样式。
@@ -103,6 +111,7 @@ thought-chain/single-row
 | status | 思维节点状态 | 'loading' \| 'success' \| 'error' \| 'abort' | - | - |
 | collapsible | 是否可折叠 | boolean | - | - |
 | blink | 闪烁动画 | boolean | - | - |
+| destroyOnHidden | 隐藏时是否销毁内容节点 | boolean | true | - |
 
 ### ThoughtChain.Item Props
 

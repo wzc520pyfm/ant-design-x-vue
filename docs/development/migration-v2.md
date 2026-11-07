@@ -11,7 +11,7 @@ pnpm add ant-design-x-vue@2.0.0
 ## 数据流
 
 1. `useXAgent` 不再是 2.0 的模型调度方式。它仍从主包导出，只为旧示例保留。新代码用 `createOpenAIChatProvider({ baseURL, model, dangerouslyApiKey })`，或自己 `new OpenAIChatProvider({ request })`。
-2. `useXChat` 改为接收 `provider`。没有 provider 时，`onRequest` / `abort` 会抛出 `provider is required`。返回值包含 `onRequest`、`messages`、`parsedMessages`、`setMessages`、`setMessage`、`abort`、`isRequesting`、`onReload`。`isRequesting` 是 computed。
+2. `useXChat` 改为接收 `provider`。没有 provider 时，`onRequest` / `abort` 会抛出 `provider is required`。返回值包含 `onRequest`、`messages`、`parsedMessages`、`setMessages`、`setMessage`、`removeMessage`、`abort`、`isRequesting`、`isDefaultMessagesRequesting`、`onReload`、`queueRequest`。`isRequesting` / `isDefaultMessagesRequesting` 为响应式（computed / ref）。
 3. 用 `XRequest(baseURL, options)` 创建请求实例，交给 Provider 时必须 `manual: true`。1.x 的 `XRequest({ baseURL, model, dangerouslyApiKey })` 改名为 `XRequestLegacy`。
 4. 1.x 的 `useXChat({ agent })` 改名为 `useLegacyXChat`。旧文档示例已经改用这个名字，避免和 2.0 钩子撞车。
 5. `useXConversations` 管理会话列表。它和 `useXChat` 通过会话 key 共享消息。

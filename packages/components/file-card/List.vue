@@ -2,7 +2,7 @@
 import { CloseCircleFilled, LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { Button } from 'ant-design-vue';
 import classnames from 'classnames';
-import { computed, nextTick, ref, useTemplateRef, watch, TransitionGroup } from 'vue';
+import { computed, nextTick, ref, watch, TransitionGroup } from 'vue';
 import { useXProviderContext } from '../x-provider';
 import FileCard from './FileCard.vue';
 import useStyle from './style';
@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<FileCardListProps>(), {
   items: () => [],
 });
 
-const containerRef = useTemplateRef<HTMLDivElement>('containerRef');
+const containerRef = ref<HTMLDivElement | null>(null);
 
 const list = ref<any[]>([]);
 
@@ -121,7 +121,7 @@ defineRender(() => {
         class={mergedCls.value}
         dir={direction.value}
         style={{ ...props.style, ...props.styles.root }}
-        ref="containerRef"
+        ref={containerRef}
         onScroll={checkPing}
       >
         <TransitionGroup css={false} onLeave={onLeave}>

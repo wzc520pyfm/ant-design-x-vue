@@ -177,6 +177,10 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
       [`${componentCls}-menu-icon`]: {
         opacity: 0,
         fontSize: token.fontSizeXL,
+        // On mobile/touch devices, always show the menu icon since hover is not available
+        [`&${componentCls}-menu-icon-mobile`]: {
+          opacity: 0.6,
+        },
       },
       [`${componentCls}-list`]: {
         display: 'flex',
