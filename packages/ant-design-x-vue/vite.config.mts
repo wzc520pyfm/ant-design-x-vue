@@ -74,7 +74,13 @@ export default defineConfig({
         globSync(`${componentsDir}/**/*.{ts,tsx,vue,js}`, {
           absolute: false,
           cwd: componentsDir,
-          ignore: ['**/node_modules/**', '**/__tests__/**', '**/*.test.*', '**/*.spec.*']
+          ignore: [
+            '**/node_modules/**',
+            '**/__tests__/**',
+            '**/*.test.*',
+            '**/*.spec.*',
+            '**/*.d.ts',
+          ]
         })
           .map(file => [
             // 删除扩展名: nested/foo.js => nested/foo

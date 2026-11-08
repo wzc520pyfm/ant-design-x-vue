@@ -320,6 +320,12 @@ export interface XMarkdownProps {
   escapeRawHtml?: boolean;
 
   /**
+   * Enable the debug performance overlay.
+   * @default false
+   */
+  debug?: boolean;
+
+  /**
    * Disable built-in default styles for tags. Pass `true` to disable all, or
    * an array to disable specific tags (e.g. `['ul', 'ol', 'li']`).
    * @default false

@@ -1,6 +1,6 @@
 {
   "name": "@ant-design-x-vue/x-card",
-  "version": "2.0.0",
+  "version": "2.10.0",
   "description": "Vue card loader for A2UI dynamic content (port of @ant-design/x-card)",
   "keywords": [
     "A2UI",

@@ -123,6 +123,7 @@ thought-chain/single-row
 | description | Description | VNode | string | - | - |
 | status | Status | 'loading' | 'success' | 'error' | 'abort' | - | - |
 | blink | Blink animation | boolean | - | - |
+| disabled | Whether disabled | boolean | false | - |
 | onClick | Click event | () => void | - | - |
 | classNames | Semantic structure class names | Record<'root' | 'icon' | 'title' | 'description', string\> | - | - |
 | styles | Semantic structure styles | Record<'root' | 'icon' | 'title' | 'description', CSSProperties\> | - | - |

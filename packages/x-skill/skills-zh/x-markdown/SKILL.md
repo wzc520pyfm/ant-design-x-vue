@@ -1,6 +1,6 @@
 ---
 name: x-markdown
-version: 2.0.0
+version: 2.10.0
 description: 使用 @ant-design-x-vue/x-markdown 做流式 Markdown 渲染、插件、主题和 Vue 组件映射。不要用 @ant-design/x-markdown。
 ---
 

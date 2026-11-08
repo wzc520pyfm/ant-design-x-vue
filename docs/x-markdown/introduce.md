@@ -1,6 +1,6 @@
 # 介绍
 
-流式友好、可扩展的 Markdown 渲染组件。对齐 `@ant-design/x-markdown@2.0.0` 的核心能力：公式、代码高亮、Mermaid、流式语法与自定义组件映射。
+流式友好、可扩展的 Markdown 渲染组件。对齐 `@ant-design/x-markdown@2.10.0` 的核心能力：公式、代码高亮、Mermaid、流式语法与自定义组件映射。
 
 ## 何时使用
 

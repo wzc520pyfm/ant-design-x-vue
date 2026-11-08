@@ -12,7 +12,7 @@ x-markdown/plugins
 
 ## Marked extension: footnotes
 
-Next, use tokenizer / renderer to convert `[^n]` to `<footnote>`, then map it to a component with Popover (align with React 'CustomPlugin/custom.tsx').
+Next, use tokenizer / renderer to convert `[^n]` to `<footnote>`, then map it to a component with Popover.
 
 :::demo-v2 Footnote syntax plus a components mapping.
 

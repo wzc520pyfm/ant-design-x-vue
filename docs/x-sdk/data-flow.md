@@ -2,7 +2,7 @@
 
 2.0 的会话数据从 `ant-design-x-vue` 导出，实现在 `@ant-design-x-vue/x-sdk`。Markdown 渲染仍从 `@ant-design-x-vue/x-markdown` 引入。
 
-从 1.x 迁过来时先看 [从 v1 到 v2](/development/migration-v2)。下面几页按 React 2.0 的 x-sdk 目录拆开：
+从 1.x 迁过来时先看 [从 v1 到 v2](/development/migration-v2)。下面几页按 React 2.10 的 x-sdk 目录拆开：
 
 - [介绍](/x-sdk/introduce)
 - [Chat Provider](/x-sdk/chat-provider)

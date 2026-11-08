@@ -1,6 +1,7 @@
 import type { CSSProperties, VNode } from 'vue';
 import type { MermaidConfig } from 'mermaid';
 import type { ItemType } from '../actions/interface';
+import type { CodeHighlighterProps } from '../code-highlighter';
 import type { AvoidValidation } from '../type-utility';
 
 export type MermaidSemanticType = 'root' | 'header' | 'graph' | 'code';
@@ -17,12 +18,7 @@ export interface MermaidActionsConfig {
   customActions?: ItemType[];
 }
 
-/**
- * Extra options for the code view highlighter.
- * Wired to standalone CodeHighlighter after that lands (#526);
- * accepted now for API parity with React `@ant-design/x` 2.10.
- */
-export type MermaidHighlightProps = Record<string, unknown>;
+export type MermaidHighlightProps = CodeHighlighterProps['highlightProps'];
 
 export interface MermaidProps {
   /**
@@ -43,8 +39,8 @@ export interface MermaidProps {
   classNames?: Partial<Record<MermaidSemanticType, string>>;
   styles?: Partial<Record<MermaidSemanticType, CSSProperties>>;
   /**
-   * @desc 透传给代码视图高亮器的配置（当前代码视图为 pre；CodeHighlighter 接入后生效）
-   * @descEN Passed to the code-view highlighter (pre for now; CodeHighlighter later)
+   * @desc 透传给代码视图高亮器的配置
+   * @descEN Passed to the code-view highlighter
    */
   highlightProps?: MermaidHighlightProps;
   /**

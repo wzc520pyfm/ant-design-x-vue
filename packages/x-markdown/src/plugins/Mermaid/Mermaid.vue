@@ -1,3 +1,25 @@
+<script lang="ts">
+import mermaid from 'mermaid';
+
+let uuidSeq = 0;
+/** Last theme passed to mermaid.initialize — avoid re-init storms across instances. */
+let lastMermaidTheme: string | null = null;
+/**
+ * Mermaid's render/parse path is not re-entrant. Streaming demos (and multiple
+ * diagrams on one page) schedule overlapping async work; without a queue that
+ * yields `firstChild` TypeErrors and overlapping SVG nodes.
+ */
+let mermaidQueue: Promise<void> = Promise.resolve();
+function enqueueMermaid<T>(task: () => Promise<T>): Promise<T> {
+  const run = mermaidQueue.then(task, task);
+  mermaidQueue = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
+</script>
+
 <script setup lang="ts">
 import {
   computed,
@@ -18,8 +40,12 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons-vue';
-import { useLocale, useXProviderContext, Actions } from 'ant-design-x-vue';
-import mermaid from 'mermaid';
+import {
+  useLocale,
+  useXProviderContext,
+  Actions,
+  CodeHighlighter,
+} from 'ant-design-x-vue';
 import { isDarkColor } from '../is-dark-color';
 
 defineOptions({ name: 'AXMermaid' });
@@ -41,24 +67,6 @@ const props = defineProps<Props>();
 enum RenderType {
   Code = 'code',
   Image = 'image',
-}
-
-let uuidSeq = 0;
-/** Last theme passed to mermaid.initialize — avoid re-init storms across instances. */
-let lastMermaidTheme: string | null = null;
-/**
- * Mermaid's render/parse path is not re-entrant. Streaming demos (and multiple
- * diagrams on one page) schedule overlapping async work; without a queue that
- * yields `firstChild` TypeErrors and overlapping SVG nodes.
- */
-let mermaidQueue: Promise<void> = Promise.resolve();
-function enqueueMermaid<T>(task: () => Promise<T>): Promise<T> {
-  const run = mermaidQueue.then(task, task);
-  mermaidQueue = run.then(
-    () => undefined,
-    () => undefined,
-  );
-  return run;
 }
 
 const { token } = theme.useToken();
@@ -194,7 +202,7 @@ function wheelHandler(e: WheelEvent) {
   if (now - lastWheelTime < 16) return;
   lastWheelTime = now;
   const delta = e.deltaY > 0 ? -0.1 : 0.1;
-  scale.value = Math.max(0.5, Math.min(3, scale.value + delta));
+  scale.value = Math.max(0.5, scale.value + delta);
 }
 
 watch(
@@ -233,7 +241,7 @@ function handleReset() {
   position.value = { x: 0, y: 0 };
 }
 function handleZoomIn() {
-  scale.value = Math.min(scale.value + 0.2, 3);
+  scale.value += 0.2;
 }
 function handleZoomOut() {
   scale.value = Math.max(scale.value - 0.2, 0.5);
@@ -252,11 +260,30 @@ async function handleCopyCode() {
 async function handleDownload() {
   const svgElement = containerRef.value?.querySelector('svg');
   if (!svgElement) return;
-  const svgString = new XMLSerializer().serializeToString(svgElement);
+
+  const exportSvg = svgElement.cloneNode(true) as SVGSVGElement;
+  exportSvg.style.removeProperty('transform');
+  exportSvg.style.removeProperty('transform-origin');
+  exportSvg.style.removeProperty('transition');
+  exportSvg.style.removeProperty('cursor');
+
+  const viewBox = svgElement.viewBox.baseVal;
+  let width = viewBox.width || svgElement.width.baseVal.value;
+  let height = viewBox.height || svgElement.height.baseVal.value;
+  if (!width || !height) {
+    const bounds = svgElement.getBoundingClientRect();
+    width ||= bounds.width / scale.value;
+    height ||= bounds.height / scale.value;
+  }
+  if (!width || !height) return;
+
+  exportSvg.setAttribute('width', `${width}`);
+  exportSvg.setAttribute('height', `${height}`);
+
+  const svgString = new XMLSerializer().serializeToString(exportSvg);
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
-  const { width, height } = svgElement.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
   canvas.width = width * dpr;
   canvas.height = height * dpr;
@@ -355,7 +382,19 @@ onBeforeUnmount(() => {
       :class="codeCls"
       :style="codeStyle"
     >
-      <pre><code>{{ (children || '').replace(/\n$/, '') }}</code></pre>
+      <CodeHighlighter
+        lang="mermaid"
+        :header="false"
+        :children="children"
+        :styles="{
+          code: {
+            background: 'transparent',
+            border: 'none',
+            borderRadius: 0,
+            padding: 0,
+          },
+        }"
+      />
     </div>
   </div>
 </template>

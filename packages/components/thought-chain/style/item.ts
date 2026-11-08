@@ -43,8 +43,27 @@ const genThoughtChainItemStyle: GenerateStyle<ThoughtChainToken> = (
       [`&${itemCls}-rtl`]: {
         direction: 'rtl',
       },
+      [`&${itemCls}-disabled`]: {
+        cursor: 'not-allowed',
+        opacity: 0.45,
+      },
+      [`&${itemCls}-disabled:not(${itemCls}-error)`]: {
+        color: token.colorTextDisabled,
+        [`& ${itemCls}-description`]: {
+          color: token.colorTextDescription,
+        },
+        [`& ${componentCls}-status-success`]: {
+          color: token.colorTextDisabled,
+        },
+        [`& ${componentCls}-status-loading`]: {
+          color: token.colorTextDisabled,
+        },
+      },
       [`&${itemCls}-solid`]: {
         background: token.itemSolidBg,
+        [`&${itemCls}-disabled`]: {
+          background: token.colorBgContainerDisabled,
+        },
         [`&${itemCls}-click:hover`]: {
           background: token.itemSolidHoverBg,
           [`&${itemCls}-error:hover`]: {
@@ -52,8 +71,11 @@ const genThoughtChainItemStyle: GenerateStyle<ThoughtChainToken> = (
             background: token.colorErrorBgHover,
           },
         },
-        [`&${itemCls}-error`]: {
+        [`&${itemCls}-error:not(${itemCls}-disabled)`]: {
           color: token.colorError,
+          background: token.colorErrorBg,
+        },
+        [`&${itemCls}-error:where(${itemCls}-disabled)`]: {
           background: token.colorErrorBg,
         },
       },
@@ -69,8 +91,12 @@ const genThoughtChainItemStyle: GenerateStyle<ThoughtChainToken> = (
             background: token.colorErrorBgHover,
           },
         },
-        [`&${itemCls}-error`]: {
+        [`&${itemCls}-error:not(${itemCls}-disabled)`]: {
           color: token.colorError,
+          border: `${unit(token.lineWidth)} ${token.lineType} ${token.colorErrorBorder}`,
+          background: token.colorErrorBg,
+        },
+        [`&${itemCls}-error:where(${itemCls}-disabled)`]: {
           border: `${unit(token.lineWidth)} ${token.lineType} ${token.colorErrorBorder}`,
           background: token.colorErrorBg,
         },
@@ -84,12 +110,19 @@ const genThoughtChainItemStyle: GenerateStyle<ThoughtChainToken> = (
           },
         },
         [`&${itemCls}-error`]: {
-          color: token.colorError,
+          [`&:not(${itemCls}-disabled)`]: {
+            color: token.colorErrorText,
+          },
+          [`&:where(${itemCls}-disabled)`]: {
+            color: token.colorTextDisabled,
+          },
         },
       },
       [`&${itemCls}-click`]: {
-        cursor: 'pointer',
         transition: `all ${token.motionDurationMid} ${token.motionEaseInOut}`,
+      },
+      [`&${itemCls}-click:not(${itemCls}-disabled)`]: {
+        cursor: 'pointer',
       },
       [`& ${itemCls}-title`]: {
         display: 'inline-block',

@@ -1,9 +1,9 @@
 # From v1 to v2
 
-`ant-design-x-vue@2.0.0` benchmarks the data flow of React `@ant-design/x@2.0.0`. When installing the main package, the same version of `@ant-design-x-vue/x-sdk` and `@ant-design-x-vue/x-markdown` will be brought.
+`ant-design-x-vue@2.10.0` aligns with the 2.x data flow of React `@ant-design/x@2.10.0`. When installing the main package, the same version of `@ant-design-x-vue/x-sdk` and `@ant-design-x-vue/x-markdown` will be brought.
 
 ```bash
-pnpm add ant-design-x-vue@2.0.0
+pnpm add ant-design-x-vue@2.10.0
 ```
 
 `import { useXChat, XRequest, XStream, useXConversations } from 'ant-design-x-vue'` gets the SDK. `XMarkdown` is imported from `@ant-design-x-vue/x-markdown`.
@@ -51,20 +51,21 @@ For a more complete field description, see [SDK Data Flow](/en/x-sdk/data-flow).
 
 ## Publish order
 
-The versions of the three packages are all `2.0.0`:
+The main package, SDK, and Markdown are all version `2.10.0`:
 
 1. Publish `@ant-design-x-vue/x-sdk` first. It has no runtime dependencies.
-2. Re-release `ant-design-x-vue` and `@ant-design-x-vue/x-markdown`. The main package depends on `2.0.0` of the latter two, and Markdown depends on `2.0.0` of the main package.
+2. Re-release `ant-design-x-vue` and `@ant-design-x-vue/x-markdown`. The main package depends on `2.10.0` of the latter two, and Markdown depends on `2.10.0` of the main package.
+3. `@ant-design-x-vue/x-card` and `@ant-design-x-vue/x-skill` are outside this dependency chain and can be published independently in the same batch.
 
-`npm publish` itself does not check whether the dependency is already on the registry. Before the user executes `pnpm add ant-design-x-vue@2.0.0`, all three packages must have been published. The dependency version in the release package is `2.0.0`, and `workspace:*` cannot be left.
+`npm publish` itself does not check whether the dependency is already on the registry. Before the user executes `pnpm add ant-design-x-vue@2.10.0`, the main package, SDK, and Markdown must all have been published. The dependency version in the release package is `2.10.0`, and `workspace:*` cannot be left.
 
-## Intentional differences from React 2.0
+## Intentional differences from React 2.10
 
 These are Vue adaptations, not leaky implementations:
 
 - Root class name is Vue’s `class`. If the component declares `className` in addition (such as XMarkdown, Actions), both can be used.
 - The stable identifier of `FileCard.List` is placed on the `key` of the list item, not `FileCard`’s own props. Vue leaves `key` to list rendering.
-- `Bubble.List` accepts both `roles` and `role`. Use `roles` when passing from both sides. The implementation of React 2.0 only has `role`.
+- `Bubble.List` accepts both `roles` and `role`. Use `roles` when passing from both sides. The implementation of React 2.10 only has `role`.
 
 ## Components
 
@@ -75,4 +76,4 @@ These are Vue adaptations, not leaky implementations:
 
 ## Legacy pages
 
-[useXAgent](https://antd-design-x-vue.netlify.app/component/use-x-agent), [useXChat](https://antd-design-x-vue.netlify.app/component/use-x-chat), [XRequest](https://antd-design-x-vue.netlify.app/component/x-request) These three pages are in 1.x documentation site. New code is written according to [SDK data flow](/en/x-sdk/data-flow).
+[useXAgent](https://1x-ant-design-x-vue.netlify.app/component/use-x-agent), [useXChat](https://1x-ant-design-x-vue.netlify.app/component/use-x-chat), [XRequest](https://1x-ant-design-x-vue.netlify.app/component/x-request) These three pages are in 1.x documentation site. New code is written according to [SDK data flow](/en/x-sdk/data-flow).

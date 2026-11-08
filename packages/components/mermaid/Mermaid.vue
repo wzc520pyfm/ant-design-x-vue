@@ -1,3 +1,27 @@
+<script lang="tsx">
+let mermaidUid = 0;
+
+/**
+ * Mermaid's render/parse path is not re-entrant. Multiple diagrams (or streaming)
+ * schedule overlapping async work; a module-level queue avoids firstChild TypeErrors
+ * across component instances.
+ */
+let mermaidQueue: Promise<void> = Promise.resolve();
+function enqueueMermaid<T>(task: () => Promise<T>): Promise<T> {
+  const run = mermaidQueue.then(task, task);
+  mermaidQueue = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
+
+function nextMermaidId(): string {
+  mermaidUid += 1;
+  return `mermaid-${mermaidUid}`;
+}
+</script>
+
 <script setup lang="tsx">
 import {
   DownloadOutlined,
@@ -11,6 +35,7 @@ import mermaid, { type MermaidConfig } from 'mermaid';
 import {
   computed,
   h,
+  nextTick,
   onBeforeUnmount,
   ref,
   shallowRef,
@@ -25,6 +50,7 @@ import pickAttrs from '../_util/pick-attrs';
 import warning from '../_util/warning';
 import Actions from '../actions';
 import type { ItemType } from '../actions/interface';
+import CodeHighlighter from '../code-highlighter';
 import { useLocale } from '../locale';
 import locale_EN from '../locale/en_US';
 import { useXProviderContext } from '../x-provider';
@@ -43,7 +69,7 @@ const {
   style = {},
   styles = {},
   classNames = {},
-  highlightProps: _highlightProps,
+  highlightProps,
   config,
   actions = {},
   onRenderTypeChange,
@@ -60,26 +86,6 @@ const attrs = useAttrs();
 enum RenderType {
   Code = 'code',
   Image = 'image',
-}
-
-let uuid = 0;
-
-/**
- * Mermaid's render/parse path is not re-entrant. Multiple diagrams (or streaming)
- * schedule overlapping async work; a shared queue avoids firstChild TypeErrors.
- */
-let mermaidQueue: Promise<void> = Promise.resolve();
-function enqueueMermaid<T>(task: () => Promise<T>): Promise<T> {
-  const run = mermaidQueue.then(task, task);
-  mermaidQueue = run.then(
-    () => {
-      /* keep queue queue */
-    },
-    () => {
-      /* swallow rejection so the queue continues */
-    },
-  );
-  return run;
 }
 
 const [contextLocale] = useLocale('Mermaid', locale_EN.Mermaid);
@@ -111,11 +117,6 @@ function slotToText(nodes: VNode[] | undefined): string {
     .join('');
 }
 
-const codeText = computed(() => {
-  if (typeof children === 'string') return children;
-  return slotToText(slots.default?.());
-});
-
 const renderType = ref<RenderType>(RenderType.Image);
 const scale = ref(1);
 const position = ref({ x: 0, y: 0 });
@@ -124,6 +125,9 @@ const lastMousePos = ref({ x: 0, y: 0 });
 
 const latestRef = shallowRef({ code: '', type: RenderType.Image as RenderType });
 const requestRef = ref(0);
+let scheduledCode: string | undefined;
+let scheduledType: RenderType | undefined;
+let scheduledConfig: MermaidConfig | undefined;
 
 const mergedCls = computed(() =>
   classnames(
@@ -175,8 +179,7 @@ const renderDiagram = throttle(async () => {
 
   requestRef.value += 1;
   const requestId = requestRef.value;
-  uuid += 1;
-  const id = `mermaid-${uuid}`;
+  const id = nextMermaidId();
 
   try {
     await enqueueMermaid(async () => {
@@ -195,27 +198,26 @@ const renderDiagram = throttle(async () => {
   }
 }, 100);
 
-watchEffect((onCleanup) => {
-  const code = codeText.value;
-  const type = renderType.value;
-  // Also re-run when config identity changes (React deps include config).
-  void config;
+function scheduleDiagram(code: string, type: RenderType) {
   latestRef.value = { code, type };
 
-  if (type === RenderType.Code) {
+  const changed =
+    code !== scheduledCode || type !== scheduledType || config !== scheduledConfig;
+  scheduledCode = code;
+  scheduledType = type;
+  scheduledConfig = config;
+  if (!changed) return;
+
+  if (!code || type === RenderType.Code) {
     renderDiagram.cancel();
     requestRef.value += 1;
     if (containerRef.value) {
       containerRef.value.innerHTML = '';
     }
   } else {
-    renderDiagram();
+    void nextTick(() => renderDiagram());
   }
-
-  onCleanup(() => {
-    renderDiagram.cancel();
-  });
-});
+}
 
 onBeforeUnmount(() => {
   renderDiagram.cancel();
@@ -339,7 +341,7 @@ function setRenderType(value: RenderType) {
   onRenderTypeChange?.(value as MermaidRenderType);
 }
 
-function buildActionItems(): ItemType[] {
+function buildActionItems(code: string): ItemType[] {
   const {
     enableZoom = true,
     enableDownload = true,
@@ -389,14 +391,14 @@ function buildActionItems(): ItemType[] {
   } else if (enableCopy) {
     items.push({
       key: 'copy',
-      actionRender: () => <Actions.Copy text={codeText.value} />,
+      actionRender: () => <Actions.Copy text={code} />,
     });
   }
 
   return [...items, ...customActions];
 }
 
-function renderHeader() {
+function renderHeader(code: string) {
   if (slots.header) {
     return slots.header();
   }
@@ -428,13 +430,15 @@ function renderHeader() {
         value={renderType.value}
         onChange={(value) => setRenderType(value as RenderType)}
       />
-      <Actions items={buildActionItems()} />
+      <Actions items={buildActionItems(code)} />
     </div>
   );
 }
 
 defineRender(() => {
-  const text = codeText.value;
+  const text =
+    typeof children === 'string' ? children : slotToText(slots.default?.());
+  scheduleDiagram(text, renderType.value);
   if (!text) {
     return null;
   }
@@ -446,7 +450,7 @@ defineRender(() => {
       style={mergedStyle.value}
       {...domProps.value}
     >
-      {renderHeader()}
+      {renderHeader(text)}
       <div
         ref={containerRef}
         class={classnames(
@@ -470,10 +474,22 @@ defineRender(() => {
           )}
           style={{ ...contextConfig.value.styles?.code, ...styles.code }}
         >
-          {/* CodeHighlighter (#526) not on main yet — plain pre for core parity. */}
-          <pre>
-            <code>{text.replace(/\n$/, '')}</code>
-          </pre>
+          <CodeHighlighter
+            lang="mermaid"
+            header={false}
+            children={text}
+            highlightProps={highlightProps}
+            styles={{
+              code: {
+                background: 'transparent',
+                border: 'none',
+                borderRadius: 0,
+                padding: 0,
+              },
+            }}
+          >
+            {text}
+          </CodeHighlighter>
         </div>
       ) : null}
     </div>,

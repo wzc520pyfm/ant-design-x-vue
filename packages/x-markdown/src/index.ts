@@ -13,7 +13,12 @@ export {
 } from './XMarkdown/hooks';
 export { Parser, parseMarkdown, htmlToVNode } from './XMarkdown/core';
 export type { HtmlToVNodeOptions } from './XMarkdown/core';
-export { resolveStreaming, resolveTailContent, DEFAULT_TAIL_CONTENT } from './XMarkdown/utils';
+export {
+  arePropsEqualIgnoringDomNode,
+  resolveStreaming,
+  resolveTailContent,
+  DEFAULT_TAIL_CONTENT,
+} from './XMarkdown/utils';
 export { StreamCacheTokenType } from './XMarkdown/interface';
 export type {
   AnimationConfig,

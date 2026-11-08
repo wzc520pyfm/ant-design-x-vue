@@ -34,7 +34,7 @@ const shell = usePlaygroundShell('720px', '16px');
 const chat = useMockChat((question) => [
   `关于 **${question}**：`,
   '',
-  '这里对齐 React 2.0 百宝箱样板间的版面：Welcome、提示词、思考和思维链。',
+  '这里对齐 React 2.10 百宝箱样板间的版面：Welcome、提示词、思考和思维链。',
   '`tbox-nodejs-sdk` 只能在 Node 里跑，文档页用本地回复代替真实百宝箱会话。',
 ].join('\n'));
 

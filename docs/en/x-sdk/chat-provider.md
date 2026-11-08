@@ -4,7 +4,7 @@ The Provider is handed over to `useXChat`, which is responsible for grouping req
 
 ## createOpenAIChatProvider
 
-This is the entry point of 1.x `useXAgent({ baseURL, model, dangerouslyApiKey | key })` in 2.0. React 2.0 deleted `useXAgent` and directly used `new OpenAIChatProvider`. Vue retains the default shape to prevent the caller from handwriting the header.
+This is the entry point of 1.x `useXAgent({ baseURL, model, dangerouslyApiKey | key })` in 2.10. React 2.10 deleted `useXAgent` and directly used `new OpenAIChatProvider`. Vue retains the default shape to prevent the caller from handwriting the header.
 
 ```ts
 import { createOpenAIChatProvider, useXChat } from 'ant-design-x-vue';

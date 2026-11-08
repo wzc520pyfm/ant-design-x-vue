@@ -1,6 +1,6 @@
 ---
 name: x-card
-version: 2.0.0
+version: 2.10.0
 description: 使用 @ant-design-x-vue/x-card 构建 A2UI 动态卡片：XCard.Box / XCard.Card、v0.9 命令、数据绑定、catalog 与 action。只写 Vue SFC。
 ---
 

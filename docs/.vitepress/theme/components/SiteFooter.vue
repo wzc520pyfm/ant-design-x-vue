@@ -12,8 +12,8 @@ const { isEn, lp } = useDocLocale()
       <div>
         <strong>Ant Design X Vue</strong>
         <p>{{ isEn
-          ? 'The Vue implementation of the RICH design paradigm. Component APIs align with React 2.0 while the usage stays Vue-native.'
-          : 'RICH 设计范式的 Vue 实现。组件 API 与 React 2.0 对齐，写法保持 Vue。' }}</p>
+          ? 'The Vue implementation of the RICH design paradigm. Component APIs align with React 2.10 while the usage stays Vue-native.'
+          : 'RICH 设计范式的 Vue 实现。组件 API 与 React 2.10 对齐，写法保持 Vue。' }}</p>
       </div>
       <div>
         <strong>{{ isEn ? 'Docs' : '文档' }}</strong>

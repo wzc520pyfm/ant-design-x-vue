@@ -28,12 +28,12 @@ See the [Skills List](/en/x-skill/skills). Prompt examples live on [Prompt Templ
 
 ### Method 1: One-click installation (recommended)
 
-Works with mainstream AI IDEs such as Claude Code and Cursor. The package name is `@ant-design-x-vue/x-skill` (version `2.0.0`, aligned with the other 2.x packages in this repo). **npm publish is deferred until [#536](https://github.com/wzc520pyfm/ant-design-x-vue/issues/536) lands on `main`**. Until then, run the CLI from this repository.
+Works with mainstream AI IDEs such as Claude Code and Cursor. The package name is `@ant-design-x-vue/x-skill` (current version `2.10.0`, aligned with the other 2.x packages in this repo).
 
 #### Basic installation
 
 ```bash
-# Install the skill library globally (after publish)
+# Install the skill library globally
 npm i -g @ant-design-x-vue/x-skill
 
 # Copy skills into the current project's .cursor/skills and .claude/skills
@@ -41,14 +41,6 @@ npx @ant-design-x-vue/x-skill
 
 # After a global install you can also run
 x-skill-vue
-```
-
-Before publish, from the repository root:
-
-```bash
-node packages/x-skill/bin/cli.js
-# or
-pnpm --filter @ant-design-x-vue/x-skill exec x-skill-vue
 ```
 
 #### Options
@@ -85,7 +77,7 @@ Use this when you want to customize the copy. Prefer `skills-zh/` for Chinese or
 
 ```bash
 mkdir -p .cursor/skills
-cp -R packages/x-skill/skills/* .cursor/skills/
+cp -R node_modules/@ant-design-x-vue/x-skill/skills/* .cursor/skills/
 ```
 
 User-level: copy into `~/.cursor/skills/`.
@@ -94,7 +86,7 @@ User-level: copy into `~/.cursor/skills/`.
 
 ```bash
 mkdir -p .claude/skills
-cp -R packages/x-skill/skills/* .claude/skills/
+cp -R node_modules/@ant-design-x-vue/x-skill/skills/* .claude/skills/
 # or: ~/.claude/skills/
 ```
 

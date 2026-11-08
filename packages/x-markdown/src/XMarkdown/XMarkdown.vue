@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { computed, h, shallowRef, watch, type CSSProperties, type Component, type VNode } from 'vue';
+import {
+  Fragment,
+  computed,
+  h,
+  shallowRef,
+  watch,
+  type CSSProperties,
+  type Component,
+  type VNode,
+} from 'vue';
 import type { XMarkdownProps } from './interface';
 import { Parser, htmlToVNode, buildDomPurifyConfig } from './core';
 import DOMPurify from 'dompurify';
@@ -7,6 +16,7 @@ import { useStreaming, useTypewriter } from './hooks';
 import { resolveStreaming, resolveTailContent } from './utils';
 import classnames from 'classnames';
 import { useXProviderContext } from 'ant-design-x-vue';
+import DebugPanel from './DebugPanel';
 
 defineOptions({
   name: 'XMarkdown',
@@ -190,11 +200,12 @@ const bodyVNodes = computed((): VNode[] => {
 
 defineRender(() => {
   if (!rawContent.value && !displayContent.value) return null;
-  return h(
+  const root = h(
     'div',
     { class: mergedCls.value, style: mergedStyle.value },
     bodyVNodes.value,
   );
+  return props.debug ? h(Fragment, null, [root, h(DebugPanel)]) : root;
 });
 </script>
 
@@ -227,6 +238,28 @@ defineRender(() => {
   margin-top: 24px;
   margin-bottom: 16px;
   font-weight: 600;
+}
+.x-markdown :deep(.inline-katex .katex-display) {
+  display: inline-block;
+  margin: 0;
+  text-align: initial;
+  vertical-align: middle;
+}
+.x-markdown :deep(.inline-katex .katex-display > .katex) {
+  display: inline-block;
+  text-align: initial;
+  white-space: normal;
+}
+.x-markdown :deep(.inline-katex .katex-display > .katex > .katex-html) {
+  display: inline-block;
+  position: static;
+}
+.x-markdown :deep(.inline-katex .katex-display > .katex > .katex-html > .tag) {
+  position: static;
+}
+.x-markdown :deep(.block-katex) {
+  display: block;
+  margin: 1em 0;
 }
 :deep(.xmd-tail) {
   display: inline;

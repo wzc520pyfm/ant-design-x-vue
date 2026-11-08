@@ -150,7 +150,7 @@ module.exports = {
 - 反馈: `Actions` - 操作列表、`FileCard` - 文件卡片
 - 其他: `XProvider` - 全局配置：主题、国际化等
 
-分组与 `@ant-design/x@2.0.0` 一致，总览见 [组件](/component/overview)。
+分组与 `@ant-design/x@2.10.0` 一致，总览见 [组件](/component/overview)。
 
 ## ⚡️ 对接模型/智能体服务，AI 对话数据流管理
 

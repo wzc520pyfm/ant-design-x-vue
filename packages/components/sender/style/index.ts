@@ -30,7 +30,7 @@ export interface SenderToken extends FullToken<'Sender'> {
 }
 
 const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
-  const { componentCls, paddingSM, paddingXS, paddingXXS, lineWidth, calc } = token;
+  const { componentCls, antCls, paddingSM, paddingXS, paddingXXS, lineWidth, calc } = token;
 
   return {
     [`${componentCls}:not(${componentCls}-switch):not(${componentCls}-header)`]: {
@@ -79,6 +79,11 @@ const genSenderStyle: GenerateStyle<SenderToken> = (token) => {
         alignSelf: 'center',
         minHeight: 'auto',
         caretColor: token.colorPrimary,
+        [`&${antCls}-input-borderless`]: {
+          '&:focus-visible, &:has(input:focus-visible), &:has(textarea:focus-visible)': {
+            outline: 'none',
+          },
+        },
       },
 
       // ============================ Actions ============================

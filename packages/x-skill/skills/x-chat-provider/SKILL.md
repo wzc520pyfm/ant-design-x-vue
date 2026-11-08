@@ -1,6 +1,6 @@
 ---
 name: x-chat-provider
-version: 2.0.0
+version: 2.10.0
 description: Implement a Vue-oriented Chat Provider that adapts any streaming API to @ant-design-x-vue/x-sdk. Do not emit React packages or JSX.
 ---
 

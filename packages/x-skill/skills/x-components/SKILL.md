@@ -1,6 +1,6 @@
 ---
 name: x-components
-version: 2.0.0
+version: 2.10.0
 description: Build AI chat UIs with ant-design-x-vue — Bubble, Sender, Conversations, Prompts, ThoughtChain, Actions, Welcome, Attachments, Sources, Suggestion, Think, FileCard, CodeHighlighter, Mermaid, Folder, XProvider, Notification. Vue SFCs only.
 ---
 

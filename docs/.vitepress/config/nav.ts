@@ -10,7 +10,7 @@ function plain(text: string, href: string): DefaultTheme.SidebarItem {
   return { text, link: href }
 }
 
-/** Matches `@ant-design/x@2.0.0` `Header/Navigation.tsx` defaultItems. */
+/** Matches `@ant-design/x@2.10.0` `Header/Navigation.tsx` defaultItems. */
 export const nav: DefaultTheme.NavItem[] = [
   link('设计', '/design/introduce', '/design/'),
   link('研发', '/development/introduce', '/development/'),
@@ -160,7 +160,7 @@ const developmentSidebar: DefaultTheme.SidebarItem[] = [
     text: '其他',
     items: [
       plain('FAQ', '/development/faq'),
-      plain('2.0 核对清单', '/development/release-checklist'),
+      plain('2.10 核对清单', '/development/release-checklist'),
     ],
   },
 ]

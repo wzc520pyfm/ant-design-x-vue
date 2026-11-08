@@ -146,7 +146,7 @@ type PresetIcons = 'default' | 'excel' | 'image' | 'markdown' | 'pdf' | 'ppt' | 
 
 <vp-semantic component="Attachments"></vp-semantic>
 
-> The semantic keys for Vue `Attachments` `classNames` / `styles` are `list` / `item` / `placeholder` / `upload` (different from some FileCard semantics in React 2.0, here only records the keys actually exposed by Vue).
+> The semantic keys for Vue `Attachments` `classNames` / `styles` are `list` / `item` / `placeholder` / `upload` (different from some FileCard semantics in React 2.10, here only records the keys actually exposed by Vue).
 
 ## Design Token
 

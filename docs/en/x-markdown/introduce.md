@@ -1,6 +1,6 @@
 # Introduction
 
-Stream-friendly, extensible Markdown rendering component. Aligns with the core capabilities of `@ant-design/x-markdown@2.0.0`: formulas, code highlighting, Mermaid, stream syntax, and custom component mapping.
+Stream-friendly, extensible Markdown rendering component. Aligns with the core capabilities of `@ant-design/x-markdown@2.10.0`: formulas, code highlighting, Mermaid, stream syntax, and custom component mapping.
 
 ## When to use
 

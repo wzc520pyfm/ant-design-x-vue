@@ -86,5 +86,5 @@ export default defineNuxtConfig({
 ## 注意
 
 - 需要先有可运行的 Vue 3.3+ Nuxt 应用；SSR 下若遇到样式闪烁，可在客户端插件里包裹 `XProvider`，或按 ant-design-vue 的 Nuxt 实践处理样式注入。
-- 独立官方 Nuxt Module 尚未发布；上述 Resolver 方式与 1.x 文档/示例保持一致，后续 Module 落地后会在本页补充迁移说明。
+- 独立官方 Nuxt Module 尚未发布；上述 Resolver 方式与 1.x 文档/示例保持一致。
 - ant-design-vue 本身可选用 [`@ant-design-vue/nuxt`](https://www.npmjs.com/package/@ant-design-vue/nuxt)；它不替代 `ant-design-x-vue` 的 Resolver，两者可并存。

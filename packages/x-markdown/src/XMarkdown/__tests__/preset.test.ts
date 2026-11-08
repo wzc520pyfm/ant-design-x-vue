@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { createApp, defineComponent, h, nextTick, ref } from 'vue';
 import XMarkdown from '../XMarkdown.vue';
 import { useStreaming } from '../hooks/useStreaming';
+import { arePropsEqualIgnoringDomNode } from '../utils/memo';
 import { resolveStreaming, STREAMING_OFF, STREAMING_ON } from '../utils/streaming';
 
 describe('resolveStreaming boolean preset', () => {
@@ -64,6 +65,37 @@ describe('streaming boolean preset on XMarkdown', () => {
     });
     // Placeholder mode: open emphasis is held back (no <strong>).
     expect(wrapper.find('strong').exists()).toBe(false);
+  });
+});
+
+describe('arePropsEqualIgnoringDomNode', () => {
+  it('shallow-compares every prop except domNode', () => {
+    const previous = {
+      children: 'const value = 1;',
+      lang: 'ts',
+      streamStatus: 'loading',
+      domNode: { type: 'element', name: 'code' },
+    };
+    const next = {
+      ...previous,
+      domNode: { type: 'element', name: 'code' },
+    };
+
+    expect(arePropsEqualIgnoringDomNode(previous, next)).toBe(true);
+    expect(
+      arePropsEqualIgnoringDomNode(previous, { ...next, children: 'changed' }),
+    ).toBe(false);
+    expect(
+      arePropsEqualIgnoringDomNode(previous, { ...next, streamStatus: 'done' }),
+    ).toBe(false);
+    expect(arePropsEqualIgnoringDomNode(previous, { ...next, extra: 1 })).toBe(
+      false,
+    );
+
+    const withoutLang = { ...previous, lang: undefined };
+    expect(
+      arePropsEqualIgnoringDomNode(withoutLang, { ...next, other: 'js' }),
+    ).toBe(false);
   });
 });
 

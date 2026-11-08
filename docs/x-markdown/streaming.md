@@ -69,6 +69,24 @@ x-markdown/animation
 | delimiters | `splitBy` 为 `sentence` 时的分隔符 | `string[]` | `['。', '！', '？', '.', '!', '?', '\n']` |
 | maxSentenceChars | `splitBy` 为 `sentence` 时一个淡入单元最多字符数 | `number` | `120` |
 
+### debug
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| debug | 是否启用 FPS / 内存性能监控浮层，支持录制并查看性能图表 | `boolean` | `false` |
+
+> `debug` 仅用于开发环境。生产环境请关闭，避免额外开销和信息暴露。
+
+### 自定义组件缓存
+
+`arePropsEqualIgnoringDomNode` 与 React 2.10 同步导出：忽略每次解析都会变化的 `domNode`，浅比较其余 props。Vue 没有和 `React.memo` 同名的公开 render bailout API，因此它适合放在你自己的缓存层或第三方渲染适配器里使用；流式场景减少重复解析优先使用 `incremental`。
+
+```ts
+import { arePropsEqualIgnoringDomNode } from '@ant-design-x-vue/x-markdown';
+
+const unchanged = arePropsEqualIgnoringDomNode(previousProps, nextProps);
+```
+
 ### 未完成语法转换
 
 当 `hasNextChunk` 为 `true` 且 `incompleteMarkdown` 为 `placeholder`（默认）时，未完成的语法 token 会转成 `incomplete-<token>` 形式，原文通过 `data-raw` 返回（`encodeURIComponent`）。`incompleteMarkdown: 'complete'` 时，强调 / 行内代码 / 链接文字 / 列表项会尽量当作已完成文本立刻显示；图片、HTML、表格仍走占位逻辑。

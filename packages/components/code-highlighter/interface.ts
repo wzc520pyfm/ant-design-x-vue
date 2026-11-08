@@ -5,8 +5,7 @@ export type CodeHighlighterSemanticType = 'root' | 'header' | 'headerTitle' | 'c
 
 /**
  * Extra options for the Prism-based highlighter.
- * Aligns loosely with React `react-syntax-highlighter` `highlightProps`.
- * Unsupported keys are ignored in this first release.
+ * Mirrors the commonly used `react-syntax-highlighter` options.
  */
 export interface CodeHighlighterHighlightProps {
   showLineNumbers?: boolean;

@@ -1,6 +1,6 @@
 import { mount, flushPromises } from '@vue/test-utils';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { nextTick } from 'vue';
+import { defineComponent, h, nextTick } from 'vue';
 
 const { parse, render, initialize } = vi.hoisted(() => ({
   parse: vi.fn(async () => true),
@@ -76,6 +76,29 @@ describe('Mermaid render id', () => {
     expect(render).not.toHaveBeenCalled();
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('Mermaid render failed'));
     warn.mockRestore();
+    wrapper.unmount();
+  });
+
+  it('uses unique ids across instances with identical content', async () => {
+    const content = 'graph TD\n  A-->B';
+    const Host = defineComponent({
+      setup() {
+        return () =>
+          h('div', [
+            h(Mermaid, { children: content }),
+            h(Mermaid, { children: content }),
+          ]);
+      },
+    });
+
+    const wrapper = mount(Host, { attachTo: document.body });
+    await new Promise((r) => setTimeout(r, 300));
+    await flushPromises();
+
+    const ids = render.mock.calls.map((c) => c[0] as string);
+    expect(ids).toHaveLength(2);
+    expect(new Set(ids).size).toBe(2);
+
     wrapper.unmount();
   });
 });

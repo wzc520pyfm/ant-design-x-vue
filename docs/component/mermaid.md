@@ -53,7 +53,7 @@ mermaid/with-xmarkdown
 | header | 头部内容；`null` / `false` 时不显示默认头 | `VNode \| string \| (() => …) \| false \| null` | - | - |
 | classNames | 语义化 className | `Partial<Record<'root' \| 'header' \| 'graph' \| 'code', string>>` | - | - |
 | styles | 语义化 style | `Partial<Record<'root' \| 'header' \| 'graph' \| 'code', CSSProperties>>` | - | - |
-| highlightProps | 代码高亮配置（当前代码视图为 `pre`；接入 CodeHighlighter 后生效） | `Record<string, unknown>` | - | - |
+| highlightProps | 代码视图的高亮配置 | `Record<string, unknown>` | - | - |
 | config | `mermaid.initialize` 配置（请保持引用稳定） | `MermaidConfig` | - | - |
 | actions | 操作栏配置 | `{ enableZoom?: boolean; enableDownload?: boolean; enableCopy?: boolean; customActions?: ItemType[] }` | `{ enableZoom: true, enableDownload: true, enableCopy: true }` | - |
 | onRenderTypeChange | 视图切换回调 | `(value: 'image' \| 'code') => void` | - | - |

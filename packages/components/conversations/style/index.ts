@@ -63,6 +63,8 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
         lineHeight: token.lineHeight,
         borderRadius: token.borderRadiusLG,
         transition: `all ${token.motionDurationMid} ${token.motionEaseInOut}`,
+        // Eliminate the 300ms click delay on touch devices.
+        touchAction: 'manipulation',
         [`&:not(${componentCls}-creation-disabled):hover`]: {
           color: token.colorPrimary,
           background: token.creationHoverColor,
@@ -137,6 +139,8 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
         borderRadius: token.borderRadiusLG,
         cursor: 'pointer',
         transition: `all ${token.motionDurationMid} ${token.motionEaseInOut}`,
+        // Eliminate the 300ms click delay on touch devices.
+        touchAction: 'manipulation',
         [`&:not(${componentCls}-item-disabled):hover`]: {
           backgroundColor: token.colorBgTextHover,
         },
@@ -210,6 +214,8 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
         color: token.colorText,
         borderRadius: token.borderRadiusLG,
         transition: `all ${token.motionDurationMid} ${token.motionEaseInOut}`,
+        // Eliminate the 300ms click delay on touch devices.
+        touchAction: 'manipulation',
         '&:hover': {
           backgroundColor: token.colorBgTextHover,
         },

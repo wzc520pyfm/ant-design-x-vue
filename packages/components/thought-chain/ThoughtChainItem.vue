@@ -8,7 +8,7 @@ import { THOUGHT_CHAIN_ITEM_STATUS, type ThoughtChainItemProps } from './interfa
 import Status from './Status.vue';
 import useStyle from './style';
 
-defineOptions({ name: 'AXThoughtChainItem' });
+defineOptions({ name: 'AXThoughtChainItem', inheritAttrs: false });
 
 const {
   blink,
@@ -24,6 +24,7 @@ const {
   status,
   onClick,
   description,
+  disabled,
   ...restProps
 } = defineProps<ThoughtChainItemProps>();
 
@@ -47,7 +48,7 @@ defineRender(() => {
     <div
       ref={itemRef}
       key={id}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       style={style}
       class={classnames(
         prefixCls.value,
@@ -59,9 +60,10 @@ defineRender(() => {
         itemCls.value,
         {
           [`${itemCls.value}-${variant}`]: variant,
-          [`${itemCls.value}-click`]: onClick,
+          [`${itemCls.value}-click`]: !disabled && onClick,
           [`${itemCls.value}-error`]: status === THOUGHT_CHAIN_ITEM_STATUS.ERROR,
           [`${itemCls.value}-rtl`]: direction.value === 'rtl',
+          [`${itemCls.value}-disabled`]: disabled,
         },
       )}
       {...domProps.value}

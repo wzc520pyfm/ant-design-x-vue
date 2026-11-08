@@ -16,7 +16,7 @@ const deepThink = ref(true);
 const chat = useMockChat((question) => [
   `**${question}**`,
   '',
-  '这是 React 2.0 ultramodern 样板间的 Vue 布局：会话栏、气泡和 Sender。',
+  '这是 React 2.10 ultramodern 样板间的 Vue 布局：会话栏、气泡和 Sender。',
   '文档站没有模型密钥，回复由本地 mock 生成，不会请求 DeepSeek。',
 ].join('\n'));
 

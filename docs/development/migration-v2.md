@@ -1,9 +1,9 @@
 # 从 v1 到 v2
 
-`ant-design-x-vue@2.0.0` 对标 React `@ant-design/x@2.0.0` 的数据流。安装主包时会带上同版本的 `@ant-design-x-vue/x-sdk` 和 `@ant-design-x-vue/x-markdown`。
+`ant-design-x-vue@2.10.0` 对齐 React `@ant-design/x@2.10.0` 的 2.x 数据流。安装主包时会带上同版本的 `@ant-design-x-vue/x-sdk` 和 `@ant-design-x-vue/x-markdown`。
 
 ```bash
-pnpm add ant-design-x-vue@2.0.0
+pnpm add ant-design-x-vue@2.10.0
 ```
 
 `import { useXChat, XRequest, XStream, useXConversations } from 'ant-design-x-vue'` 拿到的是 SDK。`XMarkdown` 从 `@ant-design-x-vue/x-markdown` 引入。
@@ -51,20 +51,21 @@ const { messages, onRequest, abort, isRequesting } = useXChat({
 
 ## 发布顺序
 
-三个包的版本都是 `2.0.0`：
+主包、SDK 和 Markdown 三个包的版本都是 `2.10.0`：
 
 1. 先发布 `@ant-design-x-vue/x-sdk`。它没有运行时依赖。
-2. 再发布 `ant-design-x-vue` 和 `@ant-design-x-vue/x-markdown`。主包依赖后两者的 `2.0.0`，Markdown 依赖主包的 `2.0.0`。
+2. 再发布 `ant-design-x-vue` 和 `@ant-design-x-vue/x-markdown`。主包依赖后两者的 `2.10.0`，Markdown 依赖主包的 `2.10.0`。
+3. `@ant-design-x-vue/x-card` 与 `@ant-design-x-vue/x-skill` 不参与这组内部依赖，可在同批发布中独立执行。
 
-`npm publish` 本身不检查依赖是否已经在 registry 上。用户执行 `pnpm add ant-design-x-vue@2.0.0` 之前，三个包都要已经发布。发布包里的依赖版本是 `2.0.0`，不能留下 `workspace:*`。
+`npm publish` 本身不检查依赖是否已经在 registry 上。用户执行 `pnpm add ant-design-x-vue@2.10.0` 之前，主包、SDK 和 Markdown 都要已经发布。发布包里的依赖版本是 `2.10.0`，不能留下 `workspace:*`。
 
-## 和 React 2.0 保持的差异
+## 和 React 2.10 保持的差异
 
 这些是 Vue 适配，不是漏实现：
 
 - 根节点类名写 Vue 的 `class`。组件如果另外声明了 `className`（例如 XMarkdown、Actions），两个都能用。
 - `FileCard.List` 的稳定标识放在列表项的 `key` 上，不放进 `FileCard` 自己的 props。Vue 把 `key` 留给列表渲染。
-- `Bubble.List` 同时接受 `roles` 和 `role`。两边都传时用 `roles`。React 2.0 的实现只有 `role`。
+- `Bubble.List` 同时接受 `roles` 和 `role`。两边都传时用 `roles`。React 2.10 的实现只有 `role`。
 
 ## 组件
 
@@ -75,4 +76,4 @@ const { messages, onRequest, abort, isRequesting } = useXChat({
 
 ## 旧页面
 
-[useXAgent](https://antd-design-x-vue.netlify.app/component/use-x-agent)、[useXChat](https://antd-design-x-vue.netlify.app/component/use-x-chat)、[XRequest](https://antd-design-x-vue.netlify.app/component/x-request) 这三页在 1.x 文档站。新代码按 [SDK 数据流](/x-sdk/data-flow) 写。
+[useXAgent](https://1x-ant-design-x-vue.netlify.app/component/use-x-agent)、[useXChat](https://1x-ant-design-x-vue.netlify.app/component/use-x-chat)、[XRequest](https://1x-ant-design-x-vue.netlify.app/component/x-request) 这三页在 1.x 文档站。新代码按 [SDK 数据流](/x-sdk/data-flow) 写。

@@ -23,7 +23,12 @@ type RequestPlaceholderFn<Input, Message> = (
 
 type RequestFallbackFn<Input, MessageInfoT, Message> = (
   requestParams: Partial<Input>,
-  info: { error: Error; messages: Message[]; messageInfo: MessageInfoT },
+  info: {
+    error: Error;
+    errorInfo?: any;
+    messages: Message[];
+    messageInfo: MessageInfoT;
+  },
 ) => Message | Promise<Message>;
 
 export type RequestParams<Message> = {
@@ -84,7 +89,9 @@ export default function useXChat<
   } = config;
 
   const idRef = ref(0);
-  const requestHandlerRef = shallowRef<AbstractXRequestClass<Input, Output> | undefined>(undefined);
+  const requestHandlerRef = shallowRef<
+    AbstractXRequestClass<Input, Output, ChatMessage> | undefined
+  >(undefined);
   const isRequesting = ref<boolean>(false);
 
   const conversationKeyRef: ShallowRef<any> =
@@ -294,16 +301,16 @@ export default function useXChat<
 
     provider.injectRequest({
       onUpdate: (chunk: Output, headers: Headers) => {
-        updateMessage('updating', chunk, [], headers);
+        return updateMessage('updating', chunk, [], headers);
       },
       onSuccess: (chunks: Output[], headers: Headers) => {
         isRequesting.value = false;
         if (conversationKeyRef.value !== undefined && conversationKeyRef.value !== null) {
           IsRequestingMap.delete(conversationKeyRef.value);
         }
-        updateMessage('success', undefined as unknown as Output, chunks, headers);
+        return updateMessage('success', undefined as unknown as Output, chunks, headers);
       },
-      onError: async (error: Error) => {
+      onError: async (error: Error, errorInfo?: any) => {
         isRequesting.value = false;
         if (conversationKeyRef.value !== undefined && conversationKeyRef.value !== null) {
           IsRequestingMap.delete(conversationKeyRef.value);
@@ -319,6 +326,7 @@ export default function useXChat<
               requestFallback as RequestFallbackFn<Input, MessageInfo<ChatMessage>, ChatMessage>
             )(requestParams, {
               error,
+              errorInfo,
               messageInfo: msg as MessageInfo<ChatMessage>,
               messages: msgs,
             });
@@ -331,7 +339,11 @@ export default function useXChat<
             ),
             createMessage(fallbackMsg, error.name === 'AbortError' ? 'abort' : 'error'),
           ]);
+          return fallbackMsg;
         } else {
+          const fallbackMsg = getMessages().find(
+            (info) => info.id === loadingMsgId || info.id === updatingMsgId,
+          )?.message;
           setMessages((ori) => {
             return ori.map((info) => {
               if (info.id === loadingMsgId || info.id === updatingMsgId) {
@@ -343,6 +355,7 @@ export default function useXChat<
               return info;
             });
           });
+          return fallbackMsg;
         }
       },
     });

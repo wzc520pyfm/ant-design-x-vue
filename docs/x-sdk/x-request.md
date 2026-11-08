@@ -4,7 +4,7 @@
 
 交给 Provider 时 `manual` 必须为 `true`。回调写在 `options.callbacks`：`onUpdate`、`onSuccess`、`onError`。`run(params)` 把这次参数和 `options.params` 合并后发出去。
 
-响应按 `content-type` 分流：`text/event-stream` 走 SSE，`application/json` 走 JSON。其它类型抛出不支持的 content-type。还可以传 `timeout`、`streamTimeout`、`middlewares`、`transformStream` 和自定义 `fetch`。
+响应按 `content-type` 分流：`text/event-stream` 走 SSE，`application/json` 走 JSON。其它类型抛出不支持的 content-type。还可以传 `timeout`、`streamTimeout`、`middlewares`、`transformStream`、自定义分隔符、失败重试和自定义 `fetch`。SSE 重试会带上最近一次事件的 `Last-Event-ID`。
 
 ### 基础使用
 
@@ -74,15 +74,20 @@ type XRequestFunction<Input = AnyObject, Output = SSEOutput> = (
 | fetch | 自定义 fetch | (baseURL, options) => Promise\<Response\> | - | - |
 | middlewares | 请求前后中间件 | XFetchMiddlewares\<Input, Output\> | - | - |
 | transformStream | 流处理器 | XStreamOptions\<Output\>['transformStream'] \| ((baseURL: string, responseHeaders: Headers) => XStreamOptions\<Output\>['transformStream']) | - | - |
+| streamSeparator | 流事件分隔符；`transformStream` 有值时忽略 | string | `\n\n` | 2.2.0 |
+| partSeparator | 事件内字段分隔符；`transformStream` 有值时忽略 | string | `\n` | 2.2.0 |
+| kvSeparator | 字段名和值之间的分隔符；`transformStream` 有值时忽略 | string | `:` | 2.2.0 |
 | manual | 是否手动发请求；为 `true` 时需调用 `run` | boolean | false | - |
+| retryInterval | 请求失败后的重试间隔（毫秒）；不设置则不自动重试 | number | - | - |
+| retryTimes | 最大重试次数 | number | - | - |
 
 ### XRequestCallbacks
 
 | 属性 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| onSuccess | 成功回调 | (chunks: Output[], responseHeaders: Headers) => void | - | - |
-| onError | 错误回调 | (error: Error) => void | - | - |
-| onUpdate | 分片更新回调 | (chunk: Output, responseHeaders: Headers) => void | - | - |
+| onSuccess | 成功回调；与 Chat Provider 一起使用时额外收到组装好的消息 | (chunks: Output[], responseHeaders: Headers, message?: MessageInfo\<ChatMessage\>) => void | - | - |
+| onError | 错误回调；返回数字可覆盖本次重试间隔，与 Chat Provider 一起使用时额外收到 fallback message | (error: Error, errorInfo?: any, responseHeaders?: Headers, fallbackMsg?: MessageInfo\<ChatMessage\>) => number \| void | - | - |
+| onUpdate | 分片更新回调；与 Chat Provider 一起使用时额外收到组装好的消息 | (chunk: Output, responseHeaders: Headers, message?: MessageInfo\<ChatMessage\>) => void | - | - |
 
 ### XRequestClass
 
@@ -121,4 +126,4 @@ interface XFetchMiddlewares<Input, Output> {
 }
 ```
 
-1.x 的 `new XRequest({ baseURL, model, dangerouslyApiKey }).create` 现在叫 `XRequestLegacy`，文档在 [XRequest 请求](https://antd-design-x-vue.netlify.app/component/x-request)。
+1.x 的 `new XRequest({ baseURL, model, dangerouslyApiKey }).create` 现在叫 `XRequestLegacy`，文档在 [XRequest 请求](https://1x-ant-design-x-vue.netlify.app/component/x-request)。

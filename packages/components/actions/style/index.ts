@@ -15,17 +15,12 @@ export interface ActionsToken extends FullToken<'Actions'> {}
 const genActionsStyle: GenerateStyle<ActionsToken> = (token) => {
   const { componentCls, antCls, calc } = token;
   // NOTE:
-  // The React 2.0 style file (`.cursor/x/packages/x/components/actions/style/index.ts`)
-  // declares `${componentCls}-item` and `${componentCls}-list` as **top-level** selectors.
-  // This works in React because the React docs run cssinjs in **CSS-Var mode**, where the
-  // generated CSS has no `:where(.css-XXX)` hash scope (e.g. `.ant-actions-list { ... }`).
-  // ant-design-vue 4.x does not yet expose a CSS-Var mode, so our cssinjs runs in JS mode
-  // and produces `:where(.css-XXX).ant-actions-list { ... }` — meaning every targeted
-  // element would need the hashId class. To keep the component templates aligned with
-  // React (hashId only on the outer `.ant-actions` root), we instead nest the inner
-  // selectors as descendants of `componentCls` so the hash is required only on the root
-  // while inner elements like `${componentCls}-list` / `-item` are matched by descendant
-  // selector. Visual output is identical to React.
+  // React declares `${componentCls}-item` and `${componentCls}-list` as top-level
+  // selectors because its cssinjs runs in CSS-Var mode and emits no `:where(.css-XXX)`
+  // hash scope. ant-design-vue 4.x has no CSS-Var mode, so our cssinjs emits
+  // `:where(.css-XXX).ant-actions-list { ... }` and every targeted element would need
+  // the hashId class. To keep the hash only on the outer `.ant-actions` root, nest the
+  // inner selectors under `componentCls`; the rendered result is unchanged.
   return {
     [componentCls]: {
       [`${componentCls}-item`]: {
@@ -42,6 +37,8 @@ const genActionsStyle: GenerateStyle<ActionsToken> = (token) => {
         justifyContent: 'center',
         lineHeight: token.lineHeight,
         transition: `all ${token.motionDurationMid} ${token.motionEaseInOut}`,
+        // Eliminate the 300ms click delay on touch devices.
+        touchAction: 'manipulation',
         // DOM class is `${componentCls}-icon`, not `${componentCls}-item-icon`.
         [`${componentCls}-icon`]: {
           display: 'inline-flex',
