@@ -13,8 +13,8 @@ let mermaidQueue: Promise<void> = Promise.resolve();
 function enqueueMermaid<T>(task: () => Promise<T>): Promise<T> {
   const run = mermaidQueue.then(task, task);
   mermaidQueue = run.then(
-    () => undefined,
-    () => undefined,
+    (): void => undefined,
+    (): void => undefined,
   );
   return run;
 }
@@ -28,8 +28,6 @@ import {
   ref,
   shallowRef,
   watch,
-  type CSSProperties,
-  type VNode,
 } from 'vue';
 import classnames from 'classnames';
 import throttle from 'lodash.throttle';
@@ -47,22 +45,11 @@ import {
   CodeHighlighter,
 } from 'ant-design-x-vue';
 import { isDarkColor } from '../is-dark-color';
+import type { MermaidProps } from './interface';
 
 defineOptions({ name: 'AXMermaid' });
 
-type SemanticType = 'root' | 'header' | 'graph' | 'code';
-
-interface Props {
-  children?: string;
-  header?: VNode | null;
-  prefixCls?: string;
-  className?: string;
-  style?: CSSProperties;
-  classNames?: Partial<Record<SemanticType, string>>;
-  styles?: Partial<Record<SemanticType, CSSProperties>>;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<MermaidProps>();
 
 enum RenderType {
   Code = 'code',

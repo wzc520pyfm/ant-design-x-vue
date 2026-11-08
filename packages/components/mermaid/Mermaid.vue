@@ -10,8 +10,8 @@ let mermaidQueue: Promise<void> = Promise.resolve();
 function enqueueMermaid<T>(task: () => Promise<T>): Promise<T> {
   const run = mermaidQueue.then(task, task);
   mermaidQueue = run.then(
-    () => undefined,
-    () => undefined,
+    (): void => undefined,
+    (): void => undefined,
   );
   return run;
 }
