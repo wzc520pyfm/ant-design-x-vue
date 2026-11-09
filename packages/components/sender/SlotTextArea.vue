@@ -721,6 +721,9 @@ onMounted(() => {
     if ((slotConfigRef.value.length || senderContext.value.skill?.value) && editableRef.value) {
       renderSlotsAndSkill();
     }
+    if (senderContext.value.autofocus && !senderContext.value.disabled) {
+      editableRef.value?.focus();
+    }
   });
 });
 
