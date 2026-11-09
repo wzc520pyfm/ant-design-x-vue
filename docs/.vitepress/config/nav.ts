@@ -160,7 +160,6 @@ const developmentSidebar: DefaultTheme.SidebarItem[] = [
     text: '其他',
     items: [
       plain('FAQ', '/development/faq'),
-      plain('2.10 核对清单', '/development/release-checklist'),
     ],
   },
 ]

@@ -157,7 +157,6 @@ const developmentSidebar: DefaultTheme.SidebarItem[] = [
     text: 'Other',
     items: [
       plain('FAQ', '/development/faq'),
-      plain('2.10 checklist', '/development/release-checklist'),
     ],
   },
 ]

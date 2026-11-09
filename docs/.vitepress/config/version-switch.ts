@@ -118,7 +118,6 @@ export const V2_SITE_PATHS = [
   '/development/common-props',
   '/development/migration-v2',
   '/development/faq',
-  '/development/release-checklist',
   '/development/spec',
   '/playground/independent',
   '/playground/copilot',
