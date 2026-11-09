@@ -132,8 +132,3 @@ folderRef.value?.addNode(['src'], { title: 'new.ts', path: 'new.ts', content: ''
 folder
 
 :::
-
-## 已知差异 / 后续
-
-- **Splitter 拖拽调宽**：React 使用 antd `Splitter`；本实现提供内部轻量水平 Splitter（非公开 API），用于目录树 / 预览区拖拽调宽。`directoryTreeWith` 作为初始宽度。
-- **默认语法高亮**：React 默认使用 `react-syntax-highlighter`；本实现默认以 `<pre><code>` 展示，可通过 `previewRender`（或后续接入 `CodeHighlighter`）自定义高亮。

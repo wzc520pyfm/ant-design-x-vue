@@ -121,7 +121,7 @@ describe('XRequest Class', () => {
     expect(callbacks.onUpdate).not.toHaveBeenCalled();
     const error = new Error('Invalid input parameters');
     error.name = 'ValidationError';
-    expect(callbacks.onError).toHaveBeenCalledWith(error);
+    expect(callbacks.onError).toHaveBeenCalledWith(error, errorResponse, headers);
   });
 
   it('should handle JSON response with success false and default error fields', async () => {
@@ -143,7 +143,7 @@ describe('XRequest Class', () => {
     expect(callbacks.onUpdate).not.toHaveBeenCalled();
     const error = new Error('System error');
     error.name = 'SystemError';
-    expect(callbacks.onError).toHaveBeenCalledWith(error);
+    expect(callbacks.onError).toHaveBeenCalledWith(error, errorResponse, headers);
   });
 
   it('should handle JSON response with success false and partial error fields', async () => {
@@ -166,7 +166,7 @@ describe('XRequest Class', () => {
     expect(callbacks.onUpdate).not.toHaveBeenCalled();
     const error = new Error('Custom error message');
     error.name = 'SystemError';
-    expect(callbacks.onError).toHaveBeenCalledWith(error);
+    expect(callbacks.onError).toHaveBeenCalledWith(error, errorResponse, headers);
   });
 
   it('should create request and handle streaming response', async () => {
@@ -354,7 +354,87 @@ describe('XRequest Class', () => {
     expect(request.isStreamTimeout).toBe(false);
     await request.asyncHandler;
     expect(callbacks.onSuccess).not.toHaveBeenCalled();
-    expect(callbacks.onError).toHaveBeenCalledWith(new Error(`StreamTimeoutError`));
+    expect(callbacks.onError).toHaveBeenCalledWith(
+      new Error(`StreamTimeoutError`),
+      undefined,
+      expect.any(Object),
+    );
     expect(request.isStreamTimeout).toBe(true);
+  });
+
+  it('passes custom separators to the SSE parser', async () => {
+    const headers = {
+      get: vi.fn().mockReturnValue('text/event-stream'),
+    };
+    mockedXFetch.mockResolvedValueOnce({
+      headers,
+      body: new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode('event=message|data=hello||'));
+          controller.close();
+        },
+      }),
+    });
+    const request = XRequest(baseURL, {
+      ...options,
+      streamSeparator: '||',
+      partSeparator: '|',
+      kvSeparator: '=',
+    });
+    await request.asyncHandler;
+    expect(callbacks.onUpdate).toHaveBeenCalledWith(
+      { event: 'message', data: 'hello' },
+      headers,
+    );
+  });
+
+  it('retries with Last-Event-ID and respects retryTimes', async () => {
+    vi.useFakeTimers();
+    try {
+      const headers = {
+        get: vi.fn().mockReturnValue('text/event-stream'),
+      };
+      const retryHeaders = {
+        get: vi.fn().mockReturnValue('application/json'),
+      };
+      let pullCount = 0;
+      const failedBody = new ReadableStream({
+        pull(controller) {
+          if (pullCount === 0) {
+            pullCount += 1;
+            controller.enqueue(new TextEncoder().encode('id: 42\ndata: hello\n\n'));
+            return;
+          }
+          controller.error(new Error('Disconnected'));
+        },
+      });
+      mockedXFetch
+        .mockResolvedValueOnce({ headers, body: failedBody })
+        .mockResolvedValueOnce({
+          headers: retryHeaders,
+          json: vi.fn().mockResolvedValueOnce({ success: true }),
+        });
+      const request = XRequest(baseURL, {
+        ...options,
+        callbacks: {
+          ...callbacks,
+          onError: vi.fn(),
+        },
+        retryInterval: 100,
+        retryTimes: 1,
+      });
+
+      await request.asyncHandler;
+      expect(mockedXFetch).toHaveBeenCalledTimes(1);
+      await vi.advanceTimersByTimeAsync(100);
+      await request.asyncHandler;
+
+      expect(mockedXFetch).toHaveBeenCalledTimes(2);
+      expect(mockedXFetch.mock.calls[1][1].headers).toEqual(
+        expect.objectContaining({ 'Last-Event-ID': '42' }),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

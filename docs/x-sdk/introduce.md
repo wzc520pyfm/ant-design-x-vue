@@ -1,6 +1,6 @@
 # 介绍
 
-`@ant-design-x-vue/x-sdk` 提供 2.0 的会话数据流，主包 `ant-design-x-vue` 再导出同一套 API。
+`@ant-design-x-vue/x-sdk` 提供 2.10 的会话数据流，主包 `ant-design-x-vue` 再导出同一套 API。
 
 - `useXConversations` 管会话列表
 - `useXChat` 管一轮对话的消息、状态和重试
@@ -9,13 +9,13 @@
 - 多个会话各自一份消息，用会话 key 隔开
 
 ```bash
-pnpm add ant-design-x-vue@2.0.0
+pnpm add ant-design-x-vue@2.10.0
 ```
 
 主包会带上同版本的 `@ant-design-x-vue/x-sdk`。只装 SDK 时：
 
 ```bash
-pnpm add @ant-design-x-vue/x-sdk@2.0.0
+pnpm add @ant-design-x-vue/x-sdk@2.10.0
 ```
 
 ```ts

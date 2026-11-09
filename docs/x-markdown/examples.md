@@ -1,6 +1,6 @@
 # 代码示例
 
-用于渲染 LLM 返回的流式 Markdown。下面按 `@ant-design/x-markdown@2.0.0` 的「代码示例」排列。每一则都是 Vue 已经实现的能力。
+用于渲染 LLM 返回的流式 Markdown。下面按 `@ant-design/x-markdown@2.10.0` 的「代码示例」排列。每一则都是 Vue 已经实现的能力。
 
 可编辑的预览在 [在线体验](/x-markdown/playground)，和基础用法是同一块输入框。
 
@@ -157,6 +157,7 @@ x-markdown/think
 | protectCustomTagNewlines | 是否保护自定义标签内部的空行分段，避免段落切分破坏标签结构 | `boolean` | `false` |
 | disableCustomTagBlockMarkdown | 是否禁用自定义标签内的块级 Markdown 解析（列表、标题、引用等）；行内 Markdown 仍生效 | `boolean` | `false` |
 | escapeRawHtml | 是否将 Markdown 中的原始 HTML 转义为纯文本展示（不解析为真实 HTML），用于防 XSS 同时保留内容 | `boolean` | `false` |
+| debug | 是否启用 FPS / 内存性能监控浮层（仅开发环境使用） | `boolean` | `false` |
 | disableDefaultStyles | 是否关闭内置标签的默认样式。`true` 关闭全部，数组按标签关闭（如 `['ul', 'ol', 'li']`），用于避免默认样式污染自定义组件内部元素 | `boolean \| Array<'p' \| 'ul' \| 'ol' \| 'li' \| 'pre' \| 'code' \| 'table' \| 'th' \| 'td' \| 'img' \| 'hr'>` | `false` |
 | className | 根节点额外 CSS 类名 | `string` | - |
 | rootClassName | `className` 的别名 | `string` | - |

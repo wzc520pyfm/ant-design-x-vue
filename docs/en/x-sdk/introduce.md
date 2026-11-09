@@ -1,6 +1,6 @@
 # Introduction
 
-`@ant-design-x-vue/x-sdk` provides 2.0 conversation data flow, and the main package `ant-design-x-vue` re-exports the same set of APIs.
+`@ant-design-x-vue/x-sdk` provides the 2.10 conversation data flow, and the main package `ant-design-x-vue` re-exports the same set of APIs.
 
 - `useXConversations` manages the conversation list
 - `useXChat` manages the messages, status, and retries of a single conversation
@@ -9,13 +9,13 @@
 - Multiple conversations each have their own messages, separated by conversation key
 
 ```bash
-pnpm add ant-design-x-vue@2.0.0
+pnpm add ant-design-x-vue@2.10.0
 ```
 
 The main package includes the same version of `@ant-design-x-vue/x-sdk`. When installing only the SDK:
 
 ```bash
-pnpm add @ant-design-x-vue/x-sdk@2.0.0
+pnpm add @ant-design-x-vue/x-sdk@2.10.0
 ```
 
 ```ts

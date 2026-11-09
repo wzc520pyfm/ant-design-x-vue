@@ -150,7 +150,7 @@ Based on the RICH interaction paradigm, we provide a large number of atomic comp
 - Feedback: `Actions` - action list, `FileCard` - file card
 - Others: `XProvider` - global settings: theme, internationalization, etc.
 
-Groups are consistent with `@ant-design/x@2.0.0`; see the overview at [Components](/en/component/overview).
+Groups are consistent with `@ant-design/x@2.10.0`; see the overview at [Components](/en/component/overview).
 
 ## ⚡️ Connect model/agent services and manage AI conversation data flow
 

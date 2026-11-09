@@ -1,6 +1,6 @@
 ---
 name: x-markdown
-version: 2.0.0
+version: 2.10.0
 description: Render streaming Markdown with @ant-design-x-vue/x-markdown — XMarkdown, plugins, themes, and Vue component maps. Not @ant-design/x-markdown.
 ---
 

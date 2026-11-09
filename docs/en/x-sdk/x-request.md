@@ -4,7 +4,7 @@
 
 When handed to the Provider, `manual` must be `true`. Callbacks are written in `options.callbacks`: `onUpdate`, `onSuccess`, `onError`. `run(params)` merges these parameters with `options.params` and sends them out.
 
-Responses are routed by `content-type`: `text/event-stream` goes to SSE, `application/json` goes to JSON. Other types throw unsupported content-type. You can also pass `timeout`, `streamTimeout`, `middlewares`, `transformStream`, and a custom `fetch`.
+Responses are routed by `content-type`: `text/event-stream` goes to SSE, `application/json` goes to JSON. Other types throw unsupported content-type. You can also pass `timeout`, `streamTimeout`, `middlewares`, `transformStream`, custom separators, failure retries, and a custom `fetch`. SSE retries include the latest event id in `Last-Event-ID`.
 
 ### Basic usage
 
@@ -74,15 +74,20 @@ type XRequestFunction<Input = AnyObject, Output = SSEOutput> = (
 | fetch | Custom fetch | (baseURL, options) => Promise\<Response\> | - | - |
 | middlewares | Pre- and post-request middleware | XFetchMiddlewares\<Input, Output\> | - | - |
 | transformStream | Stream processor | XStreamOptions\<Output\>['transformStream'] | ((baseURL: string, responseHeaders: Headers) => XStreamOptions\<Output\>['transformStream']) | - | - |
+| streamSeparator | Stream event separator; ignored when `transformStream` is set | string | `\n\n` | 2.2.0 |
+| partSeparator | Field separator inside one event; ignored when `transformStream` is set | string | `\n` | 2.2.0 |
+| kvSeparator | Separator between field names and values; ignored when `transformStream` is set | string | `:` | 2.2.0 |
 | manual | Whether to send the request manually; if `true`, `run` must be called | boolean | false | - |
+| retryInterval | Retry interval after a failure, in milliseconds; disabled when omitted | number | - | - |
+| retryTimes | Maximum retry count | number | - | - |
 
 ### XRequestCallbacks
 
 | Prop | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| onSuccess | Success callback | (chunks: Output[], responseHeaders: Headers) => void | - | - |
-| onError | Error callback | (error: Error) => void | - | - |
-| onUpdate | Chunk update callback | (chunk: Output, responseHeaders: Headers) => void | - | - |
+| onSuccess | Success callback; receives the assembled message when used with a Chat Provider | (chunks: Output[], responseHeaders: Headers, message?: MessageInfo\<ChatMessage\>) => void | - | - |
+| onError | Error callback; return a number to override the retry interval for this failure. With a Chat Provider it also receives the fallback message | (error: Error, errorInfo?: any, responseHeaders?: Headers, fallbackMsg?: MessageInfo\<ChatMessage\>) => number \| void | - | - |
+| onUpdate | Chunk update callback; receives the assembled message when used with a Chat Provider | (chunk: Output, responseHeaders: Headers, message?: MessageInfo\<ChatMessage\>) => void | - | - |
 
 ### XRequestClass
 
@@ -121,4 +126,4 @@ interface XFetchMiddlewares<Input, Output> {
 }
 ```
 
-The `new XRequest({ baseURL, model, dangerouslyApiKey }).create` in 1.x is now called `XRequestLegacy`, documentation at [XRequest Request](https://antd-design-x-vue.netlify.app/component/x-request).
+The `new XRequest({ baseURL, model, dangerouslyApiKey }).create` in 1.x is now called `XRequestLegacy`, documentation at [XRequest Request](https://1x-ant-design-x-vue.netlify.app/component/x-request).

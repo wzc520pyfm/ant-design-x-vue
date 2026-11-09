@@ -17,3 +17,4 @@ export * from './sources';
 export * from './think';
 export * from './mermaid';
 export * from './folder';
+export { default as version } from './version';

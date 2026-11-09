@@ -1,6 +1,6 @@
 ---
 name: x-request
-version: 2.0.0
+version: 2.10.0
 description: Configure XRequest from @ant-design-x-vue/x-sdk — transport, auth, retries/timeouts, streaming, and Provider integration. Vue SDK APIs, not React.
 ---
 

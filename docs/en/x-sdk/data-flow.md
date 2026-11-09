@@ -2,7 +2,7 @@
 
 In version 2.0, conversation data is exported from `ant-design-x-vue`, implemented in `@ant-design-x-vue/x-sdk`. Markdown rendering is still imported from `@ant-design-x-vue/x-markdown`.
 
-When migrating from 1.x, first see [From v1 to v2](/en/development/migration-v2). The following pages are split by the x-sdk directory of React 2.0:
+When migrating from 1.x, first see [From v1 to v2](/en/development/migration-v2). The following pages are split by the x-sdk directory of React 2.10:
 
 - [Introduction](/en/x-sdk/introduce)
 - [Chat Provider](/en/x-sdk/chat-provider)

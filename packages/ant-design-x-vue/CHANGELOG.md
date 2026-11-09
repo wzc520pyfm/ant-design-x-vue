@@ -1,5 +1,45 @@
 # Changelog
 
+## v2.10.0
+
+Alignment release for React `@ant-design/x@2.10.0`.
+
+### ⚠️ Notes
+
+- Packages: `ant-design-x-vue@2.10.0`, `@ant-design-x-vue/x-sdk@2.10.0`, `@ant-design-x-vue/x-markdown@2.10.0`, `@ant-design-x-vue/x-card@2.10.0`, and `@ant-design-x-vue/x-skill@2.10.0`.
+- The main package depends on `2.10.0` of `@ant-design-x-vue/x-sdk` and `@ant-design-x-vue/x-markdown`; Markdown depends on `ant-design-x-vue@2.10.0`.
+
+### 🚀 Enhancements
+
+- Add standalone `CodeHighlighter`, `Mermaid`, and `Folder` components, including Folder split-pane resizing and the 2.8 context menu.
+- XMarkdown streaming accepts the boolean preset, incremental sections, `incompleteMarkdown: 'complete'`, typewriter output, `componentsProps`, `debug`, and `arePropsEqualIgnoringDomNode`.
+- `useXChat`, `useXConversations`, XRequest, and XStream now expose the 2.10 callback shapes and return values.
+- Add `useMobile` and mobile behavior for Actions and Conversations.
+- Add `destroyOnHidden` to Think and ThoughtChain, and `disabled` styling to ThoughtChain items.
+- Add `@ant-design-x-vue/x-card` with the A2UI v0.8/v0.9 Card and Box flows.
+- Add the Vue-native `@ant-design-x-vue/x-skill` package and bilingual documentation.
+
+### 🐛 Fixes
+
+- Mermaid no longer races concurrent renders, loses the first diagram, or caps zoom at 3x; PNG export uses the diagram viewBox instead of the transformed DOM size.
+- CodeHighlighter reuses highlighted output while streaming when code content has not changed, and statically maps common Prism grammars so Vite resolves non-core languages such as TypeScript and JSON.
+- Folder previews use CodeHighlighter by default, and the standalone Mermaid code view is highlighted.
+- Fix currency text being parsed as LaTeX, including Pandoc-compatible single-dollar delimiter rules and escaped dollars.
+- Fix XRequest leaving `isRequesting` set after JSON `{ success: false }` responses, and ignore business errors from an older request when a newer request is active.
+- XStream cancels the reader and releases its lock when iteration exits early.
+- Restore runtime-inserted Sender `slotConfig` slots when the prop reference changes.
+- Prompts options are native buttons with keyboard and disabled-state support.
+- Suggestion menus cap their height at 256px and scroll internally.
+- Sender suppresses the borderless input focus outline and cleans up SpeechRecognition on unmount.
+- Sources CarouselCard follows controlled `activeKey` changes.
+- Actions and Conversations remove the 300ms touch delay with `touch-action: manipulation`.
+- Remove the `./dist/style.css` export because the package does not emit that file.
+
+### 📖 Documentation
+
+- Upgrade install snippets, version labels, migration guidance, FAQ, and generated package references to `2.10.0`.
+- Add English locale navigation and the 2.10 component, XMarkdown, SDK, XCard, and XSkill pages.
+- Remove temporary parity notes and stale implementation follow-up sections from the published documentation.
 
 ## v2.0.0
 

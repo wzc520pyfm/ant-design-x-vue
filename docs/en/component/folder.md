@@ -134,8 +134,3 @@ folderRef.value?.addNode(['src'], { title: 'new.ts', path: 'new.ts', content: ''
 folder
 
 :::
-
-## Known gaps / follow-ups
-
-- **Splitter drag resize**: React uses antd `Splitter`. This port ships an internal lightweight horizontal Splitter (not a public export) so the tree / preview panes can be drag-resized. `directoryTreeWith` is the initial width.
-- **Default syntax highlight**: React defaults to `react-syntax-highlighter`. This port renders `<pre><code>` by default; customize highlighting with `previewRender` (or wire `CodeHighlighter` later).

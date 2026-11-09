@@ -20,18 +20,35 @@ pnpm add @ant-design-x-vue/x-sdk
 ## Usage
 
 ```typescript
-import { useXChat, useXConversations, XRequest, XStream } from '@ant-design-x-vue/x-sdk';
+import { XRequest, XStream } from '@ant-design-x-vue/x-sdk';
 
-// Use chat composable
-const { messages, addMessage } = useXChat();
+// Manual requests are required when XRequest is handed to a Chat Provider.
+const request = XRequest('https://api.example.com/chat', {
+  manual: true,
+  callbacks: {
+    onUpdate(chunk) {
+      console.log('chunk', chunk);
+    },
+    onSuccess(chunks, responseHeaders) {
+      console.log('done', chunks.length, responseHeaders.get('content-type'));
+    },
+    onError(error) {
+      console.error(error);
+    },
+  },
+});
 
-// Use conversations composable
-const { conversations, activeId, addConversation } = useXConversations();
+request.run({ prompt: 'Hello' });
 
-// Use XRequest for API calls
-const request = XRequest({ baseURL: 'https://api.example.com' });
-const data = await request.request('/endpoint');
+// XStream turns a fetch Response body into SSE chunks.
+for await (const chunk of XStream({ readableStream: response.body! })) {
+  console.log('sse', chunk);
+}
 ```
+
+`useXChat` and `useXConversations` are Vue composables. `useXChat` requires a
+Chat Provider such as `OpenAIChatProvider` or `DefaultChatProvider`; see the
+site pages for complete examples.
 
 ## License
 

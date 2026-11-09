@@ -19,6 +19,7 @@
     "@antv/gpt-vis": "^1.3.0",
     "@vueuse/core": "^13.6.0",
     "ant-design-x-vue": "workspace:*",
-    "lottie-web": "^5.13.0"
+    "lottie-web": "^5.13.0",
+    "prismjs": "^1.30.0"
   }
 }

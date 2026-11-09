@@ -1,6 +1,6 @@
 ---
 name: x-chat-provider
-version: 2.0.0
+version: 2.10.0
 description: 实现面向 Vue 的 Chat Provider，把任意流式接口适配成 @ant-design-x-vue/x-sdk 标准格式。不要输出 React 包名或 JSX。
 ---
 

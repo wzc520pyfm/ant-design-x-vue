@@ -12,7 +12,7 @@ export const V1_DOCS_ORIGIN = 'https://1x-ant-design-x-vue.netlify.app'
 export const V2_DOCS_ORIGIN = 'https://x-vue.ant.design'
 
 /** Tracks `packages/ant-design-x-vue` so the header matches the published 2.x line. */
-export const V2_VERSION_LABEL = '2.0.0'
+export const V2_VERSION_LABEL = '2.10.0'
 export const V1_VERSION_LABEL = '1.x'
 
 /** Pages that exist on the 1.x site. Anything else falls back by section. */
@@ -118,7 +118,6 @@ export const V2_SITE_PATHS = [
   '/development/common-props',
   '/development/migration-v2',
   '/development/faq',
-  '/development/release-checklist',
   '/development/spec',
   '/playground/independent',
   '/playground/copilot',

@@ -1,5 +1,14 @@
 import useMergedState from '../_util/hooks/useMergedState';
-import { computed, ref, watchEffect, type MaybeRefOrGetter, toValue, type ComputedRef, type Ref } from 'vue';
+import {
+  computed,
+  onUnmounted,
+  ref,
+  watchEffect,
+  type MaybeRefOrGetter,
+  toValue,
+  type ComputedRef,
+  type Ref,
+} from 'vue';
 
 let SpeechRecognition: any;
 
@@ -136,6 +145,25 @@ export default function useSpeech(
       }
     }
   };
+
+  onUnmounted(() => {
+    const recognition = recognitionRef.value;
+    if (!recognition) return;
+
+    // Clear handlers before stop(): stop() fires onend, which would update state
+    // after the component has already been unmounted.
+    recognition.onstart = null;
+    recognition.onend = null;
+    recognition.onresult = null;
+
+    try {
+      recognition.stop();
+    } catch {
+      // Recognition may not have started.
+    }
+
+    recognitionRef.value = null;
+  });
 
   return { speechPermission: mergedAllowSpeech, triggerSpeech, recording }
 }

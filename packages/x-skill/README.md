@@ -2,24 +2,18 @@
 
 Agent skill texts for **ant-design-x-vue**. These files teach Cursor, Claude Code, and similar IDEs how to write Vue SFCs against this repo’s packages — not React JSX against `@ant-design/x`.
 
-Package: `@ant-design-x-vue/x-skill@2.0.0`. The npm publish is deferred until the 2.0 line lands on `main` (see issue #536). Until then, run the CLI from this repository.
+Package: `@ant-design-x-vue/x-skill@2.10.0`.
 
 中文说明见 [README.zh-CN.md](./README.zh-CN.md).
 
 ## Install
 
 ```bash
-# After publish
+# Global install
 npm i -g @ant-design-x-vue/x-skill
 npx @ant-design-x-vue/x-skill
 # or, after a global install
 x-skill-vue
-```
-
-From this monorepo (before publish):
-
-```bash
-node packages/x-skill/bin/cli.js
 ```
 
 Common flags: `--cursor`, `--claude`, `--global`, `--lang zh|en`, `--force`, `--help`, `--version`.
@@ -30,7 +24,7 @@ The CLI copies `skills/` or `skills-zh/` into `.cursor/skills` and/or `.claude/s
 
 ```bash
 mkdir -p .cursor/skills
-cp -R packages/x-skill/skills-zh/* .cursor/skills/   # or skills/* for English
+cp -R node_modules/@ant-design-x-vue/x-skill/skills-zh/* .cursor/skills/   # or skills/* for English
 ```
 
 User-level: `~/.cursor/skills/` or `~/.claude/skills/`.

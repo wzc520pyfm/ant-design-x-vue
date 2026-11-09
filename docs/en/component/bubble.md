@@ -232,7 +232,7 @@ bubble/list-scroll
 | autoScroll | Automatic scrolling to the latest location | boolean | true |
 | items | Bubble Data List | BubbleItemType[] | - |
 | roles | Bubble default property configuration, equivalent to 'role'. When passing in simultaneously, 'roles' | takes precedence RoleType | - |
-| role | Same 'role' as React 2.0 'Bubble.List' | RoleType | - |
+| role | Same 'role' as React 2.10 'Bubble.List' | RoleType | - |
 | styles | Semantic styles | Record\<SemanticDOM, CSSProperties\> | - |
 | classNames | Semantic class names | Record\<SemanticDOM, string\> | - |
 | onScroll | Rolling Event Callback | (e: Event) => void | - |

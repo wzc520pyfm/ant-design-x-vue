@@ -65,17 +65,29 @@ const simulateStream = async () => {
 
 ### With Plugins
 
-```typescript
-import { XMarkdown } from '@ant-design-x-vue/x-markdown';
-import { createHighlightCodePlugin } from '@ant-design-x-vue/x-markdown/plugins/highlight-code';
-import { createLatexPlugin } from '@ant-design-x-vue/x-markdown/plugins/latex';
-import { createMermaidPlugin } from '@ant-design-x-vue/x-markdown/plugins/mermaid';
+```vue
+<script setup lang="ts">
+import {
+  HighlightCode,
+  Latex,
+  Mermaid,
+  XMarkdown,
+} from '@ant-design-x-vue/x-markdown';
 
-const plugins = [
-  createHighlightCodePlugin({ theme: 'dark' }),
-  createLatexPlugin(),
-  createMermaidPlugin(),
-];
+const components = {
+  code: HighlightCode,
+  mermaid: Mermaid,
+};
+const config = { extensions: Latex() };
+</script>
+
+<template>
+  <XMarkdown
+    :content="content"
+    :components="components"
+    :config="config"
+  />
+</template>
 ```
 
 ## Themes

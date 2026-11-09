@@ -86,5 +86,5 @@ You can also manually import, then register the global `XProvider` in `plugins/`
 ## Notes
 
 - You need a runnable Vue 3.3+ Nuxt application first; under SSR, if you encounter style flickering, you can wrap `XProvider` in a client-side plugin, or handle style injection according to ant-design-vue's Nuxt practice.
-- The standalone official Nuxt Module hasn’t been released yet; the above Resolver method is consistent with the 1.x documentation/examples. Migration instructions will be added to this page once the module is available.
+- The standalone official Nuxt Module hasn’t been released yet; the above Resolver method is consistent with the 1.x documentation/examples.
 - ant-design-vue itself can optionally use [`@ant-design-vue/nuxt`](https://www.npmjs.com/package/@ant-design-vue/nuxt); it does not replace the `ant-design-x-vue` resolver. Both can coexist.

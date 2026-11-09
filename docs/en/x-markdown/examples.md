@@ -1,6 +1,6 @@
 # Examples
 
-Used to render the streamed Markdown returned by LLM. The following is arranged according to the `@ant-design/x-markdown@2.0.0` “Code Examples.” Each one represents a capability already implemented in Vue.
+Used to render the streamed Markdown returned by LLM. The following is arranged according to the `@ant-design/x-markdown@2.10.0` “Code Examples.” Each one represents a capability already implemented in Vue.
 
 The editable preview is at [Online Experience](/en/x-markdown/playground), using the same input box as the basic usage.
 
@@ -157,6 +157,7 @@ x-markdown/think
 | protectCustomTagNewlines | Whether to protect blank line segments inside custom tags to prevent paragraph segmentation from destroying the tag structure | `boolean` | `false` |
 | disableCustomTagBlockMarkdown | Whether disabled block-level Markdown parsing (list, title, quote, etc.) within custom tags; inline Markdown still takes effect | `boolean` | `false` |
 | escapeRawHtml | Whether to escape the original HTML in Markdown into plain text for display (not parsed into real HTML) to prevent XSS while retaining the content | `boolean` | `false` |
+| debug | Enable the FPS / memory performance overlay (development only) | `boolean` | `false` |
 | disableDefaultStyles | Whether to turn off the default style of built-in tags. `true` closes all, the array is closed by label (such as `['ul', 'ol', 'li']`), used to avoid default styles from polluting internal elements of custom components | `boolean \| Array<'p' \| 'ul' \| 'ol' \| 'li' \| 'pre' \| 'code' \| 'table' \| 'th' \| 'td' \| 'img' \| 'hr'\>` | `false` |
 | className | Root node additional CSS class name | `string` | - |
 | rootClassName | Alias of `className` | `string` | - |

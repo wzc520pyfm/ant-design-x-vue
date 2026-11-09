@@ -539,6 +539,27 @@ describe('extensions', () => {
 });
 
 describe('XMarkdown extra props (React 2.10 parity)', () => {
+  describe('debug', () => {
+    it('mounts and removes the performance overlay with the debug prop', async () => {
+      const wrapper = mount(XMarkdown, {
+        props: {
+          content: 'debug target',
+          debug: true,
+        },
+      });
+
+      expect(wrapper.find('.x-markdown').text()).toContain('debug target');
+      expect(wrapper.find('.x-markdown-debug-panel').exists()).toBe(true);
+      expect(wrapper.find('.x-markdown-debug-record-btn').text()).toContain(
+        'Record',
+      );
+
+      await wrapper.setProps({ debug: false });
+      expect(wrapper.find('.x-markdown-debug-panel').exists()).toBe(false);
+      wrapper.unmount();
+    });
+  });
+
   describe('disableDefaultStyles', () => {
     it('should not add any disable class by default', () => {
       const wrapper = mount(XMarkdown, { props: { content: '- Item' } });

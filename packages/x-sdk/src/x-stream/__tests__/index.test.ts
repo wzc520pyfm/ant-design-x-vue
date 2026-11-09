@@ -1,7 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import XStream from '../index';
 
 describe('XStream', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('transforms binary stream to SSE events', async () => {
     const textEncoder = new TextEncoder();
     const readableStream = new ReadableStream({
@@ -16,7 +20,53 @@ describe('XStream', () => {
       result.push(value);
     }
 
-    expect(result).toEqual([{ event: ' test' }, { data: ' value' }]);
+    expect(result).toEqual([{ event: 'test' }, { data: 'value' }]);
+  });
+
+  it('falls back to TextDecoder when TextDecoderStream is unavailable', async () => {
+    const originalTextDecoderStream = globalThis.TextDecoderStream;
+    Object.defineProperty(globalThis, 'TextDecoderStream', {
+      configurable: true,
+      value: undefined,
+    });
+
+    try {
+      const result: any[] = [];
+      for await (const value of XStream({
+        readableStream: new ReadableStream({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode('event: fallback\n\ndata: value\n\n'));
+            controller.close();
+          },
+        }),
+      })) {
+        result.push(value);
+      }
+      expect(result).toEqual([{ event: 'fallback' }, { data: 'value' }]);
+    } finally {
+      Object.defineProperty(globalThis, 'TextDecoderStream', {
+        configurable: true,
+        value: originalTextDecoderStream,
+      });
+    }
+  });
+
+  it('supports custom stream, part, and key-value separators', async () => {
+    const result: any[] = [];
+    for await (const value of XStream({
+      readableStream: new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode('event=message|data=hello||data=world||'));
+          controller.close();
+        },
+      }),
+      streamSeparator: '||',
+      partSeparator: '|',
+      kvSeparator: '=',
+    })) {
+      result.push(value);
+    }
+    expect(result).toEqual([{ event: 'message', data: 'hello' }, { data: 'world' }]);
   });
 
   it('make compatible with incomplete SSE data. ', async () => {
@@ -41,8 +91,8 @@ describe('XStream', () => {
     }
 
     expect(result).toEqual([
-      { event: ' message', data: '1' },
-      { event: ' end', data: '2' },
+      { event: 'message', data: '1' },
+      { event: 'end', data: '2' },
     ]);
   });
 
@@ -83,22 +133,23 @@ describe('XStream', () => {
     ).rejects.toThrow('The options.readableStream must be an instance of ReadableStream.');
   });
 
-  it('throws an error when key-value separator is not ":"', async () => {
-    await expect(
-      (async () => {
-        const result: any[] = [];
-        for await (const value of XStream({
-          readableStream: new ReadableStream({
-            async start(controller) {
-              controller.enqueue(new TextEncoder().encode('event: message\n\nincomplete'));
-              controller.close();
-            },
-          }),
-        })) {
-          result.push(value);
-        }
-      })(),
-    ).rejects.toThrow('The key-value separator ":" is not found in the sse line chunk!');
+  it('warns and skips lines without a key-value separator', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const result: any[] = [];
+    for await (const value of XStream({
+      readableStream: new ReadableStream({
+        async start(controller) {
+          controller.enqueue(new TextEncoder().encode('event: message\n\nincomplete'));
+          controller.close();
+        },
+      }),
+    })) {
+      result.push(value);
+    }
+    expect(warn).toHaveBeenCalledWith(
+      'The key-value separator ":" is not found in the sse line: incomplete !',
+    );
+    expect(result).toEqual([{ event: 'message' }]);
   });
 
   it('should return an instance of ReadableStream', () => {
@@ -112,5 +163,26 @@ describe('XStream', () => {
         }),
       }),
     ).toBeInstanceOf(ReadableStream);
+  });
+
+  it('cancels and releases the reader when the consumer exits early', async () => {
+    const stream = XStream({
+      readableStream: new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode('data: 0\n\ndata: 1\n\n'));
+          controller.close();
+        },
+      }),
+    });
+
+    for await (const value of stream) {
+      expect(value).toEqual({ data: '0' });
+      break;
+    }
+
+    expect(stream.locked).toBe(false);
+    const reader = stream.getReader();
+    await expect(reader.read()).resolves.toEqual({ done: true, value: undefined });
+    reader.releaseLock();
   });
 });

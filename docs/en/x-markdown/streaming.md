@@ -69,6 +69,24 @@ x-markdown/animation
 | delimiters | The delimiter when `splitBy` is `sentence` | `string[]` | `['. ', '! ', '? ', '.', '!', '?', '\n']` |
 | maxSentenceChars | The maximum number of characters in a fade-in unit when `splitBy` is `sentence` | `number` | `120` |
 
+### debug
+
+| Prop | Description | Type | Default |
+| --- | --- | --- | --- |
+| debug | Enable the FPS / memory performance overlay, including recording and a performance chart | `boolean` | `false` |
+
+> `debug` is for development only. Disable it in production to avoid extra overhead and information exposure.
+
+### Custom component caching
+
+`arePropsEqualIgnoringDomNode` is exported in parity with React 2.10. It ignores the `domNode` reference that changes on every parse and shallow-compares the remaining props. Vue has no public `React.memo` render-bailout equivalent, so use it in your own cache or third-party rendering adapter; prefer `incremental` to reduce repeated parsing while streaming.
+
+```ts
+import { arePropsEqualIgnoringDomNode } from '@ant-design-x-vue/x-markdown';
+
+const unchanged = arePropsEqualIgnoringDomNode(previousProps, nextProps);
+```
+
 ### Incomplete syntax conversion
 
 When `hasNextChunk` is `true` and `incompleteMarkdown` is `placeholder` (default), the unfinished syntax token will be converted into `incomplete-<token>` form, and the original text is returned through `data-raw` (`encodeURIComponent`). When `incompleteMarkdown: 'complete'` is set, the emphasis / inline code / link text / list item will be displayed immediately as completed text as much as possible; pictures, HTML, and tables will still use placeholder logic.

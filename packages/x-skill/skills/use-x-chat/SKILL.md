@@ -1,6 +1,6 @@
 ---
 name: use-x-chat
-version: 2.0.0
+version: 2.10.0
 description: Use the Vue useXChat composable — custom Provider integration, message management, error handling, and multi-conversation. Always generate Vue SFCs, never React JSX.
 ---
 
@@ -96,7 +96,7 @@ const { messages, onRequest, isRequesting } = useXChat({
 
 > **Important**: `messages` is `Ref<MessageInfo<ChatMessage>[]>`. You **cannot** pass it straight to `Bubble.List`. Map each item to `{ key, role, content, loading }`. Content lives on `msg.message`.
 
-Vue’s canonical list prop is **`roles`**. `role` is accepted for React 2.0 parity; if both are set, **`roles` wins**. Prefer `roles` in new Vue code.
+Vue’s canonical list prop is **`roles`**. `role` is accepted for React 2.10 parity; if both are set, **`roles` wins**. Prefer `roles` in new Vue code.
 
 Keep the `roles` object stable (module-level or a `const` in `setup`, not recreated inside a render function).
 

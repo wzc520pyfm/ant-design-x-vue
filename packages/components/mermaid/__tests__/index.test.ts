@@ -78,6 +78,7 @@ describe('Mermaid', () => {
   });
 
   it('supports default slot as children', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const wrapper = track(
       mount(Mermaid, {
         slots: { default: () => mermaidContent },
@@ -87,6 +88,12 @@ describe('Mermaid', () => {
     await flush();
     expect(wrapper.find('.ant-mermaid').exists()).toBe(true);
     expect(render).toHaveBeenCalled();
+    expect(
+      warn.mock.calls.some((args) =>
+        args.some((arg) => String(arg).includes('Slot "default" invoked outside')),
+      ),
+    ).toBe(false);
+    warn.mockRestore();
   });
 
   it('initializes mermaid with config', async () => {
@@ -129,6 +136,8 @@ describe('Mermaid', () => {
     expect(wrapper.find('.ant-mermaid-code').exists()).toBe(true);
     expect(wrapper.find('.ant-mermaid-graph-hidden').exists()).toBe(true);
     expect(wrapper.find('.ant-mermaid-code').text()).toContain('graph TD');
+    expect(wrapper.find('.ant-mermaid-code .ant-codeHighlighter').exists()).toBe(true);
+    expect(wrapper.find('.ant-mermaid-code .ant-codeHighlighter-header').exists()).toBe(false);
     expect(onRenderTypeChange).toHaveBeenCalledWith('code');
 
     await inputs()[0].setValue(true);
@@ -175,6 +184,27 @@ describe('Mermaid', () => {
     await flush();
     expect(wrapper.find('.myCustomHeader').text()).toContain('custom header');
     expect(wrapper.find('.ant-mermaid-header').exists()).toBe(false);
+  });
+
+  it('passes highlightProps to the code highlighter', async () => {
+    const wrapper = track(
+      mount(Mermaid, {
+        props: {
+          children: mermaidContent,
+          highlightProps: {
+            codeTagProps: { 'data-highlight': 'custom' },
+          },
+        },
+        attachTo: document.body,
+      }),
+    );
+    await flush();
+    const inputs = wrapper.findAll('input.ant-segmented-item-input');
+    await inputs[1].setValue(true);
+    await inputs[1].trigger('change');
+    await flush(100);
+
+    expect(wrapper.find('code[data-highlight="custom"]').exists()).toBe(true);
   });
 
   it('applies classNames and styles', async () => {
@@ -271,6 +301,94 @@ describe('Mermaid', () => {
     );
     await flush();
     expect(wrapper.find('.ant-mermaid').exists()).toBe(true);
+  });
+
+  it('keeps the latest diagram when two renders overlap', async () => {
+    const ids: string[] = [];
+    let releaseFirst: () => void = () => {};
+    const firstGate = new Promise<void>((resolve) => {
+      releaseFirst = resolve;
+    });
+    let call = 0;
+
+    render.mockImplementation(async (id: string) => {
+      ids.push(id);
+      call += 1;
+      if (call === 1) {
+        await firstGate;
+      }
+      return {
+        svg: `<svg id="${id}" viewBox="0 0 100 100"><rect width="100" height="100" /></svg>`,
+      };
+    });
+
+    const wrapper = track(
+      mount(Mermaid, {
+        props: { children: 'graph TD; A-->B;' },
+        attachTo: document.body,
+      }),
+    );
+    await flush(120);
+    expect(render).toHaveBeenCalledTimes(1);
+
+    await wrapper.setProps({ children: 'graph TD; B-->C;' });
+    await flush(120);
+    expect(render).toHaveBeenCalledTimes(1);
+
+    releaseFirst();
+    await flush(180);
+
+    expect(render).toHaveBeenCalledTimes(2);
+    const graphHtml = wrapper.find('.ant-mermaid-graph').html();
+    expect(graphHtml).toContain(`id="${ids[1]}"`);
+    expect(graphHtml).not.toContain(`id="${ids[0]}"`);
+  });
+
+  it('renders multiple instances with unique mermaid ids', async () => {
+    const Host = defineComponent({
+      setup() {
+        return () =>
+          h('div', [
+            h(Mermaid, { children: mermaidContent }),
+            h(Mermaid, { children: mermaidContent }),
+          ]);
+      },
+    });
+
+    const wrapper = track(mount(Host, { attachTo: document.body }));
+    await flush(200);
+
+    const svgs = wrapper.findAll('.ant-mermaid-graph svg');
+    expect(svgs).toHaveLength(2);
+    const ids = svgs.map((svg) => svg.attributes('id'));
+    expect(ids.every(Boolean)).toBe(true);
+    expect(new Set(ids).size).toBe(2);
+  });
+
+  it('allows zooming past 3x', async () => {
+    const wrapper = track(
+      mount(Mermaid, {
+        props: {
+          children: mermaidContent,
+          actions: { enableDownload: false },
+        },
+        attachTo: document.body,
+      }),
+    );
+    await flush();
+
+    const zoomIn = wrapper.findAll('.ant-actions-item')[0];
+    for (let i = 0; i < 15; i += 1) {
+      await zoomIn.trigger('click');
+    }
+    await nextTick();
+    await flushPromises();
+
+    const svg = wrapper.find('.ant-mermaid-graph svg');
+    const scale = Number(
+      svg.attributes('style')?.match(/scale\(([\d.]+)\)/)?.[1] ?? 0,
+    );
+    expect(scale).toBeGreaterThan(3);
   });
 
   it('exposes nativeElement via ref', async () => {

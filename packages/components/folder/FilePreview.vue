@@ -3,6 +3,7 @@ import { Empty, Flex, Spin } from 'ant-design-vue';
 import classnames from 'classnames';
 import { computed, type CSSProperties, type VNode } from 'vue';
 import { Actions } from '../actions';
+import CodeHighlighter from '../code-highlighter';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useLocale } from '../locale';
 import enUS from '../locale/en_US';
@@ -50,9 +51,21 @@ const getFileExtension = (path = '') => {
 const getLanguageFromExtension = (ext: string) => ext.toLowerCase() || 'txt';
 
 const originContentNode = (content: string, language: string): VNode => (
-  <pre class={`${previewCls.value}-code`} data-language={language}>
-    <code>{content.replace(/\n$/, '')}</code>
-  </pre>
+  <CodeHighlighter
+    lang={language}
+    header={false}
+    children={content}
+    class={`${previewCls.value}-code`}
+    data-language={language}
+    styles={{
+      code: {
+        background: 'transparent',
+        border: 'none',
+        borderRadius: 0,
+        padding: 0,
+      },
+    }}
+  />
 );
 
 defineRender(() => {

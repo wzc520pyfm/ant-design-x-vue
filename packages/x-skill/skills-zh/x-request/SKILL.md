@@ -1,6 +1,6 @@
 ---
 name: x-request
-version: 2.0.0
+version: 2.10.0
 description: 讲解 @ant-design-x-vue/x-sdk 的 XRequest 配置：传输、鉴权、超时、流式解析，以及和 Provider 的配合。使用 Vue SDK API，不要用 React 包。
 ---
 

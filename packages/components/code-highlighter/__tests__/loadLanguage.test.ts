@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import Prism from 'prismjs';
 import { __resetLanguageCacheForTests, ensurePrismLanguage } from '../loadLanguage';
 
 describe('ensurePrismLanguage', () => {
@@ -13,4 +14,17 @@ describe('ensurePrismLanguage', () => {
     expect(warn).toHaveBeenCalled();
     warn.mockRestore();
   }, 15000);
+
+  it('maps vue to the bundled markup grammar', async () => {
+    const result = await ensurePrismLanguage('vue', true);
+    expect(result).toBe('markup');
+    expect(Prism.languages.markup).toBeDefined();
+  });
+
+  it('loads statically mapped grammars in light mode', async () => {
+    await ensurePrismLanguage('typescript', true);
+    await ensurePrismLanguage('json', true);
+    expect(Prism.languages.typescript).toBeDefined();
+    expect(Prism.languages.json).toBeDefined();
+  });
 });

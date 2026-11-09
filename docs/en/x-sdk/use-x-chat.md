@@ -140,6 +140,4 @@ interface MessageInfo<ChatMessage> {
 type MessageStatus = 'local' | 'loading' | 'updating' | 'success' | 'error' | 'abort';
 ```
 
-`useXChat({ agent })` in 1.x is now called `useLegacyXChat`, and the documentation is in [useXChat Data Management](https://antd-design-x-vue.netlify.app/component/use-x-chat).
-
-> The React documentation also has `openai-node` custom request examples (depending on the `openai` package). The Vue documentation does not introduce this dependency yet, see the list of gaps in the PR description.
+`useXChat({ agent })` in 1.x is now called `useLegacyXChat`, and the documentation is in [useXChat Data Management](https://1x-ant-design-x-vue.netlify.app/component/use-x-chat).

@@ -1,6 +1,6 @@
 # XMarkdown plugins
 
-Plug-ins are divided into two categories. Objects with `transform(content)` in `plugins` will rewrite the Markdown string before parsing. Formulas, highlighting, and Mermaid use the marked extension or `components` mapping, just like React `@ant-design/x-markdown@2.0.0`.
+Plug-ins are divided into two categories. Objects with `transform(content)` in `plugins` will rewrite the Markdown string before parsing. Formulas, highlighting, and Mermaid use the marked extension or `components` mapping, just like React `@ant-design/x-markdown@2.10.0`.
 
 Publish the subpath in the package:
 

@@ -123,6 +123,7 @@ thought-chain/single-row
 | description | 描述 | VNode \| string | - | - |
 | status | 状态 | 'loading' \| 'success' \| 'error' \| 'abort' | - | - |
 | blink | 闪烁动画 | boolean | - | - |
+| disabled | 是否禁用 | boolean | false | - |
 | onClick | 点击事件 | () => void | - | - |
 | classNames | 语义化结构类名 | Record\<'root' \| 'icon' \| 'title' \| 'description', string\> | - | - |
 | styles | 语义化结构样式 | Record\<'root' \| 'icon' \| 'title' \| 'description', CSSProperties\> | - | - |

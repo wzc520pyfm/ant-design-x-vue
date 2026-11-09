@@ -140,6 +140,4 @@ interface MessageInfo<ChatMessage> {
 type MessageStatus = 'local' | 'loading' | 'updating' | 'success' | 'error' | 'abort';
 ```
 
-1.x 的 `useXChat({ agent })` 现在叫 `useLegacyXChat`，文档在 [useXChat 数据管理](https://antd-design-x-vue.netlify.app/component/use-x-chat)。
-
-> React 文档还有 `openai-node` 自定义 request 示例（依赖 `openai` 包）。Vue 文档暂不引入该依赖，见 PR 说明中的缺口列表。
+1.x 的 `useXChat({ agent })` 现在叫 `useLegacyXChat`，文档在 [useXChat 数据管理](https://1x-ant-design-x-vue.netlify.app/component/use-x-chat)。

@@ -12,4 +12,4 @@ overview/basic
 
 :::
 
-Data flow is in [X SDK](/en/x-sdk/introduce), rich text is in [X Markdown](/en/x-markdown/introduce). Grouping is consistent with component exports of `@ant-design/x@2.0.0`.
+Data flow is in [X SDK](/en/x-sdk/introduce), rich text is in [X Markdown](/en/x-markdown/introduce). Grouping is consistent with component exports of `@ant-design/x@2.10.0`.

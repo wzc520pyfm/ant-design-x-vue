@@ -1,6 +1,6 @@
 ---
 name: use-x-chat
-version: 2.0.0
+version: 2.10.0
 description: 讲解 Vue 版 useXChat：自定义 Provider、消息管理、错误处理与多会话。只生成 Vue SFC，不要输出 React JSX。
 ---
 
@@ -71,7 +71,7 @@ const { messages, onRequest, isRequesting } = useXChat({
 
 > **重要**：`messages` 是 `Ref<MessageInfo<ChatMessage>[]>`，**不能**直接传给 `Bubble.List`。必须映射成 `{ key, role, content, loading }`。正文在 `msg.message` 上。
 
-Vue 侧规范字段是 **`roles`**。`role` 仅为对齐 React 2.0；同时传入时 **`roles` 优先**。新代码请写 `roles`。`roles` 对象要保持稳定，不要每次渲染新建。
+Vue 侧规范字段是 **`roles`**。`role` 仅为对齐 React 2.10；同时传入时 **`roles` 优先**。新代码请写 `roles`。`roles` 对象要保持稳定，不要每次渲染新建。
 
 ```vue
 <script setup lang="ts">

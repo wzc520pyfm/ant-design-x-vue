@@ -26,12 +26,12 @@
 
 ### 方式一：一键安装（推荐）
 
-支持 Claude Code、Cursor 等主流 AI IDE。包名为 `@ant-design-x-vue/x-skill`（版本 `2.0.0`，与仓库内其他 2.x 包对齐）。**npm 发布会随 [#536](https://github.com/wzc520pyfm/ant-design-x-vue/issues/536) 合入 `main` 之后进行**；发布前可在本仓库直接运行 CLI。
+支持 Claude Code、Cursor 等主流 AI IDE。包名为 `@ant-design-x-vue/x-skill`（当前版本 `2.10.0`，与仓库内其他 2.x 包保持一致）。
 
 #### 基础安装
 
 ```bash
-# 全局安装技能库（发布后）
+# 全局安装技能库
 npm i -g @ant-design-x-vue/x-skill
 
 # 安装到当前项目的 .cursor/skills 与 .claude/skills
@@ -39,14 +39,6 @@ npx @ant-design-x-vue/x-skill
 
 # 全局安装后也可以直接调用
 x-skill-vue
-```
-
-发布前，在仓库根目录：
-
-```bash
-node packages/x-skill/bin/cli.js
-# 或
-pnpm --filter @ant-design-x-vue/x-skill exec x-skill-vue
 ```
 
 #### 常用选项
@@ -82,9 +74,9 @@ CLI 会把 `skills/` 或 `skills-zh/` 下的技能文件夹复制到目标目录
 #### Cursor
 
 ```bash
-# 在 ant-design-x-vue 仓库根目录，或先 npm pack / 解压包
+# 在已安装 @ant-design-x-vue/x-skill 的项目根目录
 mkdir -p .cursor/skills
-cp -R packages/x-skill/skills-zh/* .cursor/skills/
+cp -R node_modules/@ant-design-x-vue/x-skill/skills-zh/* .cursor/skills/
 ```
 
 用户级：拷到 `~/.cursor/skills/`。
@@ -93,8 +85,8 @@ cp -R packages/x-skill/skills-zh/* .cursor/skills/
 
 ```bash
 mkdir -p .claude/skills
-cp -R packages/x-skill/skills-zh/* .claude/skills/
-# 或：cp -R packages/x-skill/skills-zh/* ~/.claude/skills/
+cp -R node_modules/@ant-design-x-vue/x-skill/skills-zh/* .claude/skills/
+# 或：cp -R node_modules/@ant-design-x-vue/x-skill/skills-zh/* ~/.claude/skills/
 ```
 
 每个 skill 是一个含 `SKILL.md`（以及可选 `reference/`）的文件夹。装好后让 Agent 使用这些 Vue skill。

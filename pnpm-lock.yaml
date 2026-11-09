@@ -161,6 +161,9 @@ importers:
       lottie-web:
         specifier: ^5.13.0
         version: 5.13.0
+      prismjs:
+        specifier: ^1.30.0
+        version: 1.30.0
     devDependencies:
       '@ant-design-x-vue/build-utils':
         specifier: workspace:*
@@ -178,10 +181,10 @@ importers:
   packages/ant-design-x-vue:
     dependencies:
       '@ant-design-x-vue/x-markdown':
-        specifier: 2.0.0
+        specifier: 2.10.0
         version: link:../x-markdown
       '@ant-design-x-vue/x-sdk':
-        specifier: 2.0.0
+        specifier: 2.10.0
         version: link:../x-sdk
       '@ant-design/fast-color':
         specifier: ^2.0.6
@@ -257,7 +260,7 @@ importers:
   packages/components:
     dependencies:
       '@ant-design-x-vue/x-sdk':
-        specifier: 2.0.0
+        specifier: 2.10.0
         version: link:../x-sdk
       '@ant-design/fast-color':
         specifier: ^2.0.6
@@ -372,7 +375,7 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1(vue@3.5.13(typescript@5.8.2))
       ant-design-x-vue:
-        specifier: 2.0.0
+        specifier: 2.10.0
         version: link:../ant-design-x-vue
       classnames:
         specifier: ^2.5.1
@@ -396,8 +399,8 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1
       marked:
-        specifier: ^15.0.12
-        version: 15.0.12
+        specifier: ^16.4.2
+        version: 16.4.2
       mermaid:
         specifier: ^11.11.0
         version: 11.14.0

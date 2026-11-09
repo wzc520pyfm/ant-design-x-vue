@@ -1,6 +1,6 @@
 ---
 name: x-card
-version: 2.0.0
+version: 2.10.0
 description: Build AI-driven UIs with @ant-design-x-vue/x-card — XCard.Box, XCard.Card, A2UI v0.9 commands, data binding, catalogs, actions. Vue SFCs only.
 ---
 

@@ -16,8 +16,50 @@ const LANG_ALIASES: Record<string, string> = {
   shell: 'bash',
   yml: 'yaml',
   md: 'markdown',
+  vue: 'markup',
   plaintext: 'plain',
+  txt: 'plain',
   text: 'plain',
+};
+
+/**
+ * Static import table so bundlers can resolve the grammar chunks.
+ * A template-string import is invisible to Vite and fails in the browser.
+ */
+const PRISM_COMPONENT_LOADERS: Record<string, () => Promise<unknown>> = {
+  markup: () => import('prismjs/components/prism-markup'),
+  'markup-templating': () => import('prismjs/components/prism-markup-templating'),
+  css: () => import('prismjs/components/prism-css'),
+  clike: () => import('prismjs/components/prism-clike'),
+  javascript: () => import('prismjs/components/prism-javascript'),
+  typescript: () => import('prismjs/components/prism-typescript'),
+  jsx: () => import('prismjs/components/prism-jsx'),
+  tsx: () => import('prismjs/components/prism-tsx'),
+  json: () => import('prismjs/components/prism-json'),
+  bash: () => import('prismjs/components/prism-bash'),
+  python: () => import('prismjs/components/prism-python'),
+  java: () => import('prismjs/components/prism-java'),
+  c: () => import('prismjs/components/prism-c'),
+  cpp: () => import('prismjs/components/prism-cpp'),
+  csharp: () => import('prismjs/components/prism-csharp'),
+  go: () => import('prismjs/components/prism-go'),
+  rust: () => import('prismjs/components/prism-rust'),
+  ruby: () => import('prismjs/components/prism-ruby'),
+  sql: () => import('prismjs/components/prism-sql'),
+  yaml: () => import('prismjs/components/prism-yaml'),
+  markdown: () => import('prismjs/components/prism-markdown'),
+  diff: () => import('prismjs/components/prism-diff'),
+  docker: () => import('prismjs/components/prism-docker'),
+  graphql: () => import('prismjs/components/prism-graphql'),
+  scss: () => import('prismjs/components/prism-scss'),
+  less: () => import('prismjs/components/prism-less'),
+  php: () => import('prismjs/components/prism-php'),
+  swift: () => import('prismjs/components/prism-swift'),
+  kotlin: () => import('prismjs/components/prism-kotlin'),
+  objectivec: () => import('prismjs/components/prism-objectivec'),
+  r: () => import('prismjs/components/prism-r'),
+  scala: () => import('prismjs/components/prism-scala'),
+  wasm: () => import('prismjs/components/prism-wasm'),
 };
 
 const loaded = new Set<string>();
@@ -26,6 +68,18 @@ let fullPrismPromise: Promise<void> | null = null;
 export function resolvePrismLang(lang: string): string {
   const lower = lang.toLowerCase();
   return LANG_ALIASES[lower] || lower;
+}
+
+async function loadPrismComponent(id: string): Promise<void> {
+  const loader = PRISM_COMPONENT_LOADERS[id];
+  if (loader) {
+    await loader();
+    return;
+  }
+
+  // Rare grammars keep the dynamic fallback for bundlers with context-module
+  // support. Common languages above are statically visible to Vite and Rollup.
+  await import(/* @vite-ignore */ `prismjs/components/prism-${id}.js`);
 }
 
 export async function ensurePrismLanguage(lang: string, prismLightMode: boolean): Promise<string> {
@@ -74,7 +128,7 @@ export async function ensurePrismLanguage(lang: string, prismLightMode: boolean)
             return;
           }
           try {
-            await import(/* @vite-ignore */ `prismjs/components/prism-${id}.js`);
+            await loadPrismComponent(id);
             loaded.add(id);
           } catch {
             // ignore missing optional langs
@@ -122,7 +176,7 @@ export async function ensurePrismLanguage(lang: string, prismLightMode: boolean)
   for (const dep of need) {
     if (!loaded.has(dep) && !Prism.languages[dep]) {
       try {
-        await import(/* @vite-ignore */ `prismjs/components/prism-${dep}.js`);
+        await loadPrismComponent(dep);
         loaded.add(dep);
       } catch (error) {
         console.warn(`[CodeHighlighter] Failed to load language dependency: ${dep}`, error);
@@ -133,7 +187,7 @@ export async function ensurePrismLanguage(lang: string, prismLightMode: boolean)
   }
 
   try {
-    await import(/* @vite-ignore */ `prismjs/components/prism-${prismLang}.js`);
+    await loadPrismComponent(prismLang);
     loaded.add(prismLang);
   } catch (error) {
     console.warn(`[CodeHighlighter] Failed to load language: ${prismLang}`, error);

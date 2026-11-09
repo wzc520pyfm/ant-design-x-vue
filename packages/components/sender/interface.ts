@@ -71,7 +71,9 @@ interface SlotConfigContentType extends SlotConfigBaseType {
 
 interface SlotConfigTextType extends SlotConfigBaseType {
   type: 'text';
-  value: string;
+  value?: string;
+  editable?: boolean;
+  placeholder?: string;
   key?: string;
 }
 
