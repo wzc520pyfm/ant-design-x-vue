@@ -4,7 +4,7 @@ Provider 交给 `useXChat`，负责组请求参数和把 chunk 收成消息。�
 
 ## createOpenAIChatProvider
 
-这是 1.x `useXAgent({ baseURL, model, dangerouslyApiKey | key })` 在 2.0 里的入口。React 2.0 删掉了 `useXAgent`，直接 `new OpenAIChatProvider`。Vue 保留那个预设形状，避免调用方再手写 header。
+这是 1.x `useXAgent({ baseURL, model, dangerouslyApiKey | key })` 在 2.10 里的入口。React 2.10 删掉了 `useXAgent`，直接 `new OpenAIChatProvider`。Vue 保留那个预设形状，避免调用方再手写 header。
 
 ```ts
 import { createOpenAIChatProvider, useXChat } from 'ant-design-x-vue';

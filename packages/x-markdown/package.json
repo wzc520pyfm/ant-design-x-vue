@@ -1,6 +1,6 @@
 {
   "name": "@ant-design-x-vue/x-markdown",
-  "version": "2.0.0",
+  "version": "2.10.0",
   "description": "Markdown component for ant-design-x-vue with streaming support",
   "keywords": [
     "AI",
@@ -11,7 +11,7 @@
     "framework",
     "vue"
   ],
-  "homepage": "https://x-vue.ant.design",
+  "homepage": "https://ant-design-x-vue.netlify.app/",
   "bugs": {
     "url": "https://github.com/wzc520pyfm/ant-design-x-vue/issues"
   },
@@ -57,7 +57,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "ant-design-x-vue": "2.0.0",
+    "ant-design-x-vue": "2.10.0",
     "@ant-design/icons-vue": "^7.0.1",
     "classnames": "^2.5.1",
     "domhandler": "^5.0.3",
@@ -66,7 +66,7 @@
     "htmlparser2": "^10.1.0",
     "katex": "^0.16.22",
     "lodash.throttle": "^4.1.1",
-    "marked": "^15.0.12",
+    "marked": "^16.4.2",
     "mermaid": "^11.11.0"
   },
   "devDependencies": {
@@ -88,7 +88,7 @@
   },
   "peerDependencies": {
     "ant-design-vue": ">=4.0.0",
-    "vue": ">=3.5.0"
+    "vue": ">=3.3.0"
   },
   "publishConfig": {
     "access": "public"

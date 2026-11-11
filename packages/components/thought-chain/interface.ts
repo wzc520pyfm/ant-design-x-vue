@@ -61,6 +61,13 @@ export interface ThoughtChainItemType {
    * @descEN blink
    */
   blink?: boolean;
+
+  /**
+   * @desc 隐藏时是否销毁内容节点
+   * @descEN Whether to destroy content node when hidden
+   * @default true
+   */
+  destroyOnHidden?: boolean;
 }
 
 export type SemanticType =
@@ -131,12 +138,6 @@ export type ItemSemanticType = 'root' | 'icon' | 'title' | 'description';
 
 export interface ThoughtChainItemProps extends Omit<HTMLAttributes, 'title' | 'content'> {
   /**
-   * @desc 思维节点唯一标识符
-   * @descEN Unique identifier
-   */
-  key?: string;
-
-  /**
    * @desc 自定义前缀
    * @descEN Prefix
    */
@@ -183,6 +184,12 @@ export interface ThoughtChainItemProps extends Omit<HTMLAttributes, 'title' | 'c
    * @descEN blink
    */
   blink?: boolean;
+
+  /**
+   * @desc 是否禁用
+   * @descEN Whether disabled
+   */
+  disabled?: boolean;
 
   classNames?: Partial<Record<ItemSemanticType, string>>;
   styles?: Partial<Record<ItemSemanticType, CSSProperties>>;

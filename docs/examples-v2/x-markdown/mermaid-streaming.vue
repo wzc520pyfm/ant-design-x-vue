@@ -8,7 +8,6 @@ import Mermaid from '@ant-design-x-vue/x-markdown/plugins/Mermaid';
 import { Button, Flex } from 'ant-design-vue';
 import { codeRenderer } from '../_shared/markdown-code';
 
-// Parity with React 2.0.0 packages/x/docs/x-markdown/demo/supersets/Mermaid/basic.tsx
 const fullContent = `
 Here are several Mermaid diagram examples
 

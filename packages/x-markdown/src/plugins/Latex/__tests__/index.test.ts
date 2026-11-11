@@ -110,6 +110,73 @@ describe('LaTeX Plugin', () => {
     expect(wrapper.findAll('.katex').length).toBeGreaterThanOrEqual(2);
   });
 
+  it.each([
+    'Downgrade Max ($100) to Pro ($20)',
+    '把 Max 5x（$100）降级到 Pro（$20）',
+    'The items cost $10, $20, and $30, respectively.',
+  ])('should not interpret currency amounts as LaTeX: %s', (content) => {
+    const wrapper = mount(XMarkdown, {
+      props: {
+        content: `**${content}**`,
+        config: { extensions: latexPlugin() },
+      },
+    });
+    expect(wrapper.find('.katex').exists()).toBe(false);
+    expect(wrapper.text()).toContain(content);
+  });
+
+  it.each(['$\\text{\\$100}$', '$\\text{\\$x}$'])(
+    'should support escaped dollar signs inside formulas: %s',
+    (content) => {
+      const wrapper = mount(XMarkdown, {
+        props: {
+          content,
+          config: { extensions: latexPlugin() },
+        },
+      });
+      expect(wrapper.find('.katex').exists()).toBe(true);
+    },
+  );
+
+  // Pandoc's single-dollar rule: no space just inside the delimiters, and the
+  // closing delimiter must not be followed by a digit.
+  it.each(['$ x$', '$x $', '$ x $', '$x$2'])(
+    'should follow single-dollar delimiter rules: %s',
+    (content) => {
+      const wrapper = mount(XMarkdown, {
+        props: {
+          content,
+          config: { extensions: latexPlugin() },
+        },
+      });
+      expect(wrapper.find('.katex').exists()).toBe(false);
+      expect(wrapper.text()).toContain(content);
+    },
+  );
+
+  it.each(['$$ x $$', '$$ \\frac{a}{b} $$'])(
+    'should exempt double-dollar delimiters from spacing rules: %s',
+    (content) => {
+      const wrapper = mount(XMarkdown, {
+        props: {
+          content,
+          config: { extensions: latexPlugin() },
+        },
+      });
+      expect(wrapper.find('.katex').exists()).toBe(true);
+    },
+  );
+
+  it('renders multi-line bracket formulas as block katex', () => {
+    const wrapper = mount(XMarkdown, {
+      props: {
+        content: 'prefix \\[\n\\frac{a}{b}\n\\]',
+        config: { extensions: latexPlugin() },
+      },
+    });
+    expect(wrapper.find('.block-katex').exists()).toBe(true);
+  });
+
   it('should not throw error by default on malformed latex', () => {
     expect(() =>
       mount(XMarkdown, {

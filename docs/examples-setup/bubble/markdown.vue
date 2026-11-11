@@ -4,7 +4,7 @@ import { Bubble } from 'ant-design-x-vue';
 import type { BubbleProps } from 'ant-design-x-vue';
 import { Typography } from 'ant-design-vue';
 import markdownit from 'markdown-it';
-import { onWatcherCleanup, ref, watchEffect, h } from 'vue';
+import { ref, watchEffect, h } from 'vue';
 
 defineOptions({ name: 'AXBubbleMarkdownSetup' });
 
@@ -24,12 +24,12 @@ const renderMarkdown: BubbleProps['messageRender'] = (content) =>
 const renderKey = ref(0);
 const isServer = import.meta.env.SSR;
 
-watchEffect(() => {
+watchEffect((onCleanup) => {
   if (!isServer) {
     const id = setTimeout(() => {
       renderKey.value = renderKey.value + 1;
     }, text.length * 100 + 2000);
-    onWatcherCleanup(() => {
+    onCleanup(() => {
       clearTimeout(id);
     });
   }

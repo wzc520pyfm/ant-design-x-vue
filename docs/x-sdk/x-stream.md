@@ -1,6 +1,6 @@
 # XStream
 
-把 `ReadableStream<Uint8Array>` 收成可异步迭代的记录。不传 `transformStream` 时按 SSE 拆：空行分隔事件，`:` 分隔字段名和值。
+把 `ReadableStream<Uint8Array>` 收成可异步迭代的记录。不传 `transformStream` 时按 SSE 拆：空行分隔事件，`:` 分隔字段名和值；三者都可配置。异步迭代提前退出时会取消底层流并释放 reader 锁。
 
 ```ts
 import { XStream } from 'ant-design-x-vue';
@@ -36,6 +36,9 @@ x-sdk/x-stream/custom-protocol
 | --- | --- | --- | --- | --- |
 | readableStream | 二进制可读流 | ReadableStream\<Uint8Array\> | - | - |
 | transformStream | 自定义 TransformStream；不传时使用默认 SSE 转换 | TransformStream\<string, T\> | sseTransformStream | - |
+| streamSeparator | 流事件分隔符；`transformStream` 有值时忽略 | string | `\n\n` | 2.2.0 |
+| partSeparator | 事件内字段分隔符；`transformStream` 有值时忽略 | string | `\n` | 2.2.0 |
+| kvSeparator | 字段名和值之间的分隔符；`transformStream` 有值时忽略 | string | `:` | 2.2.0 |
 
 ```ts | pure
 type SSEFields = 'data' | 'event' | 'id' | 'retry';
@@ -48,4 +51,4 @@ function XStream<Output = SSEOutput>(
 ): XReadableStream<Output>;
 ```
 
-1.x 页面仍在 [XStream 流](https://antd-design-x-vue.netlify.app/component/x-stream)。2.0 的调用形式相同，实现来自 `@ant-design-x-vue/x-sdk`。
+1.x 页面仍在 [XStream 流](https://1x-ant-design-x-vue.netlify.app/component/x-stream)。2.x 的调用形式相同，实现来自 `@ant-design-x-vue/x-sdk`。

@@ -1,6 +1,6 @@
 # 代码示例
 
-用于渲染 LLM 返回的流式 Markdown。下面按 `@ant-design/x-markdown@2.0.0` 的「代码示例」排列。每一则都是 Vue 已经实现的能力。
+用于渲染 LLM 返回的流式 Markdown。下面按 `@ant-design/x-markdown@2.10.0` 的「代码示例」排列。每一则都是 Vue 已经实现的能力。
 
 可编辑的预览在 [在线体验](/x-markdown/playground)，和基础用法是同一块输入框。
 
@@ -153,6 +153,12 @@ x-markdown/think
 | plugins | 兼容旧写法：带 `transform(content)` 的对象会在解析前改写字符串；优先用 `config` + marked extensions | `any[]` | - |
 | openLinksInNewTab | 是否给所有 `a` 标签加上 `target="_blank"`（以及 `rel="noopener noreferrer"`） | `boolean` | `false` |
 | dompurifyConfig | DOMPurify 配置，用于 HTML 消毒与 XSS 防护 | [`DOMPurify.Config`](https://github.com/cure53/DOMPurify#can-i-configure-dompurify) | - |
+| componentsProps | 按标签名向 `components` 中的自定义组件传递额外 props，保持组件引用稳定，避免内联函数导致的重复挂载 | `Record<string, Record<string, unknown>>` | - |
+| protectCustomTagNewlines | 是否保护自定义标签内部的空行分段，避免段落切分破坏标签结构 | `boolean` | `false` |
+| disableCustomTagBlockMarkdown | 是否禁用自定义标签内的块级 Markdown 解析（列表、标题、引用等）；行内 Markdown 仍生效 | `boolean` | `false` |
+| escapeRawHtml | 是否将 Markdown 中的原始 HTML 转义为纯文本展示（不解析为真实 HTML），用于防 XSS 同时保留内容 | `boolean` | `false` |
+| debug | 是否启用 FPS / 内存性能监控浮层（仅开发环境使用） | `boolean` | `false` |
+| disableDefaultStyles | 是否关闭内置标签的默认样式。`true` 关闭全部，数组按标签关闭（如 `['ul', 'ol', 'li']`），用于避免默认样式污染自定义组件内部元素 | `boolean \| Array<'p' \| 'ul' \| 'ol' \| 'li' \| 'pre' \| 'code' \| 'table' \| 'th' \| 'td' \| 'img' \| 'hr'>` | `false` |
 | className | 根节点额外 CSS 类名 | `string` | - |
 | rootClassName | `className` 的别名 | `string` | - |
 | style | 根节点内联样式 | `CSSProperties` | - |

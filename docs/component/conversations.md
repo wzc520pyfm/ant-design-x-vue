@@ -105,6 +105,9 @@ conversations/infinite-load
 
 </ClientOnly>
 
+
+移动端行为：内部使用 `useMobile` 检测设备。移动端会话操作菜单图标会始终显示（加上 `ant-conversations-menu-icon-mobile`），不再依赖 hover。
+
 ## API
 
 ### ConversationsProps
@@ -114,7 +117,7 @@ conversations/infinite-load
 | activeKey        | 当前选中的值                                                                                                                                                           | string                                                                | -      | -    |
 | defaultActiveKey | 默认选中值                                                                                                                                                             | string                                                                | -      | -    |
 | items            | 会话列表数据源                                                                                                                                                         | `ItemType`[]                                                          | -      | -    |
-| onActiveChange   | 选中变更回调                                                                                                                                                           | (value: string) => void                                               | -      | -    |
+| onActiveChange   | 选中变更回调                                                                                                                                                           | (value: string, item?: ItemType) => void                              | -      | -    |
 | menu             | 会话操作菜单                                                                                                                                                           | MenuProps \| ((value: `ConversationItemType`) => MenuProps)           | -      | -    |
 | groupable        | 是否支持分组, 开启后默认按 `Conversation.group` 字段分组                                                                                                               | boolean \| `GroupableProps`                                           | -      | -    |
 | creation         | 新建对话按钮的配置                                                                                                                                                     | `CreationProps`                                                       | -      | v2   |

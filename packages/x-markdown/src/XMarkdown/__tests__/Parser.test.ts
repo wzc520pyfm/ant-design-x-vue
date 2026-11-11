@@ -101,4 +101,98 @@ describe('Parser', () => {
       expect(result).toContain('data-state="loading"');
     });
   });
+
+  describe('protectCustomTagNewlines', () => {
+    it('should protect newlines inside custom tags when protectCustomTagNewlines is true', () => {
+      const parser = new Parser({
+        protectCustomTagNewlines: true,
+        components: { CustomComponent: 'div' },
+      });
+      const content = '<CustomComponent>First line\n\nSecond line</CustomComponent>';
+      const result = parser.parse(content);
+      expect(result).toContain('<CustomComponent>First line\n\nSecond line</CustomComponent>');
+      expect(result).not.toMatch(/<CustomComponent>First line<\/p>\s*<p>Second line/);
+    });
+
+    it('should not protect newlines when protectCustomTagNewlines is false', () => {
+      const parser = new Parser({
+        protectCustomTagNewlines: false,
+        components: { CustomComponent: 'div' },
+      });
+      const content = '<CustomComponent>First line\n\nSecond line</CustomComponent>';
+      const result = parser.parse(content);
+      expect(result).toContain('<p>');
+    });
+
+    it('should work normally when protectCustomTagNewlines is true but no custom components', () => {
+      const parser = new Parser({
+        protectCustomTagNewlines: true,
+      });
+      const result = parser.parse('This is a paragraph.\n\nThis is another paragraph.');
+      expect(result).toBe('<p>This is a paragraph.</p>\n<p>This is another paragraph.</p>\n');
+    });
+
+    it('should keep block markdown parsing behavior when only protectCustomTagNewlines is enabled', () => {
+      const parser = new Parser({
+        protectCustomTagNewlines: true,
+        components: { think: 'div' },
+      });
+      const content =
+        '<think>The user is asking what I can do.\n\nKey capabilities:\n1. one\n2. two\n</think>正文内容开始';
+      const result = parser.parse(content);
+
+      expect(result).toContain('<ol>');
+      expect(result).toContain('<li>one</li>');
+      expect(result).toContain('正文内容开始');
+    });
+
+    it('should keep ordered list markup inside custom tags intact when disableCustomTagBlockMarkdown is enabled', () => {
+      const parser = new Parser({
+        disableCustomTagBlockMarkdown: true,
+        components: { think: 'div' },
+      });
+      const content =
+        '<think>The user is asking what I can do.\n\nKey capabilities:\n1. one\n2. two\n</think>正文内容开始';
+      const result = parser.parse(content);
+
+      expect(result).toContain(
+        '<think>The user is asking what I can do.\n\nKey capabilities:\n1. one\n2. two\n</think>',
+      );
+      expect(result).toContain('正文内容开始');
+      expect(result).not.toContain('<ol>');
+      expect(result).not.toContain('<li>');
+    });
+
+    it('should still parse inline markdown when disableCustomTagBlockMarkdown is enabled', () => {
+      const parser = new Parser({
+        disableCustomTagBlockMarkdown: true,
+        components: { think: 'div' },
+      });
+      const content = '<think>line a\n**bold**\nline c</think>tail';
+      const result = parser.parse(content);
+
+      expect(result).toContain('<think>line a\n<strong>bold</strong>\nline c</think>');
+      expect(result).not.toContain('<ol>');
+      expect(result).not.toMatch(/X_MD_NL_/);
+    });
+  });
+
+  describe('escapeRawHtml', () => {
+    it('should escape raw HTML when escapeRawHtml is true', () => {
+      const parser = new Parser({ escapeRawHtml: true });
+      const result = parser.parse('<div>hello</div>');
+      // encode mode also escapes `/` → &#x2F; (align React escapeHtml)
+      expect(result).toContain('&lt;div&gt;hello&lt;');
+      expect(result).toContain('div&gt;');
+      expect(result).toContain('hello');
+      expect(result).not.toContain('<div>hello</div>');
+    });
+
+    it('should leave raw HTML when escapeRawHtml is false', () => {
+      const parser = new Parser({ escapeRawHtml: false });
+      const result = parser.parse('<div>hello</div>');
+      expect(result).toContain('<div>hello</div>');
+    });
+  });
+
 });

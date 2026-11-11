@@ -18,6 +18,7 @@ import pickAttrs from '../_util/pick-attrs';
 import type { ActionsItemRuntimeProps } from './item-runtime-props';
 import { useXProviderContext } from '../x-provider';
 import useStyle from './style';
+import useMobile from '../_util/hooks/use-mobile';
 
 defineOptions({ name: 'AXActionsItem' });
 
@@ -26,6 +27,7 @@ const props = withDefaults(defineProps<ActionsItemRuntimeProps>(), {
 });
 
 const { direction, getPrefixCls } = useXProviderContext();
+const isMobile = useMobile();
 const prefixCls = getPrefixCls('actions', props.prefixCls);
 
 const [wrapCSSVar, hashId, cssVarCls] = useStyle(prefixCls);
@@ -67,7 +69,7 @@ defineRender(() => {
       {iconNode.value}
     </div>
   );
-  if (props.label) {
+  if (props.label && !isMobile.value) {
     return wrapCSSVar(<Tooltip title={props.label}>{content}</Tooltip>);
   }
   return wrapCSSVar(content);

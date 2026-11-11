@@ -6,7 +6,7 @@ import pickAttrs from '../_util/pick-attrs';
 import useXComponentConfig from '../_util/hooks/use-x-component-config';
 import { useXProviderContext } from '../x-provider';
 import { useSenderContextInject } from './context';
-import useGetState from './hooks/use-get-state';
+import useSlotConfigState from './hooks/use-slot-config-state';
 import useInputHeight from './hooks/use-input-height';
 import type { EventType, insertPosition, SkillType, SlotConfigType, SlotTextAreaRef } from './interface';
 import { computed, nextTick, onMounted, ref, Teleport, watch, type VNode } from 'vue';
@@ -44,8 +44,9 @@ const skillRef = ref<SkillType | null>(null);
 const skillPlaceholders = ref<VNode | null>(null);
 
 // ============================ State =============================
-const slotConfigComputed = computed(() => slotConfigRef.value);
-const [slotConfigMap, getSlotValues, setSlotValues] = useGetState(slotConfigComputed);
+const parentSlotConfig = computed(() => senderContext.value.slotConfig);
+const [slotConfigMap, { getSlotValues, setSlotValues, mergeSlotConfig, clear: clearSlotConfigState }] =
+  useSlotConfigState(parentSlotConfig);
 const slotPlaceholders = ref<Map<string, VNode>>(new Map());
 
 // ============================ Methods =============================
@@ -195,7 +196,7 @@ const getEditorValue = (): {
 
 const updateSlot = (key: string, value: any, e?: EventType) => {
   const slotDom = getSlotDom(key);
-  const node = slotConfigRef.value?.find((item) => item.key === key);
+  const node = slotConfigMap.get(key) ?? slotConfigRef.value?.find((item) => item.key === key);
   setSlotValues((prev) => ({ ...prev, [key]: value }));
   if (slotDom && node) {
     const newReactNode = renderSlot(node, slotDom);
@@ -498,13 +499,16 @@ const insert: SlotTextAreaRef['insert'] = (
   replaceCharacters?: string,
 ) => {
   const editableDom = editableRef.value;
+  if (!editableDom) return;
+  // Record runtime inserts before DOM work so a later parent slotConfig
+  // reference change (often a fresh `[]`) cannot drop them from getValue().
+  mergeSlotConfig(slotConfig);
+  slotConfigRef.value = [...slotConfigRef.value, ...slotConfig];
   const selection = window.getSelection();
-  if (!editableDom || !selection) return;
+  if (!selection) return;
   const slotNode = getSlotListNode(slotConfig);
   const { type, range: lastRange } = getInsertPosition(position);
   let range: Range = document.createRange();
-  slotConfigRef.value = [...slotConfigRef.value, ...slotConfig];
-  setSlotValues(slotConfig as any);
 
   if (type === 'end') {
     selection.removeAllRanges();
@@ -665,7 +669,7 @@ const clear = () => {
   skillDomRef.value = null;
   skillRef.value = null;
   skillPlaceholders.value = null;
-  setSlotValues({});
+  clearSlotConfigState();
   onInternalInput();
 };
 
@@ -694,10 +698,17 @@ const renderSlotsAndSkill = () => {
 watch(
   () => senderContext.value.slotConfig,
   (val) => {
-    slotConfigRef.value = [...(val || [])];
+    const parent = [...(val || [])];
+    const parentKeys = new Set(parent.map((node) => node.key).filter(Boolean) as string[]);
+    const extras: SlotConfigType[] = [];
+    slotConfigMap.forEach((node, key) => {
+      if (!parentKeys.has(key)) extras.push(node);
+    });
+    slotConfigRef.value = [...parent, ...extras];
     if (!editableRef.value) return;
-    // Allow empty slotConfig when skill-only mode
-    if (!slotConfigRef.value.length && !senderContext.value.skill?.value) {
+    // Match React: a fresh empty `[]` reference must not wipe the editor
+    // (runtime inserts stay in the DOM; the hook keeps their map entries).
+    if (!parent.length && !senderContext.value.skill?.value) {
       return;
     }
     renderSlotsAndSkill();

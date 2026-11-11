@@ -1,21 +1,22 @@
 import type { XRequestOptions } from '../../x-request';
+import type { SimpleType } from '../index';
 import AbstractChatProvider, { type TransformMessage } from './AbstractChatProvider';
 
-export default class DefaultChatProvider<ChatMessage, Input, Output> extends AbstractChatProvider<
-  ChatMessage,
+export default class DefaultChatProvider<
+  ChatMessage extends SimpleType,
   Input,
-  Output
-> {
+  Output,
+> extends AbstractChatProvider<ChatMessage, Input, Output> {
   transformParams(
     requestParams: ChatMessage & Partial<Input>,
-    options: XRequestOptions<Input, Output>,
+    options: XRequestOptions<Input, Output, ChatMessage>,
   ): Input {
     if (typeof requestParams !== 'object') {
       throw new Error('requestParams must be an object');
     }
     return {
       ...(options?.params || {}),
-      ...(requestParams || {}),
+      ...((requestParams as Record<string, unknown>) || {}),
     } as Input;
   }
 

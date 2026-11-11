@@ -59,6 +59,11 @@ const genPromptsStyle: GenerateStyle<PromptsToken> = (token) => {
 
       // ========================= Item =========================
       [`${componentCls}-item`]: {
+        appearance: 'none',
+        font: 'inherit',
+        color: 'inherit',
+        textAlign: 'start',
+        margin: 0,
         flex: 'none',
         maxWidth: '100%',
         minWidth: 0,

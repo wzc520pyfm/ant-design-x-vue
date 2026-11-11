@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useSidebar } from 'vitepress/theme'
+import { useDocLocale } from '../use-doc-locale'
 
 const { hasSidebar } = useSidebar()
+const { isEn, lp } = useDocLocale()
 </script>
 
 <template>
@@ -9,17 +11,19 @@ const { hasSidebar } = useSidebar()
     <div class="cols">
       <div>
         <strong>Ant Design X Vue</strong>
-        <p>RICH 设计范式的 Vue 实现。组件 API 与 React 2.0 对齐，写法保持 Vue。</p>
+        <p>{{ isEn
+          ? 'The Vue implementation of the RICH design paradigm. Component APIs align with React 2.10 while the usage stays Vue-native.'
+          : 'RICH 设计范式的 Vue 实现。组件 API 与 React 2.10 对齐，写法保持 Vue。' }}</p>
       </div>
       <div>
-        <strong>文档</strong>
-        <a href="/design/introduce">设计</a>
-        <a href="/component/overview">组件</a>
-        <a href="/x-markdown/introduce">X Markdown</a>
-        <a href="/x-sdk/introduce">X SDK</a>
+        <strong>{{ isEn ? 'Docs' : '文档' }}</strong>
+        <a :href="lp('/design/introduce')">{{ isEn ? 'Design' : '设计' }}</a>
+        <a :href="lp('/component/overview')">{{ isEn ? 'Components' : '组件' }}</a>
+        <a :href="lp('/x-markdown/introduce')">X Markdown</a>
+        <a :href="lp('/x-sdk/introduce')">X SDK</a>
       </div>
       <div>
-        <strong>相关</strong>
+        <strong>{{ isEn ? 'Related' : '相关' }}</strong>
         <a href="https://x.ant.design/index-cn" target="_blank" rel="noreferrer">Ant Design X</a>
         <a href="https://www.antdv.com/components/overview-cn" target="_blank" rel="noreferrer">Ant Design Vue</a>
         <a href="https://github.com/wzc520pyfm/ant-design-x-vue" target="_blank" rel="noreferrer">GitHub</a>

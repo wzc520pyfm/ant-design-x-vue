@@ -1,6 +1,6 @@
 {
   "name": "@ant-design-x-vue/x-sdk",
-  "version": "2.0.0",
+  "version": "2.10.0",
   "description": "SDK toolkit for ant-design-x-vue",
   "keywords": [
     "AI",
@@ -11,7 +11,7 @@
     "framework",
     "vue"
   ],
-  "homepage": "https://x-vue.ant.design",
+  "homepage": "https://ant-design-x-vue.netlify.app/",
   "bugs": {
     "url": "https://github.com/wzc520pyfm/ant-design-x-vue/issues"
   },
@@ -57,7 +57,7 @@
     "vue": "^3.5.10"
   },
   "peerDependencies": {
-    "vue": ">=3.5.0"
+    "vue": ">=3.3.0"
   },
   "publishConfig": {
     "access": "public"

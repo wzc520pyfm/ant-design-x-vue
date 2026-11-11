@@ -21,6 +21,12 @@ const localeValues: Required<xLocale & xMarkdownLocale> = {
     editableOk: 'OK',
     editableCancel: 'Cancel',
   },
+  Folder: {
+    selectFile: 'Please select a file',
+    loadError: 'Failed to load file',
+    noService: 'File content service not configured',
+    loadFailed: 'Failed to load file',
+  },
   Mermaid: {
     copySuccess: 'Copied',
     copy: 'Copy code',

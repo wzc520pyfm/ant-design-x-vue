@@ -1,13 +1,14 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
-import { computed, ref, useId } from 'vue';
+import { computed, ref } from 'vue';
+import { useCompatId } from '../_util/vueCompat';
 import pickAttrs from '../_util/pick-attrs';
 import { useXProviderContext } from '../x-provider';
 import { THOUGHT_CHAIN_ITEM_STATUS, type ThoughtChainItemProps } from './interface';
 import Status from './Status.vue';
 import useStyle from './style';
 
-defineOptions({ name: 'AXThoughtChainItem' });
+defineOptions({ name: 'AXThoughtChainItem', inheritAttrs: false });
 
 const {
   blink,
@@ -23,6 +24,7 @@ const {
   status,
   onClick,
   description,
+  disabled,
   ...restProps
 } = defineProps<ThoughtChainItemProps>();
 
@@ -32,7 +34,7 @@ const domProps = computed(() => pickAttrs(restProps, {
   data: true,
 }));
 
-const id = useId();
+const id = useCompatId();
 const itemRef = ref<HTMLElement>();
 
 const { getPrefixCls, direction } = useXProviderContext();
@@ -46,7 +48,7 @@ defineRender(() => {
     <div
       ref={itemRef}
       key={id}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       style={style}
       class={classnames(
         prefixCls.value,
@@ -58,9 +60,10 @@ defineRender(() => {
         itemCls.value,
         {
           [`${itemCls.value}-${variant}`]: variant,
-          [`${itemCls.value}-click`]: onClick,
+          [`${itemCls.value}-click`]: !disabled && onClick,
           [`${itemCls.value}-error`]: status === THOUGHT_CHAIN_ITEM_STATUS.ERROR,
           [`${itemCls.value}-rtl`]: direction.value === 'rtl',
+          [`${itemCls.value}-disabled`]: disabled,
         },
       )}
       {...domProps.value}

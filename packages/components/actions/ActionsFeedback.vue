@@ -13,6 +13,7 @@ import enUS from '../locale/en_US';
 import useLocale from '../locale/useLocale';
 import { useXProviderContext } from '../x-provider';
 import useStyle from './style';
+import useMobile from '../_util/hooks/use-mobile';
 
 defineOptions({ name: 'AXActionsFeedback' });
 
@@ -41,6 +42,7 @@ const emit = defineEmits<{
 }>();
 
 const [contextLocale] = useLocale('Actions', enUS.Actions);
+const isMobile = useMobile();
 
 const { direction, getPrefixCls } = useXProviderContext();
 const prefixCls = getPrefixCls('actions', props.prefixCls);
@@ -73,59 +75,70 @@ const onDislikeClick = () => handleChange(props.value === 'dislike' ? 'default' 
 defineRender(() => {
   const showLike = props.value === 'default' || props.value === 'like';
   const showDislike = props.value === 'default' || props.value === 'dislike';
+
+  const likeNode = (
+    <span
+      onClick={onLikeClick}
+      style={{
+        ...props.styles?.like,
+        ...(props.value === 'like' ? props.styles?.liked : {}),
+      }}
+      class={classnames(
+        `${feedbackCls}-item`,
+        `${prefixCls}-item`,
+        `${feedbackCls}-item-like`,
+        props.classNames?.like,
+        {
+          [`${props.classNames?.liked}`]:
+            !!props.classNames?.liked && props.value === 'like',
+          [`${feedbackCls}-item-like-active`]: props.value === 'like',
+        },
+      )}
+    >
+      {props.value === 'like' ? <LikeFilled /> : <LikeOutlined />}
+    </span>
+  );
+
+  const dislikeNode = (
+    <span
+      onClick={onDislikeClick}
+      style={{
+        ...props.styles?.dislike,
+        ...(props.value === 'dislike' ? props.styles?.disliked : {}),
+      }}
+      class={classnames(
+        `${feedbackCls}-item`,
+        `${prefixCls}-item`,
+        `${feedbackCls}-item-dislike`,
+        props.classNames?.dislike,
+        {
+          [`${props.classNames?.disliked}`]:
+            !!props.classNames?.disliked && props.value === 'dislike',
+          [`${feedbackCls}-item-dislike-active`]: props.value === 'dislike',
+        },
+      )}
+    >
+      {props.value === 'dislike' ? <DislikeFilled /> : <DislikeOutlined />}
+    </span>
+  );
+
   return wrapCSSVar(
     <div
       class={mergedCls.value}
       style={{ ...props.style, ...props.styles?.root }}
     >
-      {showLike && (
-        <Tooltip title={contextLocale.value.feedbackLike}>
-          <span
-            onClick={onLikeClick}
-            style={{
-              ...props.styles?.like,
-              ...(props.value === 'like' ? props.styles?.liked : {}),
-            }}
-            class={classnames(
-              `${feedbackCls}-item`,
-              `${prefixCls}-item`,
-              `${feedbackCls}-item-like`,
-              props.classNames?.like,
-              {
-                [`${props.classNames?.liked}`]:
-                  !!props.classNames?.liked && props.value === 'like',
-                [`${feedbackCls}-item-like-active`]: props.value === 'like',
-              },
-            )}
-          >
-            {props.value === 'like' ? <LikeFilled /> : <LikeOutlined />}
-          </span>
-        </Tooltip>
-      )}
-      {showDislike && (
-        <Tooltip title={contextLocale.value.feedbackDislike}>
-          <span
-            onClick={onDislikeClick}
-            style={{
-              ...props.styles?.dislike,
-              ...(props.value === 'dislike' ? props.styles?.disliked : {}),
-            }}
-            class={classnames(
-              `${feedbackCls}-item`,
-              `${prefixCls}-item`,
-              `${feedbackCls}-item-dislike`,
-              props.classNames?.dislike,
-              {
-                [`${props.classNames?.disliked}`]:
-                  !!props.classNames?.disliked && props.value === 'dislike',
-                [`${feedbackCls}-item-dislike-active`]: props.value === 'dislike',
-              },
-            )}
-          >
-            {props.value === 'dislike' ? <DislikeFilled /> : <DislikeOutlined />}
-          </span>
-        </Tooltip>
-      )}
+      {showLike &&
+        (isMobile.value ? (
+          likeNode
+        ) : (
+          <Tooltip title={contextLocale.value.feedbackLike}>{likeNode}</Tooltip>
+        ))}
+      {showDislike &&
+        (isMobile.value ? (
+          dislikeNode
+        ) : (
+          <Tooltip title={contextLocale.value.feedbackDislike}>{dislikeNode}</Tooltip>
+        ))}
     </div>,
   );
 });

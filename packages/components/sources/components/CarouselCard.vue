@@ -35,6 +35,17 @@ watch(slide, (val) => {
   (carouselRef.value as { goTo?: (index: number, animate?: boolean) => void } | undefined)?.goTo?.(val, false);
 });
 
+watch(
+  [() => props.activeKey, () => props.items],
+  () => {
+    const next = Math.max(0, props.items?.findIndex(({ key }) => key === props.activeKey) ?? 0);
+    slide.value = next;
+    (
+      carouselRef.value as { goTo?: (index: number, animate?: boolean) => void } | undefined
+    )?.goTo?.(next, false);
+  },
+);
+
 defineRender(() => (
   <div style={props.style} class={classnames(`${compCls}-wrapper`, props.className)}>
     <div class={`${compCls}-title`}>

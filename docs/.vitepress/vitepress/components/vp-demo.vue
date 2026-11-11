@@ -10,6 +10,9 @@ import { usePlayground } from '../composables/use-playground'
 // import demoBlockLocale from '../../i18n/component/demo-block.json'
 import SourceCode from './demo/vp-source-code.vue'
 import { antdDark } from '../../theme/antd-appearance'
+import { useDocLocale } from '../../theme/use-doc-locale'
+
+const { isEn } = useDocLocale()
 
 const props = defineProps<{
   source: string
@@ -93,7 +96,7 @@ const copyCode = async () => {
 
       <div class="op-btns">
         <Tooltip>
-          <template #title>在 Stackblitz 中打开</template>
+          <template #title>{{ isEn ? 'Open in StackBlitz' : '在 Stackblitz 中打开' }}</template>
           <ThunderboltOutlined tabindex="0" role="link" class="op-btn" @click="onStackblitzPlayBtnClick"
             @keydown.prevent.enter="onStackblitzPlayBtnClick" @keydown.prevent.space="onStackblitzPlayBtnClick" />
         </Tooltip>
@@ -109,9 +112,8 @@ const copyCode = async () => {
         />
       </Tooltip> -->
         <Tooltip>
-          <template #title>查看源代码</template>
-          <button ref="sourceCodeRef" :aria-label="sourceVisible ? '隐藏源代码' : '查看源代码'
-            " class="op-btn" @click="toggleSourceVisible()">
+          <template #title>{{ isEn ? 'View source' : '查看源代码' }}</template>
+          <button ref="sourceCodeRef" :aria-label="sourceVisible ? (isEn ? 'Hide source' : '隐藏源代码') : (isEn ? 'View source' : '查看源代码')" class="op-btn" @click="toggleSourceVisible()">
             <FunctionOutlined />
           </button>
         </Tooltip>
@@ -125,7 +127,7 @@ const copyCode = async () => {
         <div v-show="sourceVisible" class="example-float-control" tabindex="0" role="button"
           @click="toggleSourceVisible(false)" @keydown="onSourceVisibleKeydown">
           <CaretUpFilled />
-          <span>隐藏源代码</span>
+          <span>{{ isEn ? 'Hide source' : '隐藏源代码' }}</span>
         </div>
       </Transition>
     </div>

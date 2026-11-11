@@ -1,6 +1,6 @@
 # XMarkdown 插件
 
-插件分两类。`plugins` 里带 `transform(content)` 的对象会在解析前改写 Markdown 字符串。公式、高亮、Mermaid 走 marked 扩展或 `components` 映射，和 React `@ant-design/x-markdown@2.0.0` 一样。
+插件分两类。`plugins` 里带 `transform(content)` 的对象会在解析前改写 Markdown 字符串。公式、高亮、Mermaid 走 marked 扩展或 `components` 映射，和 React `@ant-design/x-markdown@2.10.0` 一样。
 
 发布包里的子路径：
 

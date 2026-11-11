@@ -1,6 +1,6 @@
 # 介绍
 
-流式友好、可扩展的 Markdown 渲染组件。对齐 `@ant-design/x-markdown@2.0.0` 的核心能力：公式、代码高亮、Mermaid、流式语法与自定义组件映射。
+流式友好、可扩展的 Markdown 渲染组件。对齐 `@ant-design/x-markdown@2.10.0` 的核心能力：公式、代码高亮、Mermaid、流式语法与自定义组件映射。
 
 ## 何时使用
 
@@ -44,7 +44,7 @@ x-markdown/streaming
 
 ## API
 
-完整表格（含 `children`、`paragraphTag`、`openLinksInNewTab`、`dompurifyConfig`、`rootClassName`、`style` 等）见 [代码示例 · API](/x-markdown/examples)。此处列出常用字段：
+完整表格（含 `children`、`paragraphTag`、`openLinksInNewTab`、`dompurifyConfig`、`componentsProps`、`escapeRawHtml`、`disableDefaultStyles`、`protectCustomTagNewlines`、`disableCustomTagBlockMarkdown`、`rootClassName`、`style` 等）见 [代码示例 · API](/x-markdown/examples)。此处列出常用字段：
 
 ### XMarkdownProps
 

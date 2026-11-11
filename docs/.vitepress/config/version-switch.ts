@@ -1,17 +1,18 @@
+import { isEnglishPath, stripLocalePrefix, withLocalePrefix } from './locale-path'
 export type DocVersionId = 'v1' | 'v2'
 
 /**
  * Cross-site version switch, same idea as React `docVersions` in
  * `packages/x/.dumi/theme/themeConfig.ts`: the header select leaves this origin.
  *
- * 1.x is the pre-2.0 Netlify docs. 2.x is this VitePress site. `x-vue.ant.design`
- * is the package homepage; change `V2_DOCS_ORIGIN` when that host is live.
+ * 1.x is the pre-2.0 Netlify docs. 2.x is this VitePress site. `ant-design-x-vue.netlify.app`
+ * is the package homepage; change `V2_DOCS_ORIGIN` when that host changes.
  */
 export const V1_DOCS_ORIGIN = 'https://1x-ant-design-x-vue.netlify.app'
-export const V2_DOCS_ORIGIN = 'https://x-vue.ant.design'
+export const V2_DOCS_ORIGIN = 'https://ant-design-x-vue.netlify.app'
 
 /** Tracks `packages/ant-design-x-vue` so the header matches the published 2.x line. */
-export const V2_VERSION_LABEL = '2.0.0'
+export const V2_VERSION_LABEL = '2.10.0'
 export const V1_VERSION_LABEL = '1.x'
 
 /** Pages that exist on the 1.x site. Anything else falls back by section. */
@@ -53,9 +54,12 @@ export const V2_SITE_PATHS = [
   '/component/attachments',
   '/component/actions',
   '/component/file-card',
+  '/component/folder',
   '/component/think',
+  '/component/mermaid',
   '/component/thought-chain',
   '/component/sources',
+  '/component/code-highlighter',
   '/component/x-provider',
   '/x-markdown/introduce',
   '/x-markdown/examples',
@@ -114,7 +118,6 @@ export const V2_SITE_PATHS = [
   '/development/common-props',
   '/development/migration-v2',
   '/development/faq',
-  '/development/release-checklist',
   '/development/spec',
   '/playground/independent',
   '/playground/copilot',
@@ -284,6 +287,8 @@ export function resolveVersionPath(pathname: string, target: DocVersionId): stri
 }
 
 export function resolveVersionHref(pathname: string, target: DocVersionId): string {
-  const path = resolveVersionPath(pathname, target)
-  return `${versionOrigin(target)}${path}`
+  const english = isEnglishPath(pathname)
+  const path = resolveVersionPath(stripLocalePrefix(pathname), target)
+  const localized = target === 'v2' && english ? withLocalePrefix(path, 'en') : path
+  return `${versionOrigin(target)}${localized}`
 }

@@ -2,7 +2,7 @@
 import { SendOutlined } from '@ant-design/icons-vue';
 import { Flex, Tooltip, message } from 'ant-design-vue';
 import { Sender, theme } from 'ant-design-x-vue';
-import { onWatcherCleanup, ref, watch, h } from 'vue';
+import { ref, watch, h } from 'vue';
 
 defineOptions({ name: 'AXSenderSendStyleSetup' });
 
@@ -12,13 +12,13 @@ const { token } = theme.useToken();
 const value = ref('Ask something?');
 const loading = ref(false);
 
-watch(loading, () => {
+watch(loading, (_n, _o, onCleanup) => {
   if (loading.value) {
     const timer = setTimeout(() => {
       loading.value = false;
     }, 3000);
 
-    onWatcherCleanup(() => {
+    onCleanup(() => {
       clearTimeout(timer);
     })
   }

@@ -27,6 +27,7 @@ const {
   expanded = undefined,
   onExpand,
   blink,
+  destroyOnHidden = true,
   ...restProps
 } = defineProps<ThinkProps>();
 
@@ -133,14 +134,26 @@ defineRender(() =>
         />
       </div>
       <TransitionCollapse prefixCls={prefixCls}>
-        {isExpand.value ? (
+        {destroyOnHidden ? (
+          isExpand.value ? (
+            <div
+              class={classnames(`${prefixCls}-content`, classNames.content)}
+              style={styles.content}
+            >
+              {slots.default?.()}
+            </div>
+          ) : null
+        ) : (
           <div
-            class={classnames(`${prefixCls}-content`, classNames.content)}
+            v-show={isExpand.value}
+            class={classnames(`${prefixCls}-content`, classNames.content, {
+              [`${prefixCls}-content-hidden`]: !isExpand.value,
+            })}
             style={styles.content}
           >
             {slots.default?.()}
           </div>
-        ) : null}
+        )}
       </TransitionCollapse>
     </div>,
   ),

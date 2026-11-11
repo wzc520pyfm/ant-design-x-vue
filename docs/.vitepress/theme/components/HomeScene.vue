@@ -1,19 +1,29 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { useDocLocale } from '../use-doc-locale'
 import { Bubble, Prompts, Sender, Welcome } from 'ant-design-x-vue'
 
 const props = defineProps<{
   kind: 'independent' | 'assistant' | 'nest'
 }>()
 
-const questions = [
+const { isEn } = useDocLocale()
+
+const questionsZh = [
   'Ant Design X 全新升级了什么?',
   'Ant Design X 推出全新 RICH 设计规范',
   'Ant Design X 组件资产有哪些?',
   '快来了解全新AI时代的设计范式!',
 ]
+const questionsEn = [
+  'What is new in Ant Design X?',
+  'Ant Design X introduces the RICH design paradigm',
+  'What component assets does Ant Design X provide?',
+  'Explore the design paradigm for the AI era!',
+]
+const questions = computed(() => (isEn.value ? questionsEn : questionsZh))
 
-const draft = ref(questions[0])
+const draft = ref(questions.value[0])
 const lines = ref<{ id: number, role: 'user' | 'ai', text: string }[]>([])
 let timer: ReturnType<typeof setInterval> | null = null
 let seq = 0
@@ -28,7 +38,7 @@ function ask(query: string) {
   const text = query.trim()
   if (!text) return
   lines.value.push({ id: ++seq, role: 'user', text })
-  const answer = `已收到。你说的是：${text}`
+  const answer = isEn.value ? `Got it. You said: ${text}` : `已收到。你说的是：${text}`
   const id = ++seq
   lines.value.push({ id, role: 'ai', text: '' })
   let cursor = 0
@@ -45,27 +55,27 @@ function ask(query: string) {
 watch(() => props.kind, () => {
   stop()
   lines.value = []
-  draft.value = questions[0]
+  draft.value = questions.value[0]
 })
 
 onBeforeUnmount(stop)
 
-const promptItems = [
+const promptItems = computed(() => [
   {
     key: 'hot',
-    label: '热门话题',
-    children: questions.map((text, index) => ({
+    label: isEn.value ? 'Popular topics' : '热门话题',
+    children: questions.value.map((text, index) => ({
       key: `q-${index}`,
       description: text,
     })),
   },
-]
+])
 </script>
 
 <template>
   <div class="stage" :class="kind">
     <div v-if="kind === 'nest'" class="nest">
-      <p>你好, 我是 Ant Design X</p>
+      <p>{{ isEn ? 'Hello, I am Ant Design X' : '你好, 我是 Ant Design X' }}</p>
       <Sender
         :value="draft"
         class="nest-sender"
@@ -79,8 +89,8 @@ const promptItems = [
           <Welcome
             variant="borderless"
             icon="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp"
-            title="你好, 我是全新 AI 产品创造助手"
-            description="基于 Ant Design 的 AGI 产品智能解决方案, 创造更美好的智能视界"
+            :title="isEn ? 'Hello, I am your new AI product creation assistant' : '你好, 我是全新 AI 产品创造助手'"
+            :description="isEn ? 'An AGI product solution based on Ant Design, creating a better intelligent experience' : '基于 Ant Design 的 AGI 产品智能解决方案, 创造更美好的智能视界'"
           />
           <Prompts
             :items="promptItems"
@@ -96,7 +106,7 @@ const promptItems = [
       </div>
       <Sender
         :value="draft"
-        placeholder="Ant Design X 全新升级了什么?"
+        :placeholder="isEn ? 'What is new in Ant Design X?' : 'Ant Design X 全新升级了什么?'"
         @change="(value: string) => draft = value"
         @submit="ask"
       />

@@ -1,11 +1,12 @@
 <script setup lang="tsx">
 import classnames from 'classnames';
 import type { EventHandler, MouseEventHandler } from 'ant-design-vue/es/_util/EventInterface';
-import type { ConversationItemType } from './interface';
+import type { ConversationItemType, ConversationsProps } from './interface';
 import pickAttrs from '../_util/pick-attrs';
 import { computed } from 'vue';
 import { Dropdown, Menu, Typography } from 'ant-design-vue';
 import { EllipsisOutlined } from '@ant-design/icons-vue';
+import useMobile from '../_util/hooks/use-mobile';
 
 defineOptions({ name: 'AXConversationsItem' });
 
@@ -18,7 +19,7 @@ interface ResolvedConversationsItemProps {
     getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
   };
   active?: boolean;
-  onClick?: (value: string) => void;
+  onClick?: ConversationsProps['onActiveChange'];
   class?: any;
 }
 
@@ -32,6 +33,8 @@ const {
   menu,
   ...restProps
 } = defineProps<ResolvedConversationsItemProps>();
+
+const isMobile = useMobile();
 
 const domProps = computed(() => pickAttrs(restProps, {
   aria: true,
@@ -72,7 +75,12 @@ const getPopupContainer = computed(() => dropdownMenu.value?.getPopupContainer);
 
 const renderMenuTrigger = (conversation: ConversationItemType) => {
   const originTriggerNode = (
-    <EllipsisOutlined onClick={stopPropagation} class={`${prefixCls}-menu-icon`} />
+    <EllipsisOutlined
+      onClick={stopPropagation}
+      class={classnames(`${prefixCls}-menu-icon`, {
+        [`${prefixCls}-menu-icon-mobile`]: isMobile.value,
+      })}
+    />
   );
   if (trigger.value) {
     return typeof trigger.value === 'function'

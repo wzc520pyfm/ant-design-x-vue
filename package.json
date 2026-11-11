@@ -1,6 +1,6 @@
 {
   "name": "ant-design-x-vue-monorepo",
-  "version": "2.0.0",
+  "version": "2.10.0",
   "private": true,
   "description": "Craft AI-driven interfaces effortlessly - Monorepo",
   "keywords": [
@@ -13,7 +13,7 @@
     "chat-ui",
     "vue"
   ],
-  "homepage": "https://x-vue.ant.design",
+  "homepage": "https://ant-design-x-vue.netlify.app/",
   "bugs": {
     "url": "https://github.com/wzc520pyfm/ant-design-x-vue/issues"
   },
@@ -31,6 +31,7 @@
     "build": "pnpm --filter ant-design-x-vue build",
     "build:sdk": "pnpm --filter @ant-design-x-vue/x-sdk build",
     "build:markdown": "pnpm --filter @ant-design-x-vue/x-markdown build",
+    "build:card": "pnpm --filter @ant-design-x-vue/x-card build",
     "build:all": "pnpm --filter './packages/*' build",
     "build:watch": "pnpm --filter ant-design-x-vue build:watch",
     "docs:build": "pnpm run -C docs build",
@@ -45,6 +46,7 @@
     "test": "vitest run",
     "test:sdk": "pnpm --filter @ant-design-x-vue/x-sdk test",
     "test:markdown": "pnpm --filter @ant-design-x-vue/x-markdown test",
+    "test:card": "pnpm --filter @ant-design-x-vue/x-card test",
     "test:cov": "pnpm --filter @ant-design-x-vue/components test:cov",
     "test:all": "pnpm --filter './packages/*' test",
     "update-contributors": "node scripts/update-contributors.js",

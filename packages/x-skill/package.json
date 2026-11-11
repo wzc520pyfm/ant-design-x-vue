@@ -1,0 +1,45 @@
+{
+  "name": "@ant-design-x-vue/x-skill",
+  "version": "2.10.0",
+  "description": "CLI tool for installing Vue Agent skills for ant-design-x-vue into Cursor and Claude Code",
+  "keywords": [
+    "AI",
+    "SKILL",
+    "Agent",
+    "Copilot",
+    "ant",
+    "vue",
+    "ant-design-x-vue"
+  ],
+  "homepage": "https://ant-design-x-vue.netlify.app/x-skill/introduce",
+  "bugs": {
+    "url": "https://github.com/wzc520pyfm/ant-design-x-vue/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wzc520pyfm/ant-design-x-vue"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "wzc520pyfm",
+    "email": "wzc520pyf@163.com",
+    "url": "https://github.com/wzc520pyfm"
+  },
+  "bin": {
+    "x-skill-vue": "bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "skills",
+    "skills-zh"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node -e \"console.log('x-skill: nothing to compile')\""
+  }
+}

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Space, Spin, Typography, message as messageAnt } from 'ant-design-vue';
 import { Sender } from 'ant-design-x-vue';
-import { onWatcherCleanup, ref, watch, h } from 'vue';
+import { ref, watch, h } from 'vue';
 
 defineOptions({ name: 'AXSenderActionsSetup' });
 
@@ -11,7 +11,7 @@ const value = ref('');
 const loading = ref<boolean>(false);
 
 // Mock send message
-watch(loading, () => {
+watch(loading, (_n, _o, onCleanup) => {
   if (loading.value) {
     const timer = setTimeout(() => {
       loading.value = false;
@@ -19,7 +19,7 @@ watch(loading, () => {
       message.success('Send message successfully!');
     }, 2000);
 
-    onWatcherCleanup(() => {
+    onCleanup(() => {
       clearTimeout(timer);
     });
   }

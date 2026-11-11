@@ -10,13 +10,15 @@ function plain(text: string, href: string): DefaultTheme.SidebarItem {
   return { text, link: href }
 }
 
-/** Matches `@ant-design/x@2.0.0` `Header/Navigation.tsx` defaultItems. */
+/** Matches `@ant-design/x@2.10.0` `Header/Navigation.tsx` defaultItems. */
 export const nav: DefaultTheme.NavItem[] = [
   link('设计', '/design/introduce', '/design/'),
   link('研发', '/development/introduce', '/development/'),
   link('组件', '/component/overview', '/component/'),
   link('X Markdown', '/x-markdown/introduce', '/x-markdown/'),
   link('X SDK', '/x-sdk/introduce', '/x-sdk/'),
+  link('X Card', '/x-card/introduce', '/x-card/'),
+  link('X Skill', '/x-skill/introduce', '/x-skill/'),
   link('演示', '/playground/ultramodern', '/playground/'),
 ]
 
@@ -59,6 +61,9 @@ const componentSidebar: DefaultTheme.SidebarItem[] = [
     items: [
       plain('Actions 操作列表', '/component/actions'),
       plain('FileCard 文件卡片', '/component/file-card'),
+      plain('CodeHighlighter 代码高亮', '/component/code-highlighter'),
+      plain('Mermaid 图表', '/component/mermaid'),
+      plain('Folder 文件夹', '/component/folder'),
     ],
   },
   {
@@ -155,7 +160,6 @@ const developmentSidebar: DefaultTheme.SidebarItem[] = [
     text: '其他',
     items: [
       plain('FAQ', '/development/faq'),
-      plain('2.0 核对清单', '/development/release-checklist'),
     ],
   },
 ]
@@ -226,12 +230,26 @@ const playgroundSidebar: DefaultTheme.SidebarItem[] = [
   },
 ]
 
+const cardSidebar: DefaultTheme.SidebarItem[] = [
+  plain('介绍', '/x-card/introduce'),
+  plain('A2UI v0.8', '/x-card/a2ui-v-0-8'),
+  plain('A2UI v0.9', '/x-card/a2ui-v-0-9'),
+]
+
+const skillSidebar: DefaultTheme.SidebarItem[] = [
+  plain('介绍', '/x-skill/introduce'),
+  plain('Prompt 模板', '/x-skill/prompt'),
+  plain('技能列表', '/x-skill/skills'),
+]
+
 export const sidebar: DefaultTheme.Sidebar = {
   '/design/': designSidebar,
   '/development/': developmentSidebar,
   '/component/': componentSidebar,
   '/x-markdown/': markdownSidebar,
   '/x-sdk/': sdkSidebar,
+  '/x-card/': cardSidebar,
+  '/x-skill/': skillSidebar,
   '/playground/': playgroundSidebar,
 }
 

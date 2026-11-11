@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath, URL } from 'node:url'
 import { mdPlugin } from './config/plugins'
 import { nav, sidebar } from './config/nav'
+import { nav as navEn, sidebar as sidebarEn } from './config/en'
 import { legacyRewriteMap } from './config/version-switch'
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { MarkdownTransform } from './plugins/markdown-transform';
@@ -52,6 +53,10 @@ export default defineConfig({
           find: /^@ant-design-x-vue\/x-sdk$/,
           replacement: path.resolve(__dirname, '../../packages/x-sdk/src/index.ts')
         },
+        {
+          find: /^@ant-design-x-vue\/x-card$/,
+          replacement: path.resolve(__dirname, '../../packages/x-card/src/index.ts')
+        },
         // Exact package entry only. Deep imports such as
         // `@antv/gpt-vis/dist/esm/vis/line` stay on the published files.
         // The barrel pulls in G6 and exhausts the Netlify docs heap.
@@ -98,45 +103,98 @@ export default defineConfig({
     ['link', { rel: 'icon', href: '/images/x-logo.svg' }],
   ],
   appearance: 'dark',
-  lang: 'zh-CN',
   // Old `*-v2` slugs stay reachable on this 2.x site. 1.x lives on another origin.
   rewrites: legacyRewriteMap(),
+  locales: {
+    root: {
+      label: '简体中文',
+      lang: 'zh-CN',
+      themeConfig: {
+        nav,
+        sidebar,
+        outline: {
+          label: '本页目录',
+          level: [2, 3],
+        },
+        docFooter: {
+          prev: '上一篇',
+          next: '下一篇',
+        },
+        darkModeSwitchLabel: '主题',
+        lightModeSwitchTitle: '切换到浅色',
+        darkModeSwitchTitle: '切换到深色',
+        sidebarMenuLabel: '菜单',
+        returnToTopLabel: '回到顶部',
+        langMenuLabel: '切换语言',
+      },
+    },
+    en: {
+      label: 'English',
+      lang: 'en-US',
+      themeConfig: {
+        nav: navEn,
+        sidebar: sidebarEn,
+        outline: {
+          label: 'On this page',
+          level: [2, 3],
+        },
+        docFooter: {
+          prev: 'Previous page',
+          next: 'Next page',
+        },
+        darkModeSwitchLabel: 'Theme',
+        lightModeSwitchTitle: 'Switch to light theme',
+        darkModeSwitchTitle: 'Switch to dark theme',
+        sidebarMenuLabel: 'Menu',
+        returnToTopLabel: 'Return to top',
+        langMenuLabel: 'Change language',
+      },
+    },
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original',
     siteTitle: 'Ant Design X <span class="brand-vue">Vue</span>',
-    nav,
-    sidebar,
-    outline: {
-      label: '本页目录',
-      level: [2, 3],
-    },
-    docFooter: {
-      prev: '上一篇',
-      next: '下一篇',
-    },
-    darkModeSwitchLabel: '主题',
-    lightModeSwitchTitle: '切换到浅色',
-    darkModeSwitchTitle: '切换到深色',
-    sidebarMenuLabel: '菜单',
-    returnToTopLabel: '回到顶部',
     search: {
       provider: 'local',
       options: {
-        translations: {
-          button: {
-            buttonText: '搜索',
-            buttonAriaLabel: '搜索文档',
+        locales: {
+          root: {
+            translations: {
+              button: {
+                buttonText: '搜索',
+                buttonAriaLabel: '搜索文档',
+              },
+              modal: {
+                displayDetails: '显示详细列表',
+                resetButtonTitle: '清除',
+                backButtonTitle: '关闭',
+                noResultsText: '没有找到结果',
+                footer: {
+                  selectText: '选择',
+                  navigateText: '切换',
+                  closeText: '关闭',
+                },
+              },
+            },
           },
-          modal: {
-            displayDetails: '显示详细列表',
-            resetButtonTitle: '清除',
-            backButtonTitle: '关闭',
-            noResultsText: '没有找到结果',
-            footer: {
-              selectText: '选择',
-              navigateText: '切换',
-              closeText: '关闭',
+          en: {
+            translations: {
+              button: {
+                buttonText: 'Search',
+                buttonAriaLabel: 'Search docs',
+              },
+              modal: {
+                displayDetails: 'Display detailed list',
+                resetButtonTitle: 'Reset search',
+                backButtonTitle: 'Close search',
+                noResultsText: 'No results found',
+                footer: {
+                  selectText: 'to select',
+                  navigateText: 'to navigate',
+                  closeText: 'to close',
+                },
+              },
             },
           },
         },

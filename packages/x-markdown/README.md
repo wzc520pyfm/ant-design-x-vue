@@ -38,43 +38,56 @@ console.log('Hello');
 
 ### With Streaming
 
+Pass a boolean for the 2.10 preset (`incremental` + `incompleteMarkdown: 'complete'` + `typewriter`), or an object for per-option control (`tail`, `enableAnimation`, …):
+
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
-import { XMarkdown, useStreaming } from '@ant-design-x-vue/x-markdown';
+import { XMarkdown } from '@ant-design-x-vue/x-markdown';
 
 const content = ref('');
-const streaming = ref(true);
+const isStreaming = ref(true);
 
-// Simulated streaming content
 const simulateStream = async () => {
   const text = 'Hello, this is streaming markdown content...';
   for (const char of text) {
     content.value += char;
     await new Promise((r) => setTimeout(r, 50));
   }
-  streaming.value = false;
+  isStreaming.value = false;
 };
 </script>
 
 <template>
-  <XMarkdown :content="content" :streaming="streaming" />
+  <XMarkdown :content="content" :streaming="isStreaming" />
 </template>
 ```
 
 ### With Plugins
 
-```typescript
-import { XMarkdown } from '@ant-design-x-vue/x-markdown';
-import { createHighlightCodePlugin } from '@ant-design-x-vue/x-markdown/plugins/highlight-code';
-import { createLatexPlugin } from '@ant-design-x-vue/x-markdown/plugins/latex';
-import { createMermaidPlugin } from '@ant-design-x-vue/x-markdown/plugins/mermaid';
+```vue
+<script setup lang="ts">
+import {
+  HighlightCode,
+  Latex,
+  Mermaid,
+  XMarkdown,
+} from '@ant-design-x-vue/x-markdown';
 
-const plugins = [
-  createHighlightCodePlugin({ theme: 'dark' }),
-  createLatexPlugin(),
-  createMermaidPlugin(),
-];
+const components = {
+  code: HighlightCode,
+  mermaid: Mermaid,
+};
+const config = { extensions: Latex() };
+</script>
+
+<template>
+  <XMarkdown
+    :content="content"
+    :components="components"
+    :config="config"
+  />
+</template>
 ```
 
 ## Themes
