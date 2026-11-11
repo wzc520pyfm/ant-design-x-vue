@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useData, useRoute } from 'vitepress'
 import type { DefaultTheme } from 'vitepress/theme'
 import VersionSwitch from './VersionSwitch.vue'
@@ -110,17 +110,60 @@ function onResize() {
   if (!narrow.value) menuOpen.value = false
 }
 
+function closeVitepressSidebar() {
+  const backdrop = document.querySelector('.VPBackdrop') as HTMLElement | null
+  if (backdrop) {
+    backdrop.click()
+    return
+  }
+  if (document.querySelector('.VPSidebar.open')) {
+    window.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }))
+  }
+}
+
+function toggleMenu() {
+  const next = !menuOpen.value
+  if (next) closeVitepressSidebar()
+  menuOpen.value = next
+}
+
+function onKeyup(e: KeyboardEvent) {
+  if (e.key === 'Escape' && menuOpen.value) menuOpen.value = false
+}
+
+function onSidebarClass(mutations: MutationRecord[]) {
+  for (const mutation of mutations) {
+    const el = mutation.target as HTMLElement
+    if (el.classList.contains('open')) menuOpen.value = false
+  }
+}
+
+let sidebarObserver: MutationObserver | null = null
+
+watch(menuOpen, (open) => {
+  if (open) closeVitepressSidebar()
+})
+
 onMounted(() => {
   lastY = window.scrollY
   scrollY.value = lastY
   onResize()
   window.addEventListener('scroll', onScroll, { passive: true })
   window.addEventListener('resize', onResize)
+  window.addEventListener('keyup', onKeyup)
+  const sidebar = document.querySelector('.VPSidebar')
+  if (sidebar) {
+    sidebarObserver = new MutationObserver(onSidebarClass)
+    sidebarObserver.observe(sidebar, { attributes: true, attributeFilter: ['class'] })
+  }
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
   window.removeEventListener('resize', onResize)
+  window.removeEventListener('keyup', onKeyup)
+  sidebarObserver?.disconnect()
+  sidebarObserver = null
 })
 </script>
 
@@ -151,7 +194,7 @@ onUnmounted(() => {
       type="button"
       class="x-icon-btn"
       :aria-label="isEn ? 'Open menu' : '打开菜单'"
-      @click="menuOpen = !menuOpen"
+      @click="toggleMenu"
     >
       <span v-if="menuOpen">✕</span>
       <span v-else>☰</span>
@@ -194,25 +237,30 @@ onUnmounted(() => {
       </a>
     </div>
 
-    <div v-if="narrow && menuOpen" class="x-drawer">
-      <nav>
-        <a
-          v-for="item in items"
-          :key="item.key"
-          :href="item.href"
-          :class="{ active: activeKey === item.key }"
-          @click="menuOpen = false"
-        >{{ item.text }}</a>
-      </nav>
-      <div class="x-actions">
-        <VersionSwitch />
-        <a class="x-icon-btn x-lang" :href="switchHref" :title="switchLabel" :aria-label="switchLabel" @click="menuOpen = false">{{ isEn ? '中文' : 'EN' }}</a>
-        <button type="button" class="x-icon-btn" :aria-label="isEn ? 'Toggle theme' : '切换主题'" @click="toggleTheme">
-          {{ isDark ? (isEn ? 'Light' : '浅色') : (isEn ? 'Dark' : '深色') }}
-        </button>
-        <a class="x-icon-btn" href="https://github.com/wzc520pyfm/ant-design-x-vue" target="_blank" rel="noreferrer">GitHub</a>
+    <Teleport to="body">
+      <div v-if="narrow && menuOpen" class="x-drawer-root" :class="{ 'on-home': onHome }">
+        <div class="x-drawer-mask" @click="menuOpen = false" />
+        <div class="x-drawer">
+          <nav>
+            <a
+              v-for="item in items"
+              :key="item.key"
+              :href="item.href"
+              :class="{ active: activeKey === item.key }"
+              @click="menuOpen = false"
+            >{{ item.text }}</a>
+          </nav>
+          <div class="x-actions">
+            <VersionSwitch />
+            <a class="x-icon-btn x-lang" :href="switchHref" :title="switchLabel" :aria-label="switchLabel" @click="menuOpen = false">{{ isEn ? '中文' : 'EN' }}</a>
+            <button type="button" class="x-icon-btn" :aria-label="isEn ? 'Toggle theme' : '切换主题'" @click="toggleTheme">
+              {{ isDark ? (isEn ? 'Light' : '浅色') : (isEn ? 'Dark' : '深色') }}
+            </button>
+            <a class="x-icon-btn" href="https://github.com/wzc520pyfm/ant-design-x-vue" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </div>
       </div>
-    </div>
+    </Teleport>
   </header>
 </template>
 
@@ -452,25 +500,39 @@ onUnmounted(() => {
 }
 
 
-.x-header.on-home .x-drawer {
+.x-drawer-root.on-home .x-drawer {
   background: #141618;
   color: rgba(255, 255, 255, 0.88);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
-.x-header.on-home .x-drawer a {
+.x-drawer-root.on-home .x-drawer a {
   color: rgba(255, 255, 255, 0.72);
 }
 
-.x-header.on-home .x-drawer a.active,
-.x-header.on-home .x-drawer a:hover {
+.x-drawer-root.on-home .x-drawer a.active,
+.x-drawer-root.on-home .x-drawer a:hover {
   color: #fff;
 }
 
-.x-drawer {
+/* Teleported to body so header backdrop-filter does not become the
+   containing block for position:fixed (which shrank the drawer to the
+   48px pill and stacked it over the VitePress sidebar). */
+.x-drawer-root {
   position: fixed;
-  inset: 72px 16px 16px;
+  inset: 0;
   z-index: 999;
+}
+
+.x-drawer-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.x-drawer {
+  position: absolute;
+  inset: 72px 16px 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -478,6 +540,7 @@ onUnmounted(() => {
   border-radius: 24px;
   background: var(--vp-c-bg);
   box-shadow: var(--vp-shadow-3);
+  overflow: auto;
 }
 
 .x-drawer nav {
@@ -487,7 +550,21 @@ onUnmounted(() => {
 }
 
 .x-drawer .x-actions {
-  justify-content: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-inline-end: 0;
+}
+
+.x-drawer .x-actions .x-icon-btn {
+  width: auto;
+  min-width: 40px;
+  height: 36px;
+  padding: 0 12px;
+}
+
+.x-drawer :deep(.version-switch .ant-select) {
+  width: 108px;
 }
 
 .x-lang {

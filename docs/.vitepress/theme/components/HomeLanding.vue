@@ -240,14 +240,28 @@ function bindRichTrigger() {
   )
   richObserver.observe(el)
 }
+let revealObserver: IntersectionObserver | null = null
 function bindReveal() {
-  const nodes = document.querySelectorAll('.home [data-reveal]')
-  const io = new IntersectionObserver((entries) => {
+  const nodes = document.querySelectorAll<HTMLElement>('.home [data-reveal]')
+  const isInView = (el: Element) => {
+    const rect = el.getBoundingClientRect()
+    const vh = window.innerHeight || document.documentElement.clientHeight
+    return rect.top < vh && rect.bottom > 0
+  }
+  // threshold 0.18 missed short mobile viewports when a parent clip or
+  // backdrop-filter zeroed the intersection ratio; any visible pixel is enough.
+  revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) entry.target.classList.add('in')
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in')
+        revealObserver?.unobserve(entry.target)
+      }
     })
-  }, { threshold: 0.18 })
-  nodes.forEach((node) => io.observe(node))
+  }, { threshold: 0, rootMargin: '80px 0px' })
+  nodes.forEach((node) => {
+    if (isInView(node)) node.classList.add('in')
+    else revealObserver?.observe(node)
+  })
 }
 onMounted(() => {
   bindRichTrigger()
@@ -256,6 +270,8 @@ onMounted(() => {
 onUnmounted(() => {
   richObserver?.disconnect()
   richObserver = null
+  revealObserver?.disconnect()
+  revealObserver = null
 })
 
 function titleParts(title: string, label: string) {
@@ -907,6 +923,15 @@ function titleParts(title: string, label: string) {
 [data-reveal].in {
   opacity: 1;
   transform: none;
+}
+
+/* If IntersectionObserver never fires on a narrow screen, keep the RICH
+   timeline (and other reveal blocks) visible instead of leaving blank 340px slots. */
+@media (max-width: 960px) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .card,

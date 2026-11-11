@@ -422,16 +422,14 @@
 
 /*
  * API / Props markdown tables (属性 / 说明 / 类型 / 默认值 [/ 版本]).
- * Prefer column sizing + vertical wrap over horizontal scroll for technical
- * docs. VitePress defaults use `display: block` + `overflow-x: auto`; site-
- * chrome had `overflow: hidden` (radius) which crushed「默认」/「类型」when
- * sidebar + TOC narrowed the main column. Fixed layout + width shares keep
- * typical API tables readable without overflow-x as the primary UX.
+ * Desktop: fixed layout + width shares keep typical 5-col tables readable in
+ * the main column. Do not use overflow-wrap: anywhere — that breaks Latin
+ * mid-word (avatar → "avata / r", VNode → "VNo de") when a cell is tight.
  *
- * Many SDK/component API tables are 5 columns including「版本」. Claiming
- * 100% width on the first four alone zeroed the version column, so「版本」
- * stacked character-by-character and ballooned thead height (blank gap under
- * the header labels). Always reserve a non-zero share for col 5.
+ * Narrow viewports cannot fit five columns into ~332px without crushing
+ * tokens. Restore horizontal scroll (VitePress's default UX, also how the
+ * React docs behave): keep 属性 / 说明 readable in the first screen, leave
+ * 类型 / 默认值 / 版本 just off-screen.
  */
 .vp-doc table {
   display: table;
@@ -439,7 +437,7 @@
   width: 100%;
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
-  overflow: hidden; /* clip to radius; wrapping avoids needing overflow-x */
+  overflow: hidden;
   font-size: 14px;
   border-collapse: collapse;
 }
@@ -455,31 +453,28 @@
   padding: 12px 16px;
   border-top: 1px solid var(--vp-c-divider);
   vertical-align: top;
-  /* Soft wrap only when needed; avoid word-break:break-word mid-token splits */
   overflow-wrap: break-word;
   word-break: normal;
 }
 
 /*
  * 属性 / 参数 / 字段 — fixed share acts as max width. Short/medium names
- * (conversationKey) stay one line when they fit; very long camelCase
- * (incompleteMarkdownComponentMap) must wrap inside the cell — never
- * overflow/overlap into 说明. No blanket nowrap.
+ * stay one line when they fit; only wrap a token if it is longer than the
+ * cell (break-word), never at arbitrary mid-word points (anywhere).
  */
 .vp-doc th:nth-child(1),
 .vp-doc td:nth-child(1) {
   width: 22%;
   max-width: 22%;
   white-space: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   word-break: normal;
-  overflow: hidden;
 }
 
 .vp-doc th:nth-child(1) code,
 .vp-doc td:nth-child(1) code {
   white-space: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   word-break: normal;
 }
 
@@ -518,8 +513,74 @@
 .vp-doc td:not(:first-child) code,
 .vp-doc th:not(:first-child) code {
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   word-break: normal;
+}
+
+@media (max-width: 959px) {
+  .vp-doc table {
+    display: block;
+    table-layout: auto;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .vp-doc th,
+  .vp-doc td {
+    width: auto;
+    max-width: none;
+    overflow: visible;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .vp-doc th:nth-child(1),
+  .vp-doc td:nth-child(1),
+  .vp-doc th:nth-child(1) code,
+  .vp-doc td:nth-child(1) code {
+    width: auto;
+    max-width: none;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: keep-all;
+    overflow: visible;
+  }
+
+  .vp-doc th:nth-child(2),
+  .vp-doc td:nth-child(2) {
+    min-width: 12em;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+
+  .vp-doc th:nth-child(n + 3),
+  .vp-doc td:nth-child(n + 3) {
+    width: auto;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: keep-all;
+  }
+
+  .vp-doc td:not(:first-child) code,
+  .vp-doc th:not(:first-child) code {
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: keep-all;
+  }
+}
+
+/* Mobile docs sidebar: VitePress uses `top: var(--vp-layout-top-height, 0)`
+   and `padding: 32px` (shorthand wins over our desktop padding-top). The
+   custom DocsHeader is position:fixed with z-index 1000, so without an offset
+   it covers 风格偏好 / tsx / setup at the top of the drawer. */
+@media (max-width: 959px) {
+  aside.VPSidebar {
+    top: 72px !important;
+    padding-top: 16px !important;
+  }
 }
 
 .doc-meta {

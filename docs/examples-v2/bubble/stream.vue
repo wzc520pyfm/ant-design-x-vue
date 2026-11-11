@@ -65,7 +65,7 @@ const handleClear = () => {
 
 defineRender(() => (
   <Flex vertical gap="small">
-    <Flex gap="small" align="center">
+    <Flex gap="small" align="center" wrap class="ax-bubble-stream-toolbar">
       <span>流式数据 / steaming data:</span>
       <Button type="primary" onClick={() => loadStream(2, 100)}>
         load slowly
@@ -108,3 +108,15 @@ defineRender(() => (
   </Flex>
 ));
 </script>
+
+<style>
+.ax-bubble-stream-toolbar {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .ax-bubble-stream-toolbar > span {
+    flex: 1 1 100%;
+  }
+}
+</style>
