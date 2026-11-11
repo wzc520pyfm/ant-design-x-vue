@@ -11,7 +11,7 @@
     "vue",
     "ant-design-x-vue"
   ],
-  "homepage": "https://x-vue.ant.design/x-skill/introduce",
+  "homepage": "https://ant-design-x-vue.netlify.app/x-skill/introduce",
   "bugs": {
     "url": "https://github.com/wzc520pyfm/ant-design-x-vue/issues"
   },
