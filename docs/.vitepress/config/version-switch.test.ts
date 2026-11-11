@@ -24,14 +24,14 @@ describe('cross-site version switch', () => {
     ) as { version: string }
     expect(V2_VERSION_LABEL).toBe(pkg.version)
     expect(V1_DOCS_ORIGIN).toBe('https://1x-ant-design-x-vue.netlify.app')
-    expect(V2_DOCS_ORIGIN).toBe('https://x-vue.ant.design')
+    expect(V2_DOCS_ORIGIN).toBe('https://ant-design-x-vue.netlify.app')
   })
 
   it('treats only the 1.x origin as 1.x', () => {
     expect(currentDocsVersion('https://1x-ant-design-x-vue.netlify.app')).toBe('v1')
     expect(currentDocsVersion('https://1x-ant-design-x-vue.netlify.app/')).toBe('v1')
     expect(currentDocsVersion('http://127.0.0.1:4173')).toBe('v2')
-    expect(currentDocsVersion('https://x-vue.ant.design')).toBe('v2')
+    expect(currentDocsVersion('https://ant-design-x-vue.netlify.app')).toBe('v2')
   })
 
   it('opens the same component on the 1.x site', () => {
@@ -82,10 +82,10 @@ describe('cross-site version switch', () => {
 
   it('sends 1.x pages back to the 2.x origin', () => {
     expect(resolveVersionHref('/component/bubble', 'v2')).toBe(
-      'https://x-vue.ant.design/component/bubble',
+      'https://ant-design-x-vue.netlify.app/component/bubble',
     )
     expect(resolveVersionHref('/component/use-x-chat', 'v2')).toBe(
-      'https://x-vue.ant.design/x-sdk/use-x-chat',
+      'https://ant-design-x-vue.netlify.app/x-sdk/use-x-chat',
     )
     expect(resolveVersionHref('/x-sdk/use-x-chat', 'v1')).toBe(
       'https://1x-ant-design-x-vue.netlify.app/component/use-x-chat',
@@ -97,10 +97,10 @@ describe('cross-site version switch', () => {
       'https://1x-ant-design-x-vue.netlify.app/',
     )
     expect(resolveVersionHref('/component/attachments', 'v2')).toBe(
-      'https://x-vue.ant.design/component/attachments',
+      'https://ant-design-x-vue.netlify.app/component/attachments',
     )
     expect(resolveVersionHref('/component/actions', 'v2')).toBe(
-      'https://x-vue.ant.design/component/actions',
+      'https://ant-design-x-vue.netlify.app/component/actions',
     )
   })
 
@@ -109,9 +109,9 @@ describe('cross-site version switch', () => {
       'https://1x-ant-design-x-vue.netlify.app/component/bubble',
     )
     expect(resolveVersionHref('/en/component/bubble', 'v2')).toBe(
-      'https://x-vue.ant.design/en/component/bubble',
+      'https://ant-design-x-vue.netlify.app/en/component/bubble',
     )
-    expect(resolveVersionHref('/en/', 'v2')).toBe('https://x-vue.ant.design/en/')
+    expect(resolveVersionHref('/en/', 'v2')).toBe('https://ant-design-x-vue.netlify.app/en/')
     expect(resolveVersionHref('/en/x-markdown/introduce', 'v1')).toBe(
       'https://1x-ant-design-x-vue.netlify.app/',
     )
