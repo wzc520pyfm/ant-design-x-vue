@@ -145,6 +145,7 @@ export interface SenderProps {
   value?: string;
   loading?: boolean;
   placeholder?: TextAreaProps['placeholder'];
+  autofocus?: TextAreaProps['autofocus'];
   readOnly?: boolean;
   submitType?: SubmitType;
   disabled?: boolean;

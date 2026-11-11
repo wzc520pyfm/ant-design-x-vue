@@ -32,6 +32,18 @@ sender/basic
 
 </ClientOnly>
 
+### 自动聚焦
+
+<ClientOnly>
+
+:::demo-v2 通过 `autofocus` 设置自动聚焦，支持普通输入和词槽填空模式。普通输入模式遵循浏览器原生行为，页面已有焦点时，浏览器可能不会自动转移焦点。
+
+sender/autofocus
+
+:::
+
+</ClientOnly>
+
 ### 开关组件
 
 <ClientOnly>
@@ -195,6 +207,7 @@ sender/paste-image
 | 属性 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | allowSpeech | 是否允许语音输入 | boolean \| SpeechConfig | false | - |
+| autofocus | 是否在挂载时自动获取焦点，禁用时不生效 | boolean | false | - |
 | autoSize | 自适应内容高度 | boolean \| \{ minRows?: number; maxRows?: number \} | \{ maxRows: 8 \} | - |
 | classNames | 样式类名 | [见下](#semantic-dom) | - | - |
 | components | 自定义组件 | Record\<'input', ComponentType\> | - | - |

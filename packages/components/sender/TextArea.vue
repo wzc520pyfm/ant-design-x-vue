@@ -137,6 +137,7 @@ defineRender(() => {
     <InputTextArea
       {...domProps}
       ref={inputRef}
+      autofocus={ctx.autofocus}
       disabled={ctx.disabled}
       style={ctx.styles?.input}
       class={classnames(`${ctx.prefixCls}-input`, ctx.classNames?.input)}
