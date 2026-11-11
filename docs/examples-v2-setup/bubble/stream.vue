@@ -70,7 +70,7 @@ const handleTypingComplete = () => {
 
 <template>
   <a-flex vertical gap="small">
-    <a-flex gap="small" align="center">
+    <a-flex gap="small" align="center" wrap class="ax-bubble-stream-toolbar">
       <span>流式数据 / steaming data:</span>
       <a-button type="primary" @click="loadStream(2, 100)">load slowly</a-button>
       <a-button @click="loadStream(10, 50)">load quickly</a-button>
@@ -114,3 +114,15 @@ const handleTypingComplete = () => {
     </a-flex>
   </a-flex>
 </template>
+
+<style>
+.ax-bubble-stream-toolbar {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .ax-bubble-stream-toolbar > span {
+    flex: 1 1 100%;
+  }
+}
+</style>
