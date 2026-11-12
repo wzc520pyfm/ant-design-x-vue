@@ -152,6 +152,45 @@ describe('XStream', () => {
     expect(result).toEqual([{ event: 'message' }]);
   });
 
+  it('skips the trailing blank line of a single-newline event', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const chunk = 'event: delta\ndata: {"key":"value"}\n';
+    const result: any[] = [];
+    for await (const value of XStream({
+      readableStream: new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode(chunk));
+          controller.close();
+        },
+      }),
+    })) {
+      result.push(value);
+    }
+    expect(result).toEqual([{ event: 'delta', data: '{"key":"value"}' }]);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('skips blank lines between events without warning', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const chunk = 'event: start\ndata: 1\n\n\nevent: end\ndata: 2\n\n';
+    const result: any[] = [];
+    for await (const value of XStream({
+      readableStream: new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode(chunk));
+          controller.close();
+        },
+      }),
+    })) {
+      result.push(value);
+    }
+    expect(result).toEqual([
+      { event: 'start', data: '1' },
+      { event: 'end', data: '2' },
+    ]);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
   it('should return an instance of ReadableStream', () => {
     expect(
       XStream({
