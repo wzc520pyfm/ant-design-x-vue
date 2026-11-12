@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v1.6.1
+
+[compare changes](https://github.com/wzc520pyfm/ant-design-x-vue/compare/v1.6.0...v1.6.1)
+
+### 🔥 Performance
+
+- **bubble:** Optimize typing hook ([#454](https://github.com/wzc520pyfm/ant-design-x-vue/pull/454))
+
+### 🩹 Fixes
+
+- **suggestion:** Empty array compatibility for items ([#455](https://github.com/wzc520pyfm/ant-design-x-vue/pull/455))
+- **x-stream:** Skip blank lines instead of throwing ([#549](https://github.com/wzc520pyfm/ant-design-x-vue/pull/549))
+
+### 🏡 Chore
+
+- Update badge (097b40f)
+
+### ❤️ Contributors
+
+- Wzc520pyfm ([@wzc520pyfm](https://github.com/wzc520pyfm))
+- panxin ([@pxpy](https://github.com/pxpy))
+
 ## v1.6.0
 
 [compare changes](https://github.com/wzc520pyfm/ant-design-x-vue/compare/v1.5.0...v1.6.0)
