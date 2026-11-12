@@ -94,6 +94,10 @@ function splitPart() {
       const lines = partChunk.split(DEFAULT_PART_SEPARATOR);
 
       const sseEvent = lines.reduce<SSEOutput>((acc, line) => {
+        // A trailing newline inside an event yields a blank line, which carries
+        // no field and must not be treated as a missing separator.
+        if (!isValidString(line)) return acc;
+
         const separatorIndex = line.indexOf(DEFAULT_KV_SEPARATOR);
 
         if (separatorIndex === -1) {
