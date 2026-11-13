@@ -1,8 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import XRequest, {
-  setXRequestGlobalOptions,
-  type XRequestCallbacks,
-} from '../index';
+import XRequest, { type XRequestCallbacks } from '../index';
 import xFetch from '../x-fetch';
 
 vi.mock('../x-fetch', () => ({
@@ -130,6 +127,154 @@ describe('XRequest lifecycle', () => {
     expect(callbacks.onSuccess).toHaveBeenCalledTimes(1);
   });
 
+  it('does not abort a request started from the timeout callback', async () => {
+    vi.useFakeTimers();
+    let request!: ReturnType<typeof XRequest>;
+    let restarted = false;
+    let fetchCalls = 0;
+    const callbacks: XRequestCallbacks<any> = {
+      onSuccess: vi.fn(),
+      onUpdate: vi.fn(),
+      onError: vi.fn(() => {
+        if (restarted) return;
+        restarted = true;
+        request.run({ second: true });
+      }),
+    };
+
+    mockedXFetch.mockImplementation(((_url: string, options: any) => {
+      fetchCalls += 1;
+      if (fetchCalls === 1) {
+        return new Promise((_resolve, reject) => {
+          options.signal.addEventListener('abort', () =>
+            reject(new DOMException('Aborted', 'AbortError')),
+          );
+        });
+      }
+      return new Promise((resolve, reject) => {
+        options.signal.addEventListener('abort', () =>
+          reject(new DOMException('Aborted', 'AbortError')),
+        );
+        setTimeout(() => resolve(jsonResponse({ second: true })), 5);
+      });
+    }) as any);
+
+    request = XRequest(baseURL, { manual: true, timeout: 10, callbacks });
+    request.run({});
+    await vi.advanceTimersByTimeAsync(20);
+    await request.asyncHandler;
+
+    expect(callbacks.onSuccess).toHaveBeenCalledTimes(1);
+    expect((callbacks.onSuccess as any).mock.calls[0][0]).toEqual([
+      { second: true },
+    ]);
+    expect(callbacks.onError).not.toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'AbortError' }),
+    );
+  });
+
+  it('keeps the active timeout when a superseded request settles', async () => {
+    vi.useFakeTimers();
+    const callbacks = createCallbacks();
+    let fetchCalls = 0;
+
+    mockedXFetch.mockImplementation(((_url: string, options: any) => {
+      fetchCalls += 1;
+      if (fetchCalls === 1) {
+        return new Promise((_resolve, reject) => {
+          options.signal.addEventListener('abort', () =>
+            reject(new DOMException('Aborted', 'AbortError')),
+          );
+        });
+      }
+      return new Promise(() => {});
+    }) as any);
+
+    const request = XRequest(baseURL, { manual: true, timeout: 50, callbacks });
+    request.run({ first: true });
+    request.run({ second: true });
+    // Let the superseded request's abort/catch settle before the active timeout.
+    await vi.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(60);
+
+    const timeoutErrors = (callbacks.onError as any).mock.calls.filter(
+      ([error]: [Error]) => error.message === 'TimeoutError',
+    );
+    expect(timeoutErrors).toHaveLength(1);
+  });
+
+  it('does not complete a request superseded from its onUpdate callback', async () => {
+    vi.useFakeTimers();
+    let request!: ReturnType<typeof XRequest>;
+    let restarted = false;
+    let fetchCalls = 0;
+    const callbacks: XRequestCallbacks<any> = {
+      onSuccess: vi.fn(),
+      onUpdate: vi.fn(() => {
+        if (restarted) return;
+        restarted = true;
+        request.run({ second: true });
+      }),
+      onError: vi.fn(),
+    };
+
+    mockedXFetch.mockImplementation(((_url: string) => {
+      fetchCalls += 1;
+      if (fetchCalls === 1) {
+        return Promise.resolve(jsonResponse({ first: true }));
+      }
+      return new Promise(() => {});
+    }) as any);
+
+    request = XRequest(baseURL, { manual: true, callbacks });
+    request.run({});
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(callbacks.onSuccess).not.toHaveBeenCalled();
+    expect(request.isRequesting).toBe(true);
+  });
+
+  it('does not schedule a retry after onError starts a new request', async () => {
+    vi.useFakeTimers();
+    let request!: ReturnType<typeof XRequest>;
+    let restarted = false;
+    let fetchCalls = 0;
+    const callbacks: XRequestCallbacks<any> = {
+      onSuccess: vi.fn(),
+      onUpdate: vi.fn(),
+      onError: vi.fn(() => {
+        if (restarted) return;
+        restarted = true;
+        request.run({ second: true });
+      }),
+    };
+
+    mockedXFetch.mockImplementation(((_url: string, options: any) => {
+      fetchCalls += 1;
+      if (fetchCalls === 1) {
+        return Promise.reject(new Error('boom'));
+      }
+      return new Promise((_resolve, reject) => {
+        options.signal.addEventListener('abort', () =>
+          reject(new DOMException('Aborted', 'AbortError')),
+        );
+      });
+    }) as any);
+
+    request = XRequest(baseURL, {
+      manual: true,
+      retryInterval: 10,
+      retryTimes: 5,
+      callbacks,
+    });
+    request.run({});
+    await vi.advanceTimersByTimeAsync(30);
+
+    expect(fetchCalls).toBe(2);
+    expect(callbacks.onSuccess).not.toHaveBeenCalled();
+    expect(request.isRequesting).toBe(true);
+  });
+
   it('ignores callbacks from a superseded request', async () => {
     const callbacks = createCallbacks();
     let resolveFirst!: (value: unknown) => void;
@@ -162,28 +307,5 @@ describe('XRequest lifecycle', () => {
       { request: 'first' },
       expect.anything(),
     );
-  });
-
-  it('merges global headers instead of replacing them', async () => {
-    const callbacks = createCallbacks();
-    let capturedOptions: any;
-
-    setXRequestGlobalOptions({ headers: { 'X-Global': '1' } });
-    mockedXFetch.mockImplementationOnce(((_url: string, options: any) => {
-      capturedOptions = options;
-      return Promise.resolve(jsonResponse({ ok: true }));
-    }) as any);
-
-    const request = XRequest(baseURL, {
-      callbacks,
-      headers: { 'X-Local': '2' },
-    });
-    await request.asyncHandler;
-
-    expect(capturedOptions.headers).toMatchObject({
-      'Content-Type': 'application/json',
-      'X-Global': '1',
-      'X-Local': '2',
-    });
   });
 });

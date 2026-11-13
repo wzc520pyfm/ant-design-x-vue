@@ -238,8 +238,9 @@ export class XRequestClass<
   ) {
     const generation = ++this.requestGeneration;
     const previousController = this.abortController;
-    this.abortController = new AbortController();
-    const { signal } = this.abortController;
+    const controller = new AbortController();
+    this.abortController = controller;
+    const { signal } = controller;
     // Cancel the previous in-flight request before starting a new one.
     previousController?.abort();
     clearTimeout(this.timeoutHandler);
@@ -301,16 +302,19 @@ export class XRequestClass<
       signal,
       middlewares,
     };
+    let timeoutHandler: ReturnType<typeof setTimeout> | undefined;
     if (timeout && timeout > 0) {
-      this.timeoutHandler = setTimeout(() => {
+      timeoutHandler = setTimeout(() => {
         if (generation !== this.requestGeneration) return;
         this.isTimeout = true;
         this.finishRequest();
+        // Abort this request's own controller before notifying the app:
+        // `onError` may synchronously start a new request, and that request
+        // must not be aborted by this stale timeout.
+        controller.abort();
         callbacks?.onError?.(new Error('TimeoutError'));
-        // Stop the underlying fetch; the catch handler suppresses the duplicate
-        // AbortError callback for this timeout path.
-        this.abortController.abort();
       }, timeout);
+      this.timeoutHandler = timeoutHandler;
     }
     this.startRequest();
     this._asyncHandler = xFetch<Input, Output>(this.baseURL, {
@@ -318,9 +322,10 @@ export class XRequestClass<
       ...requestInit,
     })
       .then(async (response) => {
-        clearTimeout(this.timeoutHandler);
+        clearTimeout(timeoutHandler);
+        if (generation !== this.requestGeneration) return;
 
-        if (generation !== this.requestGeneration || this.isTimeout) return;
+        if (this.isTimeout) return;
 
         if (transformStream) {
           let transformer =
@@ -371,7 +376,7 @@ export class XRequestClass<
         }
       })
       .catch((error) => {
-        clearTimeout(this.timeoutHandler);
+        clearTimeout(timeoutHandler);
         // A newer request superseded this one: drop its late callbacks/retries.
         if (generation !== this.requestGeneration) return;
         if (this.isTimeout) {
@@ -391,6 +396,9 @@ export class XRequestClass<
             ? error
             : new Error('Unknown error!');
         const retryInterval = callbacks?.onError?.(err);
+        // `onError` may synchronously start a newer request. Do not let this
+        // superseded request schedule a retry or mutate the new request.
+        if (generation !== this.requestGeneration) return;
         if (err.name !== 'AbortError') {
           const interval =
             typeof retryInterval === 'number'
@@ -493,31 +501,42 @@ export class XRequestClass<
     requestSignal?: AbortSignal,
     generation?: number,
   ) {
+    const controller = this.abortController;
     const isCurrent = () =>
       generation === undefined ||
       (generation === this.requestGeneration &&
-        (!requestSignal || requestSignal === this.abortController.signal));
+        (!requestSignal || requestSignal === controller.signal));
     const chunks: O[] = [];
     const iterator = stream[Symbol.asyncIterator]();
+    let streamTimeoutHandler: ReturnType<typeof setTimeout> | undefined;
     let result: IteratorResult<O, any>;
     do {
+      if (!isCurrent()) {
+        try {
+          await iterator.return?.(undefined);
+        } catch {
+          /* ignore cleanup errors */
+        }
+        return;
+      }
       if (streamTimeout) {
-        this.streamTimeoutHandler = setTimeout(() => {
+        streamTimeoutHandler = setTimeout(() => {
           if (!isCurrent()) return;
           this.isStreamTimeout = true;
           this.finishRequest();
+          // Abort this request's own controller before notifying the app:
+          // `onError` may synchronously start a new request.
+          controller.abort();
           callbacks?.onError?.(
             new Error('StreamTimeoutError'),
             undefined,
             response.headers,
           );
-          // Abort a hung stream so the reader/network stops; the catch handler
-          // suppresses the duplicate AbortError callback for this path.
-          this.abortController.abort();
         }, streamTimeout);
+        this.streamTimeoutHandler = streamTimeoutHandler;
       }
       result = await iterator.next();
-      clearTimeout(this.streamTimeoutHandler);
+      clearTimeout(streamTimeoutHandler);
       if (!isCurrent()) {
         try {
           await iterator.return?.(undefined);
@@ -532,13 +551,23 @@ export class XRequestClass<
       if (result.value) {
         chunks.push(result.value);
         callbacks?.onUpdate?.(result.value, response.headers);
+        // `onUpdate` may synchronously start a newer request; stop touching
+        // this request's state if it did.
+        if (!isCurrent()) {
+          try {
+            await iterator.return?.(undefined);
+          } catch {
+            /* ignore cleanup errors */
+          }
+          return;
+        }
         if (typeof (result.value as any)?.id !== 'undefined') {
           this.lastEventId = (result.value as any).id;
         }
       }
     } while (!result.done);
     if (streamTimeout) {
-      clearTimeout(this.streamTimeoutHandler);
+      clearTimeout(streamTimeoutHandler);
       if (this.isStreamTimeout) {
         // Release the stream reader so a timed-out response stops consuming.
         try {
@@ -580,6 +609,9 @@ export class XRequestClass<
       callbacks?.onError?.(error, chunk, response.headers);
     } else {
       callbacks?.onUpdate?.(chunk, response.headers);
+      // `onUpdate` may synchronously start a newer request; do not clear or
+      // complete that request's state.
+      if (!isCurrent()) return;
       this.finishRequest();
       callbacks?.onSuccess?.([chunk], response.headers);
     }
