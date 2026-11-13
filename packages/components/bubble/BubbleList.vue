@@ -241,6 +241,10 @@ const renderBubble = (item: BubbleItemType, roleConfig: RoleProps) => {
         loadingRender={slots.loading ? () => slots.loading?.({ item }) : mergedProps.loadingRender}
         {...mergedProps}
         content={slots.content ? slots.content({ item }) : mergedProps.content}
+        // The slot output is already rendered content. Applying contentRender
+        // or messageRender to it would stringify the VNode.
+        contentRender={slots.content ? undefined : mergedProps.contentRender}
+        messageRender={slots.content ? undefined : mergedProps.messageRender}
         _key={key}
         typing={initialized.value ? mergedProps.typing : false}
         onTypingComplete={mergedProps.onTypingComplete}
