@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect, type CSSProperties, type VNode } from 'vue';
+import {
+  computed,
+  ref,
+  watchEffect,
+  type CSSProperties,
+  type VNode,
+} from 'vue';
 import classnames from 'classnames';
 import hljs from 'highlight.js/lib/core';
 import hljsBash from 'highlight.js/lib/languages/bash';
@@ -47,7 +53,9 @@ const darkSurface = computed(() => isDarkColor(token.value.colorBgContainer));
 const [contextLocale] = useLocale('HighlightCode');
 
 const { direction, getPrefixCls } = useXProviderContext();
-const prefixCls = computed(() => getPrefixCls('highlightCode', props.prefixCls));
+const prefixCls = computed(() =>
+  getPrefixCls('highlightCode', props.prefixCls),
+);
 
 const rootCls = computed(() =>
   classnames(prefixCls.value, props.className, props.classNames?.root, {
@@ -61,9 +69,11 @@ const headerCls = computed(() =>
 const headerTitleCls = computed(() =>
   classnames(`${prefixCls.value}-header-title`, props.classNames?.headerTitle),
 );
-const codeBoxCls = computed(() => classnames(`${prefixCls.value}-code`, props.classNames?.code, {
-  [`${prefixCls.value}-code-dark`]: darkSurface.value,
-}));
+const codeBoxCls = computed(() =>
+  classnames(`${prefixCls.value}-code`, props.classNames?.code, {
+    [`${prefixCls.value}-code-dark`]: darkSurface.value,
+  }),
+);
 
 const headerStyle = computed(() => ({
   background: token.value.colorFillContent,
@@ -81,9 +91,9 @@ const copyStyle = computed(() => ({
 }));
 
 async function handleCopyCode() {
-  if (!props.children) return;
+  if (!childrenText.value) return;
   try {
-    await navigator.clipboard.writeText(props.children.trim());
+    await navigator.clipboard.writeText(childrenText.value.trim());
     message.success(contextLocale.value.copySuccess);
   } catch (e) {
     console.error('Failed to copy code:', e);
@@ -92,10 +102,38 @@ async function handleCopyCode() {
 
 const highlightedCode = ref<string>('');
 
+function normalizeChildrenText(children: unknown): string {
+  if (typeof children === 'string') return children;
+  if (Array.isArray(children))
+    return children.map(normalizeChildrenText).join('');
+  if (children === null || children === undefined) return '';
+  return String(children);
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+const childrenText = computed(() => normalizeChildrenText(props.children));
+// Render code as text until highlight.js output is ready. `v-html` below must
+// never receive raw source, otherwise an HTML payload inside a fenced block
+// executes during the async highlight gap.
+const displayCode = computed(
+  () =>
+    highlightedCode.value || escapeHtml(childrenText.value.replace(/\n$/, '')),
+);
+
 async function registerLanguage(lang: string) {
   if (!lang || hljs.getLanguage(lang)) return;
   try {
-    const mod = await import(/* @vite-ignore */ `highlight.js/lib/languages/${lang}`);
+    const mod = await import(
+      /* @vite-ignore */ `highlight.js/lib/languages/${lang}`
+    );
     hljs.registerLanguage(lang, mod.default);
   } catch {
     /* unknown language – fall back to auto */
@@ -103,7 +141,7 @@ async function registerLanguage(lang: string) {
 }
 
 watchEffect(async () => {
-  const text = props.children || '';
+  const text = childrenText.value;
   const lang = props.lang;
   if (!text) {
     highlightedCode.value = '';
@@ -126,25 +164,28 @@ watchEffect(async () => {
 </script>
 
 <template>
-  <code v-if="children && !lang">{{ children }}</code>
+  <code v-if="childrenText && !lang">{{ childrenText }}</code>
   <div
-    v-else-if="children && lang"
+    v-else-if="childrenText && lang"
     :class="rootCls"
     :style="{ ...style, ...styles?.root }"
   >
     <component :is="header" v-if="header" />
-    <div
-      v-else-if="header !== null"
-      :class="headerCls"
-      :style="headerStyle"
-    >
-      <span :class="headerTitleCls" :style="styles?.headerTitle">{{ lang }}</span>
-      <button type="button" :class="`${prefixCls}-copy-btn`" :style="copyStyle" @click="handleCopyCode">
+    <div v-else-if="header !== null" :class="headerCls" :style="headerStyle">
+      <span :class="headerTitleCls" :style="styles?.headerTitle">{{
+        lang
+      }}</span>
+      <button
+        type="button"
+        :class="`${prefixCls}-copy-btn`"
+        :style="copyStyle"
+        @click="handleCopyCode"
+      >
         {{ contextLocale.copy }}
       </button>
     </div>
     <div :class="codeBoxCls" :style="codeStyle">
-      <pre><code :class="`language-${lang}`" v-html="highlightedCode || (children || '').replace(/\n$/, '')" /></pre>
+      <pre><code :class="`language-${lang}`" v-html="displayCode" /></pre>
     </div>
   </div>
 </template>

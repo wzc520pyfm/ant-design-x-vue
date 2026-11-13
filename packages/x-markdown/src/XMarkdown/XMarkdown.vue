@@ -10,8 +10,8 @@ import {
   type VNode,
 } from 'vue';
 import type { XMarkdownProps } from './interface';
-import { Parser, htmlToVNode, buildDomPurifyConfig } from './core';
-import DOMPurify from 'dompurify';
+import { Parser, htmlToVNode } from './core';
+import { sanitizeMarkdownHtml } from './core/sanitize';
 import { useStreaming, useTypewriter } from './hooks';
 import { resolveStreaming, resolveTailContent } from './utils';
 import classnames from 'classnames';
@@ -76,7 +76,9 @@ const streamStatus = computed(() => (streamingFlag.value ? 'loading' : 'done'));
 const rawContent = computed(() => props.content ?? props.children ?? '');
 
 const typewriterOption = computed(() => resolvedStreaming.value?.typewriter);
-const typewriterActive = computed(() => !!resolvedStreaming.value?.hasNextChunk);
+const typewriterActive = computed(
+  () => !!resolvedStreaming.value?.hasNextChunk,
+);
 
 const pacedContent = useTypewriter({
   content: rawContent,
@@ -87,18 +89,25 @@ const pacedContent = useTypewriter({
 const streamingOptionRef = computed(() => resolvedStreaming.value);
 const componentsRef = computed(() => props.components);
 
-const { displayedContent: displayContent, sections: streamSections } = useStreaming({
-  content: pacedContent,
-  streamingOption: streamingOptionRef as any,
-  components: componentsRef as any,
-});
+const { displayedContent: displayContent, sections: streamSections } =
+  useStreaming({
+    content: pacedContent,
+    streamingOption: streamingOptionRef as any,
+    components: componentsRef as any,
+  });
 
-const tailContent = computed(() => resolveTailContent(resolvedStreaming.value?.tail));
+const tailContent = computed(() =>
+  resolveTailContent(resolvedStreaming.value?.tail),
+);
 const TailComponent = computed(() => {
   const tail = resolvedStreaming.value?.tail;
-  return typeof tail === 'object' && tail ? (tail.component as Component | undefined) : undefined;
+  return typeof tail === 'object' && tail
+    ? (tail.component as Component | undefined)
+    : undefined;
 });
-const shouldShowTail = computed(() => !!resolvedStreaming.value?.hasNextChunk && !!tailContent.value);
+const shouldShowTail = computed(
+  () => !!resolvedStreaming.value?.hasNextChunk && !!tailContent.value,
+);
 
 const mergedComponents = computed(() => {
   if (!shouldShowTail.value) return props.components || {};
@@ -165,13 +174,12 @@ function renderMarkdownSection(source: string, injectTail: boolean): VNode[] {
   if (!source) return [];
   const transformed = applyPlugins(source);
   const raw = parser.value.parse(transformed, { injectTail });
-  const html =
-    typeof document === 'undefined'
-      ? raw
-      : (DOMPurify.sanitize(
-          raw,
-          buildDomPurifyConfig(mergedComponents.value, props.dompurifyConfig) as any,
-        ) as unknown as string);
+  const html = sanitizeMarkdownHtml(
+    raw,
+    mergedComponents.value,
+    props.dompurifyConfig,
+  );
+  // No sanitizer available (SSR/Node): skip rendering instead of emitting raw HTML.
   if (!html) return [];
   return htmlToVNode(html, {
     components: mergedComponents.value,
@@ -189,7 +197,17 @@ const bodyVNodes = computed((): VNode[] => {
       const injectTail = shouldShowTail.value && index === sections.length - 1;
       const part = renderMarkdownSection(section, injectTail);
       // Keyed wrapper keeps finished sections stable across chunk updates.
-      nodes.push(h('div', { key: `xmd-sec-${index}`, class: 'xmd-section', style: { display: 'contents' } }, part));
+      nodes.push(
+        h(
+          'div',
+          {
+            key: `xmd-sec-${index}`,
+            class: 'xmd-section',
+            style: { display: 'contents' },
+          },
+          part,
+        ),
+      );
     });
     return nodes;
   }

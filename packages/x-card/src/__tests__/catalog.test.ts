@@ -45,4 +45,16 @@ describe('catalog', () => {
     expect(empty.components).toEqual({});
     warn.mockRestore();
   });
+
+  it('rejects non-http(s) catalog URLs before fetching', async () => {
+    await expect(loadCatalog('javascript:alert(1)')).rejects.toThrow(
+      'Unsupported catalog URL',
+    );
+    await expect(loadCatalog('file:///etc/passwd')).rejects.toThrow(
+      'Unsupported catalog URL',
+    );
+    await expect(
+      loadCatalog('data:text/html,<script>alert(1)</script>'),
+    ).rejects.toThrow('Unsupported catalog URL');
+  });
 });
