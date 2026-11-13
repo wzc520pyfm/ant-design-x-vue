@@ -91,14 +91,17 @@ export interface XRequestOptions<
 
 export type XRequestGlobalOptions<Input, Output> = Pick<
   XRequestOptions<Input, Output>,
-  | 'headers'
-  | 'timeout'
-  | 'streamTimeout'
-  | 'middlewares'
-  | 'fetch'
-  | 'transformStream'
-  | 'manual'
->;
+  'headers' | 'timeout' | 'streamTimeout' | 'middlewares' | 'fetch' | 'manual'
+> & {
+  /**
+   * Global transform factory. Called once per request so overlapping requests
+   * never share (and lock) the same TransformStream instance.
+   */
+  transformStream?: (
+    baseURL: string,
+    responseHeaders: Headers,
+  ) => XStreamOptions<Output>['transformStream'];
+};
 
 export type XRequestFunction<Input = AnyObject, Output = SSEOutput> = (
   baseURL: string,
@@ -106,6 +109,31 @@ export type XRequestFunction<Input = AnyObject, Output = SSEOutput> = (
 ) => XRequestClass<Input, Output>;
 
 const LastEventId = 'Last-Event-ID';
+
+/**
+ * Merge header maps case-insensitively; later sources win. Keeping a single
+ * casing variant avoids fetch combining values such as `application/json` and
+ * `text/plain` for the same header.
+ */
+function mergeHeaders(
+  ...sources: Array<Record<string, string> | undefined>
+): Record<string, string> {
+  const merged: Record<string, string> = {};
+  const canonical = new Map<string, string>();
+  for (const source of sources) {
+    if (!source) continue;
+    for (const [name, value] of Object.entries(source)) {
+      const lower = name.toLowerCase();
+      const previous = canonical.get(lower);
+      if (previous && previous !== name) {
+        delete merged[previous];
+      }
+      merged[name] = value;
+      canonical.set(lower, name);
+    }
+  }
+  return merged;
+}
 
 const globalOptions: XRequestGlobalOptions<AnyObject, AnyObject> = {
   manual: false,
@@ -117,11 +145,23 @@ const globalOptions: XRequestGlobalOptions<AnyObject, AnyObject> = {
 export function setXRequestGlobalOptions<Input, Output>(
   options: XRequestGlobalOptions<Input, Output>,
 ) {
-  const { headers, ...rest } = options;
+  const { headers, transformStream, ...rest } = options;
   Object.assign(globalOptions, rest);
   if (headers) {
     // Merge instead of replacing so the default Content-Type survives.
-    globalOptions.headers = { ...globalOptions.headers, ...headers };
+    globalOptions.headers = mergeHeaders(globalOptions.headers, headers);
+  }
+  if (transformStream) {
+    if (typeof transformStream === 'function') {
+      globalOptions.transformStream = transformStream as XRequestGlobalOptions<
+        AnyObject,
+        AnyObject
+      >['transformStream'];
+    } else {
+      console.warn(
+        'The global transformStream option must be a factory returning a fresh TransformStream per request.',
+      );
+    }
   }
 }
 
@@ -243,6 +283,9 @@ export class XRequestClass<
     const { signal } = controller;
     // Cancel the previous in-flight request before starting a new one.
     previousController?.abort();
+    // An abort listener may synchronously start a newer request; stop here so
+    // this stale init does not clear or overwrite that request's timers/handler.
+    if (generation !== this.requestGeneration) return;
     clearTimeout(this.timeoutHandler);
     clearTimeout(this.streamTimeoutHandler);
     this.isTimeout = false;
@@ -273,17 +316,20 @@ export class XRequestClass<
         Input,
         Output
       >['middlewares']);
+    const globalTransformStream =
+      typeof globalOptions.transformStream === 'function'
+        ? globalOptions.transformStream
+        : undefined;
     const transformStream =
       optionTransformStream ??
-      (globalOptions.transformStream as XRequestOptions<
+      (globalTransformStream as XRequestOptions<
         Input,
         Output
       >['transformStream']);
-    const mergedHeaders = Object.assign(
-      {},
-      globalOptions.headers || {},
+    const mergedHeaders = mergeHeaders(
+      globalOptions.headers,
       headers,
-      extraHeaders || {},
+      extraHeaders,
     );
     const requestInit: XRequestOptions<Input, Output> = {
       ...otherOptions,

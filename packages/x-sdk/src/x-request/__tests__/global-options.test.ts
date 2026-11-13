@@ -22,26 +22,47 @@ function jsonResponse(data: unknown) {
 describe('XRequest global options', () => {
   // This test mutates module-level state, so it lives in its own file to keep
   // Vitest's per-file module isolation.
-  it('merges global headers instead of replacing them', async () => {
-    let capturedOptions: any;
+  it('merges headers case-insensitively while keeping unrelated defaults', async () => {
+    const captured: any[] = [];
 
-    setXRequestGlobalOptions({ headers: { 'X-Global': '1' } });
-    mockedXFetch.mockImplementationOnce(((_url: string, options: any) => {
-      capturedOptions = options;
+    setXRequestGlobalOptions({
+      headers: { 'X-Global': '1', 'content-type': 'text/plain' },
+    });
+    mockedXFetch.mockImplementation(((_url: string, options: any) => {
+      captured.push(options);
       return Promise.resolve(jsonResponse({ ok: true }));
     }) as any);
 
     const callbacks = { onSuccess: vi.fn(), onError: vi.fn() };
-    const request = XRequest(baseURL, {
+
+    const first = XRequest(baseURL, {
       callbacks,
       headers: { 'X-Local': '2' },
     });
-    await request.asyncHandler;
+    await first.asyncHandler;
 
-    expect(capturedOptions.headers).toMatchObject({
-      'Content-Type': 'application/json',
-      'X-Global': '1',
-      'X-Local': '2',
+    const firstHeaders = captured[0].headers;
+    expect(
+      Object.keys(firstHeaders).filter(
+        (key) => key.toLowerCase() === 'content-type',
+      ),
+    ).toEqual(['content-type']);
+    expect(firstHeaders['content-type']).toBe('text/plain');
+    expect(firstHeaders['X-Global']).toBe('1');
+    expect(firstHeaders['X-Local']).toBe('2');
+
+    const second = XRequest(baseURL, {
+      callbacks,
+      headers: { 'CONTENT-TYPE': 'application/xml' },
     });
+    await second.asyncHandler;
+
+    const secondHeaders = captured[1].headers;
+    expect(
+      Object.keys(secondHeaders).filter(
+        (key) => key.toLowerCase() === 'content-type',
+      ),
+    ).toEqual(['CONTENT-TYPE']);
+    expect(secondHeaders['CONTENT-TYPE']).toBe('application/xml');
   });
 });

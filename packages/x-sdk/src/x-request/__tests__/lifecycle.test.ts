@@ -275,6 +275,49 @@ describe('XRequest lifecycle', () => {
     expect(request.isRequesting).toBe(true);
   });
 
+  it('does not overwrite a request started from the previous abort listener', async () => {
+    vi.useFakeTimers();
+    let request!: ReturnType<typeof XRequest>;
+    let startedThird = false;
+    let fetchCalls = 0;
+    const callbacks: XRequestCallbacks<any> = {
+      onSuccess: vi.fn(),
+      onError: vi.fn(),
+    };
+
+    mockedXFetch.mockImplementation(((_url: string, options: any) => {
+      fetchCalls += 1;
+      if (fetchCalls === 1) {
+        options.signal.addEventListener('abort', () => {
+          if (startedThird) return;
+          startedThird = true;
+          request.run({ third: true });
+        });
+        return new Promise((_resolve, reject) => {
+          options.signal.addEventListener('abort', () =>
+            reject(new DOMException('Aborted', 'AbortError')),
+          );
+        });
+      }
+      if (fetchCalls === 2) {
+        return Promise.resolve(jsonResponse({ third: true }));
+      }
+      return new Promise(() => {});
+    }) as any);
+
+    request = XRequest(baseURL, { manual: true, callbacks });
+    request.run({ first: true });
+    request.run({ second: true });
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(fetchCalls).toBe(2);
+    await request.asyncHandler;
+    expect(callbacks.onSuccess).toHaveBeenCalledTimes(1);
+    expect((callbacks.onSuccess as any).mock.calls[0][0]).toEqual([
+      { third: true },
+    ]);
+  });
+
   it('ignores callbacks from a superseded request', async () => {
     const callbacks = createCallbacks();
     let resolveFirst!: (value: unknown) => void;

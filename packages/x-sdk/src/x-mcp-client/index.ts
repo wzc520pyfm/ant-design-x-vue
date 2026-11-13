@@ -46,6 +46,9 @@ export class XMCPClientClass {
     return new Promise((resolve, reject) => {
       XRequest(this.baseURL, {
         ...(this.options || {}),
+        // Internal helper requests must start immediately even when the host
+        // app sets `manual: true` globally.
+        manual: false,
         callbacks: {
           onSuccess(chunks) {
             resolve((chunks?.[0] as XMCPTool[]) || []);
