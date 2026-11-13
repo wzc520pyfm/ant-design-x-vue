@@ -83,6 +83,7 @@ Box 作为容器，管理 Card 实例和命令分发。默认插槽里放 `XCard
 | commands | A2UI 命令对象 | `(A2UICommand_v0_9 \| XAgentCommand_v0_8)[]` | `[]` |
 | components | 自定义组件映射，名称必须以大写字母开头 | `Record<string, Component>` | - |
 | onAction | Card 内部触发 action 时的回调 | `(payload: ActionPayload) => void` | - |
+| catalogOptions | Catalog 加载选项：独立 registry、自定义 fetch、内网主机放行策略 | `CatalogFetchOptions` | - |
 
 ### XCard.Card
 

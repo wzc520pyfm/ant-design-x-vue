@@ -1,6 +1,19 @@
 <script setup lang="ts">
-import { computed, markRaw, provide, ref, watch, type Component } from 'vue';
-import { loadCatalog, type Catalog } from './catalog';
+import {
+  computed,
+  markRaw,
+  onBeforeUnmount,
+  provide,
+  ref,
+  watch,
+  type Component,
+} from 'vue';
+import {
+  createCatalogRegistry,
+  loadCatalog,
+  type Catalog,
+  type CatalogFetchOptions,
+} from './catalog';
 import { boxContextKey } from './context';
 import type { ActionPayload } from './types/box';
 import type { A2UICommand_v0_9 } from './types/command_v0.9';
@@ -12,6 +25,7 @@ const props = defineProps<{
   commands?: (A2UICommand_v0_9 | XAgentCommand_v0_8)[];
   components?: Record<string, any>;
   onAction?: (payload: ActionPayload) => void;
+  catalogOptions?: CatalogFetchOptions;
 }>();
 
 const rawComponents = computed(() => {
@@ -26,6 +40,20 @@ const rawComponents = computed(() => {
 const catalogMap = ref(new Map<string, Catalog>());
 const surfaceCatalogMap = ref(new Map<string, string>());
 const processedCommandsCount = ref(0);
+
+// A Box owns its remote catalog cache so two apps (or two SSR renders) can
+// never see each other's catalogs. Callers can inject their own registry.
+const ownCatalogRegistry = createCatalogRegistry();
+const catalogOptions = computed<CatalogFetchOptions>(() => ({
+  ...props.catalogOptions,
+  registry: props.catalogOptions?.registry ?? ownCatalogRegistry,
+}));
+
+onBeforeUnmount(() => {
+  if (!props.catalogOptions?.registry) {
+    ownCatalogRegistry.clear();
+  }
+});
 
 watch(
   () => props.commands,
@@ -50,7 +78,7 @@ watch(
             next.set(surfaceId, catalogId);
             surfaceCatalogMap.value = next;
           }
-          loadCatalog(catalogId)
+          loadCatalog(catalogId, catalogOptions.value)
             .then((catalog) => {
               if (catalogMap.value.has(catalogId)) return;
               const next = new Map(catalogMap.value);

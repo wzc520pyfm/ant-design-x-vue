@@ -221,6 +221,8 @@ A catalog lists allowed components and their JSON Schema. Implementation names m
 
 Helpers: `loadCatalog(catalogId)`, `validateComponent(catalog, name, props)`, `clearCatalogCache()`.
 
+Each `XCard.Box` uses its own catalog cache and clears it on unmount. Remote catalog URLs reject loopback, private and internal hosts by default; use `catalogOptions.allowedHosts` for a precise allowlist or `catalogOptions.allowInternalHosts` to opt out of all internal-host checks. Pass a custom `catalogOptions.registry` when catalogs should be shared across Boxes.
+
 ## Quick start
 
 ```vue
