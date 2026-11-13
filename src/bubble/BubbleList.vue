@@ -173,6 +173,9 @@ defineRender(() => {
           footer={slots.footer?.({ item: { key, ...bubble } }) ?? bubble.footer}
           loadingRender={slots.loading ? () => slots.loading({ item: { key, ...bubble } }) : bubble.loadingRender}
           content={slots.message?.({ item: { key, ...bubble } }) ?? bubble.content}
+          // The slot output is already rendered content. Applying messageRender
+          // to it would stringify the VNode and render `[object Object]`.
+          messageRender={slots.message ? undefined : bubble.messageRender}
           key={key}
           _key={key}
           // 用于更新滚动的ref
