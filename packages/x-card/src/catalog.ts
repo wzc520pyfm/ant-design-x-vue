@@ -39,6 +39,19 @@ export function registerCatalog(catalog: Catalog): void {
 }
 
 /**
+ * Only http(s) catalogs may be fetched. Agent-provided `catalogId` values are
+ * untrusted; schemes such as `file:`, `data:` or `javascript:` must never reach
+ * `fetch`, especially in SSR/Node.
+ */
+function assertFetchableCatalogUrl(catalogId: string): void {
+  if (!/^https?:\/\//i.test(catalogId)) {
+    throw new Error(
+      `Unsupported catalog URL "${catalogId}". Only http:// and https:// catalogs can be loaded.`,
+    );
+  }
+}
+
+/**
  * 加载 catalog（支持远程 URL 或本地注册的 schema）
  * @param catalogId catalog 的 URL 或本地 ID
  * @returns catalog 定义
@@ -61,11 +74,15 @@ export async function loadCatalog(catalogId: string): Promise<Catalog> {
     };
   }
 
+  assertFetchableCatalogUrl(catalogId);
+
   // 从远程加载
   try {
     const response = await fetch(catalogId);
     if (!response.ok) {
-      throw new Error(`Failed to load catalog from ${catalogId}: ${response.statusText}`);
+      throw new Error(
+        `Failed to load catalog from ${catalogId}: ${response.statusText}`,
+      );
     }
 
     const catalog: Catalog = await response.json();
@@ -99,7 +116,9 @@ export function validateComponent(
   if (componentDef.required) {
     for (const field of componentDef.required) {
       if (!(field in componentProps)) {
-        console.warn(`Missing required field "${field}" for component "${componentName}"`);
+        console.warn(
+          `Missing required field "${field}" for component "${componentName}"`,
+        );
         return false;
       }
     }
