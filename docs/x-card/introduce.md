@@ -228,7 +228,7 @@ Catalog 描述可用组件及其 JSON Schema，保证校验与类型安全。组
 
 也可 `loadCatalog(catalogId)` 拉取远程目录，用 `validateComponent` 做属性校验。
 
-每个 `XCard.Box` 默认使用独立的 catalog 缓存，并在卸载时清理；远程 catalog URL 默认拒绝 loopback、私有网段和内网主机，可通过 `catalogOptions.allowedHosts` 精确放行，或用 `catalogOptions.allowInternalHosts` 放宽全部内网限制。需要跨 Box 共享缓存时可传入自定义 `catalogOptions.registry`。
+每个 `XCard.Box` 默认使用独立的 catalog 缓存，并在卸载时清理；远程 catalog URL 默认拒绝 loopback、私有网段和内网主机。服务端还会解析主机名并把已验证的 IP 绑定到连接；浏览器端只做主机名检查，无法解析 DNS。可通过 `catalogOptions.allowedHosts` 精确放行，或用 `catalogOptions.allowInternalHosts` 放宽全部内网限制。需要跨 Box 共享缓存时可传入自定义 `catalogOptions.registry`。
 
 ## 快速开始
 

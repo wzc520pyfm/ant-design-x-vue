@@ -63,7 +63,11 @@ export function createCatalogRegistry(): CatalogRegistry {
 export interface CatalogFetchOptions {
   /** Registry used for lookup and caching. Defaults to the module-level one. */
   registry?: CatalogRegistry;
-  /** Custom fetch, e.g. a server-side fetch with an egress proxy. */
+  /**
+   * Custom fetch / transport. When provided, it is responsible for DNS
+   * rebinding and redirect protections; the built-in Node transport pins the
+   * validated address instead.
+   */
   fetch?: typeof fetch;
   /** Explicitly allow loopback/private/internal hosts. Defaults to false. */
   allowInternalHosts?: boolean;
@@ -215,10 +219,27 @@ function isAllowedHost(url: URL, allowedHosts?: string[]): boolean {
   });
 }
 
-async function assertCatalogUrlAllowed(
+interface CatalogTarget {
+  url: URL;
+  /** Address pinned for the Node transport. */
+  address?: string;
+  family?: number;
+}
+
+interface CatalogResponse {
+  ok: boolean;
+  status: number;
+  statusText: string;
+  url: string;
+  headers: { get(name: string): string | null };
+  json(): Promise<unknown>;
+  body?: { cancel?: () => Promise<void> } | null;
+}
+
+async function resolveCatalogTarget(
   catalogId: string,
   options?: CatalogFetchOptions,
-): Promise<void> {
+): Promise<CatalogTarget> {
   let url: URL;
   try {
     url = new URL(catalogId);
@@ -236,7 +257,7 @@ async function assertCatalogUrlAllowed(
     options?.allowInternalHosts ||
     isAllowedHost(url, options?.allowedHosts)
   ) {
-    return;
+    return { url };
   }
 
   const hostname = normalizeHost(url.hostname);
@@ -246,13 +267,19 @@ async function assertCatalogUrlAllowed(
     );
   }
 
-  if (!isNodeRuntime() || isIPv4(hostname) || hostname.includes(':')) {
-    return;
+  if (isIPv4(hostname)) {
+    return { url, address: hostname, family: 4 };
+  }
+  if (hostname.includes(':')) {
+    return { url, address: hostname, family: 6 };
+  }
+  if (!isNodeRuntime()) {
+    return { url };
   }
 
   try {
-    // Resolve the host on the server so a public hostname pointing at an
-    // internal address (including metadata endpoints) is rejected.
+    // Resolve on the server and pin the validated address in the transport, so
+    // a second lookup during connection setup cannot reach a private address.
     const dnsModule = 'node:dns/promises';
     const dns = await import(/* @vite-ignore */ dnsModule);
     const records = await dns.lookup(hostname, { all: true, verbatim: true });
@@ -266,6 +293,8 @@ async function assertCatalogUrlAllowed(
         `Blocked catalog URL "${catalogId}": host resolves to a private address.`,
       );
     }
+    const first = records[0];
+    return { url, address: first.address, family: first.family };
   } catch (error) {
     if (
       error instanceof Error &&
@@ -277,38 +306,152 @@ async function assertCatalogUrlAllowed(
   }
 }
 
+async function cancelResponseBody(response: CatalogResponse): Promise<void> {
+  try {
+    await response.body?.cancel?.();
+  } catch {
+    /* ignore cleanup errors */
+  }
+}
+
+/**
+ * @internal Build Node request options with the validated address pinned, while
+ * preserving the original hostname for HTTP Host and TLS SNI.
+ */
+export function createPinnedRequestOptions(
+  url: URL,
+  address?: string,
+  family?: number,
+): Record<string, unknown> {
+  const isHttps = url.protocol === 'https:';
+  const options: Record<string, unknown> = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      'accept-encoding': 'identity',
+    },
+  };
+
+  if (address) {
+    options.lookup = (
+      _hostname: string,
+      _options: unknown,
+      callback: (error: Error | null, address: string, family: number) => void,
+    ) => {
+      callback(null, address, family ?? (address.includes(':') ? 6 : 4));
+    };
+    const hostname = normalizeHost(url.hostname);
+    if (isHttps && !isIPv4(hostname) && !hostname.includes(':')) {
+      options.servername = hostname;
+    }
+  }
+
+  return options;
+}
+
+async function fetchPinnedCatalog(
+  target: CatalogTarget,
+): Promise<CatalogResponse> {
+  const isHttps = target.url.protocol === 'https:';
+  const moduleName = isHttps ? 'node:https' : 'node:http';
+  const nodeHttp = await import(/* @vite-ignore */ moduleName);
+  const request = nodeHttp.request ?? nodeHttp.default?.request;
+  if (typeof request !== 'function') {
+    throw new Error(`Unable to load the Node ${moduleName} transport.`);
+  }
+
+  return new Promise<CatalogResponse>((resolve, reject) => {
+    const requestOptions = createPinnedRequestOptions(
+      target.url,
+      target.address,
+      target.family,
+    );
+
+    const req = request(target.url, requestOptions, (res: any) => {
+      const chunks: Buffer[] = [];
+      res.on('data', (chunk: Buffer) => chunks.push(chunk));
+      res.on('end', () => {
+        const body = Buffer.concat(chunks).toString('utf8');
+        const status = res.statusCode ?? 0;
+        resolve({
+          ok: status >= 200 && status < 300,
+          status,
+          statusText: res.statusMessage ?? '',
+          url: target.url.toString(),
+          headers: {
+            get(name: string) {
+              const value = res.headers?.[name.toLowerCase()];
+              return Array.isArray(value) ? value[0] ?? null : value ?? null;
+            },
+          },
+          json: async () => JSON.parse(body),
+        });
+      });
+      res.on('error', reject);
+    });
+
+    req.on('error', reject);
+    req.end();
+  });
+}
+
+async function fetchWithImpl(
+  url: string,
+  fetchImpl: typeof fetch,
+  manualRedirects: boolean,
+): Promise<CatalogResponse> {
+  const response = await fetchImpl(url, {
+    redirect: manualRedirects ? 'manual' : 'follow',
+  });
+  return response as unknown as CatalogResponse;
+}
+
 async function fetchCatalogResponse(
-  catalogId: string,
+  initialTarget: CatalogTarget,
   options?: CatalogFetchOptions,
-): Promise<Response> {
-  const fetchImpl = options?.fetch ?? fetch;
-  const manualRedirects = isNodeRuntime();
-  let current = catalogId;
+): Promise<CatalogResponse> {
+  const fetchImpl = options?.fetch;
+  const node = isNodeRuntime();
+  let target = initialTarget;
 
   for (
     let redirectCount = 0;
     redirectCount <= MAX_REDIRECTS;
     redirectCount += 1
   ) {
-    const response = await fetchImpl(current, {
-      redirect: manualRedirects ? 'manual' : 'follow',
-    });
+    const response = fetchImpl
+      ? await fetchWithImpl(target.url.toString(), fetchImpl, node)
+      : node
+      ? await fetchPinnedCatalog(target)
+      : await fetchWithImpl(target.url.toString(), fetch, false);
 
-    if (response.url && response.url !== current) {
+    if (response.url && response.url !== target.url.toString()) {
       // A custom fetch may follow redirects itself; validate the final URL too.
-      await assertCatalogUrlAllowed(response.url, options);
+      await resolveCatalogTarget(response.url, options);
     }
 
-    if (manualRedirects && REDIRECT_STATUS.has(response.status)) {
+    if (node && REDIRECT_STATUS.has(response.status)) {
       const location = response.headers.get('location');
       if (!location) {
+        await cancelResponseBody(response);
         throw new Error(
-          `Catalog redirect from ${current} is missing a Location header.`,
+          `Catalog redirect from ${target.url} is missing a Location header.`,
         );
       }
-      const next = new URL(location, current).toString();
-      await assertCatalogUrlAllowed(next, options);
-      current = next;
+
+      let nextTarget: CatalogTarget;
+      try {
+        nextTarget = await resolveCatalogTarget(
+          new URL(location, target.url).toString(),
+          options,
+        );
+      } catch (error) {
+        await cancelResponseBody(response);
+        throw error;
+      }
+
+      await cancelResponseBody(response);
+      target = nextTarget;
       continue;
     }
 
@@ -316,7 +459,7 @@ async function fetchCatalogResponse(
   }
 
   throw new Error(
-    `Too many redirects while loading catalog from ${catalogId}.`,
+    `Too many redirects while loading catalog from ${initialTarget.url}.`,
   );
 }
 
@@ -363,18 +506,18 @@ export async function loadCatalog(
     };
   }
 
-  await assertCatalogUrlAllowed(catalogId, options);
+  const target = await resolveCatalogTarget(catalogId, options);
 
   // 从远程加载
   try {
-    const response = await fetchCatalogResponse(catalogId, options);
+    const response = await fetchCatalogResponse(target, options);
     if (!response.ok) {
       throw new Error(
         `Failed to load catalog from ${catalogId}: ${response.statusText}`,
       );
     }
 
-    const catalog: Catalog = await response.json();
+    const catalog = (await response.json()) as Catalog;
     (registry ?? defaultCache).set(catalogId, catalog);
     return catalog;
   } catch (error) {
