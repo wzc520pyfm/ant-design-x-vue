@@ -621,6 +621,9 @@ export class XRequestClass<
         } catch {
           /* ignore cleanup errors */
         }
+        // Cleanup can start a new request (e.g. an abort/cleanup callback calls
+        // run()); do not clear that request's isRequesting state.
+        if (!isCurrent()) return;
         this.finishRequest();
         return;
       }
