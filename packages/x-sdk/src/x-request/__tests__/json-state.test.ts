@@ -50,7 +50,7 @@ describe('XRequest JSON failure state', () => {
     }
   });
 
-  it('keeps a new request active when an older JSON failure resolves later', async () => {
+  it('ignores an older JSON failure that resolves after a newer request starts', async () => {
     let resolveOlderBody!: (body: unknown) => void;
     let resolveNewerResponse!: (response: Response) => void;
     let notifyBodyStarted!: () => void;
@@ -96,7 +96,8 @@ describe('XRequest JSON failure state', () => {
 
     expect(request.asyncHandler).toBe(newerRequest);
     expect(request.isRequesting).toBe(true);
-    expect(callbackStates).toEqual([true]);
+    // The superseded request must not surface its late error to the app.
+    expect(callbackStates).toEqual([]);
 
     resolveNewerResponse(jsonResponse({ success: true }));
     await newerRequest;

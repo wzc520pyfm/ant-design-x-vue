@@ -1,11 +1,19 @@
 import type { AnyObject } from '../_util/type';
 import type { MessageInfo, SimpleType } from '../x-chat';
-import type { JSONOutPut, SSEOutput, XReadableStream, XStreamOptions } from '../x-stream';
+import type {
+  JSONOutPut,
+  SSEOutput,
+  XReadableStream,
+  XStreamOptions,
+} from '../x-stream';
 import XStream from '../x-stream';
 import type { XFetchMiddlewares } from './x-fetch';
 import xFetch from './x-fetch';
 
-export interface XRequestCallbacks<Output, ChatMessage extends SimpleType = any> {
+export interface XRequestCallbacks<
+  Output,
+  ChatMessage extends SimpleType = any,
+> {
   /**
    * @description Callback when the request is successful
    */
@@ -51,7 +59,10 @@ export interface XRequestOptions<
   middlewares?: XFetchMiddlewares<Input, Output>;
   transformStream?:
     | XStreamOptions<Output>['transformStream']
-    | ((baseURL: string, responseHeaders: Headers) => XStreamOptions<Output>['transformStream']);
+    | ((
+        baseURL: string,
+        responseHeaders: Headers,
+      ) => XStreamOptions<Output>['transformStream']);
   /**
    * @description Separator between stream events
    * @default "\n\n"
@@ -80,7 +91,13 @@ export interface XRequestOptions<
 
 export type XRequestGlobalOptions<Input, Output> = Pick<
   XRequestOptions<Input, Output>,
-  'headers' | 'timeout' | 'streamTimeout' | 'middlewares' | 'fetch' | 'transformStream' | 'manual'
+  | 'headers'
+  | 'timeout'
+  | 'streamTimeout'
+  | 'middlewares'
+  | 'fetch'
+  | 'transformStream'
+  | 'manual'
 >;
 
 export type XRequestFunction<Input = AnyObject, Output = SSEOutput> = (
@@ -100,7 +117,12 @@ const globalOptions: XRequestGlobalOptions<AnyObject, AnyObject> = {
 export function setXRequestGlobalOptions<Input, Output>(
   options: XRequestGlobalOptions<Input, Output>,
 ) {
-  Object.assign(globalOptions, options);
+  const { headers, ...rest } = options;
+  Object.assign(globalOptions, rest);
+  if (headers) {
+    // Merge instead of replacing so the default Content-Type survives.
+    globalOptions.headers = { ...globalOptions.headers, ...headers };
+  }
 }
 
 export abstract class AbstractXRequestClass<
@@ -111,8 +133,12 @@ export abstract class AbstractXRequestClass<
   baseURL!: string;
   options!: XRequestOptions<Input, Output, ChatMessage>;
 
-  constructor(baseURL: string, options?: XRequestOptions<Input, Output, ChatMessage>) {
-    if (!baseURL || typeof baseURL !== 'string') throw new Error('The baseURL is not valid!');
+  constructor(
+    baseURL: string,
+    options?: XRequestOptions<Input, Output, ChatMessage>,
+  ) {
+    if (!baseURL || typeof baseURL !== 'string')
+      throw new Error('The baseURL is not valid!');
     this.baseURL = baseURL;
     this.options = options || {};
   }
@@ -145,6 +171,8 @@ export class XRequestClass<
   private retryTimes = 0;
   private retryTimer: ReturnType<typeof setTimeout> | undefined;
   private lastEventId: any;
+  /** Monotonic id; callbacks from older requests are ignored. */
+  private requestGeneration = 0;
 
   public get asyncHandler() {
     return this._asyncHandler;
@@ -174,9 +202,12 @@ export class XRequestClass<
     return this._manual;
   }
 
-  constructor(baseURL: string, options?: XRequestOptions<Input, Output, ChatMessage>) {
+  constructor(
+    baseURL: string,
+    options?: XRequestOptions<Input, Output, ChatMessage>,
+  ) {
     super(baseURL, options);
-    this._manual = options?.manual || false;
+    this._manual = options?.manual ?? globalOptions.manual ?? false;
     if (!this.manual) {
       this.init();
     }
@@ -201,23 +232,52 @@ export class XRequestClass<
     this.abortController?.abort();
   }
 
-  private init(extraParams?: Partial<Input>, extraHeaders?: Record<string, string>) {
+  private init(
+    extraParams?: Partial<Input>,
+    extraHeaders?: Record<string, string>,
+  ) {
+    const generation = ++this.requestGeneration;
+    const previousController = this.abortController;
     this.abortController = new AbortController();
     const { signal } = this.abortController;
+    // Cancel the previous in-flight request before starting a new one.
+    previousController?.abort();
+    clearTimeout(this.timeoutHandler);
+    clearTimeout(this.streamTimeoutHandler);
+    this.isTimeout = false;
+    this.isStreamTimeout = false;
+
     const {
       callbacks,
       params,
       headers = {},
-      transformStream,
-      fetch,
-      timeout,
-      streamTimeout,
-      middlewares,
+      transformStream: optionTransformStream,
+      fetch: optionFetch,
+      timeout: optionTimeout,
+      streamTimeout: optionStreamTimeout,
+      middlewares: optionMiddlewares,
       streamSeparator,
       partSeparator,
       kvSeparator,
       ...otherOptions
     } = this.options;
+    const timeout = optionTimeout ?? globalOptions.timeout;
+    const streamTimeout = optionStreamTimeout ?? globalOptions.streamTimeout;
+    const fetch =
+      optionFetch ??
+      (globalOptions.fetch as XRequestOptions<Input, Output>['fetch']);
+    const middlewares =
+      optionMiddlewares ??
+      (globalOptions.middlewares as XRequestOptions<
+        Input,
+        Output
+      >['middlewares']);
+    const transformStream =
+      optionTransformStream ??
+      (globalOptions.transformStream as XRequestOptions<
+        Input,
+        Output
+      >['transformStream']);
     const mergedHeaders = Object.assign(
       {},
       globalOptions.headers || {},
@@ -227,10 +287,12 @@ export class XRequestClass<
     const requestInit: XRequestOptions<Input, Output> = {
       ...otherOptions,
       method: (otherOptions as RequestInit).method || 'POST',
-      body: (otherOptions as RequestInit).body ?? JSON.stringify({
-        ...params,
-        ...(extraParams || {}),
-      }),
+      body:
+        (otherOptions as RequestInit).body ??
+        JSON.stringify({
+          ...params,
+          ...(extraParams || {}),
+        }),
       params: {
         ...params,
         ...extraParams,
@@ -241,9 +303,13 @@ export class XRequestClass<
     };
     if (timeout && timeout > 0) {
       this.timeoutHandler = setTimeout(() => {
+        if (generation !== this.requestGeneration) return;
         this.isTimeout = true;
         this.finishRequest();
         callbacks?.onError?.(new Error('TimeoutError'));
+        // Stop the underlying fetch; the catch handler suppresses the duplicate
+        // AbortError callback for this timeout path.
+        this.abortController.abort();
       }, timeout);
     }
     this.startRequest();
@@ -254,10 +320,11 @@ export class XRequestClass<
       .then(async (response) => {
         clearTimeout(this.timeoutHandler);
 
-        if (this.isTimeout) return;
+        if (generation !== this.requestGeneration || this.isTimeout) return;
 
         if (transformStream) {
-          let transformer = transformStream as XStreamOptions<Output>['transformStream'];
+          let transformer =
+            transformStream as XStreamOptions<Output>['transformStream'];
           if (typeof transformStream === 'function') {
             transformer = transformStream(this.baseURL, response.headers);
           }
@@ -270,6 +337,7 @@ export class XRequestClass<
             partSeparator,
             kvSeparator,
             signal,
+            generation,
           );
           return;
         }
@@ -285,28 +353,49 @@ export class XRequestClass<
               partSeparator,
               kvSeparator,
               signal,
+              generation,
             );
             break;
           case 'application/json':
-            await this.jsonResponseHandler<Output, ChatMessage>(response, signal, callbacks);
+            await this.jsonResponseHandler<Output, ChatMessage>(
+              response,
+              signal,
+              callbacks,
+              generation,
+            );
             break;
           default:
-            throw new Error(`The response content-type: ${contentType} is not support!`);
+            throw new Error(
+              `The response content-type: ${contentType} is not support!`,
+            );
         }
       })
       .catch((error) => {
         clearTimeout(this.timeoutHandler);
+        // A newer request superseded this one: drop its late callbacks/retries.
+        if (generation !== this.requestGeneration) return;
+        if (this.isTimeout) {
+          this.finishRequest();
+          return;
+        }
+        if (this.isStreamTimeout) {
+          this.finishRequest();
+          return;
+        }
         if (signal === this.abortController.signal) {
           this.finishRequest();
         }
         const err =
-          error instanceof Error || (typeof DOMException !== 'undefined' && error instanceof DOMException)
+          error instanceof Error ||
+          (typeof DOMException !== 'undefined' && error instanceof DOMException)
             ? error
             : new Error('Unknown error!');
         const retryInterval = callbacks?.onError?.(err);
         if (err.name !== 'AbortError') {
           const interval =
-            typeof retryInterval === 'number' ? retryInterval : this.options.retryInterval;
+            typeof retryInterval === 'number'
+              ? retryInterval
+              : this.options.retryInterval;
           if (interval && interval > 0) {
             if (
               typeof this.options.retryTimes === 'number' &&
@@ -348,6 +437,7 @@ export class XRequestClass<
     partSeparator?: string,
     kvSeparator?: string,
     requestSignal?: AbortSignal,
+    generation?: number,
   ) => {
     const stream = XStream<O>({
       readableStream: response.body!,
@@ -356,7 +446,14 @@ export class XRequestClass<
       partSeparator,
       kvSeparator,
     });
-    await this.processStream<O, M>(stream, response, callbacks, streamTimeout, requestSignal);
+    await this.processStream<O, M>(
+      stream,
+      response,
+      callbacks,
+      streamTimeout,
+      requestSignal,
+      generation,
+    );
   };
 
   private sseResponseHandler = async <
@@ -370,6 +467,7 @@ export class XRequestClass<
     partSeparator?: string,
     kvSeparator?: string,
     requestSignal?: AbortSignal,
+    generation?: number,
   ) => {
     const stream = XStream<O>({
       readableStream: response.body!,
@@ -377,7 +475,14 @@ export class XRequestClass<
       partSeparator,
       kvSeparator,
     });
-    await this.processStream<O, M>(stream, response, callbacks, streamTimeout, requestSignal);
+    await this.processStream<O, M>(
+      stream,
+      response,
+      callbacks,
+      streamTimeout,
+      requestSignal,
+      generation,
+    );
   };
 
   private async processStream<O, M extends SimpleType = any>(
@@ -386,22 +491,41 @@ export class XRequestClass<
     callbacks?: XRequestCallbacks<O, M>,
     streamTimeout?: number,
     requestSignal?: AbortSignal,
+    generation?: number,
   ) {
+    const isCurrent = () =>
+      generation === undefined ||
+      (generation === this.requestGeneration &&
+        (!requestSignal || requestSignal === this.abortController.signal));
     const chunks: O[] = [];
     const iterator = stream[Symbol.asyncIterator]();
     let result: IteratorResult<O, any>;
     do {
       if (streamTimeout) {
         this.streamTimeoutHandler = setTimeout(() => {
+          if (!isCurrent()) return;
           this.isStreamTimeout = true;
-          if (!requestSignal || requestSignal === this.abortController.signal) {
-            this.finishRequest();
-          }
-          callbacks?.onError?.(new Error('StreamTimeoutError'), undefined, response.headers);
+          this.finishRequest();
+          callbacks?.onError?.(
+            new Error('StreamTimeoutError'),
+            undefined,
+            response.headers,
+          );
+          // Abort a hung stream so the reader/network stops; the catch handler
+          // suppresses the duplicate AbortError callback for this path.
+          this.abortController.abort();
         }, streamTimeout);
       }
       result = await iterator.next();
       clearTimeout(this.streamTimeoutHandler);
+      if (!isCurrent()) {
+        try {
+          await iterator.return?.(undefined);
+        } catch {
+          /* ignore cleanup errors */
+        }
+        return;
+      }
       if (this.isStreamTimeout) {
         break;
       }
@@ -416,15 +540,18 @@ export class XRequestClass<
     if (streamTimeout) {
       clearTimeout(this.streamTimeoutHandler);
       if (this.isStreamTimeout) {
-        if (!requestSignal || requestSignal === this.abortController.signal) {
-          this.finishRequest();
+        // Release the stream reader so a timed-out response stops consuming.
+        try {
+          await iterator.return?.(undefined);
+        } catch {
+          /* ignore cleanup errors */
         }
+        this.finishRequest();
         return;
       }
     }
-    if (!requestSignal || requestSignal === this.abortController.signal) {
-      this.finishRequest();
-    }
+    if (!isCurrent()) return;
+    this.finishRequest();
     callbacks?.onSuccess?.(chunks, response.headers);
   }
 
@@ -435,16 +562,21 @@ export class XRequestClass<
     response: Response,
     requestSignal: AbortSignal,
     callbacks?: XRequestCallbacks<O, M>,
+    generation?: number,
   ) => {
+    const isCurrent = () =>
+      generation === undefined ||
+      (generation === this.requestGeneration &&
+        requestSignal === this.abortController.signal);
     const chunk: O = await response.json();
+
+    if (!isCurrent()) return;
 
     if ((chunk as unknown as JSONOutPut)?.success === false) {
       const j = chunk as unknown as JSONOutPut;
       const error = new Error(j.message || 'System error');
       error.name = j.name || 'SystemError';
-      if (requestSignal === this.abortController.signal) {
-        this.finishRequest();
-      }
+      this.finishRequest();
       callbacks?.onError?.(error, chunk, response.headers);
     } else {
       callbacks?.onUpdate?.(chunk, response.headers);
@@ -472,5 +604,5 @@ function XRequest<
 }
 
 export default XRequest;
-export { XRequest };
 export type { XFetchMiddlewares } from './x-fetch';
+export { XRequest };
