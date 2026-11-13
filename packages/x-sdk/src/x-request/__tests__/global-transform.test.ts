@@ -50,4 +50,45 @@ describe('XRequest global transformStream', () => {
     expect(warn).toHaveBeenCalled();
     warn.mockRestore();
   });
+
+  it('calls the global transform factory per request and applies its output', async () => {
+    const factory = vi.fn(
+      (_baseURL: string, _headers: Headers) =>
+        new TransformStream<string, { wrapped: string }>({
+          transform(chunk, controller) {
+            controller.enqueue({ wrapped: chunk.trim() });
+          },
+        }),
+    );
+    setXRequestGlobalOptions({ transformStream: factory as any });
+
+    const headers = { get: () => 'text/event-stream' };
+    mockedXFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      headers,
+      body: new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode('payload'));
+          controller.close();
+        },
+      }),
+    });
+
+    const onSuccess = vi.fn();
+    const onError = vi.fn();
+    const onUpdate = vi.fn();
+    const request = XRequest(baseURL, {
+      manual: true,
+      callbacks: { onSuccess, onError, onUpdate },
+    });
+    request.run({});
+    await request.asyncHandler;
+
+    expect(factory).toHaveBeenCalledTimes(1);
+    expect(factory).toHaveBeenCalledWith(baseURL, headers);
+    expect(onUpdate).toHaveBeenCalledWith({ wrapped: 'payload' }, headers);
+    expect(onSuccess).toHaveBeenCalledWith([{ wrapped: 'payload' }], headers);
+    expect(onError).not.toHaveBeenCalled();
+  });
 });
