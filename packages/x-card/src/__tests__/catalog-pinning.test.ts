@@ -20,6 +20,20 @@ describe('createPinnedRequestOptions', () => {
     });
   });
 
+  it('returns address records when lookup is called with all: true', () => {
+    const options = createPinnedRequestOptions(
+      new URL('https://catalog.example.com/catalog.json'),
+      '93.184.216.34',
+      4,
+    );
+
+    const callback = vi.fn();
+    (options.lookup as any)('catalog.example.com', { all: true }, callback);
+    expect(callback).toHaveBeenCalledWith(null, [
+      { address: '93.184.216.34', family: 4 },
+    ]);
+  });
+
   it('does not set SNI for an IP literal', () => {
     const options = createPinnedRequestOptions(
       new URL('https://93.184.216.34/catalog.json'),

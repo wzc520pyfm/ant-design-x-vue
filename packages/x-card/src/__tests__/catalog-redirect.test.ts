@@ -74,4 +74,23 @@ describe('catalog redirect policy', () => {
     expect(cancel).toHaveBeenCalledTimes(1);
     error.mockRestore();
   });
+
+  it('releases a non-OK response body', async () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const response = new Response(new ReadableStream(), {
+      status: 503,
+      statusText: 'Service Unavailable',
+    });
+    const cancel = vi.spyOn(response.body!, 'cancel');
+    const fetchMock = vi.fn(async () => response);
+
+    await expect(
+      loadCatalog('http://93.184.216.34/catalog.json', {
+        fetch: fetchMock as any,
+      }),
+    ).rejects.toThrow(/Failed to load catalog/);
+
+    expect(cancel).toHaveBeenCalledTimes(1);
+    error.mockRestore();
+  });
 });

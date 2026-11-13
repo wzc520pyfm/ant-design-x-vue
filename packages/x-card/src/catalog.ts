@@ -335,10 +335,15 @@ export function createPinnedRequestOptions(
   if (address) {
     options.lookup = (
       _hostname: string,
-      _options: unknown,
-      callback: (error: Error | null, address: string, family: number) => void,
+      lookupOptions: { all?: boolean } | undefined,
+      callback: (error: Error | null, ...result: unknown[]) => void,
     ) => {
-      callback(null, address, family ?? (address.includes(':') ? 6 : 4));
+      const resolvedFamily = family ?? (address.includes(':') ? 6 : 4);
+      if (lookupOptions?.all) {
+        callback(null, [{ address, family: resolvedFamily }]);
+      } else {
+        callback(null, address, resolvedFamily);
+      }
     };
     const hostname = normalizeHost(url.hostname);
     if (isHttps && !isIPv4(hostname) && !hostname.includes(':')) {
@@ -368,26 +373,38 @@ async function fetchPinnedCatalog(
     );
 
     const req = request(target.url, requestOptions, (res: any) => {
-      const chunks: Buffer[] = [];
-      res.on('data', (chunk: Buffer) => chunks.push(chunk));
-      res.on('end', () => {
-        const body = Buffer.concat(chunks).toString('utf8');
-        const status = res.statusCode ?? 0;
-        resolve({
-          ok: status >= 200 && status < 300,
-          status,
-          statusText: res.statusMessage ?? '',
-          url: target.url.toString(),
-          headers: {
-            get(name: string) {
-              const value = res.headers?.[name.toLowerCase()];
-              return Array.isArray(value) ? value[0] ?? null : value ?? null;
-            },
+      const status = res.statusCode ?? 0;
+      resolve({
+        ok: status >= 200 && status < 300,
+        status,
+        statusText: res.statusMessage ?? '',
+        url: target.url.toString(),
+        headers: {
+          get(name: string) {
+            const value = res.headers?.[name.toLowerCase()];
+            return Array.isArray(value) ? value[0] ?? null : value ?? null;
           },
-          json: async () => JSON.parse(body),
-        });
+        },
+        body: {
+          cancel: async () => {
+            res.on('error', () => {});
+            res.destroy();
+          },
+        },
+        json: () =>
+          new Promise((resolveBody, rejectBody) => {
+            const chunks: Buffer[] = [];
+            res.on('data', (chunk: Buffer) => chunks.push(chunk));
+            res.on('end', () => {
+              try {
+                resolveBody(JSON.parse(Buffer.concat(chunks).toString('utf8')));
+              } catch (error) {
+                rejectBody(error);
+              }
+            });
+            res.on('error', rejectBody);
+          }),
       });
-      res.on('error', reject);
     });
 
     req.on('error', reject);
@@ -512,6 +529,7 @@ export async function loadCatalog(
   try {
     const response = await fetchCatalogResponse(target, options);
     if (!response.ok) {
+      await cancelResponseBody(response);
       throw new Error(
         `Failed to load catalog from ${catalogId}: ${response.statusText}`,
       );
