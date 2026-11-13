@@ -76,6 +76,10 @@ export interface CatalogFetchOptions {
    * `catalog.example.com`, `*.example.com` or `https://catalog.example.com`.
    */
   allowedHosts?: string[];
+  /** Request timeout for the built-in Node transport. Defaults to 30s. */
+  requestTimeoutMs?: number;
+  /** Maximum response size for the built-in Node transport. Defaults to 5 MiB. */
+  maxResponseBytes?: number;
 }
 
 /** Explicitly registered catalogs, shared across callers by design. */
@@ -93,6 +97,8 @@ export function registerCatalog(catalog: Catalog): void {
 
 const REDIRECT_STATUS = new Set([301, 302, 303, 307, 308]);
 const MAX_REDIRECTS = 5;
+const DEFAULT_REQUEST_TIMEOUT_MS = 30_000;
+const DEFAULT_MAX_RESPONSE_BYTES = 5 * 1024 * 1024;
 
 const BLOCKED_HOSTNAMES = new Set([
   'localhost',
@@ -122,6 +128,7 @@ function isIPv4(value: string): boolean {
 }
 
 function isPrivateIPv4(value: string): boolean {
+  if (value === '168.63.129.16') return true;
   const parts = value.split('.').map(Number);
   if (
     parts.length !== 4 ||
@@ -160,10 +167,58 @@ function ipv4FromMappedIPv6(value: string): string | undefined {
   return undefined;
 }
 
+function expandIPv6(value: string): number[] | undefined {
+  let normalized = value;
+  const ipv4Match = normalized.match(/(\d{1,3}(?:\.\d{1,3}){3})$/);
+  if (ipv4Match) {
+    const parts = ipv4Match[1].split('.').map(Number);
+    if (
+      parts.length !== 4 ||
+      parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)
+    ) {
+      return undefined;
+    }
+    const hi = ((parts[0] << 8) | parts[1]).toString(16);
+    const lo = ((parts[2] << 8) | parts[3]).toString(16);
+    normalized = normalized.slice(0, -ipv4Match[1].length) + `${hi}:${lo}`;
+  }
+
+  const halves = normalized.split('::');
+  if (halves.length > 2) return undefined;
+  const head = halves[0] ? halves[0].split(':') : [];
+  const tail = halves.length === 2 && halves[1] ? halves[1].split(':') : [];
+  const missing = 8 - head.length - tail.length;
+  if (missing < 0 || (halves.length === 2 && missing < 1)) return undefined;
+  if (halves.length === 1 && missing !== 0) return undefined;
+  if (![...head, ...tail].every((part) => /^[0-9a-f]{1,4}$/i.test(part))) {
+    return undefined;
+  }
+
+  const parts = [...head, ...Array(missing).fill('0'), ...tail];
+  if (parts.length !== 8) return undefined;
+  return parts.map((part) => parseInt(part, 16));
+}
+
+function ipv4FromNat64IPv6(value: string): string | undefined {
+  const groups = expandIPv6(value);
+  if (!groups || groups[0] !== 0x64 || groups[1] !== 0xff9b) {
+    return undefined;
+  }
+  // Well-known NAT64 prefix 64:ff9b::/96 has the IPv4 address in the last
+  // 32 bits. 64:ff9b:1::/48 is local-use and blocked separately.
+  if (groups[2] !== 0) return undefined;
+  return `${groups[6] >> 8}.${groups[6] & 255}.${groups[7] >> 8}.${
+    groups[7] & 255
+  }`;
+}
+
 function isPrivateIPv6(value: string): boolean {
   const mapped = ipv4FromMappedIPv6(value);
   if (mapped) return isPrivateIPv4(mapped);
   if (value === '::' || value === '::1') return true;
+  if (value.startsWith('64:ff9b:1')) return true;
+  const nat64 = ipv4FromNat64IPv6(value);
+  if (nat64) return isPrivateIPv4(nat64);
   if (value.startsWith('fc') || value.startsWith('fd')) return true;
   // Link-local and deprecated site-local ranges.
   if (value.startsWith('fe')) return true;
@@ -356,6 +411,7 @@ export function createPinnedRequestOptions(
 
 async function fetchPinnedCatalog(
   target: CatalogTarget,
+  options?: CatalogFetchOptions,
 ): Promise<CatalogResponse> {
   const isHttps = target.url.protocol === 'https:';
   const moduleName = isHttps ? 'node:https' : 'node:http';
@@ -364,6 +420,9 @@ async function fetchPinnedCatalog(
   if (typeof request !== 'function') {
     throw new Error(`Unable to load the Node ${moduleName} transport.`);
   }
+
+  const timeoutMs = options?.requestTimeoutMs ?? DEFAULT_REQUEST_TIMEOUT_MS;
+  const maxBytes = options?.maxResponseBytes ?? DEFAULT_MAX_RESPONSE_BYTES;
 
   return new Promise<CatalogResponse>((resolve, reject) => {
     const requestOptions = createPinnedRequestOptions(
@@ -394,19 +453,45 @@ async function fetchPinnedCatalog(
         json: () =>
           new Promise((resolveBody, rejectBody) => {
             const chunks: Buffer[] = [];
-            res.on('data', (chunk: Buffer) => chunks.push(chunk));
+            let total = 0;
+            let settled = false;
+
+            res.on('data', (chunk: Buffer) => {
+              if (settled) return;
+              total += chunk.length;
+              if (total > maxBytes) {
+                settled = true;
+                res.destroy();
+                rejectBody(
+                  new Error(
+                    `Catalog response exceeds the maximum size of ${maxBytes} bytes.`,
+                  ),
+                );
+                return;
+              }
+              chunks.push(chunk);
+            });
             res.on('end', () => {
+              if (settled) return;
+              settled = true;
               try {
                 resolveBody(JSON.parse(Buffer.concat(chunks).toString('utf8')));
               } catch (error) {
                 rejectBody(error);
               }
             });
-            res.on('error', rejectBody);
+            res.on('error', (error: Error) => {
+              if (settled) return;
+              settled = true;
+              rejectBody(error);
+            });
           }),
       });
     });
 
+    req.setTimeout(timeoutMs, () => {
+      req.destroy(new Error(`Catalog request timed out after ${timeoutMs}ms.`));
+    });
     req.on('error', reject);
     req.end();
   });
@@ -439,7 +524,7 @@ async function fetchCatalogResponse(
     const response = fetchImpl
       ? await fetchWithImpl(target.url.toString(), fetchImpl, node)
       : node
-      ? await fetchPinnedCatalog(target)
+      ? await fetchPinnedCatalog(target, options)
       : await fetchWithImpl(target.url.toString(), fetch, false);
 
     if (response.url && response.url !== target.url.toString()) {

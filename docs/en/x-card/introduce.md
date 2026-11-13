@@ -221,7 +221,7 @@ A catalog lists allowed components and their JSON Schema. Implementation names m
 
 Helpers: `loadCatalog(catalogId)`, `validateComponent(catalog, name, props)`, `clearCatalogCache()`.
 
-Each `XCard.Box` uses its own catalog cache and clears it on unmount. Remote catalog URLs reject loopback, private and internal hosts by default. On the server, the host name is resolved and the validated address is pinned to the connection; browser loads only perform host-name checks because they cannot resolve DNS. Use `catalogOptions.allowedHosts` for a precise allowlist or `catalogOptions.allowInternalHosts` to opt out of all internal-host checks. Pass a custom `catalogOptions.registry` when catalogs should be shared across Boxes.
+Each `XCard.Box` uses its own catalog cache and clears it on unmount. Remote catalog URLs reject loopback, private and internal hosts by default. On the server, the host name is resolved and the validated address is pinned to the connection; browser loads only perform host-name checks because they cannot resolve DNS. Use `catalogOptions.allowedHosts` for a precise allowlist or `catalogOptions.allowInternalHosts` to opt out of all internal-host checks. Pass a custom `catalogOptions.registry` when catalogs should be shared across Boxes. The built-in Node transport applies a 30s request timeout and a 5 MiB response cap by default; override them with `catalogOptions.requestTimeoutMs` / `catalogOptions.maxResponseBytes`.
 
 ## Quick start
 

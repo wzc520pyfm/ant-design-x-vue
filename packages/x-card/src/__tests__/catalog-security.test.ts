@@ -111,10 +111,14 @@ describe('catalog URL policy', () => {
       'http://127.0.0.1/catalog.json',
       'http://localhost/catalog.json',
       'http://169.254.169.254/latest/meta-data',
+      'http://168.63.129.16/catalog.json',
       'http://10.0.0.1/catalog.json',
       'http://172.16.0.1/catalog.json',
       'http://192.168.1.1/catalog.json',
       'http://[::1]/catalog.json',
+      'http://[64:ff9b::7f00:1]/catalog.json',
+      'http://[64:ff9b::127.0.0.1]/catalog.json',
+      'http://[64:ff9b:1::1]/catalog.json',
       'http://metadata.google.internal/computeMetadata/v1/',
     ];
 
