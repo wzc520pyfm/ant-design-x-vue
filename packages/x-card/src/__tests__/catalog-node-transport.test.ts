@@ -53,6 +53,21 @@ describe('Node catalog transport', () => {
     error.mockRestore();
   });
 
+  it('times out when the body arrives slowly', async () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const url = await startServer((_req, res) => {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      const timer = setInterval(() => res.write(' '), 10);
+      res.on('close', () => clearInterval(timer));
+    });
+
+    await expect(
+      loadCatalog(url, { allowInternalHosts: true, requestTimeoutMs: 50 }),
+    ).rejects.toThrow(/timed out/);
+
+    error.mockRestore();
+  });
+
   it('rejects responses over the size cap', async () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     const url = await startServer((_req, res) => {

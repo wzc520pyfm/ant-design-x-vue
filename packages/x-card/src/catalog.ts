@@ -425,6 +425,23 @@ async function fetchPinnedCatalog(
   const maxBytes = options?.maxResponseBytes ?? DEFAULT_MAX_RESPONSE_BYTES;
 
   return new Promise<CatalogResponse>((resolve, reject) => {
+    let deadline: ReturnType<typeof setTimeout> | undefined;
+    let settled = false;
+    let rejectBodyWith: ((error: Error) => void) | undefined;
+
+    const clearDeadline = () => {
+      if (deadline !== undefined) {
+        clearTimeout(deadline);
+        deadline = undefined;
+      }
+    };
+    const fail = (error: Error) => {
+      if (settled) return;
+      settled = true;
+      clearDeadline();
+      reject(error);
+    };
+
     const requestOptions = createPinnedRequestOptions(
       target.url,
       target.address,
@@ -433,6 +450,7 @@ async function fetchPinnedCatalog(
 
     const req = request(target.url, requestOptions, (res: any) => {
       const status = res.statusCode ?? 0;
+      settled = true;
       resolve({
         ok: status >= 200 && status < 300,
         status,
@@ -446,6 +464,7 @@ async function fetchPinnedCatalog(
         },
         body: {
           cancel: async () => {
+            clearDeadline();
             res.on('error', () => {});
             res.destroy();
           },
@@ -454,45 +473,60 @@ async function fetchPinnedCatalog(
           new Promise((resolveBody, rejectBody) => {
             const chunks: Buffer[] = [];
             let total = 0;
-            let settled = false;
+            let bodySettled = false;
+
+            const settleBody = (callback: () => void) => {
+              if (bodySettled) return;
+              bodySettled = true;
+              rejectBodyWith = undefined;
+              clearDeadline();
+              callback();
+            };
+            rejectBodyWith = (error) => settleBody(() => rejectBody(error));
 
             res.on('data', (chunk: Buffer) => {
-              if (settled) return;
+              if (bodySettled) return;
               total += chunk.length;
               if (total > maxBytes) {
-                settled = true;
+                settleBody(() => {
+                  rejectBody(
+                    new Error(
+                      `Catalog response exceeds the maximum size of ${maxBytes} bytes.`,
+                    ),
+                  );
+                });
                 res.destroy();
-                rejectBody(
-                  new Error(
-                    `Catalog response exceeds the maximum size of ${maxBytes} bytes.`,
-                  ),
-                );
                 return;
               }
               chunks.push(chunk);
             });
             res.on('end', () => {
-              if (settled) return;
-              settled = true;
-              try {
-                resolveBody(JSON.parse(Buffer.concat(chunks).toString('utf8')));
-              } catch (error) {
-                rejectBody(error);
-              }
+              settleBody(() => {
+                try {
+                  resolveBody(
+                    JSON.parse(Buffer.concat(chunks).toString('utf8')),
+                  );
+                } catch (error) {
+                  rejectBody(error);
+                }
+              });
             });
             res.on('error', (error: Error) => {
-              if (settled) return;
-              settled = true;
-              rejectBody(error);
+              settleBody(() => rejectBody(error));
             });
           }),
       });
     });
 
-    req.setTimeout(timeoutMs, () => {
-      req.destroy(new Error(`Catalog request timed out after ${timeoutMs}ms.`));
-    });
-    req.on('error', reject);
+    deadline = setTimeout(() => {
+      const timeoutError = new Error(
+        `Catalog request timed out after ${timeoutMs}ms.`,
+      );
+      rejectBodyWith?.(timeoutError);
+      req.destroy(timeoutError);
+    }, timeoutMs);
+    (deadline as any).unref?.();
+    req.on('error', fail);
     req.end();
   });
 }
