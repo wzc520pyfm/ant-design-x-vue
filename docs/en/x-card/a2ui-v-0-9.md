@@ -85,6 +85,7 @@ Box is the container that owns Card instances and dispatches commands. Place `XC
 | commands | A2UI command objects | `(A2UICommand_v0_9 \| XAgentCommand_v0_8)[]` | `[]` |
 | components | Implementation map; names must start with an uppercase letter | `Record<string, Component>` | - |
 | onAction | Fired when a card triggers an action | `(payload: ActionPayload) => void` | - |
+| catalogOptions | Catalog loading options: scoped registry, custom fetch and internal-host policy | `CatalogFetchOptions` | - |
 
 ### XCard.Card
 

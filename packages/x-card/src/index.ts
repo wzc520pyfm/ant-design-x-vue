@@ -6,10 +6,13 @@ export {
   type ActionPayload,
   type Catalog,
   type CatalogComponent,
+  type CatalogFetchOptions,
+  type CatalogRegistry,
   registerCatalog,
   loadCatalog,
   validateComponent,
   clearCatalogCache,
+  createCatalogRegistry,
 } from './x-card';
 export { default as Card } from './Card';
 export { default as Box } from './Box.vue';
