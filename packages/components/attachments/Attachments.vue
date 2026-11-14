@@ -73,6 +73,7 @@ const triggerChange: AttachmentsProps['onChange'] = (info) => {
 
 const mergedUploadProps = computed<UploadProps>(() => ({
   ...uploadProps,
+  disabled,
   fileList: fileList.value,
   onChange: triggerChange,
 }));
