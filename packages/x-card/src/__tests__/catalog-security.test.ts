@@ -119,6 +119,7 @@ describe('catalog URL policy', () => {
       'http://[64:ff9b::7f00:1]/catalog.json',
       'http://[64:ff9b::127.0.0.1]/catalog.json',
       'http://[64:ff9b:1::1]/catalog.json',
+      'http://[64:ff9b:0001::1]/catalog.json',
       'http://metadata.google.internal/computeMetadata/v1/',
     ];
 
@@ -128,6 +129,20 @@ describe('catalog URL policy', () => {
       ).rejects.toThrow(/Blocked catalog URL/);
     }
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('does not over-match the NAT64 local-use range', async () => {
+    const fetchMock = vi.fn(async () =>
+      jsonResponse({ components: { Text: { type: 'object' } } }),
+    );
+
+    await expect(
+      loadCatalog('http://[64:ff9b:10::1]/catalog.json', {
+        fetch: fetchMock as any,
+      }),
+    ).resolves.toHaveProperty('components');
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it('allows internal hosts only with an explicit opt-in', async () => {

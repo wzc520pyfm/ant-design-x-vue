@@ -199,26 +199,24 @@ function expandIPv6(value: string): number[] | undefined {
   return parts.map((part) => parseInt(part, 16));
 }
 
-function ipv4FromNat64IPv6(value: string): string | undefined {
-  const groups = expandIPv6(value);
-  if (!groups || groups[0] !== 0x64 || groups[1] !== 0xff9b) {
-    return undefined;
-  }
-  // Well-known NAT64 prefix 64:ff9b::/96 has the IPv4 address in the last
-  // 32 bits. 64:ff9b:1::/48 is local-use and blocked separately.
-  if (groups[2] !== 0) return undefined;
-  return `${groups[6] >> 8}.${groups[6] & 255}.${groups[7] >> 8}.${
-    groups[7] & 255
-  }`;
-}
-
 function isPrivateIPv6(value: string): boolean {
   const mapped = ipv4FromMappedIPv6(value);
   if (mapped) return isPrivateIPv4(mapped);
   if (value === '::' || value === '::1') return true;
-  if (value.startsWith('64:ff9b:1')) return true;
-  const nat64 = ipv4FromNat64IPv6(value);
-  if (nat64) return isPrivateIPv4(nat64);
+
+  const nat64Groups = expandIPv6(value);
+  if (nat64Groups && nat64Groups[0] === 0x64 && nat64Groups[1] === 0xff9b) {
+    // 64:ff9b:1::/48 is local-use and always blocked.
+    if (nat64Groups[2] === 1) return true;
+    // 64:ff9b::/96 embeds the IPv4 address in the last 32 bits.
+    if (nat64Groups[2] === 0) {
+      const embedded = `${nat64Groups[6] >> 8}.${nat64Groups[6] & 255}.${
+        nat64Groups[7] >> 8
+      }.${nat64Groups[7] & 255}`;
+      return isPrivateIPv4(embedded);
+    }
+  }
+
   if (value.startsWith('fc') || value.startsWith('fd')) return true;
   // Link-local and deprecated site-local ranges.
   if (value.startsWith('fe')) return true;
