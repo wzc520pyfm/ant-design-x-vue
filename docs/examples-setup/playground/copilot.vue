@@ -347,7 +347,7 @@ const Copilot = defineComponent({
     });
 
     const handleUserSubmit = (val: string) => {
-      if (!val || isRequesting.value) return;
+      if (!val || isRequesting.value) return false;
       onRequest({
         messages: [{ role: 'user', content: val }],
       });
@@ -360,6 +360,7 @@ const Copilot = defineComponent({
           label: val.slice(0, 20),
         });
       }
+      return true;
     };
 
     const onPasteFile = (fileList: FileList) => {
@@ -493,8 +494,9 @@ const Copilot = defineComponent({
                   inputValue.value = v;
                 }}
                 onSubmit={() => {
-                  handleUserSubmit(inputValue.value);
-                  inputValue.value = '';
+                  if (handleUserSubmit(inputValue.value)) {
+                    inputValue.value = '';
+                  }
                 }}
                 onCancel={() => abort()}
                 allowSpeech

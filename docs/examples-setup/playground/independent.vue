@@ -56,6 +56,8 @@ interface ChatMessage extends XModelMessage {
 type ChatHandlers = {
   onReload?: ReturnType<typeof useXChat<ChatMessage>>['onReload'];
   setMessage?: ReturnType<typeof useXChat<ChatMessage>>['setMessage'];
+  isBusy?: () => boolean;
+  isLatestAssistant?: (id: string | number) => boolean;
 };
 
 const shell = usePlaygroundShell('720px', '0');
@@ -314,11 +316,12 @@ watch(
 );
 
 function onSubmit(val: string) {
-  if (!val || isRequesting.value) return;
+  if (!val || isRequesting.value) return false;
   onRequest({
     messages: [{ role: 'user', content: val }],
   });
   listRef.value?.scrollTo?.({ top: 'bottom' });
+  return true;
 }
 
 const cardStyle = {
@@ -496,8 +499,9 @@ defineRender(() => (
               </Sender.Header>
             )}
             onSubmit={() => {
-              onSubmit(inputValue.value);
-              inputValue.value = '';
+              if (onSubmit(inputValue.value)) {
+                inputValue.value = '';
+              }
             }}
             onUpdate:value={(v: string) => { inputValue.value = v; }}
             onCancel={() => abort()}

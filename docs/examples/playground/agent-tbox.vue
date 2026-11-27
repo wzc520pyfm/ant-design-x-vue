@@ -291,7 +291,9 @@ const { onRequest, messages, isRequesting, abort, onReload } = useXChat<TboxMess
   provider,
   conversationKey: activeConversationKey,
   requestPlaceholder: () => ({
-    content: { text: t.noData },
+    // Empty content so transformMessage does not prepend the loading label into streamed text.
+    // ThoughtChain.Item header already shows the loading state.
+    content: {},
     role: 'assistant',
   }),
 });
@@ -305,11 +307,12 @@ watch(
 );
 
 function onSubmit(val: string) {
-  if (!val || isRequesting.value) return;
+  if (!val || isRequesting.value) return false;
   onRequest({
     message: { role: 'user', content: val },
   });
   listRef.value?.scrollTo?.({ top: 'bottom' });
+  return true;
 }
 
 function ask(info: { data: { description?: string } }) {
@@ -472,8 +475,9 @@ function conversationMenu(conversation: { key: string }) {
 }
 
 function sendCurrent() {
-  onSubmit(inputValue.value);
-  inputValue.value = '';
+  if (onSubmit(inputValue.value)) {
+    inputValue.value = '';
+  }
 }
 
 defineRender(() => (
