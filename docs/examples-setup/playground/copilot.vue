@@ -11,7 +11,7 @@ import {
   LikeOutlined,
   PaperClipOutlined,
   PlusOutlined,
-  ProductOutlined,
+  AppstoreOutlined,
   ReloadOutlined,
   ScheduleOutlined,
 } from '@ant-design/icons-vue';
@@ -468,7 +468,7 @@ const Copilot = defineComponent({
               {locale.upgrades}
             </Button>
             <Button
-              icon={<ProductOutlined />}
+              icon={<AppstoreOutlined />}
               onClick={() => handleUserSubmit(locale.whatComponentsAreInAntDesignX)}
             >
               {locale.components}

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 defineOptions({ name: 'AXPlaygroundAgentTboxSetup' });
 
 import {
@@ -16,11 +16,7 @@ import {
   SmileOutlined,
   SyncOutlined,
 } from '@ant-design/icons-vue';
-import type {
-  ActionsFeedbackProps,
-  BubbleListProps,
-  ThoughtChainItemProps,
-} from 'ant-design-x-vue';
+import type { BubbleListProps, ThoughtChainItemProps } from 'ant-design-x-vue';
 import {
   Actions,
   Bubble,
@@ -34,7 +30,7 @@ import {
   useXChat,
   useXConversations,
 } from 'ant-design-x-vue';
-import { Avatar, Button, Pagination, Space, message } from 'ant-design-vue';
+import { Avatar, Button, Flex, Pagination, Space, message } from 'ant-design-vue';
 import { XMarkdown } from '@ant-design-x-vue/x-markdown';
 import '@ant-design-x-vue/x-markdown/themes/light.css';
 import '@ant-design-x-vue/x-markdown/themes/dark.css';
@@ -48,14 +44,13 @@ import {
   ref,
   toRef,
   watch,
-  type Ref,
 } from 'vue';
-import {
-  createTboxProviderFactory,
-  type TboxMessage,
-  type TboxOutput,
-} from '../../examples-v2/_shared/mock-tbox-provider';
+import type { Ref } from 'vue';
+import { createTboxProviderFactory } from '../../examples-v2/_shared/mock-tbox-provider';
+import type { TboxMessage, TboxOutput } from '../../examples-v2/_shared/mock-tbox-provider';
 import { usePlaygroundShell } from '../../examples-v2/_shared/playground-shell';
+
+type FeedbackValue = 'like' | 'dislike' | 'default';
 
 const t = {
   whatIsTbox: '什么是百宝箱 Tbox.cn?',
@@ -215,7 +210,7 @@ const Footer = defineComponent({
     status: { type: String, default: undefined },
   },
   setup(props) {
-    const mockFeedback = ref<ActionsFeedbackProps['value']>('default');
+    const mockFeedback = ref<FeedbackValue>('default');
     return () => {
       if (props.status === 'updating' || props.status === 'loading') return null;
       const items = [
@@ -254,7 +249,7 @@ const Footer = defineComponent({
             h(Actions.Feedback, {
               styles: { liked: { color: '#f759ab' } },
               value: mockFeedback.value || 'default',
-              onChange: (val: ActionsFeedbackProps['value']) => {
+              onChange: (val: FeedbackValue) => {
                 mockFeedback.value = val;
                 message.success(`${props.id}: ${val}`);
               },
@@ -475,99 +470,107 @@ function sendCurrent() {
   onSubmit(inputValue.value);
   inputValue.value = '';
 }
-</script>
 
-<template>
+defineRender(() => (
   <XProvider>
-    <a-flex :style="shell.shellStyle.value">
-      <div :style="sideStyle">
-        <div style="display:flex;align-items:center;gap:8px;margin:24px 0;padding:0 24px">
-          <img :src="logo" width="24" height="24" alt="logo" draggable="false">
-          <span style="font-weight:700;font-size:16px">Ant Design X</span>
+    <Flex style={shell.shellStyle.value}>
+      <div style={sideStyle.value}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '24px 0', padding: '0 24px' }}>
+          <img src={logo} width={24} height={24} alt="logo" draggable={false} />
+          <span style={{ fontWeight: 700, fontSize: '16px' }}>Ant Design X</span>
         </div>
         <Conversations
-          style="flex:1;overflow-y:auto;margin-top:12px"
-          :creation="{ onClick: onCreateConversation }"
-          :items="conversationItems"
-          :active-key="activeConversationKey"
-          :on-active-change="setActiveConversationKey"
+          style={{ flex: 1, overflowY: 'auto', marginTop: '12px' }}
+          creation={{ onClick: onCreateConversation }}
+          items={conversationItems.value}
+          activeKey={activeConversationKey.value}
+          onActiveChange={setActiveConversationKey}
           groupable
-          :styles="{ item: { padding: '0 8px' } }"
-          :menu="conversationMenu"
+          styles={{ item: { padding: '0 8px' } }}
+          menu={conversationMenu}
         />
         <div
-          style="border-top:1px solid var(--ant-color-border-secondary, #f0f0f0);height:40px;display:flex;align-items:center;justify-content:space-between"
+          style={{
+            borderTop: '1px solid var(--ant-color-border-secondary, #f0f0f0)',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
         >
-          <Avatar :size="24" />
-          <Button type="text" :icon="helpIcon" />
+          <Avatar size={24} />
+          <Button type="text" icon={helpIcon} />
         </div>
       </div>
 
-      <div class="ax-tbox-chat" :style="chatStyle">
-        <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;width:100%">
-          <Bubble.List
-            v-if="messages.length"
-            ref="listRef"
-            :items="bubbleItems"
-            :styles="{ root: { maxWidth: 940 } }"
-            :role="role"
-          />
-          <a-flex
-            v-else
-            vertical
-            :gap="16"
-            align="center"
-            :style="{ maxWidth: '840px', width: '100%', padding: '24px', boxSizing: 'border-box' }"
-          >
-            <Welcome
-              class="ax-tbox-welcome"
-              variant="borderless"
-              :icon="welcomeIcon"
-              :title="t.helloAntdXTboxAgent"
-              :description="t.antdXTboxDescription"
-              :styles="{ icon: { height: '64px' } }"
-              :extra="welcomeExtra"
+      <div class="ax-tbox-chat" style={chatStyle.value}>
+        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+          {messages.value.length ? (
+            <Bubble.List
+              ref={listRef as any}
+              items={bubbleItems.value}
+              styles={{ root: { maxWidth: 940 } }}
+              role={role}
             />
-            <a-flex :gap="16" style="width:100%">
-              <Prompts
-                class="ax-tbox-prompts"
-                :items="[HOT_TOPICS]"
-                :styles="hotTopicsStyles"
-                :on-item-click="ask"
+          ) : (
+            <Flex
+              vertical
+              gap={16}
+              align="center"
+              style={{ maxWidth: '840px', width: '100%', padding: '24px', boxSizing: 'border-box' }}
+            >
+              <Welcome
+                class="ax-tbox-welcome"
+                variant="borderless"
+                icon={welcomeIcon}
+                title={t.helloAntdXTboxAgent}
+                description={t.antdXTboxDescription}
+                styles={{ icon: { height: '64px' } }}
+                extra={welcomeExtra}
               />
-              <Prompts
-                class="ax-tbox-prompts"
-                :items="[DESIGN_GUIDE]"
-                :styles="designGuideStyles"
-                :on-item-click="ask"
-              />
-            </a-flex>
-          </a-flex>
+              <Flex gap={16} style={{ width: '100%' }}>
+                <Prompts
+                  class="ax-tbox-prompts"
+                  items={[HOT_TOPICS]}
+                  styles={hotTopicsStyles}
+                  onItemClick={ask}
+                />
+                <Prompts
+                  class="ax-tbox-prompts"
+                  items={[DESIGN_GUIDE]}
+                  styles={designGuideStyles}
+                  onItemClick={ask}
+                />
+              </Flex>
+            </Flex>
+          )}
         </div>
 
-        <a-flex vertical :gap="12" justify="center" style="margin-inline:24px">
+        <Flex vertical gap={12} justify="center" style={{ marginInline: '24px' }}>
           <Prompts
-            :items="SENDER_PROMPTS"
-            :on-item-click="ask"
-            :styles="{ item: { padding: '6px 12px' } }"
-            style="width:100%;max-width:840px;margin:0 auto"
+            items={SENDER_PROMPTS}
+            onItemClick={ask}
+            styles={{ item: { padding: '6px 12px' } }}
+            style={{ width: '100%', maxWidth: '840px', margin: '0 auto' }}
           />
           <Sender
-            style="width:100%;max-width:840px;margin:0 auto"
-            :value="inputValue"
-            :loading="isRequesting"
-            :placeholder="t.askMeAnything"
-            @update:value="(v) => (inputValue = v)"
-            :on-submit="sendCurrent"
-            :on-cancel="() => abort()"
+            style={{ width: '100%', maxWidth: '840px', margin: '0 auto' }}
+            value={inputValue.value}
+            loading={isRequesting.value}
+            placeholder={t.askMeAnything}
+            onUpdate:value={(v: string) => { inputValue.value = v; }}
+            onSubmit={sendCurrent}
+            onCancel={() => abort()}
           />
-        </a-flex>
+        </Flex>
       </div>
-    </a-flex>
+    </Flex>
   </XProvider>
-</template>
+));
+</script>
 
 <style>
+
 .ax-tbox-chat :deep(.ant-bubble-content-updating) {
   background-image: linear-gradient(90deg, #ff6b23 0%, #af3cb8 31%, #53b6ff 89%);
   background-size: 100% 2px;
