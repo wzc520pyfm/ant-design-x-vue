@@ -43,7 +43,7 @@ import '@ant-design-x-vue/x-markdown/themes/light.css';
 import '@ant-design-x-vue/x-markdown/themes/dark.css';
 import dayjs from 'dayjs';
 import { computed, defineComponent, provide, ref, watch } from 'vue';
-import { createGlmProviderFactory } from '../../examples-v2/_shared/playground-glm-provider';
+import { createLiveGlmProvider } from '../../examples-v2/_shared/playground-glm-provider';
 import { playgroundZh as locale } from '../../examples-v2/_shared/playground-locale';
 import { usePlaygroundShell } from '../../examples-v2/_shared/playground-shell';
 
@@ -123,7 +123,6 @@ const THOUGHT_CHAIN_CONFIG = {
   abort: { title: locale.aborted, status: 'abort' as const },
 };
 
-const provider = createGlmProviderFactory({ thinkingDisabled: true })('independent');
 const historyMessageFactory = (conversationKey: string) => HISTORY_MESSAGES[conversationKey] || [];
 
 const chatHandlers = ref<ChatHandlers>({});
@@ -264,6 +263,8 @@ const {
   defaultConversations: DEFAULT_CONVERSATIONS_ITEMS,
   defaultActiveConversationKey: DEFAULT_CONVERSATIONS_ITEMS[0].key,
 });
+
+const provider = createLiveGlmProvider(() => activeConversationKey.value, { thinkingDisabled: true });
 
 const attachmentsOpen = ref(false);
 const attachedFiles = ref<any[]>([]);

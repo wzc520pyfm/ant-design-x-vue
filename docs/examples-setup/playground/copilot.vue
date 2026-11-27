@@ -37,7 +37,7 @@ import { Button, Flex, Image, Popover, Space, message, theme } from 'ant-design-
 import dayjs from 'dayjs';
 import { computed, defineComponent, ref } from 'vue';
 import { OpenAIOutlined } from '../../examples-v2/_shared/openai-outlined';
-import { createGlmProviderFactory } from '../../examples-v2/_shared/playground-glm-provider';
+import { createLiveGlmProvider } from '../../examples-v2/_shared/playground-glm-provider';
 import { playgroundZh as locale } from '../../examples-v2/_shared/playground-locale';
 
 const { token } = theme.useToken();
@@ -137,8 +137,6 @@ const MOCK_QUESTIONS = [
   locale.whatComponentsAreInAntDesignX,
   locale.howToQuicklyInstallAndImportComponents,
 ];
-
-const provider = createGlmProviderFactory({ thinkingDisabled: true })('copilot');
 
 const ThinkComponent = defineComponent({
   name: 'PlaygroundCopilotThink',
@@ -323,6 +321,8 @@ const Copilot = defineComponent({
       defaultConversations: DEFAULT_CONVERSATIONS_ITEMS,
       defaultActiveConversationKey: DEFAULT_CONVERSATIONS_ITEMS[0].key,
     });
+
+    const provider = createLiveGlmProvider(() => activeConversationKey.value, { thinkingDisabled: true });
 
     const { onRequest, messages, isRequesting, abort } = useXChat({
       provider,

@@ -1,7 +1,6 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 defineOptions({ name: 'AXPlaygroundUltramodernSetup' });
 
-import { h, computed, onMounted, ref, watch } from 'vue';
 import { DeleteOutlined, SyncOutlined } from '@ant-design/icons-vue';
 import type { BubbleListProps, SenderProps } from 'ant-design-x-vue';
 import {
@@ -20,6 +19,7 @@ import { XMarkdown } from '@ant-design-x-vue/x-markdown';
 import '@ant-design-x-vue/x-markdown/themes/light.css';
 import '@ant-design-x-vue/x-markdown/themes/dark.css';
 import dayjs from 'dayjs';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import { OpenAIOutlined } from '../../examples-v2/_shared/openai-outlined';
 import { createLiveGlmProvider } from '../../examples-v2/_shared/playground-glm-provider';
 import { playgroundZh as locale } from '../../examples-v2/_shared/playground-locale';
@@ -64,11 +64,17 @@ const slotConfig: SenderProps['slotConfig'] = [
 const historyMessageFactory = (conversationKey: string) =>
   HISTORY_MESSAGES[conversationKey] || [];
 
-const { conversations, addConversation, setConversations } = useXConversations({
+const {
+  conversations,
+  addConversation,
+  setConversations,
+} = useXConversations({
   defaultConversations: DEFAULT_CONVERSATIONS_ITEMS,
 });
 
+/** Mirrors React ultramodern local `curConversation` state. */
 const curConversation = ref(DEFAULT_CONVERSATIONS_ITEMS[0].key);
+/** Label prefix `[当前对话]` after the first send in a session (React `activeConversation`). */
 const activeConversation = ref<string>();
 const deepThink = ref(true);
 const senderRef = ref<InstanceType<typeof Sender> | null>(null);
@@ -108,71 +114,67 @@ onMounted(() => {
   senderRef.value?.focus?.({ cursor: 'end' });
 });
 
-const conversationItems = computed(() =>
-  conversations.value
-    .map(({ key, label, ...other }) => ({
-      key,
-      label:
-        key === activeConversation.value
-          ? `[${locale.curConversation}]${label}`
-          : label,
-      ...other,
-    }))
-    .sort((a) => (a.key === activeConversation.value ? -1 : 0)),
-);
+const Footer = defineComponent({
+  name: 'PlaygroundUltramodernFooter',
+  props: {
+    id: { type: String, default: undefined },
+    content: { type: String, default: '' },
+    status: { type: String, default: undefined },
+  },
+  setup(props) {
+    return () => {
+      if (props.status === 'updating' || props.status === 'loading') return null;
+      return props.id ? (
+        <div style={{ display: 'flex' }}>
+          <Actions
+            items={[
+              {
+                key: 'retry',
+                label: locale.retry,
+                icon: <SyncOutlined />,
+                onItemClick: () => {
+                  onReloadRef.value?.(props.id!, { userAction: 'retry' } as never);
+                },
+              },
+              {
+                key: 'copy',
+                actionRender: <Actions.Copy text={props.content} />,
+              },
+            ]}
+          />
+        </div>
+      ) : null;
+    };
+  },
+});
 
-const bubbleItems = computed(() =>
-  messages.value.map((i) => ({
-    ...i.message,
-    key: i.id,
-    status: i.status,
-    loading: i.status === 'loading',
-    extraInfo: (i.message as any).extraInfo,
-  })),
-);
-
-const role = computed((): BubbleListProps['role'] => ({
+const getRole = (className: string): BubbleListProps['role'] => ({
   assistant: {
     placement: 'start',
-    footer: (content: string, { status, key }: any) => {
-      if (status === 'updating' || status === 'loading') return null as any;
-      const text = typeof content === 'string' ? content : '';
-      return key
-        ? h('div', { style: 'display:flex' }, [
-            h(Actions, {
-              items: [
-                {
-                  key: 'retry',
-                  label: locale.retry,
-                  icon: h(SyncOutlined),
-                  onItemClick: () => {
-                    onReloadRef.value?.(key as string, { userAction: 'retry' } as never);
-                  },
-                },
-                {
-                  key: 'copy',
-                  actionRender: h(Actions.Copy, { text }),
-                },
-              ],
-            }),
-          ])
-        : null;
-    },
+    footer: (content: string, { status, key }: any) => (
+      <Footer
+        content={typeof content === 'string' ? content : ''}
+        status={status}
+        id={key as string}
+      />
+    ),
     contentRender: (content: any, { status }: { status?: string }) => {
       const text = typeof content === 'string' ? content : '';
-      return h(XMarkdown, {
-        paragraphTag: 'div',
-        content: text.replace(/\n\n/g, '<br/><br/>'),
-        className: shell.markdownClass.value,
-        streaming: {
-          hasNextChunk: status === 'updating',
-          enableAnimation: true,
-        },
-      });
+      return (
+        <XMarkdown
+          paragraphTag="div"
+          content={text.replace(/\n\n/g, '<br/><br/>')}
+          className={className}
+          streaming={{
+            hasNextChunk: status === 'updating',
+            enableAnimation: true,
+          }}
+        />
+      );
     },
   },
   user: { placement: 'end' },
-}));
+});
 
 const sideStyle = computed(() => ({
   ...shell.sideStyle.value,
@@ -193,137 +195,152 @@ const chatStyle = computed(() => ({
   overflow: 'auto',
 }));
 
-const senderWrapStyle = computed(() => ({
-  padding: '8px',
-  ...(messages.value.length === 0
-    ? {
-        display: 'flex',
-        flexDirection: 'column' as const,
-        alignItems: 'center',
-        height: '100%',
-      }
-    : {}),
-}));
-
-const createChat = () => {
-  if (!messages.value.length) {
-    message.error(locale.itIsNowANewConversation);
-    return;
-  }
-  const now = dayjs().valueOf().toString();
-  addConversation({
-    key: now,
-    label: `${locale.newConversation} ${conversations.value.length + 1}`,
-    group: locale.today,
-  });
-  curConversation.value = now;
-};
-
-const menu = (conversation: { key: string }) => ({
-  items: [
-    {
-      label: locale.delete,
-      key: 'delete',
-      icon: h(DeleteOutlined),
-      danger: true,
-      onClick: () => {
-        const next = conversations.value.filter((item) => item.key !== conversation.key);
-        setConversations(next);
-        if (conversation.key === curConversation.value) {
-          curConversation.value = next[0]?.key || '';
-        }
-      },
-    },
-  ],
-});
-
-const footer = (actionNode: any) =>
-  h(Flex, { justify: 'space-between', align: 'center' }, () => [
-    h(Flex, { gap: 'small', align: 'center' }, () => [
-      h(
-        Sender.Switch,
-        {
-          value: deepThink.value,
-          icon: h(OpenAIOutlined),
-          onChange: (checked: boolean) => {
-            deepThink.value = checked;
-          },
-        },
-        () => locale.deepThink,
-      ),
-    ]),
-    h(Flex, { align: 'center' }, () => [actionNode]),
-  ]);
-
-const onSubmit = (val: string) => {
-  if (!val) return;
-  onRequest({
-    messages: [{ role: 'user', content: val }],
-    thinking: { type: 'disabled' },
-  } as never);
-  activeConversation.value = curConversation.value;
-  senderRef.value?.clear?.();
-};
-
-const onActiveChange = (key: string) => {
-  curConversation.value = key;
-};
-</script>
-
-<template>
+defineRender(() => (
   <XProvider>
-    <a-flex :style="shell.shellStyle.value">
-      <div :style="sideStyle">
-        <div style="display:flex;align-items:center;gap:8px;margin:24px 0;padding:0 12px">
-          <img :src="logo" width="24" height="24" alt="logo" draggable="false">
-          <span style="font-weight:700;font-size:16px">Ant Design X</span>
+    <Flex style={shell.shellStyle.value}>
+      <div style={sideStyle.value}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '24px 0', padding: '0 12px' }}>
+          <img src={logo} width={24} height={24} alt="logo" draggable={false} />
+          <span style={{ fontWeight: 700, fontSize: 16 }}>Ant Design X</span>
         </div>
         <Conversations
-          style="flex:1;overflow-y:auto;margin-top:12px"
-          :creation="{ onClick: createChat }"
-          :items="conversationItems"
-          :active-key="curConversation"
-          :on-active-change="onActiveChange"
+          style={{ flex: 1, overflowY: 'auto', marginTop: 12 }}
+          creation={{
+            onClick: () => {
+              if (!messages.value.length) {
+                message.error(locale.itIsNowANewConversation);
+                return;
+              }
+              const now = dayjs().valueOf().toString();
+              addConversation({
+                key: now,
+                label: `${locale.newConversation} ${conversations.value.length + 1}`,
+                group: locale.today,
+              });
+              curConversation.value = now;
+            },
+          }}
+          items={conversations.value
+            .map(({ key, label, ...other }) => ({
+              key,
+              label:
+                key === activeConversation.value
+                  ? `[${locale.curConversation}]${label}`
+                  : label,
+              ...other,
+            }))
+            .sort((a) => (a.key === activeConversation.value ? -1 : 0))}
+          activeKey={curConversation.value}
+          onActiveChange={(key: string) => {
+            curConversation.value = key;
+          }}
           groupable
-          :styles="{ item: { padding: '0 8px' } }"
-          :menu="menu"
+          styles={{ item: { padding: '0 8px' } }}
+          menu={(conversation: { key: string }) => ({
+            items: [
+              {
+                label: locale.delete,
+                key: 'delete',
+                icon: <DeleteOutlined />,
+                danger: true,
+                onClick: () => {
+                  const next = conversations.value.filter(
+                    (item) => item.key !== conversation.key,
+                  );
+                  setConversations(next);
+                  if (conversation.key === curConversation.value) {
+                    curConversation.value = next[0]?.key || '';
+                  }
+                },
+              },
+            ],
+          })}
         />
       </div>
 
-      <div class="ax-playground-ultramodern-chat" :style="chatStyle">
-        <div style="flex:1;overflow-y:auto;margin-block-start:16px">
-          <Bubble.List
-            v-if="messages.length !== 0"
-            :styles="{ root: { maxWidth: 940, marginBlockEnd: 24 } }"
-            :items="bubbleItems"
-            :role="role"
-          />
+      <div style={chatStyle.value} class="ax-playground-ultramodern-chat">
+        <div style={{ flex: 1, overflowY: 'auto', marginBlockStart: 16 }}>
+          {messages.value.length !== 0 && (
+            <Bubble.List
+              styles={{ root: { maxWidth: 940, marginBlockEnd: 24 } }}
+              items={messages.value.map((i) => ({
+                ...i.message,
+                key: i.id,
+                status: i.status,
+                loading: i.status === 'loading',
+                extraInfo: (i.message as any).extraInfo,
+              }))}
+              role={getRole(shell.markdownClass.value)}
+            />
+          )}
         </div>
-        <div :style="senderWrapStyle">
-          <div
-            v-if="messages.length === 0"
-            style="margin-block-start:25%;font-size:32px;margin-block-end:38px;font-weight:600"
-          >
-            {{ locale.agentName }}
-          </div>
+        <div
+          style={{
+            padding: 8,
+            ...(messages.value.length === 0
+              ? {
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  height: '100%',
+                }
+              : {}),
+          }}
+        >
+          {messages.value.length === 0 && (
+            <div
+              style={{
+                marginBlockStart: '25%',
+                fontSize: 32,
+                marginBlockEnd: 38,
+                fontWeight: 600,
+              }}
+            >
+              {locale.agentName}
+            </div>
+          )}
           <Sender
-            :key="curConversation"
-            ref="senderRef"
-            style="max-width:840px;width:100%"
-            :suffix="false"
-            :slot-config="slotConfig"
-            :loading="isRequesting"
-            :placeholder="locale.placeholder"
-            :auto-size="{ minRows: 3, maxRows: 6 }"
-            :footer="footer"
-            @submit="onSubmit"
-            @cancel="abort()"
+            style={{ maxWidth: 840, width: '100%' }}
+            suffix={false}
+            ref={senderRef as any}
+            key={curConversation.value}
+            slotConfig={slotConfig}
+            loading={isRequesting.value}
+            onSubmit={(val: string) => {
+              if (!val) return;
+              onRequest({
+                messages: [{ role: 'user', content: val }],
+                thinking: { type: 'disabled' },
+              } as never);
+              activeConversation.value = curConversation.value;
+              senderRef.value?.clear?.();
+            }}
+            onCancel={() => abort()}
+            placeholder={locale.placeholder}
+            footer={(actionNode: any) => (
+              <Flex justify="space-between" align="center">
+                <Flex gap="small" align="center">
+                  <Sender.Switch
+                    value={deepThink.value}
+                    onChange={(checked: boolean) => {
+                      deepThink.value = checked;
+                    }}
+                    icon={<OpenAIOutlined />}
+                  >
+                    {locale.deepThink}
+                  </Sender.Switch>
+                </Flex>
+                <Flex align="center">{actionNode}</Flex>
+              </Flex>
+            )}
+            autoSize={{ minRows: 3, maxRows: 6 }}
           />
         </div>
       </div>
-    </a-flex>
+    </Flex>
   </XProvider>
-</template>
+));
+</script>
 
 <style>
 .ax-playground-ultramodern-chat .ant-bubble-content-updating {

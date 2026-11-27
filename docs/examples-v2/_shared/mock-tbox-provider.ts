@@ -232,14 +232,81 @@ export function createTboxProviderFactory(
 ) {
   const caches = new Map<string, MockTboxProvider>();
 
-  return (conversationKey: string) => {
-    let provider = caches.get(conversationKey);
+  const factory = (conversationKey: string) => {
+    const key = conversationKey || 'default';
+    let provider = caches.get(key);
     if (!provider) {
       provider = new MockTboxProvider({
         request: new MockTboxRequest('Tbox Mock Client', {}, replyFor),
       });
-      caches.set(conversationKey, provider);
+      caches.set(key, provider);
     }
     return provider;
   };
+
+  factory.caches = caches;
+  return factory as ((conversationKey: string) => MockTboxProvider) & {
+    caches: Map<string, MockTboxProvider>;
+  };
+}
+
+/**
+ * Stable provider for Vue `useXChat` (setup once).
+ * Delegates to the per-conversation cached provider from `getConversationKey()`.
+ */
+export function createLiveTboxProvider(
+  getConversationKey: () => string,
+  replyFor: (userText: string) => MockTboxReply = defaultMockTboxReply,
+): MockTboxProvider {
+  const factory = createTboxProviderFactory(replyFor);
+  const getMessagesFns = new Set<() => any>();
+
+  const current = () => {
+    const provider = factory(getConversationKey());
+    getMessagesFns.forEach((fn) => provider.injectGetMessages(fn));
+    return provider;
+  };
+
+  const seed = factory('__playground_tbox_seed__');
+
+  const requestFacade = {
+    get manual() {
+      return current().request.manual;
+    },
+    get options() {
+      return current().request.options;
+    },
+    get baseURL() {
+      return (current().request as any).baseURL;
+    },
+    get isRequesting() {
+      return current().request.isRequesting;
+    },
+    get asyncHandler() {
+      return (current().request as any).asyncHandler;
+    },
+    abort(...args: any[]) {
+      return (current().request.abort as any)(...args);
+    },
+    run(...args: any[]) {
+      return (current().request.run as any)(...args);
+    },
+  };
+
+  return new Proxy(seed, {
+    get(_target, prop) {
+      if (prop === 'request') {
+        return requestFacade;
+      }
+      if (prop === 'injectGetMessages') {
+        return (fn: () => any) => {
+          getMessagesFns.add(fn);
+          current().injectGetMessages(fn);
+        };
+      }
+      const provider = current();
+      const value = (provider as any)[prop];
+      return typeof value === 'function' ? value.bind(provider) : value;
+    },
+  }) as MockTboxProvider;
 }

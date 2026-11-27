@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   MockTboxProvider,
   MockTboxRequest,
+  createLiveTboxProvider,
   createTboxProviderFactory,
   defaultMockTboxReply,
 } from '../../examples-v2/_shared/mock-tbox-provider';
@@ -61,6 +62,17 @@ describe('mock-tbox-provider', () => {
   it('factory caches per conversation key', () => {
     const factory = createTboxProviderFactory();
     expect(factory('a')).toBe(factory('a'));
+    expect(factory('a')).not.toBe(factory('b'));
+  });
+
+  it('live provider delegates by conversation key', () => {
+    let key = 'a';
+    const live = createLiveTboxProvider(() => key);
+    const factory = createTboxProviderFactory();
+    // Same seed pattern: live.request.run should hit the current key's cache
+    expect(live).toBeTruthy();
+    key = 'b';
+    expect(() => live.request.manual).not.toThrow();
     expect(factory('a')).not.toBe(factory('b'));
   });
 

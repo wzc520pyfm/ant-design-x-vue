@@ -46,7 +46,7 @@ import {
   watch,
 } from 'vue';
 import type { Ref } from 'vue';
-import { createTboxProviderFactory } from '../../examples-v2/_shared/mock-tbox-provider';
+import { createLiveTboxProvider } from '../../examples-v2/_shared/mock-tbox-provider';
 import type { TboxMessage, TboxOutput } from '../../examples-v2/_shared/mock-tbox-provider';
 import { usePlaygroundShell } from '../../examples-v2/_shared/playground-shell';
 
@@ -263,8 +263,6 @@ const Footer = defineComponent({
   },
 });
 
-const providerFactory = createTboxProviderFactory();
-
 const {
   conversations,
   activeConversationKey,
@@ -278,12 +276,12 @@ const {
 
 const inputValue = ref('');
 const listRef = ref<{ scrollTo?: (opts: { top: string }) => void } | null>(null);
-const activeKey = computed(() =>
+const provider = createLiveTboxProvider(() =>
   String(activeConversationKey.value || DEFAULT_CONVERSATIONS_ITEMS[0].key),
 );
 
 const { onRequest, messages, isRequesting, abort, onReload } = useXChat<TboxMessage>({
-  provider: providerFactory(activeKey.value),
+  provider,
   conversationKey: activeConversationKey,
   requestPlaceholder: () => ({
     content: { text: t.noData },
