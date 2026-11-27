@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ name: 'PlaygroundCopilotSetup' });
+
 import {
   AppstoreAddOutlined,
   CloseOutlined,
@@ -9,417 +11,423 @@ import {
   LikeOutlined,
   PaperClipOutlined,
   PlusOutlined,
-  AppstoreOutlined,
+  ProductOutlined,
   ReloadOutlined,
   ScheduleOutlined,
 } from '@ant-design/icons-vue';
+import type { AttachmentsProps, BubbleListProps, ConversationItemType } from 'ant-design-x-vue';
 import {
   Attachments,
-  type Attachment,
   Bubble,
   Conversations,
-  type Conversation,
   Prompts,
   Sender,
   Suggestion,
+  Think,
   Welcome,
-  useXAgent,
-  useLegacyXChat,
-  theme,
+  useXChat,
+  useXConversations,
+  type DefaultMessageInfo,
+  type XModelMessage,
 } from 'ant-design-x-vue';
-import { Button, Image, Popover, Space, Spin, message } from 'ant-design-vue';
-import { ref, watch, onMounted, computed, h } from 'vue';
+import { XMarkdown } from '@ant-design-x-vue/x-markdown';
+import '@ant-design-x-vue/x-markdown/themes/light.css';
+import '@ant-design-x-vue/x-markdown/themes/dark.css';
+import { Button, Flex, Image, Popover, Space, message, theme } from 'ant-design-vue';
+import dayjs from 'dayjs';
+import { computed, defineComponent, h, ref } from 'vue';
+import { OpenAIOutlined } from '../../examples-v2/_shared/openai-outlined';
+import { createGlmProviderFactory } from '../../examples-v2/_shared/playground-glm-provider';
+import { playgroundZh as locale } from '../../examples-v2/_shared/playground-locale';
 
-defineOptions({ name: 'PlaygroundCopilotSetup' });
+const { token } = theme.useToken();
 
-type BubbleDataType = {
-  role: string;
-  content: string;
+const DEFAULT_CONVERSATIONS_ITEMS: ConversationItemType[] = [
+  { key: '5', label: locale.newSession, group: locale.today },
+  { key: '4', label: locale.whatHasAntDesignXUpgraded, group: locale.today },
+  { key: '3', label: locale.newAgiHybridInterface, group: locale.today },
+  { key: '2', label: locale.howToQuicklyInstallAndImportComponents, group: locale.yesterday },
+  { key: '1', label: locale.whatIsAntDesignX, group: locale.yesterday },
+];
+
+const HISTORY_MESSAGES: Record<string, DefaultMessageInfo<XModelMessage>[]> = {
+  '5': [
+    { message: { role: 'user', content: locale.historyMessages.newSession.user }, status: 'success' },
+    {
+      message: { role: 'assistant', content: locale.historyMessages.newSession.assistant },
+      status: 'success',
+    },
+  ],
+  '4': [
+    {
+      message: { role: 'user', content: locale.historyMessages.whatHasAntDesignXUpgraded.user },
+      status: 'success',
+    },
+    {
+      message: {
+        role: 'assistant',
+        content: locale.historyMessages.whatHasAntDesignXUpgraded.assistant,
+      },
+      status: 'success',
+    },
+  ],
+  '3': [
+    {
+      message: { role: 'user', content: locale.historyMessages.newAgiHybridInterface.user },
+      status: 'success',
+    },
+    {
+      message: {
+        role: 'assistant',
+        content: locale.historyMessages.newAgiHybridInterface.assistant,
+      },
+      status: 'success',
+    },
+  ],
+  '2': [
+    {
+      message: {
+        role: 'user',
+        content: locale.historyMessages.howToQuicklyInstallAndImportComponents.user,
+      },
+      status: 'success',
+    },
+    {
+      message: {
+        role: 'assistant',
+        content: locale.historyMessages.howToQuicklyInstallAndImportComponents.assistant,
+      },
+      status: 'success',
+    },
+  ],
+  '1': [
+    {
+      message: { role: 'user', content: locale.historyMessages.whatIsAntDesignX.user },
+      status: 'success',
+    },
+    {
+      message: {
+        role: 'assistant',
+        content: locale.historyMessages.whatIsAntDesignX.assistant,
+      },
+      status: 'success',
+    },
+  ],
 };
 
-const MOCK_SESSION_LIST = [
-  {
-    key: '5',
-    label: 'New session',
-    group: 'Today',
-  },
-  {
-    key: '4',
-    label: 'What has Ant Design X upgraded?',
-    group: 'Today',
-  },
-  {
-    key: '3',
-    label: 'New AGI Hybrid Interface',
-    group: 'Today',
-  },
-  {
-    key: '2',
-    label: 'How to quickly install and import components?',
-    group: 'Yesterday',
-  },
-  {
-    key: '1',
-    label: 'What is Ant Design X?',
-    group: 'Yesterday',
-  },
-];
+const historyMessageFactory = (conversationKey: string): DefaultMessageInfo<XModelMessage>[] =>
+  HISTORY_MESSAGES[conversationKey] || [];
+
 const MOCK_SUGGESTIONS = [
-  { label: 'Write a report', value: 'report' },
-  { label: 'Draw a picture', value: 'draw' },
+  { label: locale.writeAReport, value: 'report' },
+  { label: locale.drawAPicture, value: 'draw' },
   {
-    label: 'Check some knowledge',
+    label: locale.checkSomeKnowledge,
     value: 'knowledge',
+    icon: h(OpenAIOutlined),
     children: [
-      { label: 'About React', value: 'react' },
-      { label: 'About Ant Design', value: 'antd' },
+      { label: locale.aboutReact, value: 'react' },
+      { label: locale.aboutAntDesign, value: 'antd' },
     ],
   },
 ];
+
 const MOCK_QUESTIONS = [
-  'What has Ant Design X upgraded?',
-  'What components are in Ant Design X?',
-  'How to quickly install and import components?',
+  locale.whatHasAntDesignXUpgraded,
+  locale.whatComponentsAreInAntDesignX,
+  locale.howToQuicklyInstallAndImportComponents,
 ];
-const AGENT_PLACEHOLDER = 'Generating content, please wait...';
 
+const provider = createGlmProviderFactory({ thinkingDisabled: true })('copilot');
 
-const attachmentsRef = ref<InstanceType<typeof Attachments>>(null);
-const abortController = ref<AbortController>(null);
-
-// ==================== State ====================
-
-const messageHistory = ref<Record<string, any>>({});
-
-const sessionList = ref<Conversation[]>(MOCK_SESSION_LIST);
-const curSession = ref(sessionList.value[0].key);
-
-const attachmentsOpen = ref(false);
-const files = ref<Attachment[]>([]);
-
-const inputValue = ref('');
-
-
-// ==================== Runtime ====================
-
-/**
- * 🔔 Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.
- */
-const [agent] = useXAgent<BubbleDataType>({
-  baseURL: 'https://api.x.ant.design/api/model-url-path',
-  model: 'model-name',
-  dangerouslyApiKey: 'Bearer sk-xxxxxxxxxxxxxxxxxxxx',
+const ThinkComponent = defineComponent({
+  name: 'PlaygroundCopilotThinkSetup',
+  props: {
+    streamStatus: { type: String, default: 'done' },
+  },
+  setup(props, { slots }) {
+    return () =>
+      h(
+        Think,
+        {
+          title: props.streamStatus === 'done' ? locale.completeThinking : `${locale.deepThinking}...`,
+          loading: props.streamStatus !== 'done',
+        },
+        () => slots.default?.(),
+      );
+  },
 });
 
-const loading = agent.value.isRequesting();
+const role: BubbleListProps['role'] = {
+  assistant: {
+    placement: 'start',
+    footer: () =>
+      h('div', { style: { display: 'flex' } }, [
+        h(Button, { type: 'text', size: 'small', icon: h(ReloadOutlined) }),
+        h(Button, { type: 'text', size: 'small', icon: h(CopyOutlined) }),
+        h(Button, { type: 'text', size: 'small', icon: h(LikeOutlined) }),
+        h(Button, { type: 'text', size: 'small', icon: h(DislikeOutlined) }),
+      ]),
+    contentRender(content: string) {
+      const newContent = String(content ?? '').replace(/\n\n/g, '<br/><br/>');
+      return h(XMarkdown, {
+        content: newContent,
+        components: { think: ThinkComponent },
+      });
+    },
+  },
+  user: { placement: 'end' },
+};
 
-const { messages, onRequest, setMessages } = useLegacyXChat({
-  agent: agent.value,
-  requestFallback: (_, { error }) => {
-    if (error.name === 'AbortError') {
+const styles = computed(() => ({
+  copilotChat: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    background: token.value.colorBgContainer,
+    color: token.value.colorText,
+    overflow: 'hidden',
+  },
+  chatHeader: {
+    height: '52px',
+    boxSizing: 'border-box' as const,
+    borderBottom: `1px solid ${token.value.colorBorder}`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '0 10px 0 16px',
+  },
+  headerTitle: {
+    fontWeight: 600,
+    fontSize: '15px',
+  },
+  headerButton: {
+    fontSize: '18px',
+  },
+  conversations: {
+    width: '300px',
+  },
+  chatList: {
+    flex: 1,
+    overflowY: 'auto' as const,
+    paddingInline: '16px',
+    marginBlockStart: `${token.value.margin}px`,
+    display: 'flex',
+    flexDirection: 'column' as const,
+    minHeight: 0,
+  },
+  chatWelcome: {
+    marginInline: `${token.value.margin}px`,
+    padding: '12px 16px',
+    borderRadius: '12px',
+    background: token.value.colorBgTextHover,
+    marginBottom: `${token.value.margin}px`,
+  },
+  chatSend: {
+    padding: `${token.value.padding}px`,
+  },
+}));
+
+const workareaStyles = computed(() => ({
+  copilotWrapper: {
+    width: '100%',
+    height: 'min(100vh, 720px)',
+    display: 'flex',
+    border: `1px solid ${token.value.colorBorderSecondary}`,
+    borderRadius: `${token.value.borderRadiusLG}px`,
+    overflow: 'hidden',
+  },
+  workarea: {
+    flex: 1,
+    background: token.value.colorBgLayout,
+    display: 'flex',
+    flexDirection: 'column' as const,
+    minWidth: 0,
+  },
+  workareaHeader: {
+    boxSizing: 'border-box' as const,
+    height: '52px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '0 48px 0 28px',
+    borderBottom: `1px solid ${token.value.colorBorder}`,
+  },
+  headerTitle: {
+    fontWeight: 600,
+    fontSize: '15px',
+    color: token.value.colorText,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  headerButton: {
+    backgroundImage: 'linear-gradient(78deg, #8054f2 7%, #3895da 95%)',
+    borderRadius: '12px',
+    height: '24px',
+    width: '93px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#fff',
+    cursor: 'pointer',
+    fontSize: '12px',
+    fontWeight: 600,
+    transition: 'all 0.3s',
+  },
+  workareaBody: {
+    flex: 1,
+    padding: `${token.value.padding}px`,
+    background: token.value.colorBgContainer,
+    borderRadius: `${token.value.borderRadius}px`,
+    minHeight: 0,
+  },
+  bodyContent: {
+    overflow: 'auto',
+    height: '100%',
+    paddingRight: '10px',
+  },
+  bodyText: {
+    color: token.value.colorText,
+    padding: '8px',
+  },
+}));
+
+const attachmentsRef = ref<{ upload?: (file: File | File[] | FileList) => void } | null>(null);
+const listRef = ref<{ scrollTo?: (opts: { top: string }) => void } | null>(null);
+const attachmentsOpen = ref(false);
+const files = ref<NonNullable<AttachmentsProps['items']>>([]);
+const inputValue = ref('');
+const copilotOpen = ref(true);
+
+const {
+  conversations,
+  activeConversationKey,
+  setActiveConversationKey,
+  addConversation,
+  getConversation,
+  setConversation,
+} = useXConversations({
+  defaultConversations: DEFAULT_CONVERSATIONS_ITEMS,
+  defaultActiveConversationKey: DEFAULT_CONVERSATIONS_ITEMS[0].key,
+});
+
+const { onRequest, messages, isRequesting, abort } = useXChat({
+  provider,
+  conversationKey: activeConversationKey,
+  defaultMessages: ({ conversationKey }) => historyMessageFactory(String(conversationKey ?? '')),
+  requestPlaceholder: () => ({
+    content: locale.noData,
+    role: 'assistant',
+  }),
+  requestFallback: (_: unknown, { error, errorInfo, messageInfo }: any) => {
+    if (error?.name === 'AbortError') {
       return {
-        content: 'Request is aborted',
+        content: messageInfo?.message?.content || locale.requestAborted,
         role: 'assistant',
       };
     }
     return {
-      content: 'Request failed, please try again!',
+      content: errorInfo?.error?.message || locale.requestFailed,
       role: 'assistant',
     };
-  },
-  transformMessage: (info) => {
-    const { originMessage, currentMessage } = info || {};
-    let currentContent = '';
-    let currentThink = '';
-    try {
-      if (currentMessage?.data && !currentMessage?.data.includes('DONE')) {
-        const message = JSON.parse(currentMessage?.data);
-        currentThink = message?.choices?.[0]?.delta?.reasoning_content || '';
-        currentContent = message?.choices?.[0]?.delta?.content || '';
-      }
-    } catch (error) {
-      console.error(error);
-    }
-
-    let content = '';
-
-    if (!originMessage?.content && currentThink) {
-      content = `<think>${currentThink}`;
-    } else if (
-      originMessage?.content?.includes('<think>') &&
-      !originMessage?.content.includes('</think>') &&
-      currentContent
-    ) {
-      content = `${originMessage?.content}</think>${currentContent}`;
-    } else {
-      content = `${originMessage?.content || ''}${currentThink}${currentContent}`;
-    }
-
-    return {
-      content: content,
-      role: 'assistant',
-    };
-  },
-  resolveAbortController: (controller) => {
-    abortController.value = controller;
   },
 });
-watch(curSession, () => {
-  if (curSession.value !== undefined) {
-    setMessages(messageHistory.value?.[curSession.value] || []);
-  } else {
-    setMessages([]);
-  }
-}, { immediate: true });
 
-watch(
-  () => messages.value,
-  () => {
-    // history mock
-    if (messages.value?.length) {
-      messageHistory.value = {
-        ...messageHistory.value,
-        [curSession.value]: messages.value,
-      }
-    }
-  }
+const conversationItems = computed(() =>
+  conversations.value?.map((i) =>
+    i.key === activeConversationKey.value
+      ? { ...i, label: `[${locale.curConversation}] ${i.label}` }
+      : i,
+  ),
 );
 
+const bubbleItems = computed(() =>
+  messages.value?.map((i) => ({
+    ...i.message,
+    key: i.id,
+    status: i.status,
+    loading: i.status === 'loading',
+  })),
+);
 
-// ==================== Event ====================
-const handleUserSubmit = (val: string) => {
+const promptItems = MOCK_QUESTIONS.map((i) => ({ key: i, description: i }));
+
+function handleUserSubmit(val: string) {
+  if (!val) return;
   onRequest({
-    stream: true,
-    message: { content: val, role: 'user' },
+    messages: [{ role: 'user', content: val }],
   });
+  listRef.value?.scrollTo?.({ top: 'bottom' });
 
-  // session title mock
-  if (sessionList.value.find((i) => i.key === curSession.value)?.label === 'New session') {
-    const tempList = sessionList.value.map((i) => (i.key !== curSession.value ? i : { ...i, label: val?.slice(0, 20) }));
-    sessionList.value = tempList
+  const conversation = getConversation(activeConversationKey.value);
+  if (conversation?.label === locale.newSession) {
+    setConversation(activeConversationKey.value, {
+      ...conversation,
+      label: val.slice(0, 20),
+    });
   }
-};
+}
 
-const onPasteFile = (_: File, files: FileList) => {
-  for (const file of Array.from(files)) {
-    attachmentsRef.value?.upload(file);
+function onPasteFile(fileList: FileList) {
+  for (const file of Array.from(fileList)) {
+    attachmentsRef.value?.upload?.(file);
   }
   attachmentsOpen.value = true;
-};
+}
 
-const createNewSession = () => {
-  if (agent.value.isRequesting()) {
-    message.error(
-      'Message is Requesting, you can create a new conversation after request done or abort it right now...',
-    );
-    return;
-  }
-
+function createNewSession() {
   if (messages.value?.length) {
-    const timeNow = new Date().getTime().toString();
-    try {
-      abortController.value?.abort();
-    } catch (error) {
-      console.error(error);
-    }
-    // The abort execution will trigger an asynchronous requestFallback, which may lead to timing issues.
-    // In future versions, the sessionId capability will be added to resolve this problem.
-    setTimeout(() => {
-      sessionList.value = [
-        { key: timeNow, label: 'New session', group: 'Today' },
-        ...sessionList.value,
-      ]
-      curSession.value = timeNow;
-    }, 100);
+    const timeNow = dayjs().valueOf().toString();
+    addConversation({
+      key: timeNow,
+      label: locale.newSession,
+      group: locale.today,
+    });
+    setActiveConversationKey(timeNow);
   } else {
-    message.error('It is now a new conversation.');
+    message.error(locale.itIsNowANewConversation);
   }
 }
 
-const changeConversation = async (val: string) => {
-  try {
-    abortController.value?.abort();
-  } catch (error) {
-    console.error(error); 
-  }
-  // The abort execution will trigger an asynchronous requestFallback, which may lead to timing issues.
-  // In future versions, the sessionId capability will be added to resolve this problem.
-  setTimeout(() => {
-    curSession.value = val;
-  }, 100);
+function setCopilotOpen(val: boolean) {
+  copilotOpen.value = val;
 }
 
-const setCopilotOpen = (val: boolean) => copilotOpen.value = val;
+function onAttachmentsChange(info: { fileList: NonNullable<AttachmentsProps['items']> }) {
+  files.value = info.fileList;
+}
 
+function attachmentsPlaceholder(type: string) {
+  return type === 'drop'
+    ? { title: locale.dropFileHere }
+    : {
+        icon: h(CloudUploadOutlined),
+        title: locale.uploadFiles,
+        description: locale.clickOrDragFilesToUpload,
+      };
+}
 
-// ==================== Style ====================
-const { token } = theme.useToken();
-const styles = computed(() => {
-  return {
-    copilotChat: {
-      width: '400px',
-      display: 'flex',
-      flexDirection: 'column',
-      background: token.value.colorBgContainer,
-      color: token.value.colorText,
-    },
-    // chatHeader 样式
-    chatHeader: {
-      height: '52px',
-      boxSizing: 'border-box',
-      borderBottom: `1px solid ${token.value.colorBorder}`,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0 10px 0 16px',
-    },
-    headerTitle: {
-      'font-weight': 600,
-      'font-size': '15px',
-    },
-    headerButton: {
-      width: '32px',
-      height: '32px',
-      display: 'flex',
-      'align-items': 'center',
-      'justify-content': 'center',
-      'font-size': '18px',
-    },
-    conversations: {
-      width: '300px',
-      '& .ant-conversations-list': {
-        paddingInlineStart: 0,
-      },
-    },
-    // chatList 样式
-    chatList: {
-      overflow: 'auto',
-      'padding-block': '16px',
-      flex: 1,
-    },
-    chatWelcome: {
-      'margin-inline': '16px',
-      padding: '12px 16px',
-      'border-radius': '2px 12px 12px 12px',
-      'background': token.value.colorBgTextHover,
-      'margin-bottom': '16px',
-    },
-    loadingMessage: {
-      'background-image': 'linear-gradient(90deg, #ff6b23 0%, #af3cb8 31%, #53b6ff 89%)',
-      'background-size': '100% 2px',
-      'background-repeat': 'no-repeat',
-      'background-position': 'bottom',
-    },
-    // chatSend 样式
-    chatSend: {
-      padding: '12px'
-    },
-    sendAction: {
-      display: 'flex',
-      'align-items': 'center',
-      'margin-bottom': '12px',
-      gap: '8px',
-    },
-    speechButton: {
-      'font-size': '18px',
-      color: `${token.value.colorText} !important`,
-    },
-  } as const;
-});
-const workareaStyles = computed(() => {
-  return {
-    copilotWrapper: {
-      'min-width': '970px',
-      height: '100vh',
-      display: 'flex',
-    },
-    workarea: {
-      flex: 1,
-      background: token.value.colorBgLayout,
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    workareaHeader: {
-      'box-sizing': 'border-box',
-      height: '52px',
-      display: 'flex',
-      alignItems: 'center',
-      'justify-content': 'space-between',
-      padding: '0 48px 0 28px',
-      'border-bottom': `1px solid ${token.value.colorBorder}`,
-    },
-    headerTitle: {
-      'font-weight': 600,
-      'font-size': '15px',
-      'color': token.value.colorText,
-      'display': 'flex',
-      'align-items': 'center',
-      'gap': '8px',
-    },
-    headerButton: {
-      'background-image': 'linear-gradient(78deg, #8054f2 7%, #3895da 95%)',
-      'border-radius': '12px',
-      height: '24px',
-      width: '93px',
-      display: 'flex',
-      'align-items': 'center',
-      'justify-content': 'center',
-      color: '#fff',
-      cursor: 'pointer',
-      'font-size': '12px',
-      'font-weight': 600,
-      transition: 'all 0.3s',
-      '&:hover': {
-        'opacity': 0.8,
-      },
-    },
-    workareaBody: {
-      flex: 1,
-      padding: '16px',
-      background: token.value.colorBgContainer,
-      borderRadius: '16px',
-      minHeight: 0,
-    },
-    bodyContent: {
-      overflow: 'auto',
-      height: '100%',
-      'padding-right': '10px',
-    },
-    bodyText: {
-      color: token.value.colorText,
-      padding: '8px'
-    },
-  } as const;
-});
+function onPromptItemClick(info: { data?: { description?: string } }) {
+  handleUserSubmit(String(info?.data?.description ?? ''));
+}
 
-// ==================== State =================
-const copilotOpen = ref<boolean>(true)
+function onSuggestionSelect(itemVal: string) {
+  inputValue.value = `[${itemVal}]:`;
+}
 
-const roles: (typeof Bubble.List)['roles'] = {
-  assistant: {
-    placement: 'start',
-    footer: h('div', {style:{ display: 'flex' }}, [
-      h('Button', {type: 'text', size: 'small', icon: h(ReloadOutlined), onClick: () => {}}),
-      h('Button', {type: 'text', size: 'small', icon: h(CopyOutlined), onClick: () => {}}),
-      h('Button', {type: 'text', size:'small', icon: h(LikeOutlined), onClick: () => {}}),
-      h('Button', {type: 'text', size:'small', icon: h(DislikeOutlined), onClick: () => {}}),
-    ]),
-    loadingRender: () => h(
-      Space,
-      {},
-      [
-        h(Spin, {size: 'small'}, []),
-        AGENT_PLACEHOLDER,
-      ]
-    )
-  },
-  user: { placement: 'end' },
+function onSenderChange(onTrigger: (v?: boolean) => void, v: string) {
+  onTrigger(v === '/');
+  inputValue.value = v;
+}
+
+function onSenderSubmit() {
+  handleUserSubmit(inputValue.value);
+  inputValue.value = '';
 }
 </script>
 
 <template>
   <div :style="workareaStyles.copilotWrapper">
-    <!-- 左侧工作区 -->
     <div :style="workareaStyles.workarea">
       <div :style="workareaStyles.workareaHeader">
         <div :style="workareaStyles.headerTitle">
@@ -437,7 +445,7 @@ const roles: (typeof Bubble.List)['roles'] = {
           :style="workareaStyles.headerButton"
           @click="setCopilotOpen(true)"
         >
-          ✨ AI Copilot
+          ✨ {{ locale.aiCopilot }}
         </div>
       </div>
 
@@ -486,13 +494,11 @@ const roles: (typeof Bubble.List)['roles'] = {
         </div>
       </div>
     </div>
-    <!-- 右侧对话区 -->
-    <div :style="{ ...styles.copilotChat, display: copilotOpen ? 'flex' : 'none' }">
-      <!-- 对话区 - header -->
-      <!-- {chatHeader} -->
+
+    <div :style="{ ...styles.copilotChat, width: copilotOpen ? '400px' : 0 }">
       <div :style="styles.chatHeader">
         <div :style="styles.headerTitle">
-          ✨ AI Copilot
+          ✨ {{ locale.aiCopilot }}
         </div>
         <Space :size="0">
           <Button
@@ -503,17 +509,16 @@ const roles: (typeof Bubble.List)['roles'] = {
           />
           <Popover
             placement="bottom"
-            :overlay-style="{ padding: 0, maxHeight: 600 }"
+            :overlay-inner-style="{ padding: 0, maxHeight: 600 }"
           >
             <template #content>
               <Conversations
-                :items="sessionList?.map((i) =>
-                  i.key === curSession ? { ...i, label: `[current] ${i.label}` } : i,
-                )"
-                :active-key="curSession"
+                :items="conversationItems"
+                :active-key="activeConversationKey"
                 groupable
-                :styles="{...styles.conversations, item: { padding: '0 8px' } }"
-                @active-change="changeConversation"
+                :styles="{ item: { padding: '0 8px' } }"
+                :style="styles.conversations"
+                @active-change="setActiveConversationKey"
               />
             </template>
             <Button
@@ -530,146 +535,101 @@ const roles: (typeof Bubble.List)['roles'] = {
           />
         </Space>
       </div>
-      <!-- 对话区 - 消息列表 -->
+
       <div :style="styles.chatList">
         <Bubble.List
           v-if="messages?.length"
-          :style="{ height: '100%', paddingInline: '16px' }"
-          :items="messages?.map((i) => ({
-            ...i.message,
-            styles: {
-              content: i.status === 'loading' ? styles.loadingMessage : {},
-            },
-            loading: i.status === 'loading',
-            typing: i.status === 'loading' ? { step: 5, interval: 20, suffix: h('span', '💗') } : false,
-          }))"
-          :roles="roles"
+          ref="listRef"
+          :items="bubbleItems"
+          :role="role"
         />
         <template v-else>
           <Welcome
             variant="borderless"
-            title="👋 Hello, I'm Ant Design X"
-            description="Base on Ant Design, AGI product interface solution, create a better intelligent vision~"
+            :title="`👋 ${locale.helloImAntDesignX}`"
+            :description="locale.baseOnAntDesign"
             :style="styles.chatWelcome"
           />
           <Prompts
             vertical
-            title="I can help："
-            :items="MOCK_QUESTIONS.map((i) => ({ key: i, description: i }))"
-            :style="{
-              'margin-inline': '16px',
-            }"
-            :styles="{
-              title: { fontSize: 14 },
-            }"
-            @item-click="(info) => handleUserSubmit(info?.data?.description as string)"
+            :title="locale.iCanHelp"
+            :items="promptItems"
+            :styles="{ title: { fontSize: 14 } }"
+            @item-click="onPromptItemClick"
           />
         </template>
       </div>
 
-      <!-- 对话区 - 输入框 -->
-      <!-- {chatSender} -->
-      <div :style="styles.chatSend">
-        <div :style="styles.sendAction">
+      <Flex
+        vertical
+        :gap="12"
+        :style="styles.chatSend"
+      >
+        <Flex
+          :gap="12"
+          align="center"
+        >
           <Button
             :icon="h(ScheduleOutlined)"
-            @click="handleUserSubmit('What has Ant Design X upgraded?')"
+            @click="handleUserSubmit(locale.whatHasAntDesignXUpgraded)"
           >
-            Upgrades
+            {{ locale.upgrades }}
           </Button>
           <Button
-            :icon="h(AppstoreOutlined)"
-            @click="handleUserSubmit('What component assets are available in Ant Design X?')"
+            :icon="h(ProductOutlined)"
+            @click="handleUserSubmit(locale.whatComponentsAreInAntDesignX)"
           >
-            Components
+            {{ locale.components }}
           </Button>
           <Button :icon="h(AppstoreAddOutlined)">
-            More
+            {{ locale.more }}
           </Button>
-        </div>
-        <!-- 输入框 -->
-      
+        </Flex>
+
         <Suggestion
           :items="MOCK_SUGGESTIONS"
-          @select="(itemVal) => inputValue = `[${itemVal}]:`"
+          @select="onSuggestionSelect"
         >
           <template #default="{ onTrigger, onKeyDown }">
             <Sender
-              :loading="loading"
+              :loading="isRequesting"
               :value="inputValue"
               allow-speech
-              placeholder="Ask or input / use skills"
-              @change="(v) => {
-                onTrigger(v === '/');
-                inputValue = v;
-              }"
-              @submit="() => {
-                handleUserSubmit(inputValue);
-                inputValue = '';
-              }"
-              @cancel="() => {
-                try {
-                  abortController?.abort();
-                } catch (error) {
-                  console.error(error); 
-                }
-              }"
+              :placeholder="locale.askOrInputUseSkills"
+              @change="(v) => onSenderChange(onTrigger, v)"
+              @submit="onSenderSubmit"
+              @cancel="() => abort()"
               @key-down="onKeyDown"
               @paste-file="onPasteFile"
             >
               <template #header>
                 <Sender.Header
-                  title="Upload File"
+                  :title="locale.uploadFile"
                   :styles="{ content: { padding: 0 } }"
                   :open="attachmentsOpen"
                   force-render
-                  @open-change="val => attachmentsOpen = val"
+                  @open-change="(val) => (attachmentsOpen = val)"
                 >
                   <Attachments
                     ref="attachmentsRef"
                     :before-upload="() => false"
                     :items="files"
-                    :placeholder="(type) =>
-                      type === 'drop'
-                        ? { title: 'Drop file here' }
-                        : {
-                          icon: h(CloudUploadOutlined),
-                          title: 'Upload files',
-                          description: 'Click or drag files to this area to upload',
-                        }"
-                    @change="({ fileList }) => files = fileList"
+                    :placeholder="attachmentsPlaceholder"
+                    @change="onAttachmentsChange"
                   />
                 </Sender.Header>
               </template>
               <template #prefix>
                 <Button
                   type="text"
-                  :icon="h(PaperClipOutlined, {style: { fontSize: '18px' }})"
+                  :icon="h(PaperClipOutlined, { style: { fontSize: '18px' } })"
                   @click="attachmentsOpen = !attachmentsOpen"
                 />
-              </template>
-              <template #actions="{info: {components: {SendButton, LoadingButton, SpeechButton}}}">
-                <div :style="{ display: 'flex', alignItems: 'center', gap: 4 }">
-                  <component
-                    :is="SpeechButton"
-                    :style="styles.speechButton"
-                  />
-                  <component
-                    :is="LoadingButton"
-                    v-if="loading"
-                    type="default"
-                  />
-                  <component
-                    :is="SendButton"
-                    v-else
-                    type="primary"
-                  />
-                </div>
               </template>
             </Sender>
           </template>
         </Suggestion>
-      </div>
+      </Flex>
     </div>
   </div>
 </template>
