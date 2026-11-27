@@ -1,4 +1,6 @@
 <script setup lang="tsx">
+defineOptions({ name: 'PlaygroundCopilot' });
+
 import {
   AppstoreAddOutlined,
   CloseOutlined,
@@ -9,661 +11,626 @@ import {
   LikeOutlined,
   PaperClipOutlined,
   PlusOutlined,
-  AppstoreOutlined,
+  ProductOutlined,
   ReloadOutlined,
   ScheduleOutlined,
 } from '@ant-design/icons-vue';
+import type { AttachmentsProps, BubbleListProps, ConversationItemType } from 'ant-design-x-vue';
 import {
   Attachments,
-  type Attachment,
   Bubble,
   Conversations,
-  type Conversation,
   Prompts,
   Sender,
   Suggestion,
+  Think,
   Welcome,
-  useXAgent,
-  useLegacyXChat,
-  theme,
+  useXChat,
+  useXConversations,
+  type DefaultMessageInfo,
+  type XModelMessage,
 } from 'ant-design-x-vue';
-import { Button, Image, Popover, Space, Spin, message } from 'ant-design-vue';
-import { ref, watch, onMounted, computed } from 'vue';
+import { XMarkdown } from '@ant-design-x-vue/x-markdown';
+import '@ant-design-x-vue/x-markdown/themes/light.css';
+import '@ant-design-x-vue/x-markdown/themes/dark.css';
+import { Button, Flex, Image, Popover, Space, message, theme } from 'ant-design-vue';
+import dayjs from 'dayjs';
+import { computed, defineComponent, ref } from 'vue';
+import { OpenAIOutlined } from '../../examples-v2/_shared/openai-outlined';
+import { createGlmProviderFactory } from '../../examples-v2/_shared/playground-glm-provider';
+import { playgroundZh as locale } from '../../examples-v2/_shared/playground-locale';
 
-defineOptions({ name: 'PlaygroundCopilot' });
+const { token } = theme.useToken();
 
-type BubbleDataType = {
-  role: string;
-  content: string;
+const DEFAULT_CONVERSATIONS_ITEMS: ConversationItemType[] = [
+  { key: '5', label: locale.newSession, group: locale.today },
+  { key: '4', label: locale.whatHasAntDesignXUpgraded, group: locale.today },
+  { key: '3', label: locale.newAgiHybridInterface, group: locale.today },
+  { key: '2', label: locale.howToQuicklyInstallAndImportComponents, group: locale.yesterday },
+  { key: '1', label: locale.whatIsAntDesignX, group: locale.yesterday },
+];
+
+const HISTORY_MESSAGES: Record<string, DefaultMessageInfo<XModelMessage>[]> = {
+  '5': [
+    { message: { role: 'user', content: locale.historyMessages.newSession.user }, status: 'success' },
+    {
+      message: { role: 'assistant', content: locale.historyMessages.newSession.assistant },
+      status: 'success',
+    },
+  ],
+  '4': [
+    {
+      message: { role: 'user', content: locale.historyMessages.whatHasAntDesignXUpgraded.user },
+      status: 'success',
+    },
+    {
+      message: {
+        role: 'assistant',
+        content: locale.historyMessages.whatHasAntDesignXUpgraded.assistant,
+      },
+      status: 'success',
+    },
+  ],
+  '3': [
+    {
+      message: { role: 'user', content: locale.historyMessages.newAgiHybridInterface.user },
+      status: 'success',
+    },
+    {
+      message: {
+        role: 'assistant',
+        content: locale.historyMessages.newAgiHybridInterface.assistant,
+      },
+      status: 'success',
+    },
+  ],
+  '2': [
+    {
+      message: {
+        role: 'user',
+        content: locale.historyMessages.howToQuicklyInstallAndImportComponents.user,
+      },
+      status: 'success',
+    },
+    {
+      message: {
+        role: 'assistant',
+        content: locale.historyMessages.howToQuicklyInstallAndImportComponents.assistant,
+      },
+      status: 'success',
+    },
+  ],
+  '1': [
+    {
+      message: { role: 'user', content: locale.historyMessages.whatIsAntDesignX.user },
+      status: 'success',
+    },
+    {
+      message: {
+        role: 'assistant',
+        content: locale.historyMessages.whatIsAntDesignX.assistant,
+      },
+      status: 'success',
+    },
+  ],
 };
 
-const MOCK_SESSION_LIST = [
-  {
-    key: '5',
-    label: 'New session',
-    group: 'Today',
-  },
-  {
-    key: '4',
-    label: 'What has Ant Design X upgraded?',
-    group: 'Today',
-  },
-  {
-    key: '3',
-    label: 'New AGI Hybrid Interface',
-    group: 'Today',
-  },
-  {
-    key: '2',
-    label: 'How to quickly install and import components?',
-    group: 'Yesterday',
-  },
-  {
-    key: '1',
-    label: 'What is Ant Design X?',
-    group: 'Yesterday',
-  },
-];
+const historyMessageFactory = (conversationKey: string): DefaultMessageInfo<XModelMessage>[] =>
+  HISTORY_MESSAGES[conversationKey] || [];
+
 const MOCK_SUGGESTIONS = [
-  { label: 'Write a report', value: 'report' },
-  { label: 'Draw a picture', value: 'draw' },
+  { label: locale.writeAReport, value: 'report' },
+  { label: locale.drawAPicture, value: 'draw' },
   {
-    label: 'Check some knowledge',
+    label: locale.checkSomeKnowledge,
     value: 'knowledge',
+    icon: <OpenAIOutlined />,
     children: [
-      { label: 'About React', value: 'react' },
-      { label: 'About Ant Design', value: 'antd' },
+      { label: locale.aboutReact, value: 'react' },
+      { label: locale.aboutAntDesign, value: 'antd' },
     ],
   },
 ];
-const MOCK_QUESTIONS = [
-  'What has Ant Design X upgraded?',
-  'What components are in Ant Design X?',
-  'How to quickly install and import components?',
-];
-const AGENT_PLACEHOLDER = 'Generating content, please wait...';
 
+const MOCK_QUESTIONS = [
+  locale.whatHasAntDesignXUpgraded,
+  locale.whatComponentsAreInAntDesignX,
+  locale.howToQuicklyInstallAndImportComponents,
+];
+
+const provider = createGlmProviderFactory({ thinkingDisabled: true })('copilot');
+
+const ThinkComponent = defineComponent({
+  name: 'PlaygroundCopilotThink',
+  props: {
+    streamStatus: { type: String, default: 'done' },
+  },
+  setup(props, { slots }) {
+    return () => (
+      <Think
+        title={props.streamStatus === 'done' ? locale.completeThinking : `${locale.deepThinking}...`}
+        loading={props.streamStatus !== 'done'}
+      >
+        {slots.default?.()}
+      </Think>
+    );
+  },
+});
+
+const role: BubbleListProps['role'] = {
+  assistant: {
+    placement: 'start',
+    footer: (
+      <div style={{ display: 'flex' }}>
+        <Button type="text" size="small" icon={<ReloadOutlined />} />
+        <Button type="text" size="small" icon={<CopyOutlined />} />
+        <Button type="text" size="small" icon={<LikeOutlined />} />
+        <Button type="text" size="small" icon={<DislikeOutlined />} />
+      </div>
+    ),
+    contentRender(content: string) {
+      const newContent = String(content ?? '').replace(/\n\n/g, '<br/><br/>');
+      return (
+        <XMarkdown
+          content={newContent}
+          components={{ think: ThinkComponent }}
+        />
+      );
+    },
+  },
+  user: { placement: 'end' },
+};
+
+const styles = computed(() => ({
+  copilotChat: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    background: token.value.colorBgContainer,
+    color: token.value.colorText,
+    overflow: 'hidden',
+  },
+  chatHeader: {
+    height: '52px',
+    boxSizing: 'border-box' as const,
+    borderBottom: `1px solid ${token.value.colorBorder}`,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '0 10px 0 16px',
+  },
+  headerTitle: {
+    fontWeight: 600,
+    fontSize: '15px',
+  },
+  headerButton: {
+    fontSize: '18px',
+  },
+  conversations: {
+    width: '300px',
+  },
+  chatList: {
+    flex: 1,
+    overflowY: 'auto' as const,
+    paddingInline: '16px',
+    marginBlockStart: `${token.value.margin}px`,
+    display: 'flex',
+    flexDirection: 'column' as const,
+    minHeight: 0,
+  },
+  chatWelcome: {
+    marginInline: `${token.value.margin}px`,
+    padding: '12px 16px',
+    borderRadius: '12px',
+    background: token.value.colorBgTextHover,
+    marginBottom: `${token.value.margin}px`,
+  },
+  chatSend: {
+    padding: `${token.value.padding}px`,
+  },
+}));
+
+const workareaStyles = computed(() => ({
+  copilotWrapper: {
+    width: '100%',
+    height: 'min(100vh, 720px)',
+    display: 'flex',
+    border: `1px solid ${token.value.colorBorderSecondary}`,
+    borderRadius: `${token.value.borderRadiusLG}px`,
+    overflow: 'hidden',
+  },
+  workarea: {
+    flex: 1,
+    background: token.value.colorBgLayout,
+    display: 'flex',
+    flexDirection: 'column' as const,
+    minWidth: 0,
+  },
+  workareaHeader: {
+    boxSizing: 'border-box' as const,
+    height: '52px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '0 48px 0 28px',
+    borderBottom: `1px solid ${token.value.colorBorder}`,
+  },
+  headerTitle: {
+    fontWeight: 600,
+    fontSize: '15px',
+    color: token.value.colorText,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  headerButton: {
+    backgroundImage: 'linear-gradient(78deg, #8054f2 7%, #3895da 95%)',
+    borderRadius: '12px',
+    height: '24px',
+    width: '93px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#fff',
+    cursor: 'pointer',
+    fontSize: '12px',
+    fontWeight: 600,
+    transition: 'all 0.3s',
+  },
+  workareaBody: {
+    flex: 1,
+    padding: `${token.value.padding}px`,
+    background: token.value.colorBgContainer,
+    borderRadius: `${token.value.borderRadius}px`,
+    minHeight: 0,
+  },
+  bodyContent: {
+    overflow: 'auto',
+    height: '100%',
+    paddingRight: '10px',
+  },
+  bodyText: {
+    color: token.value.colorText,
+    padding: '8px',
+  },
+}));
 
 interface CopilotProps {
   copilotOpen: boolean;
   setCopilotOpen: (open: boolean) => void;
 }
 
-const attachmentsRef = ref<InstanceType<typeof Attachments>>(null);
-const abortController = ref<AbortController>(null);
+const Copilot = defineComponent({
+  name: 'PlaygroundCopilotPanel',
+  props: {
+    copilotOpen: { type: Boolean, required: true },
+    setCopilotOpen: { type: Function, required: true },
+  },
+  setup(props: CopilotProps) {
+    const attachmentsRef = ref<{ upload?: (file: File | File[] | FileList) => void } | null>(null);
+    const listRef = ref<{ scrollTo?: (opts: { top: string }) => void } | null>(null);
+    const attachmentsOpen = ref(false);
+    const files = ref<NonNullable<AttachmentsProps['items']>>([]);
+    const inputValue = ref('');
 
-// ==================== State ====================
+    const {
+      conversations,
+      activeConversationKey,
+      setActiveConversationKey,
+      addConversation,
+      getConversation,
+      setConversation,
+    } = useXConversations({
+      defaultConversations: DEFAULT_CONVERSATIONS_ITEMS,
+      defaultActiveConversationKey: DEFAULT_CONVERSATIONS_ITEMS[0].key,
+    });
 
-const messageHistory = ref<Record<string, any>>({});
-
-const sessionList = ref<Conversation[]>(MOCK_SESSION_LIST);
-const curSession = ref(sessionList.value[0].key);
-
-const attachmentsOpen = ref(false);
-const files = ref<Attachment[]>([]);
-
-const inputValue = ref('');
-
-
-// ==================== Runtime ====================
-
-/**
- * 🔔 Please replace the BASE_URL, PATH, MODEL, API_KEY with your own values.
- */
-const [agent] = useXAgent<BubbleDataType>({
-  baseURL: 'https://api.x.ant.design/api/llm_siliconflow_deepseekr1',
-  model: 'deepseek-ai/DeepSeek-R1',
-  dangerouslyApiKey: 'Bearer sk-xxxxxxxxxxxxxxxxxxxx',
-});
-
-const loading = ref(false);
-watch(() => agent.value.isRequesting(), () => {
-  loading.value = agent.value.isRequesting();
-});
-
-const { messages, onRequest, setMessages } = useLegacyXChat({
-  agent: agent.value,
-  requestFallback: (_, { error }) => {
-    if (error.name === 'AbortError') {
-      return {
-        content: 'Request is aborted',
+    const { onRequest, messages, isRequesting, abort } = useXChat({
+      provider,
+      conversationKey: activeConversationKey,
+      defaultMessages: ({ conversationKey }) => historyMessageFactory(String(conversationKey ?? '')),
+      requestPlaceholder: () => ({
+        content: locale.noData,
         role: 'assistant',
-      };
-    }
-    return {
-      content: 'Request failed, please try again!',
-      role: 'assistant',
-    };
-  },
-  transformMessage: (info) => {
-    const { originMessage, chunk } = info || {};
-    let currentContent = '';
-    let currentThink = '';
-    try {
-      if (chunk?.data && !chunk?.data.includes('DONE')) {
-        const message = JSON.parse(chunk?.data);
-        currentThink = message?.choices?.[0]?.delta?.reasoning_content || '';
-        currentContent = message?.choices?.[0]?.delta?.content || '';
-      }
-    } catch (error) {
-      console.error(error);
-    }
-
-    let content = '';
-
-    if (!originMessage?.content && currentThink) {
-      content = `<think>${currentThink}`;
-    } else if (
-      originMessage?.content?.includes('<think>') &&
-      !originMessage?.content.includes('</think>') &&
-      currentContent
-    ) {
-      content = `${originMessage?.content}</think>${currentContent}`;
-    } else {
-      content = `${originMessage?.content || ''}${currentThink}${currentContent}`;
-    }
-
-    return {
-      content: content,
-      role: 'assistant',
-    };
-  },
-  resolveAbortController: (controller) => {
-    abortController.value = controller;
-  },
-});
-watch(curSession, () => {
-  if (curSession.value !== undefined) {
-    setMessages(messageHistory.value?.[curSession.value] || [])
-  } else {
-    setMessages([])
-  }
-}, { immediate: true })
-
-// ==================== Event ====================
-const handleUserSubmit = (val: string) => {
-  onRequest({
-    stream: true,
-    message: { content: val, role: 'user' },
-  });
-
-  // session title mock
-  if (sessionList.value.find((i) => i.key === curSession.value)?.label === 'New session') {
-    const tempList = sessionList.value.map((i) => (i.key !== curSession.value ? i : { ...i, label: val?.slice(0, 20) }));
-    sessionList.value = tempList
-  }
-};
-
-const onPasteFile = (_: File, files: FileList) => {
-  for (const file of Array.from(files)) {
-    attachmentsRef.value?.upload(file);
-  }
-  attachmentsOpen.value = true;
-};
-
-watch(
-  () => messages.value,
-  () => {
-    // history mock
-    if (messages.value?.length) {
-      messageHistory.value = {
-        ...messageHistory.value,
-        [curSession.value]: messages.value,
-      }
-    }
-  }
-)
-
-const Copilot = (props: CopilotProps) => {
-  const { copilotOpen, setCopilotOpen } = props;
-
-  // ==================== Nodes ====================
-  const chatHeader = (
-    <div style={styles.value.chatHeader}>
-      <div style={styles.value.headerTitle}>✨ AI Copilot</div>
-      <Space size={0}>
-        <Button
-          type="text"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            if (agent.value.isRequesting()) {
-              message.error(
-                'Message is Requesting, you can create a new conversation after request done or abort it right now...',
-              );
-              return;
-            }
-
-            if (messages.value?.length) {
-              const timeNow = new Date().getTime().toString();
-              try {
-                abortController.value?.abort();
-              } catch (error) {
-                console.error(error);
-              }
-              // The abort execution will trigger an asynchronous requestFallback, which may lead to timing issues.
-              // In future versions, the sessionId capability will be added to resolve this problem.
-              setTimeout(() => {
-                sessionList.value = [
-                  { key: timeNow, label: 'New session', group: 'Today' },
-                  ...sessionList.value,
-                ]
-                curSession.value = timeNow;
-              }, 100);
-            } else {
-              message.error('It is now a new conversation.');
-            }
-          }}
-          style={styles.value.headerButton}
-        />
-        <Popover
-          placement="bottom"
-          overlayStyle={{ padding: 0, maxHeight: 600 }}
-          content={
-            <Conversations
-              items={sessionList.value?.map((i) =>
-                i.key === curSession.value ? { ...i, label: `[current] ${i.label}` } : i,
-              )}
-              activeKey={curSession.value}
-              groupable
-              onActiveChange={async (val) => {
-                try {
-                  abortController.value?.abort();
-                } catch (error) {
-                  console.error(error);
-                }
-                // The abort execution will trigger an asynchronous requestFallback, which may lead to timing issues.
-                // In future versions, the sessionId capability will be added to resolve this problem.
-                setTimeout(() => {
-                  curSession.value = val;
-                }, 100);
-              }}
-              styles={{...styles.value.conversations, item: { padding: '0 8px' } }}
-            />
-          }
-        >
-          <Button type="text" icon={<CommentOutlined />} style={styles.value.headerButton} />
-        </Popover>
-        <Button
-          type="text"
-          icon={<CloseOutlined />}
-          onClick={() => setCopilotOpen(false)}
-          style={styles.value.headerButton}
-        />
-      </Space>
-    </div>
-  );
-  const chatList = (
-    <div style={styles.value.chatList}>
-      {messages.value?.length ? (
-        /** 消息列表 */
-        <Bubble.List
-          style={{ height: '100%', paddingInline: '16px' }}
-          items={messages.value?.map((i) => ({
-            ...i.message,
-            styles: {
-              content: i.status === 'loading' ? styles.value.loadingMessage : {},
-            },
-            loading: i.status === 'loading',
-            typing: i.status === 'loading' ? { step: 5, interval: 20, suffix: <>💗</> } : false,
-          }))}
-          roles={{
-            assistant: {
-              placement: 'start',
-              footer: (
-                <div style={{ display: 'flex' }}>
-                  <Button type="text" size="small" icon={<ReloadOutlined />} />
-                  <Button type="text" size="small" icon={<CopyOutlined />} />
-                  <Button type="text" size="small" icon={<LikeOutlined />} />
-                  <Button type="text" size="small" icon={<DislikeOutlined />} />
-                </div>
-              ),
-              loadingRender: () => (
-                <Space>
-                  <Spin size="small" />
-                  {AGENT_PLACEHOLDER}
-                </Space>
-              ),
-            },
-            user: { placement: 'end' },
-          }}
-        />
-      ) : (
-        /** 没有消息时的 welcome */
-        <>
-          <Welcome
-            variant="borderless"
-            title="👋 Hello, I'm Ant Design X"
-            description="Base on Ant Design, AGI product interface solution, create a better intelligent vision~"
-            style={styles.value.chatWelcome}
-          />
-
-          <Prompts
-            vertical
-            title="I can help："
-            items={MOCK_QUESTIONS.map((i) => ({ key: i, description: i }))}
-            onItemClick={(info) => handleUserSubmit(info?.data?.description as string)}
-            style={{
-              'margin-inline': '16px',
-            }}
-            styles={{
-              title: { fontSize: 14 },
-            }}
-          />
-        </>
-      )}
-    </div>
-  );
-  const sendHeader = (
-    <Sender.Header
-      title="Upload File"
-      styles={{ content: { padding: 0 } }}
-      open={attachmentsOpen.value}
-      onOpenChange={val => attachmentsOpen.value = val}
-      forceRender
-    >
-      <Attachments
-        ref={attachmentsRef}
-        beforeUpload={() => false}
-        items={files.value}
-        onChange={({ fileList }) => files.value = fileList}
-        placeholder={(type) =>
-          type === 'drop'
-            ? { title: 'Drop file here' }
-            : {
-                icon: <CloudUploadOutlined />,
-                title: 'Upload files',
-                description: 'Click or drag files to this area to upload',
-              }
+      }),
+      requestFallback: (_: unknown, { error, errorInfo, messageInfo }: any) => {
+        if (error?.name === 'AbortError') {
+          return {
+            content: messageInfo?.message?.content || locale.requestAborted,
+            role: 'assistant',
+          };
         }
-      />
-    </Sender.Header>
-  );
-  const chatSender = (
-    <div style={styles.value.chatSend}>
-      <div style={styles.value.sendAction}>
-        <Button
-          icon={<ScheduleOutlined />}
-          onClick={() => handleUserSubmit('What has Ant Design X upgraded?')}
-        >
-          Upgrades
-        </Button>
-        <Button
-          icon={<AppstoreOutlined />}
-          onClick={() => handleUserSubmit('What component assets are available in Ant Design X?')}
-        >
-          Components
-        </Button>
-        <Button icon={<AppstoreAddOutlined />}>More</Button>
-      </div>
-
-      <Suggestion items={MOCK_SUGGESTIONS} onSelect={(itemVal) => inputValue.value = `[${itemVal}]:`}
-        children={({ onTrigger, onKeyDown }) => (
-          <Sender
-            loading={loading.value}
-            value={inputValue.value}
-            onChange={(v) => {
-              onTrigger(v === '/');
-              inputValue.value = v;
-            }}
-            onSubmit={() => {
-              handleUserSubmit(inputValue.value);
-              inputValue.value = '';
-            }}
-            onCancel={() => {
-              try {
-                abortController.value?.abort();
-              } catch (error) {
-                console.error(error);
-              }
-            }}
-            allowSpeech
-            placeholder="Ask or input / use skills"
-            onKeyDown={onKeyDown}
-            header={sendHeader}
-            prefix={
-              <Button
-                type="text"
-                icon={<PaperClipOutlined style={{ fontSize: '18px' }} />}
-                onClick={() => attachmentsOpen.value = !attachmentsOpen.value}
-              />
-            }
-            onPasteFile={onPasteFile}
-            actions={(_, info) => {
-              const { SendButton, LoadingButton, SpeechButton } = info.components;
-              return (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <SpeechButton style={styles.value.speechButton} />
-                  {loading.value ? <LoadingButton type="default" /> : <SendButton type="primary" />}
-                </div>
-              );
-            }}
-          />
-        )}
-      />
-    </div>
-  );
-
-  return (
-    <div style={{ ...styles.value.copilotChat, display: copilotOpen ? 'flex' : 'none' }}>
-      {chatHeader}
-      {chatList}
-      {chatSender}
-    </div>
-  );
-};
-
-
-// ==================== Style ====================
-const { token } = theme.useToken();
-const styles = computed(() => {
-  return {
-    copilotChat: {
-      width: '400px',
-      display: 'flex',
-      flexDirection: 'column',
-      background: token.value.colorBgContainer,
-      color: token.value.colorText,
-    },
-    // chatHeader 样式
-    chatHeader: {
-      height: '52px',
-      boxSizing: 'border-box',
-      borderBottom: `1px solid ${token.value.colorBorder}`,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '0 10px 0 16px',
-    },
-    headerTitle: {
-      'font-weight': 600,
-      'font-size': '15px',
-    },
-    headerButton: {
-      display: 'flex',
-      'align-items': 'center',
-      'justify-content': 'center',
-      'font-size': '18px',
-    },
-    conversations: {
-      width: '300px',
-      '& .ant-conversations-list': {
-        paddingInlineStart: 0,
+        return {
+          content: errorInfo?.error?.message || locale.requestFailed,
+          role: 'assistant',
+        };
       },
-    },
-    // chatList 样式
-    chatList: {
-      overflow: 'auto',
-      'padding-block': '16px',
-      flex: 1,
-    },
-    chatWelcome: {
-      'margin-inline': '16px',
-      padding: '12px 16px',
-      'border-radius': '2px 12px 12px 12px',
-      'background': token.value.colorBgTextHover,
-      'margin-bottom': '16px',
-    },
-    loadingMessage: {
-      'background-image': 'linear-gradient(90deg, #ff6b23 0%, #af3cb8 31%, #53b6ff 89%)',
-      'background-size': '100% 2px',
-      'background-repeat': 'no-repeat',
-      'background-position': 'bottom',
-    },
-    // chatSend 样式
-    chatSend: {
-      padding: '12px'
-    },
-    sendAction: {
-      display: 'flex',
-      'align-items': 'center',
-      'margin-bottom': '12px',
-      gap: '8px',
-    },
-    speechButton: {
-      'font-size': '18px',
-      color: `${token.value.colorText} !important`,
-    },
-  } as const;
-});
-const workareaStyles = computed(() => {
-  return {
-    copilotWrapper: {
-      'min-width': '970px',
-      height: '100vh',
-      display: 'flex',
-    },
-    workarea: {
-      flex: 1,
-      background: token.value.colorBgLayout,
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    workareaHeader: {
-      'box-sizing': 'border-box',
-      height: '52px',
-      display: 'flex',
-      alignItems: 'center',
-      'justify-content': 'space-between',
-      padding: '0 48px 0 28px',
-      'border-bottom': `1px solid ${token.value.colorBorder}`,
-    },
-    headerTitle: {
-      'font-weight': 600,
-      'font-size': '15px',
-      'color': token.value.colorText,
-      'display': 'flex',
-      'align-items': 'center',
-      'gap': '8px',
-    },
-    headerButton: {
-      'background-image': 'linear-gradient(78deg, #8054f2 7%, #3895da 95%)',
-      'border-radius': '12px',
-      height: '24px',
-      width: '93px',
-      display: 'flex',
-      'align-items': 'center',
-      'justify-content': 'center',
-      color: '#fff',
-      cursor: 'pointer',
-      'font-size': '12px',
-      'font-weight': 600,
-      transition: 'all 0.3s',
-      '&:hover': {
-        'opacity': 0.8,
-      },
-    },
-    workareaBody: {
-      flex: 1,
-      padding: '16px',
-      background: token.value.colorBgContainer,
-      borderRadius: '16px',
-      minHeight: 0,
-    },
-    bodyContent: {
-      overflow: 'auto',
-      height: '100%',
-      'padding-right': '10px',
-    },
-    bodyText: {
-      color: token.value.colorText,
-      padding: '8px'
-    },
-  } as const;
-});
+    });
 
-// ==================== State =================
-const copilotOpen = ref<boolean>(true)
-// ==================== Render =================
-defineRender(() => {
-  return (
-    <div style={workareaStyles.value.copilotWrapper}>
-      <div style={workareaStyles.value.workarea}>
-        <div style={workareaStyles.value.workareaHeader}>
-          <div style={workareaStyles.value.headerTitle}>
-            <img
-              src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original"
-              draggable={false}
-              alt="logo"
-              width={20}
-              height={20}
+    const handleUserSubmit = (val: string) => {
+      if (!val) return;
+      onRequest({
+        messages: [{ role: 'user', content: val }],
+      });
+      listRef.value?.scrollTo?.({ top: 'bottom' });
+
+      const conversation = getConversation(activeConversationKey.value);
+      if (conversation?.label === locale.newSession) {
+        setConversation(activeConversationKey.value, {
+          ...conversation,
+          label: val.slice(0, 20),
+        });
+      }
+    };
+
+    const onPasteFile = (fileList: FileList) => {
+      for (const file of Array.from(fileList)) {
+        attachmentsRef.value?.upload?.(file);
+      }
+      attachmentsOpen.value = true;
+    };
+
+    return () => (
+      <div
+        style={{
+          ...styles.value.copilotChat,
+          width: props.copilotOpen ? 400 : 0,
+        }}
+      >
+        <div style={styles.value.chatHeader}>
+          <div style={styles.value.headerTitle}>✨ {locale.aiCopilot}</div>
+          <Space size={0}>
+            <Button
+              type="text"
+              icon={<PlusOutlined />}
+              style={styles.value.headerButton}
+              onClick={() => {
+                if (messages.value?.length) {
+                  const timeNow = dayjs().valueOf().toString();
+                  addConversation({
+                    key: timeNow,
+                    label: locale.newSession,
+                    group: locale.today,
+                  });
+                  setActiveConversationKey(timeNow);
+                } else {
+                  message.error(locale.itIsNowANewConversation);
+                }
+              }}
             />
-            Ant Design X
-          </div>
-          {!copilotOpen.value && (
-            <div onClick={() => copilotOpen.value = true} style={workareaStyles.value.headerButton}>
-              ✨ AI Copilot
-            </div>
+            <Popover
+              placement="bottom"
+              overlayInnerStyle={{ padding: 0, maxHeight: 600 }}
+              content={
+                <Conversations
+                  items={conversations.value?.map((i) =>
+                    i.key === activeConversationKey.value
+                      ? { ...i, label: `[${locale.curConversation}] ${i.label}` }
+                      : i,
+                  )}
+                  activeKey={activeConversationKey.value}
+                  groupable
+                  onActiveChange={setActiveConversationKey}
+                  styles={{ item: { padding: '0 8px' } }}
+                  style={styles.value.conversations}
+                />
+              }
+            >
+              <Button type="text" icon={<CommentOutlined />} style={styles.value.headerButton} />
+            </Popover>
+            <Button
+              type="text"
+              icon={<CloseOutlined />}
+              onClick={() => props.setCopilotOpen(false)}
+              style={styles.value.headerButton}
+            />
+          </Space>
+        </div>
+
+        <div style={styles.value.chatList}>
+          {messages.value?.length ? (
+            <Bubble.List
+              ref={listRef as any}
+              items={messages.value?.map((i) => ({
+                ...i.message,
+                key: i.id,
+                status: i.status,
+                loading: i.status === 'loading',
+              }))}
+              role={role}
+            />
+          ) : (
+            <>
+              <Welcome
+                variant="borderless"
+                title={`👋 ${locale.helloImAntDesignX}`}
+                description={locale.baseOnAntDesign}
+                style={styles.value.chatWelcome}
+              />
+              <Prompts
+                vertical
+                title={locale.iCanHelp}
+                items={MOCK_QUESTIONS.map((i) => ({ key: i, description: i }))}
+                onItemClick={(info: { data?: { description?: string } }) =>
+                  handleUserSubmit(String(info?.data?.description ?? ''))
+                }
+                styles={{ title: { fontSize: 14 } }}
+              />
+            </>
           )}
         </div>
 
-        <div
-          style={{ ...workareaStyles.value.workareaBody, margin: copilotOpen.value ? '16px' : '16px 48px' }}
-        >
-          <div style={workareaStyles.value.bodyContent}>
-            <Image
-              src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*48RLR41kwHIAAAAAAAAAAAAADgCCAQ/fmt.webp"
-              preview={false}
-            />
-            <div style={workareaStyles.value.bodyText}>
-              <h4>What is the RICH design paradigm?</h4>
-              <div>
-                RICH is an AI interface design paradigm we propose, similar to how the WIMP paradigm
-                relates to graphical user interfaces.
-              </div>
-              <br />
-              <div>
-                The ACM SIGCHI 2005 (the premier conference on human-computer interaction) defined
-                that the core issues of human-computer interaction can be divided into three levels:
-              </div>
-              <ul>
-                <li>
-                  Interface Paradigm Layer: Defines the design elements of human-computer
-                  interaction interfaces, guiding designers to focus on core issues.
-                </li>
-                <li>
-                  User model layer: Build an interface experience evaluation model to measure the
-                  quality of the interface experience.
-                </li>
-                <li>
-                  Software framework layer: The underlying support algorithms and data structures
-                  for human-computer interfaces, which are the contents hidden behind the front-end
-                  interface.
-                </li>
-              </ul>
-              <div>
-                The interface paradigm is the aspect that designers need to focus on and define the
-                most when a new human-computer interaction technology is born. The interface
-                paradigm defines the design elements that designers should pay attention to, and
-                based on this, it is possible to determine what constitutes good design and how to
-                achieve it.
-              </div>
+        <Flex vertical gap={12} style={styles.value.chatSend}>
+          <Flex gap={12} align="center">
+            <Button
+              icon={<ScheduleOutlined />}
+              onClick={() => handleUserSubmit(locale.whatHasAntDesignXUpgraded)}
+            >
+              {locale.upgrades}
+            </Button>
+            <Button
+              icon={<ProductOutlined />}
+              onClick={() => handleUserSubmit(locale.whatComponentsAreInAntDesignX)}
+            >
+              {locale.components}
+            </Button>
+            <Button icon={<AppstoreAddOutlined />}>{locale.more}</Button>
+          </Flex>
+          <Suggestion
+            items={MOCK_SUGGESTIONS}
+            onSelect={(itemVal: string) => {
+              inputValue.value = `[${itemVal}]:`;
+            }}
+            children={({ onTrigger, onKeyDown }: { onTrigger: (v?: boolean) => void; onKeyDown: (e: KeyboardEvent) => void }) => (
+              <Sender
+                loading={isRequesting.value}
+                value={inputValue.value}
+                onChange={(v: string) => {
+                  if (v === '/') {
+                    onTrigger();
+                  } else if (!v) {
+                    onTrigger(false);
+                  }
+                  inputValue.value = v;
+                }}
+                onSubmit={() => {
+                  handleUserSubmit(inputValue.value);
+                  inputValue.value = '';
+                }}
+                onCancel={() => abort()}
+                allowSpeech
+                placeholder={locale.askOrInputUseSkills}
+                onKeyDown={onKeyDown}
+                header={
+                  <Sender.Header
+                    title={locale.uploadFile}
+                    styles={{ content: { padding: 0 } }}
+                    open={attachmentsOpen.value}
+                    onOpenChange={(open: boolean) => {
+                      attachmentsOpen.value = open;
+                    }}
+                    forceRender
+                  >
+                    <Attachments
+                      ref={attachmentsRef as any}
+                      beforeUpload={() => false}
+                      items={files.value}
+                      onChange={({ fileList }: { fileList: NonNullable<AttachmentsProps['items']> }) => {
+                        files.value = fileList;
+                      }}
+                      placeholder={(type: string) =>
+                        type === 'drop'
+                          ? { title: locale.dropFileHere }
+                          : {
+                              icon: <CloudUploadOutlined />,
+                              title: locale.uploadFiles,
+                              description: locale.clickOrDragFilesToUpload,
+                            }
+                      }
+                    />
+                  </Sender.Header>
+                }
+                prefix={
+                  <Button
+                    type="text"
+                    icon={<PaperClipOutlined style={{ fontSize: 18 }} />}
+                    onClick={() => {
+                      attachmentsOpen.value = !attachmentsOpen.value;
+                    }}
+                  />
+                }
+                onPasteFile={onPasteFile}
+              />
+            )}
+          />
+        </Flex>
+      </div>
+    );
+  },
+});
+
+const copilotOpen = ref(true);
+
+defineRender(() => (
+  <div style={workareaStyles.value.copilotWrapper}>
+    <div style={workareaStyles.value.workarea}>
+      <div style={workareaStyles.value.workareaHeader}>
+        <div style={workareaStyles.value.headerTitle}>
+          <img
+            src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original"
+            draggable={false}
+            alt="logo"
+            width={20}
+            height={20}
+          />
+          Ant Design X
+        </div>
+        {!copilotOpen.value && (
+          <div
+            onClick={() => {
+              copilotOpen.value = true;
+            }}
+            style={workareaStyles.value.headerButton}
+          >
+            ✨ {locale.aiCopilot}
+          </div>
+        )}
+      </div>
+
+      <div
+        style={{
+          ...workareaStyles.value.workareaBody,
+          margin: copilotOpen.value ? 16 : '16px 48px',
+        }}
+      >
+        <div style={workareaStyles.value.bodyContent}>
+          <Image
+            src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*48RLR41kwHIAAAAAAAAAAAAADgCCAQ/fmt.webp"
+            preview={false}
+          />
+          <div style={workareaStyles.value.bodyText}>
+            <h4>What is the RICH design paradigm?</h4>
+            <div>
+              RICH is an AI interface design paradigm we propose, similar to how the WIMP paradigm
+              relates to graphical user interfaces.
+            </div>
+            <br />
+            <div>
+              The ACM SIGCHI 2005 (the premier conference on human-computer interaction) defined
+              that the core issues of human-computer interaction can be divided into three levels:
+            </div>
+            <ul>
+              <li>
+                Interface Paradigm Layer: Defines the design elements of human-computer
+                interaction interfaces, guiding designers to focus on core issues.
+              </li>
+              <li>
+                User model layer: Build an interface experience evaluation model to measure the
+                quality of the interface experience.
+              </li>
+              <li>
+                Software framework layer: The underlying support algorithms and data structures
+                for human-computer interfaces, which are the contents hidden behind the front-end
+                interface.
+              </li>
+            </ul>
+            <div>
+              The interface paradigm is the aspect that designers need to focus on and define the
+              most when a new human-computer interaction technology is born. The interface
+              paradigm defines the design elements that designers should pay attention to, and
+              based on this, it is possible to determine what constitutes good design and how to
+              achieve it.
             </div>
           </div>
         </div>
       </div>
-
-      <Copilot copilotOpen={copilotOpen.value} setCopilotOpen={(value: boolean) => copilotOpen.value = value} />
     </div>
-  );
-});
+
+    <Copilot
+      copilotOpen={copilotOpen.value}
+      setCopilotOpen={(open: boolean) => {
+        copilotOpen.value = open;
+      }}
+    />
+  </div>
+));
 </script>
