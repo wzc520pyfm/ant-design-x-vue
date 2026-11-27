@@ -94,8 +94,8 @@ const logo = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbM
 const welcomeIcon = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp';
 
 const DEFAULT_CONVERSATIONS_ITEMS = [
-  { key: 'default-0', label: t.whatIsTbox, group: t.today },
-  { key: 'default-1', label: t.whatCanTboxDo, group: t.yesterday },
+  { key: 'tbox-0', label: t.whatIsTbox, group: t.today },
+  { key: 'tbox-1', label: t.whatCanTboxDo, group: t.yesterday },
 ];
 
 const HOT_TOPICS = {
@@ -223,11 +223,18 @@ const Footer = defineComponent({
           label: t.retry,
           icon: h(SyncOutlined),
           onItemClick: () => {
-            if (props.id != null) {
-              chatHandlers.value.onReload?.(props.id, {
-                userAction: 'retry',
-              } as never);
+            if (props.id == null || isRequesting.value) return;
+            for (let i = messages.value.length - 1; i >= 0; i -= 1) {
+              const item = messages.value[i] as any;
+              const role = item?.message?.role ?? item?.role;
+              if (role === 'assistant') {
+                if (String(item.id) !== String(props.id)) return;
+                break;
+              }
             }
+            chatHandlers.value.onReload?.(props.id, {
+              userAction: 'retry',
+            } as never);
           },
         },
         {
@@ -298,7 +305,7 @@ watch(
 );
 
 function onSubmit(val: string) {
-  if (!val) return;
+  if (!val || isRequesting.value) return;
   onRequest({
     message: { role: 'user', content: val },
   });
@@ -340,7 +347,7 @@ const role: BubbleListProps['role'] = {
     footer: (content: unknown, { status, key }: { status?: string; key?: string | number }) => {
       const data = asTboxContent(content);
       return h(Footer, {
-        content: data.ext_text || '',
+        content: data.text || data.ext_text || '',
         status,
         id: key,
       });

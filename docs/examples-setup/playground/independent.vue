@@ -63,7 +63,7 @@ const logo = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbM
 const welcomeIcon = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp';
 
 const HISTORY_MESSAGES: Record<string, DefaultMessageInfo<ChatMessage>[]> = {
-  'default-1': [
+  'independent-1': [
     {
       message: { role: 'user', content: locale.howToQuicklyInstallAndImportComponents },
       status: 'success',
@@ -73,16 +73,16 @@ const HISTORY_MESSAGES: Record<string, DefaultMessageInfo<ChatMessage>[]> = {
       status: 'success',
     },
   ],
-  'default-2': [
+  'independent-2': [
     { message: { role: 'user', content: locale.newAgiHybridInterface }, status: 'success' },
     { message: { role: 'assistant', content: locale.aiMessage_1 }, status: 'success' },
   ],
 };
 
 const DEFAULT_CONVERSATIONS_ITEMS = [
-  { key: 'default-0', label: locale.whatIsAntDesignX, group: locale.today },
-  { key: 'default-1', label: locale.howToQuicklyInstallAndImportComponents, group: locale.today },
-  { key: 'default-2', label: locale.newAgiHybridInterface, group: locale.yesterday },
+  { key: 'independent-0', label: locale.whatIsAntDesignX, group: locale.today },
+  { key: 'independent-1', label: locale.howToQuicklyInstallAndImportComponents, group: locale.today },
+  { key: 'independent-2', label: locale.newAgiHybridInterface, group: locale.yesterday },
 ];
 
 const HOT_TOPICS = {
@@ -166,9 +166,10 @@ const Footer = defineComponent({
           label: locale.retry,
           icon: <SyncOutlined />,
           onItemClick: () => {
-            if (props.id != null) {
-              chatHandlers.value.onReload?.(String(props.id), { userAction: 'retry' } as never);
-            }
+            if (props.id == null) return;
+            if (chatHandlers.value.isBusy?.()) return;
+            if (!chatHandlers.value.isLatestAssistant?.(props.id)) return;
+            chatHandlers.value.onReload?.(String(props.id), { userAction: 'retry' } as never);
           },
         },
         {
@@ -291,15 +292,29 @@ const { onRequest, messages, isRequesting, abort, onReload, setMessage } = useXC
 });
 
 watch(
-  () => [onReload, setMessage],
+  () => [onReload, setMessage, messages.value, isRequesting.value],
   () => {
-    chatHandlers.value = { onReload, setMessage };
+    chatHandlers.value = {
+      onReload,
+      setMessage,
+      isBusy: () => isRequesting.value,
+      isLatestAssistant: (id) => {
+        for (let i = messages.value.length - 1; i >= 0; i -= 1) {
+          const item = messages.value[i] as any;
+          const role = item?.message?.role ?? item?.role;
+          if (role === 'assistant') {
+            return String(item.id) === String(id);
+          }
+        }
+        return false;
+      },
+    };
   },
   { immediate: true },
 );
 
 function onSubmit(val: string) {
-  if (!val) return;
+  if (!val || isRequesting.value) return;
   onRequest({
     messages: [{ role: 'user', content: val }],
   });

@@ -29,20 +29,20 @@ const shell = usePlaygroundShell('640px', '0');
 const logo = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original';
 
 const DEFAULT_CONVERSATIONS_ITEMS = [
-  { key: 'default-0', label: locale.whatIsAntDesignX, group: locale.today },
-  { key: 'default-1', label: locale.howToQuicklyInstallAndImportComponents, group: locale.today },
-  { key: 'default-2', label: locale.newAgiHybridInterface, group: locale.yesterday },
+  { key: 'ultramodern-0', label: locale.whatIsAntDesignX, group: locale.today },
+  { key: 'ultramodern-1', label: locale.howToQuicklyInstallAndImportComponents, group: locale.today },
+  { key: 'ultramodern-2', label: locale.newAgiHybridInterface, group: locale.yesterday },
 ];
 
 const HISTORY_MESSAGES: Record<string, DefaultMessageInfo<XModelMessage>[]> = {
-  'default-1': [
+  'ultramodern-1': [
     {
       message: { role: 'user', content: locale.howToQuicklyInstallAndImportComponents },
       status: 'success',
     },
     { message: { role: 'assistant', content: locale.aiMessage_2 }, status: 'success' },
   ],
-  'default-2': [
+  'ultramodern-2': [
     { message: { role: 'user', content: locale.newAgiHybridInterface }, status: 'success' },
     { message: { role: 'assistant', content: locale.aiMessage_1 }, status: 'success' },
   ],
@@ -133,6 +133,15 @@ const Footer = defineComponent({
                 label: locale.retry,
                 icon: <SyncOutlined />,
                 onItemClick: () => {
+                  if (isRequesting.value) return;
+                  for (let i = messages.value.length - 1; i >= 0; i -= 1) {
+                    const item = messages.value[i] as any;
+                    const role = item?.message?.role ?? item?.role;
+                    if (role === 'assistant') {
+                      if (String(item.id) !== String(props.id)) return;
+                      break;
+                    }
+                  }
                   onReloadRef.value?.(props.id!, { userAction: 'retry' } as never);
                 },
               },
@@ -307,7 +316,7 @@ defineRender(() => (
             slotConfig={slotConfig}
             loading={isRequesting.value}
             onSubmit={(val: string) => {
-              if (!val) return;
+              if (!val || isRequesting.value) return;
               onRequest({
                 messages: [{ role: 'user', content: val }],
                 thinking: { type: 'disabled' },

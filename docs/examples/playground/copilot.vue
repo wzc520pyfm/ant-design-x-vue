@@ -43,22 +43,22 @@ import { playgroundZh as locale } from '../../examples-v2/_shared/playground-loc
 const { token } = theme.useToken();
 
 const DEFAULT_CONVERSATIONS_ITEMS: ConversationItemType[] = [
-  { key: '5', label: locale.newSession, group: locale.today },
-  { key: '4', label: locale.whatHasAntDesignXUpgraded, group: locale.today },
-  { key: '3', label: locale.newAgiHybridInterface, group: locale.today },
-  { key: '2', label: locale.howToQuicklyInstallAndImportComponents, group: locale.yesterday },
-  { key: '1', label: locale.whatIsAntDesignX, group: locale.yesterday },
+  { key: 'copilot-5', label: locale.newSession, group: locale.today },
+  { key: 'copilot-4', label: locale.whatHasAntDesignXUpgraded, group: locale.today },
+  { key: 'copilot-3', label: locale.newAgiHybridInterface, group: locale.today },
+  { key: 'copilot-2', label: locale.howToQuicklyInstallAndImportComponents, group: locale.yesterday },
+  { key: 'copilot-1', label: locale.whatIsAntDesignX, group: locale.yesterday },
 ];
 
 const HISTORY_MESSAGES: Record<string, DefaultMessageInfo<XModelMessage>[]> = {
-  '5': [
+  'copilot-5': [
     { message: { role: 'user', content: locale.historyMessages.newSession.user }, status: 'success' },
     {
       message: { role: 'assistant', content: locale.historyMessages.newSession.assistant },
       status: 'success',
     },
   ],
-  '4': [
+  'copilot-4': [
     {
       message: { role: 'user', content: locale.historyMessages.whatHasAntDesignXUpgraded.user },
       status: 'success',
@@ -71,7 +71,7 @@ const HISTORY_MESSAGES: Record<string, DefaultMessageInfo<XModelMessage>[]> = {
       status: 'success',
     },
   ],
-  '3': [
+  'copilot-3': [
     {
       message: { role: 'user', content: locale.historyMessages.newAgiHybridInterface.user },
       status: 'success',
@@ -84,7 +84,7 @@ const HISTORY_MESSAGES: Record<string, DefaultMessageInfo<XModelMessage>[]> = {
       status: 'success',
     },
   ],
-  '2': [
+  'copilot-2': [
     {
       message: {
         role: 'user',
@@ -100,7 +100,7 @@ const HISTORY_MESSAGES: Record<string, DefaultMessageInfo<XModelMessage>[]> = {
       status: 'success',
     },
   ],
-  '1': [
+  'copilot-1': [
     {
       message: { role: 'user', content: locale.historyMessages.whatIsAntDesignX.user },
       status: 'success',
@@ -347,7 +347,7 @@ const Copilot = defineComponent({
     });
 
     const handleUserSubmit = (val: string) => {
-      if (!val) return;
+      if (!val || isRequesting.value) return;
       onRequest({
         messages: [{ role: 'user', content: val }],
       });
@@ -373,7 +373,7 @@ const Copilot = defineComponent({
       <div
         style={{
           ...styles.value.copilotChat,
-          width: props.copilotOpen ? 400 : 0,
+          width: props.copilotOpen ? '400px' : 0,
         }}
       >
         <div style={styles.value.chatHeader}>
@@ -579,7 +579,7 @@ defineRender(() => (
       <div
         style={{
           ...workareaStyles.value.workareaBody,
-          margin: copilotOpen.value ? 16 : '16px 48px',
+          margin: copilotOpen.value ? '16px' : '16px 48px',
         }}
       >
         <div style={workareaStyles.value.bodyContent}>
