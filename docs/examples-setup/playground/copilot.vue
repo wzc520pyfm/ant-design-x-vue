@@ -228,13 +228,13 @@ const styles = computed(() => ({
 }));
 
 const workareaStyles = computed(() => ({
+  /** React docs: compact iframe="1200" */
   copilotWrapper: {
     width: '100%',
-    height: 'min(100vh, 720px)',
+    height: '1200px',
     display: 'flex',
-    border: `1px solid ${token.value.colorBorderSecondary}`,
-    borderRadius: `${token.value.borderRadiusLG}px`,
     overflow: 'hidden',
+    background: token.value.colorBgContainer,
   },
   workarea: {
     flex: 1,
@@ -553,7 +553,7 @@ const Copilot = defineComponent({
 const copilotOpen = ref(true);
 
 defineRender(() => (
-  <div style={workareaStyles.value.copilotWrapper}>
+  <div class="ax-playground-root" style={workareaStyles.value.copilotWrapper}>
     <div style={workareaStyles.value.workarea}>
       <div style={workareaStyles.value.workareaHeader}>
         <div style={workareaStyles.value.headerTitle}>

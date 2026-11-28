@@ -89,7 +89,8 @@ const t = {
   ErrThinking: '思考出错',
 };
 
-const shell = usePlaygroundShell('720px', '16px');
+/** React docs: compact iframe="800" */
+const shell = usePlaygroundShell('800px', '16px');
 const logo = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original';
 const welcomeIcon = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp';
 
@@ -391,20 +392,12 @@ const bubbleItems = computed(() =>
   })),
 );
 
-const sideStyle = computed(() => ({
-  ...shell.sideStyle.value,
-  width: '280px',
-  padding: '0 12px',
-  display: 'flex',
-  flexDirection: 'column' as const,
-  height: '100%',
-}));
-
 const chatStyle = computed(() => ({
   ...shell.mainStyle.value,
   paddingBlock: '24px',
   paddingInline: 0,
   height: '100%',
+  width: 'calc(100% - 280px)',
   display: 'flex',
   flexDirection: 'column' as const,
   justifyContent: 'space-between',
@@ -482,11 +475,11 @@ function sendCurrent() {
 
 defineRender(() => (
   <XProvider>
-    <Flex style={shell.shellStyle.value}>
-      <div style={sideStyle.value}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '24px 0', padding: '0 24px' }}>
+    <div class="ax-playground-root" style={shell.shellStyle.value}>
+      <div style={shell.sideStyle.value}>
+        <div style={shell.logoStyle.value}>
           <img src={logo} width={24} height={24} alt="logo" draggable={false} />
-          <span style={{ fontWeight: 700, fontSize: '16px' }}>Ant Design X</span>
+          <span style={{ fontWeight: 700, fontSize: '16px', color: 'inherit' }}>Ant Design X</span>
         </div>
         <Conversations
           style={{ flex: 1, overflowY: 'auto', marginTop: '12px' }}
@@ -539,13 +532,13 @@ defineRender(() => (
               />
               <Flex gap={16} style={{ width: '100%' }}>
                 <Prompts
-                  class="ax-tbox-prompts"
+                  class="ax-playground-chat-prompt ax-tbox-prompts"
                   items={[HOT_TOPICS]}
                   styles={hotTopicsStyles}
                   onItemClick={ask}
                 />
                 <Prompts
-                  class="ax-tbox-prompts"
+                  class="ax-playground-chat-prompt ax-tbox-prompts"
                   items={[DESIGN_GUIDE]}
                   styles={designGuideStyles}
                   onItemClick={ask}
@@ -560,7 +553,7 @@ defineRender(() => (
             items={SENDER_PROMPTS}
             onItemClick={ask}
             styles={{ item: { padding: '6px 12px' } }}
-            style={{ width: '100%', maxWidth: '840px', margin: '0 auto' }}
+            style={{ width: '100%', maxWidth: '840px', margin: '0 auto', color: 'inherit' }}
           />
           <Sender
             style={{ width: '100%', maxWidth: '840px', margin: '0 auto' }}
@@ -573,7 +566,7 @@ defineRender(() => (
           />
         </Flex>
       </div>
-    </Flex>
+    </div>
   </XProvider>
 ));
 </script>

@@ -25,7 +25,8 @@ import { createLiveGlmProvider } from '../../examples-v2/_shared/playground-glm-
 import { playgroundZh as locale } from '../../examples-v2/_shared/playground-locale';
 import { usePlaygroundShell } from '../../examples-v2/_shared/playground-shell';
 
-const shell = usePlaygroundShell('640px', '0');
+/** React docs: compact iframe="800" */
+const shell = usePlaygroundShell('800px', '0');
 const logo = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original';
 
 const DEFAULT_CONVERSATIONS_ITEMS = [
@@ -185,19 +186,11 @@ const getRole = (className: string): BubbleListProps['role'] => ({
   user: { placement: 'end' },
 });
 
-const sideStyle = computed(() => ({
-  ...shell.sideStyle.value,
-  width: '280px',
-  padding: '0 12px',
-  display: 'flex',
-  flexDirection: 'column' as const,
-  height: '100%',
-}));
-
 const chatStyle = computed(() => ({
   ...shell.mainStyle.value,
   padding: 0,
   height: '100%',
+  width: 'calc(100% - 280px)',
   display: 'flex',
   flexDirection: 'column' as const,
   minWidth: 0,
@@ -206,11 +199,11 @@ const chatStyle = computed(() => ({
 
 defineRender(() => (
   <XProvider>
-    <Flex style={shell.shellStyle.value}>
-      <div style={sideStyle.value}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '24px 0', padding: '0 12px' }}>
+    <div class="ax-playground-root" style={shell.shellStyle.value}>
+      <div style={shell.sideStyle.value}>
+        <div style={shell.logoStyle.value}>
           <img src={logo} width={24} height={24} alt="logo" draggable={false} />
-          <span style={{ fontWeight: 700, fontSize: 16 }}>Ant Design X</span>
+          <span style={{ fontWeight: 700, fontSize: 16, color: 'inherit' }}>Ant Design X</span>
         </div>
         <Conversations
           style={{ flex: 1, overflowY: 'auto', marginTop: 12 }}
@@ -346,7 +339,7 @@ defineRender(() => (
           />
         </div>
       </div>
-    </Flex>
+    </div>
   </XProvider>
 ));
 </script>

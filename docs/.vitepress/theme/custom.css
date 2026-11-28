@@ -119,3 +119,17 @@ html:not(.dark) .example-showcase .ant-actions-item .anticon {
   margin-top: 0;
 }
 
+/* Welcome prompt cards keep a light gradient; force readable dark text like React. */
+.vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-label {
+  color: rgba(0, 0, 0, 0.88) !important;
+}
+
+.vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-desc {
+  color: rgba(0, 0, 0, 0.65) !important;
+  width: 100%;
+}
+
+.vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-icon {
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+

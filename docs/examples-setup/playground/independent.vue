@@ -60,7 +60,8 @@ type ChatHandlers = {
   isLatestAssistant?: (id: string | number) => boolean;
 };
 
-const shell = usePlaygroundShell('720px', '0');
+/** React docs: compact iframe="800" */
+const shell = usePlaygroundShell('800px', '0');
 const logo = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original';
 const welcomeIcon = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp';
 
@@ -331,19 +332,11 @@ const cardStyle = {
   border: 'none',
 };
 
-const sideStyle = computed(() => ({
-  ...shell.sideStyle.value,
-  width: '280px',
-  padding: '0 12px',
-  display: 'flex',
-  flexDirection: 'column' as const,
-  height: '100%',
-}));
-
 const chatStyle = computed(() => ({
   ...shell.mainStyle.value,
   padding: 0,
   height: '100%',
+  width: 'calc(100% - 280px)',
   display: 'flex',
   flexDirection: 'column' as const,
   justifyContent: 'space-between',
@@ -352,11 +345,11 @@ const chatStyle = computed(() => ({
 
 defineRender(() => (
   <XProvider>
-    <Flex style={shell.shellStyle.value}>
-      <div style={sideStyle.value}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '24px 0', padding: '0 12px' }}>
+    <div class="ax-playground-root" style={shell.shellStyle.value}>
+      <div style={shell.sideStyle.value}>
+        <div style={shell.logoStyle.value}>
           <img src={logo} width={24} height={24} alt="logo" draggable={false} />
-          <span style={{ fontWeight: 700, fontSize: 16 }}>Ant Design X</span>
+          <span style={{ fontWeight: 700, fontSize: 16, color: 'inherit' }}>Ant Design X</span>
         </div>
         <Conversations
           style={{ flex: 1, overflowY: 'auto', marginTop: 12 }}
@@ -442,6 +435,7 @@ defineRender(() => (
               />
               <Flex gap={16} justify="center" style={{ width: '100%' }}>
                 <Prompts
+                  class="ax-playground-chat-prompt"
                   items={[HOT_TOPICS]}
                   styles={{
                     list: { height: '100%' },
@@ -451,6 +445,7 @@ defineRender(() => (
                   onItemClick={(info: { data: { description?: string } }) => onSubmit(String(info.data.description || ''))}
                 />
                 <Prompts
+                  class="ax-playground-chat-prompt"
                   items={[DESIGN_GUIDE]}
                   styles={{
                     item: cardStyle,
@@ -469,7 +464,7 @@ defineRender(() => (
               items={SENDER_PROMPTS}
               onItemClick={(info: { data: { description?: string } }) => onSubmit(String(info.data.description || ''))}
               styles={{ item: { padding: '6px 12px' } }}
-              style={{ width: '100%', maxWidth: 840 }}
+              style={{ width: '100%', maxWidth: 840, color: 'inherit' }}
             />
           )}
           <Sender
@@ -518,7 +513,7 @@ defineRender(() => (
           />
         </Flex>
       </div>
-    </Flex>
+    </div>
   </XProvider>
 ));
 </script>
