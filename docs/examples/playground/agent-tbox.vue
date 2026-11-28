@@ -181,14 +181,16 @@ const ThinkComponent = defineComponent({
     watch(
       () => [props.streamStatus, chatStatus.value] as const,
       ([streamStatus, status]) => {
-        if (streamStatus === 'done') {
-          title.value = t.CompleteThinking;
-          loading.value = false;
-        } else if (status === 'abort') {
+        // Prefer request status over sanitized streamStatus — abort can look like "done"
+        // after DOMPurify closes an unclosed <think> tag.
+        if (status === 'abort') {
           title.value = t.AbortThinking;
           loading.value = false;
         } else if (status === 'error') {
           title.value = t.ErrThinking;
+          loading.value = false;
+        } else if (streamStatus === 'done') {
+          title.value = t.CompleteThinking;
           loading.value = false;
         } else {
           title.value = `${t.DeepThinking}...`;
@@ -308,12 +310,22 @@ watch(
 );
 
 function onSubmit(val: string) {
-  if (!val || isRequesting.value) return false;
+  if (!val || !activeConversationKey.value) return false;
+  // provider.request.isRequesting flips sync on run; isRequesting can lag with conversationKey Map.
+  if (isRequesting.value || provider.request.isRequesting) return false;
   onRequest({
     message: { role: 'user', content: val },
   });
   listRef.value?.scrollTo?.({ top: 'bottom' });
   return true;
+}
+
+function switchConversation(key: string | undefined) {
+  if (key === activeConversationKey.value) return;
+  if (isRequesting.value || provider.request.isRequesting) {
+    abort();
+  }
+  setActiveConversationKey(key as string);
 }
 
 function ask(info: { data: { description?: string } }) {
@@ -442,13 +454,27 @@ function onCreateConversation() {
     label: `${t.newConversation} ${conversations.value.length + 1}`,
     group: t.today,
   });
-  setActiveConversationKey(now);
+  switchConversation(now);
 }
 
-function conversationMenu(conversation: { key: string }) {
+function conversationMenu(conversation: { key: string; label?: unknown }) {
   return {
     items: [
-      { label: t.rename, key: 'rename', icon: h(EditOutlined) },
+      {
+        label: t.rename,
+        key: 'rename',
+        icon: h(EditOutlined),
+        onClick: () => {
+          const current = String(conversation.label ?? '');
+          const next = window.prompt(t.rename, current.replace(/^\[.*?\]/, ''))?.trim();
+          if (!next) return;
+          setConversations(
+            conversations.value.map((item) =>
+              item.key === conversation.key ? { ...item, label: next } : item,
+            ),
+          );
+        },
+      },
       {
         label: t.delete,
         key: 'delete',
@@ -459,7 +485,7 @@ function conversationMenu(conversation: { key: string }) {
           const nextKey = next[0]?.key;
           setConversations(next);
           if (conversation.key === activeConversationKey.value) {
-            setActiveConversationKey(nextKey);
+            switchConversation(nextKey);
           }
         },
       },
@@ -486,7 +512,7 @@ defineRender(() => (
           creation={{ onClick: onCreateConversation }}
           items={conversationItems.value}
           activeKey={activeConversationKey.value}
-          onActiveChange={setActiveConversationKey}
+          onActiveChange={(key: string) => switchConversation(key)}
           groupable
           styles={{ item: { padding: '0 8px' } }}
           menu={conversationMenu}

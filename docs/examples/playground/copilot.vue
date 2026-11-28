@@ -346,8 +346,17 @@ const Copilot = defineComponent({
       },
     });
 
+    function switchConversation(key: string) {
+      if (key === activeConversationKey.value) return;
+      if (isRequesting.value || provider.request.isRequesting) {
+        abort();
+      }
+      setActiveConversationKey(key);
+    }
+
     const handleUserSubmit = (val: string) => {
-      if (!val || isRequesting.value) return false;
+      if (!val || !activeConversationKey.value) return false;
+      if (isRequesting.value || provider.request.isRequesting) return false;
       onRequest({
         messages: [{ role: 'user', content: val }],
       });
@@ -392,7 +401,7 @@ const Copilot = defineComponent({
                     label: locale.newSession,
                     group: locale.today,
                   });
-                  setActiveConversationKey(timeNow);
+                  switchConversation(timeNow);
                 } else {
                   message.error(locale.itIsNowANewConversation);
                 }
@@ -410,7 +419,7 @@ const Copilot = defineComponent({
                   )}
                   activeKey={activeConversationKey.value}
                   groupable
-                  onActiveChange={setActiveConversationKey}
+                  onActiveChange={switchConversation}
                   styles={{ item: { padding: '0 8px' } }}
                   style={styles.value.conversations}
                 />

@@ -317,12 +317,21 @@ watch(
 );
 
 function onSubmit(val: string) {
-  if (!val || isRequesting.value) return false;
+  if (!val || !activeConversationKey.value) return false;
+  if (isRequesting.value || provider.request.isRequesting) return false;
   onRequest({
     messages: [{ role: 'user', content: val }],
   });
   listRef.value?.scrollTo?.({ top: 'bottom' });
   return true;
+}
+
+function switchConversation(key: string | undefined) {
+  if (key === activeConversationKey.value) return;
+  if (isRequesting.value || provider.request.isRequesting) {
+    abort();
+  }
+  setActiveConversationKey(key as string);
 }
 
 const cardStyle = {
@@ -365,7 +374,7 @@ defineRender(() => (
                 label: `${locale.newConversation} ${conversations.value.length + 1}`,
                 group: locale.today,
               });
-              setActiveConversationKey(now);
+              switchConversation(now);
             },
           }}
           items={conversations.value.map(({ key, label, ...other }) => ({
@@ -374,12 +383,26 @@ defineRender(() => (
             ...other,
           }))}
           activeKey={activeConversationKey.value}
-          onActiveChange={(key: string) => setActiveConversationKey(key)}
+          onActiveChange={(key: string) => switchConversation(key)}
           groupable
           styles={{ item: { padding: '0 8px' } }}
-          menu={(conversation: { key: string }) => ({
+          menu={(conversation: { key: string; label?: unknown }) => ({
             items: [
-              { label: locale.rename, key: 'rename', icon: <EditOutlined /> },
+              {
+                label: locale.rename,
+                key: 'rename',
+                icon: <EditOutlined />,
+                onClick: () => {
+                  const current = String(conversation.label ?? '');
+                  const next = window.prompt(locale.rename, current.replace(/^\[.*?\]/, ''))?.trim();
+                  if (!next) return;
+                  setConversations(
+                    conversations.value.map((item) =>
+                      item.key === conversation.key ? { ...item, label: next } : item,
+                    ),
+                  );
+                },
+              },
               {
                 label: locale.delete,
                 key: 'delete',
@@ -390,7 +413,7 @@ defineRender(() => (
                   const nextKey = next[0]?.key;
                   setConversations(next);
                   if (conversation.key === activeConversationKey.value) {
-                    setActiveConversationKey(nextKey);
+                    switchConversation(nextKey);
                   }
                 },
               },

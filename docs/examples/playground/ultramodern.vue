@@ -111,6 +111,14 @@ watch(
   { immediate: true },
 );
 
+function switchConversation(key: string) {
+  if (key === curConversation.value) return;
+  if (isRequesting.value || provider.request.isRequesting) {
+    abort();
+  }
+  curConversation.value = key;
+}
+
 onMounted(() => {
   senderRef.value?.focus?.({ cursor: 'end' });
 });
@@ -219,7 +227,7 @@ defineRender(() => (
                 label: `${locale.newConversation} ${conversations.value.length + 1}`,
                 group: locale.today,
               });
-              curConversation.value = now;
+              switchConversation(now);
             },
           }}
           items={conversations.value
@@ -233,9 +241,7 @@ defineRender(() => (
             }))
             .sort((a) => (a.key === activeConversation.value ? -1 : 0))}
           activeKey={curConversation.value}
-          onActiveChange={(key: string) => {
-            curConversation.value = key;
-          }}
+          onActiveChange={(key: string) => switchConversation(key)}
           groupable
           styles={{ item: { padding: '0 8px' } }}
           menu={(conversation: { key: string }) => ({
@@ -251,7 +257,7 @@ defineRender(() => (
                   );
                   setConversations(next);
                   if (conversation.key === curConversation.value) {
-                    curConversation.value = next[0]?.key || '';
+                    switchConversation(next[0]?.key || '');
                   }
                 },
               },
@@ -309,7 +315,8 @@ defineRender(() => (
             slotConfig={slotConfig}
             loading={isRequesting.value}
             onSubmit={(val: string) => {
-              if (!val || isRequesting.value) return;
+              if (!val || !curConversation.value) return;
+              if (isRequesting.value || provider.request.isRequesting) return;
               onRequest({
                 messages: [{ role: 'user', content: val }],
                 thinking: { type: 'disabled' },
