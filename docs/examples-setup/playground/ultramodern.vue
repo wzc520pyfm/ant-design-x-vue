@@ -217,7 +217,8 @@ defineRender(() => (
           style={{ flex: 1, overflowY: 'auto', marginTop: 12 }}
           creation={{
             onClick: () => {
-              if (!messages.value.length) {
+              // Allow create when no conversation is active (e.g. after deleting the last one).
+              if (messages.value.length === 0 && curConversation.value) {
                 message.error(locale.itIsNowANewConversation);
                 return;
               }
@@ -255,9 +256,21 @@ defineRender(() => (
                   const next = conversations.value.filter(
                     (item) => item.key !== conversation.key,
                   );
+                  if (!next.length) {
+                    const now = dayjs().valueOf().toString();
+                    setConversations([
+                      {
+                        key: now,
+                        label: `${locale.newConversation} 1`,
+                        group: locale.today,
+                      },
+                    ]);
+                    switchConversation(now);
+                    return;
+                  }
                   setConversations(next);
                   if (conversation.key === curConversation.value) {
-                    switchConversation(next[0]?.key || '');
+                    switchConversation(next[0].key);
                   }
                 },
               },

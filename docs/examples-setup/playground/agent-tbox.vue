@@ -444,7 +444,8 @@ const welcomeExtra = () =>
 const helpIcon = h(QuestionCircleOutlined);
 
 function onCreateConversation() {
-  if (!messages.value.length) {
+  // Allow create when no conversation is active (e.g. after deleting the last one).
+  if (messages.value.length === 0 && activeConversationKey.value) {
     message.error(t.nowNenConversation);
     return;
   }
@@ -465,8 +466,10 @@ function conversationMenu(conversation: { key: string; label?: unknown }) {
         key: 'rename',
         icon: h(EditOutlined),
         onClick: () => {
-          const current = String(conversation.label ?? '');
-          const next = window.prompt(t.rename, current.replace(/^\[.*?\]/, ''))?.trim();
+          const current = String(
+            conversations.value.find((item) => item.key === conversation.key)?.label ?? '',
+          );
+          const next = window.prompt(t.rename, current)?.trim();
           if (!next) return;
           setConversations(
             conversations.value.map((item) =>
@@ -482,10 +485,21 @@ function conversationMenu(conversation: { key: string; label?: unknown }) {
         danger: true,
         onClick: () => {
           const next = conversations.value.filter((item) => item.key !== conversation.key);
-          const nextKey = next[0]?.key;
+          if (!next.length) {
+            const now = dayjs().valueOf().toString();
+            setConversations([
+              {
+                key: now,
+                label: `${t.newConversation} 1`,
+                group: t.today,
+              },
+            ]);
+            switchConversation(now);
+            return;
+          }
           setConversations(next);
           if (conversation.key === activeConversationKey.value) {
-            switchConversation(nextKey);
+            switchConversation(next[0].key);
           }
         },
       },
