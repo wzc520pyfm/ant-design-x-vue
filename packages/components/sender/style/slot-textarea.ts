@@ -33,18 +33,20 @@ const genSlotTextAreaStyle: GenerateStyle<SenderToken> = (token) => {
           color: token.colorTextPlaceholder,
         },
       },
-      // React 2.0 @ant-design/x slot-textarea: horizontal margin is marginXXS,
-      // and marginBlock is marginXXS / 2. Inline margins do not collapse, so
-      // two wrapped slot rows keep a full marginXXS between the chips.
-      // vertical-align stays bottom so that gap sits under the line box
-      // instead of being eaten by a fixed 24px height.
-      [slotCls]: {
-        display: 'inline-flex',
-        margin: `0 ${unit(token.marginXXS)}`,
-        verticalAlign: 'bottom',
+      // Match React `@ant-design/x` slot-textarea: non-content slots use
+      // inline-block + vertical-align middle and a font-metric height so the
+      // chip shares the text baseline with surrounding plain text.
+      [`${slotCls}:not(${slotContentCls})`]: {
+        display: 'inline-block',
+        verticalAlign: 'middle',
         alignItems: 'center',
-        marginBlock: unit(calc(token.marginXXS).div(2).equal()),
-        minHeight: token.controlHeightSM,
+        marginBlock: 1,
+        height: calc(token.fontSize).mul(token.lineHeight).add(2).equal(),
+        wordBreak: 'break-all',
+        marginInline: token.marginXXS,
+      },
+      // Content slots keep an inline chip box (see slotContentCls below).
+      [slotCls]: {
         wordBreak: 'break-all',
       },
 

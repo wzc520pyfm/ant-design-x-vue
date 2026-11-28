@@ -43,6 +43,10 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
       padding: token.paddingSM,
       margin: 0,
       listStyle: 'none',
+      // Lock Ant Design font size so VitePress `.vp-doc` 16px host styles
+      // do not enlarge group titles / items relative to React `@ant-design/x`.
+      fontSize: token.fontSize,
+      lineHeight: token.lineHeight,
       'ul, ol': {
         margin: 0,
         padding: 0,
@@ -204,6 +208,9 @@ const genConversationsStyle: GenerateStyle<ConversationsToken> = (token) => {
         display: 'flex',
         alignItems: 'center',
         color: token.colorTextDescription,
+        // Caption-sized vs item label (token.fontSize) — matches React docs look.
+        fontSize: token.fontSizeSM,
+        lineHeight: token.lineHeightSM,
         height: token.controlHeightLG,
         minHeight: token.controlHeightLG,
         padding: `0 ${unit(token.paddingXS)}`,

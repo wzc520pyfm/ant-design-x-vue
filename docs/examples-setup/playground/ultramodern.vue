@@ -214,7 +214,7 @@ defineRender(() => (
           <span style={{ fontWeight: 700, fontSize: 16, color: 'inherit' }}>Ant Design X</span>
         </div>
         <Conversations
-          style={{ flex: 1, overflowY: 'auto', marginTop: 12 }}
+          style={{ flex: 1, overflowY: 'auto', marginTop: 12, padding: 0 }}
           creation={{
             onClick: () => {
               // Allow create when no conversation is active (e.g. after deleting the last one).
@@ -296,29 +296,14 @@ defineRender(() => (
           )}
         </div>
         <div
-          style={{
-            padding: 8,
-            ...(messages.value.length === 0
-              ? {
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  height: '100%',
-                }
-              : {}),
-          }}
+          class={
+            messages.value.length === 0
+              ? 'ax-playground-ultramodern-sender ax-playground-ultramodern-sender--start'
+              : 'ax-playground-ultramodern-sender'
+          }
         >
           {messages.value.length === 0 && (
-            <div
-              style={{
-                marginBlockStart: '25%',
-                fontSize: 32,
-                marginBlockEnd: 38,
-                fontWeight: 600,
-              }}
-            >
-              {locale.agentName}
-            </div>
+            <div class="ax-playground-ultramodern-agent-name">{locale.agentName}</div>
           )}
           <Sender
             style={{ maxWidth: 840, width: '100%' }}
@@ -370,5 +355,31 @@ defineRender(() => (
   background-size: 100% 2px;
   background-repeat: no-repeat;
   background-position: bottom;
+}
+
+/* React ultramodern: chatSender paddingXS + startPage center; docs hosts are
+   narrower than Ant Design X's iframe, so add horizontal inset for breathing room. */
+.ax-playground-ultramodern-sender {
+  padding: 8px 24px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.ax-playground-ultramodern-sender--start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+/* Explicit px so VitePress host font metrics cannot shrink the title.
+   Color inherits from .ax-playground-root (token.colorText) for light/dark. */
+.ax-playground-ultramodern-agent-name {
+  margin-block-start: 25%;
+  margin-block-end: 38px;
+  font-size: 32px !important;
+  line-height: 1.2;
+  font-weight: 600;
+  color: inherit;
 }
 </style>
