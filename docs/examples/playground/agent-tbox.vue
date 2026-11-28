@@ -541,11 +541,14 @@ defineRender(() => (
         />
         <div
           style={{
-            borderTop: '1px solid var(--ant-color-border-secondary, #f0f0f0)',
-            height: '40px',
+            borderTop: `1px solid ${shell.token.value.colorBorderSecondary}`,
+            height: '48px',
+            paddingInline: '4px',
+            boxSizing: 'border-box',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            flexShrink: 0,
           }}
         >
           <Avatar size={24} />

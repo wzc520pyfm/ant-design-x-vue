@@ -377,10 +377,15 @@ const placeholderStyle = computed(() => ({
 
 const sideFooterStyle = computed(() => ({
   borderTop: `1px solid ${shell.token.value.colorBorderSecondary}`,
-  height: 40,
+  // Explicit px — unitless `height: 40` is dropped by Vue style normalize (footer collapsed ~33px).
+  // 48px gives Avatar(24)/icon button room to breathe vs the cramped 40px rail.
+  height: '48px',
+  paddingInline: '4px',
+  boxSizing: 'border-box' as const,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
+  flexShrink: 0,
 }));
 
 defineRender(() => (
