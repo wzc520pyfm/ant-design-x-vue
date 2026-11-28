@@ -347,37 +347,33 @@ const promptCardStyle = computed(() => ({
   border: 'none',
 }));
 
-const chatStyle = computed(() => {
+const chatPadPx = computed(() => {
   const pad = shell.token.value.paddingLG ?? 24;
-  const padPx = typeof pad === 'number' ? `${pad}px` : String(pad);
-  return {
-    ...shell.mainStyle.value,
-    // Original Vue independent: vertical padding + gap between list and sender.
-    // Use explicit px strings — unitless paddingBlock/gap can be dropped by Vue style normalize.
-    paddingInline: 0,
-    paddingBlock: padPx,
-    height: '100%',
-    width: 'calc(100% - 280px)',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    justifyContent: 'space-between',
-    gap: '16px',
-    minWidth: 0,
-    boxSizing: 'border-box' as const,
-  };
+  return typeof pad === 'number' ? `${pad}px` : String(pad);
 });
 
-const placeholderStyle = computed(() => {
-  const pad = shell.token.value.paddingLG ?? 24;
-  const padPx = typeof pad === 'number' ? `${pad}px` : String(pad);
-  return {
-    maxWidth: 840,
-    width: '100%',
-    paddingTop: '32px',
-    paddingInline: padPx,
-    boxSizing: 'border-box' as const,
-  };
-});
+const chatStyle = computed(() => ({
+  ...shell.mainStyle.value,
+  // Original Vue independent: paddingLG on the chat column so Bubble + Sender share side inset.
+  // Explicit px strings — unitless padding*/gap can be dropped by Vue style normalize.
+  paddingInline: chatPadPx.value,
+  paddingBlock: chatPadPx.value,
+  height: '100%',
+  width: 'calc(100% - 280px)',
+  display: 'flex',
+  flexDirection: 'column' as const,
+  justifyContent: 'space-between',
+  gap: '16px',
+  minWidth: 0,
+  boxSizing: 'border-box' as const,
+}));
+
+const placeholderStyle = computed(() => ({
+  maxWidth: 840,
+  width: '100%',
+  paddingTop: '32px',
+  boxSizing: 'border-box' as const,
+}));
 
 const sideFooterStyle = computed(() => ({
   borderTop: `1px solid ${shell.token.value.colorBorderSecondary}`,
@@ -534,7 +530,7 @@ defineRender(() => (
           )}
         </div>
 
-        <Flex vertical gap={12} align="center" style={{ width: '100%', paddingInline: 8, boxSizing: 'border-box' }}>
+        <Flex vertical gap={12} align="center" style={{ width: '100%', boxSizing: 'border-box' }}>
           {!attachmentsOpen.value && (
             <Prompts
               items={SENDER_PROMPTS}

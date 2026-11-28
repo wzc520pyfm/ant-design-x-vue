@@ -308,7 +308,8 @@ defineRender(() => (
             <div class="ax-playground-ultramodern-agent-name">{locale.agentName}</div>
           )}
           <Sender
-            style={{ maxWidth: 840, width: '100%' }}
+            // React ultramodern: no maxWidth — width follows chatSender (aligns with Bubble.List 940).
+            style={{ width: '100%' }}
             suffix={false}
             ref={senderRef as any}
             key={curConversation.value}
@@ -359,10 +360,9 @@ defineRender(() => (
   background-position: bottom;
 }
 
-/* React ultramodern: chatSender paddingXS + startPage center; docs hosts are
-   narrower than Ant Design X's iframe, so add horizontal inset for breathing room. */
+/* React ultramodern chatSender: paddingXS (8px) — match Bubble.List side inset. */
 .ax-playground-ultramodern-sender {
-  padding: 8px 24px;
+  padding: 8px;
   box-sizing: border-box;
   width: 100%;
 }
