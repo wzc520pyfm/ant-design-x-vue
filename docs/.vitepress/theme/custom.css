@@ -119,17 +119,31 @@ html:not(.dark) .example-showcase .ant-actions-item .anticon {
   margin-top: 0;
 }
 
-/* Welcome prompt cards keep a light gradient; force readable dark text like React. */
-.vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-label {
+/* Prompt cards use a light gradient in light mode — force readable dark text.
+   Dark mode uses dark gradients (original Vue independent); use light text there. */
+html:not(.dark) .vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-label {
   color: rgba(0, 0, 0, 0.88) !important;
 }
 
-.vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-desc {
+html:not(.dark) .vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-desc {
   color: rgba(0, 0, 0, 0.65) !important;
   width: 100%;
 }
 
-.vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-icon {
+html:not(.dark) .vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-icon {
   color: rgba(0, 0, 0, 0.65) !important;
+}
+
+html.dark .vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-label {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+html.dark .vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-desc {
+  color: rgba(255, 255, 255, 0.65) !important;
+  width: 100%;
+}
+
+html.dark .vp-doc .example-showcase .ax-playground-chat-prompt .ant-prompts-icon {
+  color: rgba(255, 255, 255, 0.65) !important;
 }
 

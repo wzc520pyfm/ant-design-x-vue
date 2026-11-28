@@ -45,7 +45,7 @@ import dayjs from 'dayjs';
 import { computed, defineComponent, provide, ref, watch } from 'vue';
 import { createLiveGlmProvider } from '../../examples-v2/_shared/playground-glm-provider';
 import { playgroundZh as locale } from '../../examples-v2/_shared/playground-locale';
-import { usePlaygroundShell } from '../../examples-v2/_shared/playground-shell';
+import { isDarkColor, usePlaygroundShell } from '../../examples-v2/_shared/playground-shell';
 
 interface ChatMessage extends XModelMessage {
   extraInfo?: {
@@ -95,8 +95,8 @@ const HOT_TOPICS = {
     { key: '1-1', description: locale.whatComponentsAreInAntDesignX, icon: <span style={{ color: '#f93a4a', fontWeight: 700 }}>1</span> },
     { key: '1-2', description: locale.newAgiHybridInterface, icon: <span style={{ color: '#ff6565', fontWeight: 700 }}>2</span> },
     { key: '1-3', description: locale.whatComponentsAreInAntDesignX, icon: <span style={{ color: '#ff8f1f', fontWeight: 700 }}>3</span> },
-    { key: '1-4', description: locale.comeAndDiscoverNewDesignParadigm, icon: <span style={{ color: '#00000040', fontWeight: 700 }}>4</span> },
-    { key: '1-5', description: locale.howToQuicklyInstallAndImportComponents, icon: <span style={{ color: '#00000040', fontWeight: 700 }}>5</span> },
+    { key: '1-4', description: locale.comeAndDiscoverNewDesignParadigm, icon: <span style={{ opacity: 0.6, fontWeight: 700 }}>4</span> },
+    { key: '1-5', description: locale.howToQuicklyInstallAndImportComponents, icon: <span style={{ opacity: 0.6, fontWeight: 700 }}>5</span> },
   ],
 };
 
@@ -334,22 +334,57 @@ function switchConversation(key: string | undefined) {
   setActiveConversationKey(key as string);
 }
 
-const cardStyle = {
-  flex: 1,
-  backgroundImage: 'linear-gradient(123deg, #e5f4ff 0%, #efe7ff 100%)',
+/** Match original Vue independent: light vs dark prompt card gradients. */
+const isDarkTheme = computed(() => isDarkColor(shell.token.value.colorBgContainer));
+
+const promptCardStyle = computed(() => ({
+  flex: '1 1 0',
+  minWidth: 0,
+  backgroundImage: isDarkTheme.value
+    ? 'linear-gradient(123deg, #1e2a38 0%, #2b1f3b 100%)'
+    : 'linear-gradient(123deg, #e5f4ff 0%, #efe7ff 100%)',
   borderRadius: '12px',
   border: 'none',
-};
+}));
 
-const chatStyle = computed(() => ({
-  ...shell.mainStyle.value,
-  padding: 0,
-  height: '100%',
-  width: 'calc(100% - 280px)',
+const chatStyle = computed(() => {
+  const pad = shell.token.value.paddingLG ?? 24;
+  const padPx = typeof pad === 'number' ? `${pad}px` : String(pad);
+  return {
+    ...shell.mainStyle.value,
+    // Original Vue independent: vertical padding + gap between list and sender.
+    // Use explicit px strings — unitless paddingBlock/gap can be dropped by Vue style normalize.
+    paddingInline: 0,
+    paddingBlock: padPx,
+    height: '100%',
+    width: 'calc(100% - 280px)',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    justifyContent: 'space-between',
+    gap: '16px',
+    minWidth: 0,
+    boxSizing: 'border-box' as const,
+  };
+});
+
+const placeholderStyle = computed(() => {
+  const pad = shell.token.value.paddingLG ?? 24;
+  const padPx = typeof pad === 'number' ? `${pad}px` : String(pad);
+  return {
+    maxWidth: 840,
+    width: '100%',
+    paddingTop: '32px',
+    paddingInline: padPx,
+    boxSizing: 'border-box' as const,
+  };
+});
+
+const sideFooterStyle = computed(() => ({
+  borderTop: `1px solid ${shell.token.value.colorBorderSecondary}`,
+  height: 40,
   display: 'flex',
-  flexDirection: 'column' as const,
+  alignItems: 'center',
   justifyContent: 'space-between',
-  minWidth: 0,
 }));
 
 defineRender(() => (
@@ -361,7 +396,7 @@ defineRender(() => (
           <span style={{ fontWeight: 700, fontSize: 16, color: 'inherit' }}>Ant Design X</span>
         </div>
         <Conversations
-          style={{ flex: 1, overflowY: 'auto', marginTop: 12 }}
+          style={{ flex: 1, overflowY: 'auto', marginTop: 12, padding: 0 }}
           creation={{
             onClick: () => {
               // Allow create when no conversation is active (e.g. after deleting the last one).
@@ -434,7 +469,7 @@ defineRender(() => (
             ],
           })}
         />
-        <div style={{ borderTop: '1px solid var(--ant-color-border-secondary, #f0f0f0)', height: 40, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={sideFooterStyle.value}>
           <Avatar size={24} />
           <Button type="text" icon={<QuestionCircleOutlined />} />
         </div>
@@ -452,11 +487,12 @@ defineRender(() => (
                 loading: i.status === 'loading',
                 extraInfo: i.extraInfo,
               }))}
-              styles={{ root: { maxWidth: 940 } }}
+              styles={{ root: { maxWidth: 940, width: '100%' } }}
+              style={{ height: '100%', maxWidth: 840, width: '100%', margin: '0 auto' }}
               role={getRole(shell.markdownClass.value)}
             />
           ) : (
-            <Flex vertical style={{ maxWidth: 840, width: '100%', padding: 24, boxSizing: 'border-box' }} gap={16} align="center">
+            <Flex vertical style={placeholderStyle.value} gap={16} align="center">
               <Welcome
                 style={{ width: '100%' }}
                 variant="borderless"
@@ -476,8 +512,8 @@ defineRender(() => (
                   items={[HOT_TOPICS]}
                   styles={{
                     list: { height: '100%' },
-                    item: cardStyle,
-                    subItem: { padding: 0, background: 'transparent' },
+                    item: promptCardStyle.value,
+                    subItem: { padding: 0, background: 'transparent', maxWidth: '100%' },
                   }}
                   onItemClick={(info: { data: { description?: string } }) => onSubmit(String(info.data.description || ''))}
                 />
@@ -485,8 +521,11 @@ defineRender(() => (
                   class="ax-playground-chat-prompt"
                   items={[DESIGN_GUIDE]}
                   styles={{
-                    item: cardStyle,
-                    subItem: { background: '#ffffffa6' },
+                    item: promptCardStyle.value,
+                    subItem: {
+                      background: isDarkTheme.value ? undefined : '#ffffffa6',
+                      maxWidth: '100%',
+                    },
                   }}
                   onItemClick={(info: { data: { description?: string } }) => onSubmit(String(info.data.description || ''))}
                 />
@@ -495,12 +534,12 @@ defineRender(() => (
           )}
         </div>
 
-        <Flex vertical gap={12} align="center" style={{ margin: 8 }}>
+        <Flex vertical gap={12} align="center" style={{ width: '100%', paddingInline: 8, boxSizing: 'border-box' }}>
           {!attachmentsOpen.value && (
             <Prompts
               items={SENDER_PROMPTS}
               onItemClick={(info: { data: { description?: string } }) => onSubmit(String(info.data.description || ''))}
-              styles={{ item: { padding: '6px 12px' } }}
+              styles={{ item: { padding: '6px 12px', maxWidth: '100%' } }}
               style={{ width: '100%', maxWidth: 840, color: 'inherit' }}
             />
           )}

@@ -48,7 +48,7 @@ import {
 import type { Ref } from 'vue';
 import { createLiveTboxProvider } from '../../examples-v2/_shared/mock-tbox-provider';
 import type { TboxMessage, TboxOutput } from '../../examples-v2/_shared/mock-tbox-provider';
-import { usePlaygroundShell } from '../../examples-v2/_shared/playground-shell';
+import { isDarkColor, usePlaygroundShell } from '../../examples-v2/_shared/playground-shell';
 
 type FeedbackValue = 'like' | 'dislike' | 'default';
 
@@ -417,23 +417,31 @@ const chatStyle = computed(() => ({
   boxSizing: 'border-box' as const,
 }));
 
-const cardStyle = {
-  flex: 1,
-  backgroundImage: 'linear-gradient(123deg, #e5f4ff 0%, #efe7ff 100%)',
+const isDarkTheme = computed(() => isDarkColor(shell.token.value.colorBgContainer));
+
+const promptCardStyle = computed(() => ({
+  flex: '1 1 0',
+  minWidth: 0,
+  backgroundImage: isDarkTheme.value
+    ? 'linear-gradient(123deg, #1e2a38 0%, #2b1f3b 100%)'
+    : 'linear-gradient(123deg, #e5f4ff 0%, #efe7ff 100%)',
   borderRadius: '12px',
   border: 'none',
-};
+}));
 
-const hotTopicsStyles = {
+const hotTopicsStyles = computed(() => ({
   list: { height: '100%' },
-  item: cardStyle,
-  subItem: { padding: 0, background: 'transparent' },
-};
+  item: promptCardStyle.value,
+  subItem: { padding: 0, background: 'transparent', maxWidth: '100%' },
+}));
 
-const designGuideStyles = {
-  item: cardStyle,
-  subItem: { background: '#ffffffa6' },
-};
+const designGuideStyles = computed(() => ({
+  item: promptCardStyle.value,
+  subItem: {
+    background: isDarkTheme.value ? undefined : '#ffffffa6',
+    maxWidth: '100%',
+  },
+}));
 
 const welcomeExtra = () =>
   h(Space, null, () => [
@@ -574,13 +582,13 @@ defineRender(() => (
                 <Prompts
                   class="ax-playground-chat-prompt ax-tbox-prompts"
                   items={[HOT_TOPICS]}
-                  styles={hotTopicsStyles}
+                  styles={hotTopicsStyles.value}
                   onItemClick={ask}
                 />
                 <Prompts
                   class="ax-playground-chat-prompt ax-tbox-prompts"
                   items={[DESIGN_GUIDE]}
-                  styles={designGuideStyles}
+                  styles={designGuideStyles.value}
                   onItemClick={ask}
                 />
               </Flex>
