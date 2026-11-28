@@ -4,7 +4,7 @@ aside: false
 
 # Ultramodern
 
-Similar to React 2.10's ultramodern: left-side conversation, empty state title, bubbles, and a Sender with a "Deep Thinking" switch. The documentation site does not include model keys; replies use a local mock and will not request DeepSeek.
+Matches React 2.10 ultramodern: conversations, empty-state title, bubbles, `slotConfig`, and a Sender with deep-think switch. Uses the public glm demo API.
 
 :::demo
 

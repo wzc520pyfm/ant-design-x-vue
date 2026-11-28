@@ -28,6 +28,11 @@ const vm = getCurrentInstance()!
 
 const prefer = useStorage('antdx-docs-preference', 'tsx');
 
+/** React playground embeds use `compact iframe`; mirror that for Vue docs hosts. */
+const isPlaygroundDemo = computed(() =>
+  String(props.path || '').includes('playground/'),
+)
+
 const demoTheme = computed(() => ({
   algorithm: antdDark.value ? theme.darkAlgorithm : theme.defaultAlgorithm,
   inherit: false,
@@ -79,8 +84,8 @@ const copyCode = async () => {
   <!-- danger here DO NOT USE INLINE SCRIPT TAG -->
   <XProvider :theme="demoTheme">
 
-    <div class="example">
-      <div class="example-showcase">
+    <div class="example" :class="{ 'example--playground': isPlaygroundDemo }">
+      <div class="example-showcase" :class="{ 'example-showcase--compact': isPlaygroundDemo }">
         <template v-if="prefer === 'tsx'">
           <slot name="source" />
         </template>
@@ -179,6 +184,16 @@ const copyCode = async () => {
         }
       }
     }
+  }
+
+  &.example--playground {
+    overflow: hidden;
+  }
+
+  .example-showcase--compact {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden;
   }
 
   .op-btns {

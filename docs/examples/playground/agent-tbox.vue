@@ -2,17 +2,23 @@
 defineOptions({ name: 'AXPlaygroundAgentTbox' });
 
 import {
+  AppstoreAddOutlined,
   AppstoreOutlined,
   DeleteOutlined,
+  EditOutlined,
   EllipsisOutlined,
   FileSearchOutlined,
+  GlobalOutlined,
   HeartOutlined,
   QuestionCircleOutlined,
   ScheduleOutlined,
   ShareAltOutlined,
   SmileOutlined,
+  SyncOutlined,
 } from '@ant-design/icons-vue';
+import type { BubbleListProps, ThoughtChainItemProps } from 'ant-design-x-vue';
 import {
+  Actions,
   Bubble,
   Conversations,
   Prompts,
@@ -21,193 +27,609 @@ import {
   ThoughtChain,
   Welcome,
   XProvider,
+  useXChat,
+  useXConversations,
 } from 'ant-design-x-vue';
-import { Avatar, Button, Flex, Space, message } from 'ant-design-vue';
+import { Avatar, Button, Flex, Pagination, Space, message } from 'ant-design-vue';
 import { XMarkdown } from '@ant-design-x-vue/x-markdown';
 import '@ant-design-x-vue/x-markdown/themes/light.css';
 import '@ant-design-x-vue/x-markdown/themes/dark.css';
-import { computed } from 'vue';
-import { useMockChat } from '../../examples-v2/_shared/use-mock-chat';
-import { usePlaygroundShell } from '../../examples-v2/_shared/playground-shell';
+import dayjs from 'dayjs';
+import {
+  computed,
+  defineComponent,
+  h,
+  inject,
+  provide,
+  ref,
+  toRef,
+  watch,
+} from 'vue';
+import type { Ref } from 'vue';
+import { createLiveTboxProvider } from '../../examples-v2/_shared/mock-tbox-provider';
+import type { TboxMessage, TboxOutput } from '../../examples-v2/_shared/mock-tbox-provider';
+import { isDarkColor, usePlaygroundShell } from '../../examples-v2/_shared/playground-shell';
 
-const shell = usePlaygroundShell('720px', '16px');
-const chat = useMockChat((question) => [
-  `关于 **${question}**：`,
-  '',
-  '这里对齐 React 2.10 百宝箱样板间的版面：Welcome、提示词、思考和思维链。',
-  '`tbox-nodejs-sdk` 只能在 Node 里跑，文档页用本地回复代替真实百宝箱会话。',
-].join('\n'));
+type FeedbackValue = 'like' | 'dislike' | 'default';
 
-chat.setConversations([
-  { key: '1', label: '什么是百宝箱 Tbox.cn?' },
-  { key: '2', label: '百宝箱可以做什么?' },
-]);
+const t = {
+  whatIsTbox: '什么是百宝箱 Tbox.cn?',
+  whatCanTboxDo: '百宝箱可以做什么?',
+  today: '今天',
+  yesterday: '昨天',
+  hotTopics: '最热话题',
+  designGuide: '设计指南',
+  intent: '意图',
+  role: '角色',
+  aiUnderstandsUserNeeds: 'AI 理解用户需求并提供解决方案',
+  aiPublicImage: 'AI 的公众形象',
+  dynamic: '动态',
+  component: '组件',
+  guide: '指南',
+  tutorial: '教程',
+  newConversation: '新会话',
+  rename: '重命名',
+  delete: '删除',
+  helloAntdXTboxAgent: '你好， 我是 Ant Design X & 百宝箱智能体',
+  antdXTboxDescription:
+    '基于 Ant Design 的 AGI 产品界面解决方案，打造更卓越的智能视觉体验，集成了百宝箱 Tbox.cn 的智能体能力，助力产品设计与开发。',
+  askMeAnything: '向我提问吧',
+  DeepThinking: '深度思考中',
+  CompleteThinking: '深度思考完成',
+  noData: '暂无数据',
+  modelIsRunning: '正在调用模型',
+  modelExecutionCompleted: '大模型执行完成',
+  executionFailed: '执行失败',
+  aborted: '已经终止',
+  curConversation: '当前对话',
+  nowNenConversation: '当前已经是新会话',
+  isMock: '当前为模拟功能',
+  retry: '重新生成',
+  AbortThinking: '思考已中止',
+  ErrThinking: '思考出错',
+};
 
+/** React docs: compact iframe="800" */
+const shell = usePlaygroundShell('800px', '16px');
 const logo = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original';
 const welcomeIcon = 'https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*s5sNRo5LjfQAAAAAAAAAAAAADgCCAQ/fmt.webp';
 
-const hotTopics = {
-  key: '1',
-  label: '最热话题',
-  children: [
-    { key: '1-1', description: '什么是百宝箱 Tbox.cn?', icon: <span style={{ color: '#f93a4a', fontWeight: 700 }}>1</span> },
-    { key: '1-2', description: '百宝箱可以做什么?', icon: <span style={{ color: '#ff6565', fontWeight: 700 }}>2</span> },
-  ],
-};
-const designGuide = {
-  key: '2',
-  label: '设计指南',
-  children: [
-    { key: '2-1', icon: <HeartOutlined />, label: '意图', description: 'AI 理解用户需求并提供解决方案' },
-    { key: '2-2', icon: <SmileOutlined />, label: '角色', description: 'AI 的公众形象' },
-  ],
-};
-const senderPrompts = [
-  { key: '1', description: '动态', icon: <ScheduleOutlined /> },
-  { key: '2', description: '组件', icon: <AppstoreOutlined /> },
-  { key: '3', description: '指南', icon: <FileSearchOutlined /> },
-  { key: '4', description: '教程', icon: <AppstoreOutlined /> },
+const DEFAULT_CONVERSATIONS_ITEMS = [
+  { key: 'tbox-0', label: t.whatIsTbox, group: t.today },
+  { key: 'tbox-1', label: t.whatCanTboxDo, group: t.yesterday },
 ];
 
-const chain = computed(() => [
-  { key: 'running', title: chat.isRequesting.value ? '正在调用模型' : '大模型执行完成', status: (chat.isRequesting.value ? 'loading' : 'success') as 'loading' | 'success' },
-]);
+const HOT_TOPICS = {
+  key: '1',
+  label: t.hotTopics,
+  children: [
+    {
+      key: '1-1',
+      description: t.whatIsTbox,
+      icon: h('span', { style: { color: '#f93a4a', fontWeight: 700 } }, '1'),
+    },
+    {
+      key: '1-2',
+      description: t.whatCanTboxDo,
+      icon: h('span', { style: { color: '#ff6565', fontWeight: 700 } }, '2'),
+    },
+  ],
+};
 
-const cardStyle = {
+const DESIGN_GUIDE = {
+  key: '2',
+  label: t.designGuide,
+  children: [
+    {
+      key: '2-1',
+      icon: h(HeartOutlined),
+      label: t.intent,
+      description: t.aiUnderstandsUserNeeds,
+    },
+    {
+      key: '2-2',
+      icon: h(SmileOutlined),
+      label: t.role,
+      description: t.aiPublicImage,
+    },
+  ],
+};
+
+const SENDER_PROMPTS = [
+  { key: '1', description: t.dynamic, icon: h(ScheduleOutlined) },
+  { key: '2', description: t.component, icon: h(AppstoreOutlined) },
+  { key: '3', description: t.guide, icon: h(FileSearchOutlined) },
+  { key: '4', description: t.tutorial, icon: h(AppstoreAddOutlined) },
+];
+
+const ThoughtChainConfig = {
+  loading: { title: t.modelIsRunning, status: 'loading' as const },
+  updating: { title: t.modelIsRunning, status: 'loading' as const },
+  success: { title: t.modelExecutionCompleted, status: 'success' as const },
+  error: { title: t.executionFailed, status: 'error' as const },
+  abort: { title: t.aborted, status: 'abort' as const },
+};
+
+type ChatHandlers = {
+  onReload?: ReturnType<typeof useXChat>['onReload'];
+};
+
+const chatHandlers = ref<ChatHandlers>({});
+const MessageContextKey = 'ax-tbox-message-status';
+
+const MessageStatusProvider = defineComponent({
+  name: 'AXTboxMessageStatusProviderSetup',
+  props: {
+    chatStatus: { type: String, default: undefined },
+  },
+  setup(props, { slots }) {
+    provide(MessageContextKey, toRef(props, 'chatStatus'));
+    return () => slots.default?.();
+  },
+});
+
+const ThinkComponent = defineComponent({
+  name: 'AXTboxThinkComponentSetup',
+  props: {
+    streamStatus: { type: String, default: 'done' },
+  },
+  setup(props, { slots }) {
+    const chatStatus = inject<Ref<string | undefined>>(MessageContextKey, ref(undefined));
+    const title = ref(`${t.DeepThinking}...`);
+    const loading = ref(true);
+
+    watch(
+      () => [props.streamStatus, chatStatus.value] as const,
+      ([streamStatus, status]) => {
+        // Prefer request status over sanitized streamStatus — abort can look like "done"
+        // after DOMPurify closes an unclosed <think> tag.
+        if (status === 'abort') {
+          title.value = t.AbortThinking;
+          loading.value = false;
+        } else if (status === 'error') {
+          title.value = t.ErrThinking;
+          loading.value = false;
+        } else if (streamStatus === 'done') {
+          title.value = t.CompleteThinking;
+          loading.value = false;
+        } else {
+          title.value = `${t.DeepThinking}...`;
+          loading.value = true;
+        }
+      },
+      { immediate: true },
+    );
+
+    return () =>
+      h(Think, { title: title.value, loading: loading.value }, () => slots.default?.());
+  },
+});
+
+const Footer = defineComponent({
+  name: 'AXTboxFooterSetup',
+  props: {
+    id: { type: [String, Number], default: undefined },
+    content: { type: String, default: '' },
+    status: { type: String, default: undefined },
+  },
+  setup(props) {
+    const mockFeedback = ref<FeedbackValue>('default');
+    return () => {
+      if (props.status === 'updating' || props.status === 'loading') return null;
+      const items = [
+        {
+          key: 'pagination',
+          actionRender: () => h(Pagination, { simple: true, total: 1, pageSize: 1 }),
+        },
+        {
+          key: 'retry',
+          label: t.retry,
+          icon: h(SyncOutlined),
+          onItemClick: () => {
+            if (props.id == null || isRequesting.value) return;
+            for (let i = messages.value.length - 1; i >= 0; i -= 1) {
+              const item = messages.value[i] as any;
+              const role = item?.message?.role ?? item?.role;
+              if (role === 'assistant') {
+                if (String(item.id) !== String(props.id)) return;
+                break;
+              }
+            }
+            chatHandlers.value.onReload?.(props.id, {
+              userAction: 'retry',
+            } as never);
+          },
+        },
+        {
+          key: 'copy',
+          actionRender: () => h(Actions.Copy, { text: props.content }),
+        },
+        {
+          key: 'audio',
+          actionRender: () =>
+            h(Actions.Audio, {
+              onClick: () => {
+                message.info(t.isMock);
+              },
+            }),
+        },
+        {
+          key: 'feedback',
+          actionRender: () =>
+            h(Actions.Feedback, {
+              styles: { liked: { color: '#f759ab' } },
+              value: mockFeedback.value || 'default',
+              onChange: (val: FeedbackValue) => {
+                mockFeedback.value = val;
+                message.success(`${props.id}: ${val}`);
+              },
+            }),
+        },
+      ];
+      return props.id != null
+        ? h('div', { style: { display: 'flex' } }, [h(Actions, { items })])
+        : null;
+    };
+  },
+});
+
+const {
+  conversations,
+  activeConversationKey,
+  setActiveConversationKey,
+  addConversation,
+  setConversations,
+} = useXConversations({
+  defaultConversations: DEFAULT_CONVERSATIONS_ITEMS,
+  defaultActiveConversationKey: DEFAULT_CONVERSATIONS_ITEMS[0].key,
+});
+
+const inputValue = ref('');
+const listRef = ref<{ scrollTo?: (opts: { top: string }) => void } | null>(null);
+const provider = createLiveTboxProvider(() =>
+  String(activeConversationKey.value || DEFAULT_CONVERSATIONS_ITEMS[0].key),
+);
+
+const { onRequest, messages, isRequesting, abort, onReload } = useXChat<TboxMessage>({
+  provider,
+  conversationKey: activeConversationKey,
+  requestPlaceholder: () => ({
+    // Empty content so transformMessage does not prepend the loading label into streamed text.
+    // ThoughtChain.Item header already shows the loading state.
+    content: {},
+    role: 'assistant',
+  }),
+});
+
+watch(
+  () => onReload,
+  () => {
+    chatHandlers.value = { onReload };
+  },
+  { immediate: true },
+);
+
+function onSubmit(val: string) {
+  if (!val || !activeConversationKey.value) return false;
+  // provider.request.isRequesting flips sync on run; isRequesting can lag with conversationKey Map.
+  if (isRequesting.value || provider.request.isRequesting) return false;
+  onRequest({
+    message: { role: 'user', content: val },
+  });
+  listRef.value?.scrollTo?.({ top: 'bottom' });
+  return true;
+}
+
+function switchConversation(key: string | undefined) {
+  if (key === activeConversationKey.value) return;
+  if (isRequesting.value || provider.request.isRequesting) {
+    abort();
+  }
+  setActiveConversationKey(key as string);
+}
+
+function ask(info: { data: { description?: string } }) {
+  onSubmit(String(info.data.description || ''));
+}
+
+function asTboxContent(content: unknown): TboxOutput {
+  if (content && typeof content === 'object') {
+    return content as TboxOutput;
+  }
+  return {};
+}
+
+function buildMarkdown(content: TboxOutput) {
+  const ext = content.ext_text || '';
+  const text = content.text || '';
+  return `${ext ? `<think>\n\n${ext}${text ? '\n\n</think>\n\n' : ''}` : ''}${text}`;
+}
+
+const role: BubbleListProps['role'] = {
+  assistant: {
+    placement: 'start',
+    header: (_: unknown, { status }: { status?: string }) => {
+      const config = ThoughtChainConfig[status as keyof typeof ThoughtChainConfig];
+      return config
+        ? h(ThoughtChain.Item, {
+            style: { marginBottom: 8 },
+            status: config.status as ThoughtChainItemProps['status'],
+            variant: 'solid',
+            icon: h(GlobalOutlined),
+            title: config.title,
+          })
+        : null;
+    },
+    footer: (content: unknown, { status, key }: { status?: string; key?: string | number }) => {
+      const data = asTboxContent(content);
+      return h(Footer, {
+        content: data.text || data.ext_text || '',
+        status,
+        id: key,
+      });
+    },
+    contentRender: (content: unknown, { status }: { status?: string }) => {
+      const data = asTboxContent(content);
+      return h(MessageStatusProvider, { chatStatus: status }, () =>
+        h(XMarkdown, {
+          content: buildMarkdown(data),
+          className: shell.markdownClass.value,
+          components: { think: ThinkComponent },
+          streaming: { hasNextChunk: status === 'updating', enableAnimation: true },
+        }),
+      );
+    },
+  },
+  user: {
+    placement: 'end',
+    contentRender: (content: unknown) =>
+      typeof content === 'string' ? content : asTboxContent(content).text || '',
+  },
+};
+
+const conversationItems = computed(() =>
+  conversations.value.map(({ key, label, ...other }) => ({
+    key,
+    label: key === activeConversationKey.value ? `[${t.curConversation}]${label}` : label,
+    ...other,
+  })),
+);
+
+const bubbleItems = computed(() =>
+  messages.value.map((i) => ({
+    ...i.message,
+    key: i.id,
+    status: i.status,
+    loading: i.status === 'loading',
+  })),
+);
+
+const chatStyle = computed(() => ({
+  ...shell.mainStyle.value,
+  paddingBlock: '24px',
+  paddingInline: 0,
+  height: '100%',
+  width: 'calc(100% - 280px)',
+  display: 'flex',
+  flexDirection: 'column' as const,
+  justifyContent: 'space-between',
+  minWidth: 0,
+  boxSizing: 'border-box' as const,
+}));
+
+const isDarkTheme = computed(() => isDarkColor(shell.token.value.colorBgContainer));
+
+const promptCardStyle = computed(() => ({
   flex: '1 1 0',
   minWidth: 0,
-  backgroundImage: 'linear-gradient(123deg, #e5f4ff 0%, #efe7ff 100%)',
+  backgroundImage: isDarkTheme.value
+    ? 'linear-gradient(123deg, #1e2a38 0%, #2b1f3b 100%)'
+    : 'linear-gradient(123deg, #e5f4ff 0%, #efe7ff 100%)',
   borderRadius: '12px',
   border: 'none',
-};
+}));
+
+const hotTopicsStyles = computed(() => ({
+  list: { height: '100%' },
+  item: promptCardStyle.value,
+  subItem: { padding: 0, background: 'transparent', maxWidth: '100%' },
+}));
+
+const designGuideStyles = computed(() => ({
+  item: promptCardStyle.value,
+  subItem: {
+    background: isDarkTheme.value ? undefined : '#ffffffa6',
+    maxWidth: '100%',
+  },
+}));
+
+const welcomeExtra = () =>
+  h(Space, null, () => [
+    h(Button, { icon: h(ShareAltOutlined) }),
+    h(Button, { icon: h(EllipsisOutlined) }),
+  ]);
+
+const helpIcon = h(QuestionCircleOutlined);
+
+function onCreateConversation() {
+  // Allow create when no conversation is active (e.g. after deleting the last one).
+  if (messages.value.length === 0 && activeConversationKey.value) {
+    message.error(t.nowNenConversation);
+    return;
+  }
+  const now = dayjs().valueOf().toString();
+  addConversation({
+    key: now,
+    label: `${t.newConversation} ${conversations.value.length + 1}`,
+    group: t.today,
+  });
+  switchConversation(now);
+}
+
+function conversationMenu(conversation: { key: string; label?: unknown }) {
+  return {
+    items: [
+      {
+        label: t.rename,
+        key: 'rename',
+        icon: h(EditOutlined),
+        onClick: () => {
+          const current = String(
+            conversations.value.find((item) => item.key === conversation.key)?.label ?? '',
+          );
+          const next = window.prompt(t.rename, current)?.trim();
+          if (!next) return;
+          setConversations(
+            conversations.value.map((item) =>
+              item.key === conversation.key ? { ...item, label: next } : item,
+            ),
+          );
+        },
+      },
+      {
+        label: t.delete,
+        key: 'delete',
+        icon: h(DeleteOutlined),
+        danger: true,
+        onClick: () => {
+          const next = conversations.value.filter((item) => item.key !== conversation.key);
+          if (!next.length) {
+            const now = dayjs().valueOf().toString();
+            setConversations([
+              {
+                key: now,
+                label: `${t.newConversation} 1`,
+                group: t.today,
+              },
+            ]);
+            switchConversation(now);
+            return;
+          }
+          setConversations(next);
+          if (conversation.key === activeConversationKey.value) {
+            switchConversation(next[0].key);
+          }
+        },
+      },
+    ],
+  };
+}
+
+function sendCurrent() {
+  if (onSubmit(inputValue.value)) {
+    inputValue.value = '';
+  }
+}
 
 defineRender(() => (
   <XProvider>
-    <Flex style={shell.shellStyle.value}>
-      <Flex vertical style={{ ...shell.sideStyle.value, width: '280px', padding: '0 12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '24px 0', padding: '0 12px' }}>
+    <div class="ax-playground-root" style={shell.shellStyle.value}>
+      <div style={shell.sideStyle.value}>
+        <div style={shell.logoStyle.value}>
           <img src={logo} width={24} height={24} alt="logo" draggable={false} />
-          <span style={{ fontWeight: 700, fontSize: '16px' }}>Ant Design X</span>
+          <span style={{ fontWeight: 700, fontSize: '16px', color: 'inherit' }}>Ant Design X</span>
         </div>
         <Conversations
-          style={{ flex: 1 }}
-          creation={{
-            onClick: () => {
-              if (!chat.bubbles.value.length) {
-                message.warning('当前已经是新会话');
-                return;
-              }
-              chat.addChat();
-            },
-          }}
-          items={chat.conversations.value.map((item) => ({ ...item, group: '今天' }))}
-          activeKey={chat.activeConversationKey.value}
-          onActiveChange={(key: string) => chat.setActiveConversationKey(key)}
+          style={{ flex: 1, overflowY: 'auto', marginTop: '12px' }}
+          creation={{ onClick: onCreateConversation }}
+          items={conversationItems.value}
+          activeKey={activeConversationKey.value}
+          onActiveChange={(key: string) => switchConversation(key)}
           groupable
-          menu={(conversation) => ({
-            items: [
-              {
-                key: 'delete',
-                label: '删除',
-                icon: <DeleteOutlined />,
-                danger: true,
-                onClick: () => {
-                  const next = chat.conversations.value.filter((item) => item.key !== conversation.key);
-                  chat.setConversations(next);
-                  if (conversation.key === chat.activeConversationKey.value) {
-                    chat.setActiveConversationKey(next[0]?.key || '');
-                  }
-                },
-              },
-            ],
-          })}
+          styles={{ item: { padding: '0 8px' } }}
+          menu={conversationMenu}
         />
-        <div style={{ height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div
+          style={{
+            borderTop: `1px solid ${shell.token.value.colorBorderSecondary}`,
+            height: '48px',
+            paddingInline: '4px',
+            boxSizing: 'border-box',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexShrink: 0,
+          }}
+        >
           <Avatar size={24} />
-          <Button type="text" icon={<QuestionCircleOutlined />} />
+          <Button type="text" icon={helpIcon} />
         </div>
-      </Flex>
-      <Flex vertical gap={12} style={{ ...shell.mainStyle.value, overflow: 'auto' }}>
-        {chat.bubbles.value.length === 0 ? (
-          <Flex vertical gap={16} align="center" style={{ width: '100%' }}>
-            <Welcome
-              className="ax-tbox-welcome"
-              variant="borderless"
-              icon={welcomeIcon}
-              title="你好， 我是 Ant Design X & 百宝箱智能体"
-              description="基于 Ant Design 的 AGI 产品界面解决方案，打造更卓越的智能视觉体验。百宝箱 Node SDK 未打进文档页，这里保留同样的欢迎与提示布局。"
-              styles={{ icon: { height: 64 } }}
-              extra={(
-                <Space>
-                  <Button icon={<ShareAltOutlined />} />
-                  <Button icon={<EllipsisOutlined />} />
-                </Space>
-              )}
-            />
-            <Flex gap={16} align="stretch" style={{ width: '100%' }}>
-              <Prompts
-                class="ax-tbox-prompts"
-                items={[hotTopics]}
-                styles={{
-                  list: { height: '100%', width: '100%' },
-                  item: { ...cardStyle, height: '100%' },
-                  subItem: { padding: 0, background: 'transparent', maxWidth: '100%' },
-                }}
-                onItemClick={(info: { data: { description?: string } }) => chat.send(String(info.data.description || ''))}
-              />
-              <Prompts
-                class="ax-tbox-prompts"
-                items={[designGuide]}
-                styles={{
-                  list: { height: '100%', width: '100%' },
-                  item: { ...cardStyle, height: '100%' },
-                  subItem: { background: 'rgba(255,255,255,0.65)', maxWidth: '100%' },
-                }}
-                onItemClick={(info: { data: { description?: string } }) => chat.send(String(info.data.description || ''))}
-              />
-            </Flex>
-          </Flex>
-        ) : (
-          <>
-            <Think title={chat.isRequesting.value ? '深度思考中' : '深度思考完成'} loading={chat.isRequesting.value}>
-              真实百宝箱流式推理不在浏览器里。这一块标出思考面板的位置。
-            </Think>
-            <ThoughtChain items={chain.value} />
+      </div>
+
+      <div class="ax-tbox-chat" style={chatStyle.value}>
+        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+          {messages.value.length ? (
             <Bubble.List
-              style={{ minHeight: '220px' }}
-              items={chat.bubbles.value}
-              roles={{
-                user: { placement: 'end' },
-                ai: {
-                  placement: 'start',
-                  contentRender: (content: string) => (
-                    <XMarkdown className={shell.markdownClass.value} content={content} />
-                  ),
-                },
-              }}
+              ref={listRef as any}
+              items={bubbleItems.value}
+              styles={{ root: { maxWidth: 940 } }}
+              role={role}
             />
-          </>
-        )}
-        <Prompts
-          items={senderPrompts}
-          onItemClick={(info: { data: { description?: string } }) => chat.send(String(info.data.description || ''))}
-          styles={{ item: { padding: '6px 12px' } }}
-        />
-        <Sender
-          value={chat.input.value}
-          loading={chat.isRequesting.value}
-          placeholder="向我提问吧"
-          onUpdate:value={(value: string) => { chat.input.value = value; }}
-          onSubmit={() => chat.send()}
-          onCancel={() => chat.abort()}
-        />
-      </Flex>
-    </Flex>
+          ) : (
+            <Flex
+              vertical
+              gap={16}
+              align="center"
+              style={{ maxWidth: '840px', width: '100%', padding: '24px', boxSizing: 'border-box' }}
+            >
+              <Welcome
+                class="ax-tbox-welcome"
+                variant="borderless"
+                icon={welcomeIcon}
+                title={t.helloAntdXTboxAgent}
+                description={t.antdXTboxDescription}
+                styles={{ icon: { height: '64px' } }}
+                extra={welcomeExtra}
+              />
+              <Flex gap={16} style={{ width: '100%' }}>
+                <Prompts
+                  class="ax-playground-chat-prompt ax-tbox-prompts"
+                  items={[HOT_TOPICS]}
+                  styles={hotTopicsStyles.value}
+                  onItemClick={ask}
+                />
+                <Prompts
+                  class="ax-playground-chat-prompt ax-tbox-prompts"
+                  items={[DESIGN_GUIDE]}
+                  styles={designGuideStyles.value}
+                  onItemClick={ask}
+                />
+              </Flex>
+            </Flex>
+          )}
+        </div>
+
+        <Flex vertical gap={12} justify="center" style={{ marginInline: '24px' }}>
+          <Prompts
+            items={SENDER_PROMPTS}
+            onItemClick={ask}
+            styles={{ item: { padding: '6px 12px' } }}
+            style={{ width: '100%', maxWidth: '840px', margin: '0 auto', color: 'inherit' }}
+          />
+          <Sender
+            style={{ width: '100%', maxWidth: '840px', margin: '0 auto' }}
+            value={inputValue.value}
+            loading={isRequesting.value}
+            placeholder={t.askMeAnything}
+            onUpdate:value={(v: string) => { inputValue.value = v; }}
+            onSubmit={sendCurrent}
+            onCancel={() => abort()}
+          />
+        </Flex>
+      </div>
+    </div>
   </XProvider>
 ));
 </script>
 
 <style>
+
+.ax-tbox-chat :deep(.ant-bubble-content-updating) {
+  background-image: linear-gradient(90deg, #ff6b23 0%, #af3cb8 31%, #53b6ff 89%);
+  background-size: 100% 2px;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
 .ax-tbox-welcome .ant-welcome-icon {
   flex-shrink: 0;
 }

@@ -9,6 +9,8 @@ import AxPlaygroundCopilotSetup from '../../examples-setup/playground/copilot.vu
 
 # Copilot
 
+Matches React 2.10 copilot: workarea + 400px side panel, Conversations popover, Welcome/Prompts, Suggestion `/`, Attachments, speech, and streaming Markdown/Think. Docs site uses the public glm demo endpoint.
+
 :::demo
 
 playground/copilot

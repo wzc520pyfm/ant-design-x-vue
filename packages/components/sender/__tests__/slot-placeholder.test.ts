@@ -46,10 +46,16 @@ describe('Sender slot and switch layout', () => {
       .map(node => node.textContent || '')
       .join('\n');
 
-    expect(css).toMatch(/\.ant-sender-slot\{[^}]*vertical-align:bottom/);
-    expect(css).toMatch(/\.ant-sender-slot\{[^}]*min-height:24px/);
-    expect(css).toMatch(/\.ant-sender-slot\{[^}]*(margin-block:2px|margin-top:2px)/);
-    expect(css).not.toMatch(/\.ant-sender-slot\{[^}]*vertical-align:middle/);
+    // React parity: non-content slots use vertical-align middle + font-metric height.
+    expect(css).toMatch(
+      /\.ant-sender-slot:not\(\.ant-sender-slot-content\)\{[^}]*vertical-align:middle/,
+    );
+    expect(css).toMatch(
+      /\.ant-sender-slot:not\(\.ant-sender-slot-content\)\{[^}]*display:inline-block/,
+    );
+    expect(css).not.toMatch(
+      /\.ant-sender-slot:not\(\.ant-sender-slot-content\)\{[^}]*vertical-align:bottom/,
+    );
     expect(css).toMatch(/\.ant-sender-switch \.ant-btn\{[^}]*white-space:nowrap/);
     wrapper.unmount();
   });

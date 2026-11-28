@@ -9,6 +9,8 @@ import AxPlaygroundIndependentSetup from '../../examples-setup/playground/indepe
 
 # Independent
 
+Matches React 2.10 independent: conversations, Welcome, prompts, ThoughtChain, streaming Markdown, Attachments, and speech. Uses the public glm demo API.
+
 :::demo
 
 playground/independent
