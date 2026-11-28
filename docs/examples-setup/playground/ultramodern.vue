@@ -178,10 +178,12 @@ const getRole = (className: string): BubbleListProps['role'] => ({
     ),
     contentRender: (content: any, { status }: { status?: string }) => {
       const text = typeof content === 'string' ? content : '';
+      // Do not rewrite `\n\n` → `<br/><br/>`: that destroys Markdown block
+      // boundaries so `###` / `---` render as literal text (same bug as React demo).
       return (
         <XMarkdown
           paragraphTag="div"
-          content={text.replace(/\n\n/g, '<br/><br/>')}
+          content={text}
           className={className}
           streaming={{
             hasNextChunk: status === 'updating',

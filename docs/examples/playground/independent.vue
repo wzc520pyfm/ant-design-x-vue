@@ -239,11 +239,11 @@ const getRole = (className: string): BubbleListProps['role'] => ({
     ),
     contentRender: (content: any, { status }: { status?: string }) => {
       const text = typeof content === 'string' ? content : '';
-      const newContent = text.replace(/\n\n/g, '<br/><br/>');
+      // Keep blank lines so Markdown headings / hr / lists parse as blocks.
       return (
         <XMarkdown
           paragraphTag="div"
-          content={newContent}
+          content={text}
           components={{ think: ThinkComponent }}
           className={className}
           streaming={{

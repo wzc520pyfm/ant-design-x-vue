@@ -167,10 +167,10 @@ const role: BubbleListProps['role'] = {
       </div>
     ),
     contentRender(content: string) {
-      const newContent = String(content ?? '').replace(/\n\n/g, '<br/><br/>');
+      // Keep blank lines so Markdown headings / hr / lists parse as blocks.
       return (
         <XMarkdown
-          content={newContent}
+          content={String(content ?? '')}
           components={{ think: ThinkComponent }}
         />
       );
